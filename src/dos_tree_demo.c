@@ -20,11 +20,11 @@ void print_tree(dostree t) {
 
 void print_tree_helper(dostree t, dostree_node n, int indent) {
     int i;
-    if (n == nil) {
+    if (n == dos_nil) {
         fputs("<empty tree>", stdout);
         return;
     }
-    if (n->right != nil) {
+    if (n->right != dos_nil) {
         print_tree_helper(t, n->right, indent + INDENT_STEP);
     }
     for(i=0; i<indent; i++)
@@ -33,7 +33,7 @@ void print_tree_helper(dostree t, dostree_node n, int indent) {
         printf("[key:%d size:%d]\n", n->key,n->size);
     else
         printf("*[key:%d size:%d]\n", n->key, n->size);
-    if (n->left != nil) {
+    if (n->left != dos_nil) {
         print_tree_helper(t, n->left, indent + INDENT_STEP);
     }
 }
@@ -57,7 +57,7 @@ int main(void)
 
 	for(i=0; i<MAXELEMENT; i++) {
 		dostree_node n = dostree_lookup(t->root,i+1);
-		if(n!=nil) printf("the %dth element is %d\n\n", i+1, n->key);
+		if(n!=dos_nil) printf("the %dth element is %d\n\n", i+1, n->key);
     }
     
 	print_tree(t);
@@ -73,7 +73,7 @@ int main(void)
 
 	for(i=0; i<MAXELEMENT/2; i++) {
 		dostree_node n = dostree_lookup(t->root,i+1);
-		if(n!=nil) printf("the %dth element is %d\n\n", i+1, n->key);
+		if(n!=dos_nil) printf("the %dth element is %d\n\n", i+1, n->key);
     }
 
 	exit(0);
