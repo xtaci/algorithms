@@ -22,7 +22,8 @@ PROGRAMS =	insertion_sort_demo \
 			rbtree_demo \
 			heap_demo \
 			interval_tree_demo \
-			dos_tree_demo
+			dos_tree_demo \
+			skip_list_demo
 
 all: $(PROGRAMS)
 
@@ -78,6 +79,9 @@ interval_tree_demo: $(SRCDIR)/interval_tree_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 dos_tree_demo: $(SRCDIR)/dos_tree_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+skip_list_demo: $(SRCDIR)/skip_list_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:
