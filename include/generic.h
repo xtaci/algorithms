@@ -12,7 +12,7 @@
 do { \
 	int __list_counter; \
 	for(__list_counter=0;__list_counter<n;__list_counter++) \
-		printf("%d\t",list[__list_counter]); \
+		printf("%d\t ",list[__list_counter]); \
 	printf("\n"); \
 } while(0)
 
