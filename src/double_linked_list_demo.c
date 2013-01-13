@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "double_linked_list.h"
+#include "sol.h"
 
 struct DemoNode{
 	int key;
@@ -52,9 +53,22 @@ int main()
 	list_for_each_entry(node, &head, list){
 		printf("%d\n", node->key);
 	}
+	
+	// mtf & mao
+	printf("list_mtf: move the 2nd element to 1st pos:\n");
+	list_mtf(head.next->next, &head);  // 2nd element
+	list_for_each_entry(node, &head, list){
+		printf("%d\n", node->key);
+	}
+
+	printf("list_mao: move ahead the 3rd element one pos:\n");
+	list_mao(head.next->next->next, &head); // 3rd element
+	list_for_each_entry(node, &head, list){
+		printf("%d\n", node->key);
+	}
 
 	// move 
-	printf("list_move:\n");
+	printf("list_move: move an element to another list\n");
 	list_move(head.next, &head2);
 	printf("head#1:\n");
 	list_for_each_entry(node, &head, list){
@@ -72,7 +86,7 @@ int main()
 	list_for_each_entry(node, &head2, list){
 		printf("%d\n", node->key);
 	}
-
+	
 	// delete all nodes
 	printf("list_for_each_entry_safe to delete everything:\n");
 	struct DemoNode * n;
