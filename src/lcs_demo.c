@@ -3,7 +3,7 @@
 #include <time.h>
 #include "lcs.h"
 
-#define printlist(list,n) \
+#define printlistC(list,n) \
 do { \
 	int __list_counter; \
 	for(__list_counter=0;__list_counter<n;__list_counter++) \
@@ -13,7 +13,7 @@ do { \
 
 int main(void)
 {
-	int MAXN = 100;
+	int MAXN = 10;
 	int X[MAXN];
 	int Y[MAXN];
 
@@ -25,9 +25,9 @@ int main(void)
 	}
 
 	printf("The list->A is:\n");
-	printlist(X,MAXN);
+	printlistC(X,MAXN);
 	printf("The list->B is:\n");
-	printlist(Y,MAXN);
+	printlistC(Y,MAXN);
 	
 	struct Array2D * arr = lcs_length(X, MAXN, Y, MAXN);
 	

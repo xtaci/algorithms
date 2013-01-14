@@ -11,14 +11,15 @@ int main()
 	int i;
 	srand(time(NULL));
 	for (i=0;i < MAXELEMENTS; i++) {
-		int element = rand()%1000;
-		heap_insert(heap, element);
+		int value = rand()%1000;
+		heap_insert(heap, i, (void *)value);
 
-		printf("inserting: %d\n", element);
+		printf("inserting: %d->%d\n", i, value);
 	}
 
 	for (i=0;i < MAXELEMENTS; i++) {
-		printf("deleting min: %d\n", heap_delete_min(heap));
+		printf("deleting min: %d->%d\n", HEAP_MIN_KEY(heap), (int)HEAP_MIN_VALUE(heap));
+		heap_delete_min(heap);
 	}
 
 	return 0;
