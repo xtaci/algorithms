@@ -24,7 +24,8 @@ PROGRAMS =	insertion_sort_demo \
 			interval_tree_demo \
 			dos_tree_demo \
 			skip_list_demo \
-			lcs_demo
+			lcs_demo	\
+			graph_demo
 
 all: $(PROGRAMS)
 
@@ -86,6 +87,9 @@ skip_list_demo: $(SRCDIR)/skip_list_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 lcs_demo: $(SRCDIR)/lcs_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+graph_demo: $(SRCDIR)/graph_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:
