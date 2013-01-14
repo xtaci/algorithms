@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <limits.h>
 
 struct Heap {
@@ -27,10 +28,10 @@ struct Heap {
 	void ** values;
 };
 
-#define HEAP_COPY(heap, idx1, idx2) 		\
+#define HEAP_COPY(heap, to, from) 		\
 do {										\
-	heap->keys[idx1] = heap->keys[idx2];			\
-	heap->values[idx1] = heap->values[idx2];		\
+	heap->keys[to] = heap->keys[from];			\
+	heap->values[to] = heap->values[from];		\
 } while(0)
 
 
@@ -78,6 +79,11 @@ inline void heap_insert(struct Heap * heap, int key, void * value)
 		HEAP_ASSIGN(heap, now, key, value);/*heap_insert in the last place*/
 }
 
+inline bool heap_is_empty(struct Heap * heap)
+{
+	return (heap->size==0)?true:false;
+}
+
 inline void heap_delete_min(struct Heap * heap)
 {
         /* heap[1] is the minimum key. So we remove heap[1]. Size of the heap is decreased. 
@@ -87,6 +93,9 @@ inline void heap_delete_min(struct Heap * heap)
         int lastKey;
 		void * lastValue;	
  		int child,now;
+
+		// empty heap, just return
+		if (heap->size == 0) return; 
        
         lastKey = heap->keys[heap->size];
         lastValue = heap->values[heap->size];
@@ -118,7 +127,5 @@ inline void heap_delete_min(struct Heap * heap)
 
 		HEAP_ASSIGN(heap, now, lastKey, lastValue);
 }
-
-
 
 #endif //
