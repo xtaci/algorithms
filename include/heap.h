@@ -45,16 +45,27 @@ do {										\
 #define HEAP_MIN_VALUE(heap) (heap->values[1])
 
 /**
+ * HEAP_FOR_EACH	iterate over list of given type
+ * @counter an integer variable for counting
+ * @data:	the type * to use as a loop counter.
+ * @heap:	the heap struct 
+ */
+#define HEAP_FOR_EACH(counter, data, heap)				\
+	for (counter=1,data=(typeof(*data) *)(heap->values[counter]); \
+		counter<=heap->size; \
+		counter++, data=(typeof(*data) *)(heap->values[counter]))
+
+/**
  * heap init
  */
 inline struct Heap * heap_init(int max)
 {
 	struct Heap * heap = (struct Heap *)malloc(sizeof(struct Heap));
 	heap->size = 0;
-	heap->max = max;
-	heap->keys = (int *)malloc(sizeof(int) * max);
+	heap->max = max+1;
+	heap->keys = (int *)malloc(sizeof(int) * heap->max);
     heap->keys[0] = -INT_MAX;
-	heap->values= (void **)malloc(sizeof(void *) * max);
+	heap->values= (void **)malloc(sizeof(void *) * heap->max);
 	return heap;
 }
 
@@ -76,7 +87,7 @@ inline void heap_insert(struct Heap * heap, int key, void * value)
 				HEAP_COPY(heap, now, now/2);
                 now /= 2;
         }
-		HEAP_ASSIGN(heap, now, key, value);/*heap_insert in the last place*/
+		HEAP_ASSIGN(heap, now, key, value);
 }
 
 inline bool heap_is_empty(struct Heap * heap)

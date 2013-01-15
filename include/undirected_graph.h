@@ -31,6 +31,7 @@ struct Adjacent {
 	struct Vertex v;
 	struct list_head v_head;  // vertex list header
 	struct list_head a_list; 
+	uint32_t num_neigh;		// num of neighbours
 };
 
 /**
@@ -70,7 +71,7 @@ static inline void undirected_graph_del_me_from_adjacent(struct Adjacent * a, ui
 /**
  * find an adjacent list with vertex id == id 
  */
-static inline struct Adjacent * undirected_graph_lookup_vertex(struct UndirectedGraph * g, uint32_t id)
+static inline struct Adjacent * undirected_graph_lookup(struct UndirectedGraph * g, uint32_t id)
 {
 	struct Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_list){
@@ -98,12 +99,13 @@ inline struct UndirectedGraph * undirected_graph_create()
  */
 inline bool undirected_graph_add_vertex(struct UndirectedGraph * g, uint32_t id)
 {
-	if (undirected_graph_lookup_vertex(g,id)!=NULL) return false;
+	if (undirected_graph_lookup(g,id)!=NULL) return false;
 
 	// new empty adjacent list
 	struct Adjacent * a = (struct Adjacent *)malloc(sizeof(struct Adjacent));
 	INIT_LIST_HEAD(&a->v_head);
 	a->v.id = id; 	// new vertex id
+	a->num_neigh = 0;
 	list_add_tail(&a->a_list, &g->a_head);
 	g->num_vertex++;
 
@@ -115,16 +117,17 @@ inline bool undirected_graph_add_vertex(struct UndirectedGraph * g, uint32_t id)
  */
 inline void undirected_graph_del_vertex(struct UndirectedGraph * g, uint32_t id)
 {
-	struct Adjacent * a = undirected_graph_lookup_vertex(g, id);
+	struct Adjacent * a = undirected_graph_lookup(g, id);
 	if (a==NULL) return;
 	
 	struct Vertex * v,* vn;
 	// find connected-vertex
 	list_for_each_entry_safe(v, vn, &a->v_head, v_list){
-		struct Adjacent * neigh = undirected_graph_lookup_vertex(g, v->id);
+		struct Adjacent * neigh = undirected_graph_lookup(g, v->id);
 		undirected_graph_del_me_from_adjacent(neigh, id);
 		list_del(&v->v_list);
 		free(v);
+		neigh->num_neigh--;
 		g->num_edges--;
 	}
 
@@ -140,8 +143,8 @@ inline void undirected_graph_del_vertex(struct UndirectedGraph * g, uint32_t id)
  */
 inline bool undirected_graph_add_edge(struct UndirectedGraph * g, uint32_t x, uint32_t y, int32_t weight)
 {
-	struct Adjacent * a1 = undirected_graph_lookup_vertex(g, x);
-	struct Adjacent * a2 = undirected_graph_lookup_vertex(g, y);
+	struct Adjacent * a1 = undirected_graph_lookup(g, x);
+	struct Adjacent * a2 = undirected_graph_lookup(g, y);
 
 	if (a1==NULL || a2==NULL) return false;
 	
@@ -155,6 +158,8 @@ inline bool undirected_graph_add_edge(struct UndirectedGraph * g, uint32_t x, ui
 	list_add_tail(&n->v_list, &a2->v_head);
 
 	g->num_edges++;
+	a1->num_neigh++;
+	a2->num_neigh++;
 
 	return true;
 }
@@ -164,8 +169,8 @@ inline bool undirected_graph_add_edge(struct UndirectedGraph * g, uint32_t x, ui
  */
 inline void undirected_graph_del_edge(struct UndirectedGraph * g, uint32_t x, uint32_t y)
 {
-	struct Adjacent * a1 = undirected_graph_lookup_vertex(g, x);
-	struct Adjacent * a2 = undirected_graph_lookup_vertex(g, y);
+	struct Adjacent * a1 = undirected_graph_lookup(g, x);
+	struct Adjacent * a2 = undirected_graph_lookup(g, y);
 	if (a1==NULL || a2==NULL) return ;
 	
 	struct Vertex * v, *n;
@@ -175,6 +180,7 @@ inline void undirected_graph_del_edge(struct UndirectedGraph * g, uint32_t x, ui
 			list_del(&v->v_list);
 			free(v);
 			g->num_edges--;
+			a1->num_neigh--;
 		}
 	}
 
@@ -183,9 +189,9 @@ inline void undirected_graph_del_edge(struct UndirectedGraph * g, uint32_t x, ui
 		if (v->id == x) {
 			list_del(&v->v_list);
 			free(v);
+			a2->num_neigh--;
 		}
 	}
-
 }
 
 /**
@@ -196,10 +202,10 @@ inline void undirected_graph_print(struct UndirectedGraph * g)
 	struct Adjacent * a;
 	printf("Graph : %d vertex, %d edges\n", g->num_vertex,g->num_edges);
 	list_for_each_entry(a, &g->a_head, a_list){
-		printf("%d->{", a->v.id);
+		printf("%d(neigh:%d)->{", a->v.id, a->num_neigh);
 		struct Vertex * v;
 		list_for_each_entry(v, &a->v_head, v_list){
-			printf("%d(%d)\t", v->id, v->weight);
+			printf("%d(w:%d)\t", v->id, v->weight);
 		}
 		printf("}\n");
 	}	
