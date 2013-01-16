@@ -26,7 +26,9 @@ PROGRAMS =	insertion_sort_demo \
 			skip_list_demo \
 			lcs_demo	\
 			graph_demo \
-			prim_mst_demo
+			prim_mst_demo \
+			directed_graph_demo 
+			
 
 all: $(PROGRAMS)
 
@@ -94,6 +96,9 @@ graph_demo: $(SRCDIR)/graph_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 prim_mst_demo: $(SRCDIR)/prim_mst_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+directed_graph_demo: $(SRCDIR)/directed_graph_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:

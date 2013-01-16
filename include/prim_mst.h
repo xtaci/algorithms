@@ -28,7 +28,7 @@ struct PrimAdjacent {
 	struct Heap * heap; 	// binary heap representation of weight->node
  							// the top of the heap is always the minimal element
 	struct Vertex * v;
-	struct list_head pa_list; 
+	struct list_head pa_node; 
 };
 
 /**
@@ -44,13 +44,13 @@ struct PrimGraph {
 static inline void prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent * a)
 {
 	struct PrimAdjacent * pa = (struct PrimAdjacent *)malloc(sizeof(struct PrimAdjacent));		
-	list_add_tail(&pa->pa_list, &pg->pa_head);
+	list_add_tail(&pa->pa_node, &pg->pa_head);
 
 	pa->v = &a->v;	
 	pa->heap = heap_init(a->num_neigh);
 
 	struct Vertex * v;
-	list_for_each_entry(v, &a->v_head, v_list){
+	list_for_each_entry(v, &a->v_head, v_node){
 		heap_insert(pa->heap, v->weight, v);  // weight->vertex
 	}
 }
@@ -64,7 +64,7 @@ inline struct PrimGraph * prim_mst_init(struct UndirectedGraph * g)
 	INIT_LIST_HEAD(&pg->pa_head);
 
 	struct Adjacent * a;
-	list_for_each_entry(a, &g->a_head, a_list){
+	list_for_each_entry(a, &g->a_head, a_node){
 		prim_mst_add_adjacent(pg, a);
 	}
 
@@ -78,7 +78,7 @@ inline struct PrimGraph * prim_mst_init(struct UndirectedGraph * g)
 inline struct PrimAdjacent * prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
 {
 	struct PrimAdjacent * pa;
-	list_for_each_entry(pa, &pg->pa_head, pa_list){
+	list_for_each_entry(pa, &pg->pa_head, pa_node){
 		if (pa->v->id == id) { return pa;}
 	}
 	
@@ -94,7 +94,7 @@ inline struct UndirectedGraph * prim_mst_run(struct PrimGraph * pg)
 	
 	// choose the first vertex as the starting point
 	struct PrimAdjacent * pa;
-	list_for_each_entry(pa, &pg->pa_head, pa_list){ break; }
+	list_for_each_entry(pa, &pg->pa_head, pa_node){ break; }
 	struct Vertex * v = pa->v;
 	undirected_graph_add_vertex(mst, v->id);
 
@@ -106,7 +106,7 @@ inline struct UndirectedGraph * prim_mst_run(struct PrimGraph * pg)
 
 		// for each Vnew, find a new vertex in V that has minimal weight.
 		struct Adjacent * a; 
-		list_for_each_entry(a, &mst->a_head, a_list){
+		list_for_each_entry(a, &mst->a_head, a_node){
 			pa = prim_mst_lookup(pg, a->v.id);
 			while (!heap_is_empty(pa->heap)) { 	// find one neighbour
 				v = (struct Vertex *)HEAP_MIN_VALUE(pa->heap); 
@@ -141,7 +141,7 @@ inline void prim_mst_print(struct PrimGraph * pg)
 {
 	struct PrimAdjacent * pa;
 	printf("Prim Graph: \n");
-	list_for_each_entry(pa, &pg->pa_head, pa_list){
+	list_for_each_entry(pa, &pg->pa_head, pa_node){
 		printf("%d->{", pa->v->id);
 		int i;
 		struct Vertex * v;
