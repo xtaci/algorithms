@@ -73,7 +73,7 @@ static inline void directed_graph_del_me_from_adjacent(struct DirectedGraph * g,
 /**
  * find an adjacent list with vertex id == id 
  */
-static inline struct Adjacent * directed_graph_lookup(struct DirectedGraph * g, uint32_t id)
+inline struct Adjacent * directed_graph_lookup(struct DirectedGraph * g, uint32_t id)
 {
 	struct Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_node){

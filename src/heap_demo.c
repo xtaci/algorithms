@@ -16,11 +16,9 @@ int main()
 
 		printf("inserting: %d->%d\n", 100-i, value);
 	}
-
-	int index = 20;
-	printf("reindex a position:%d\n", index);
-	heap->keys[index] = -1;	
-	heap_reindex(heap, index);
+	int key = 51;
+	printf("modify a key :%d to %d\n", key, -1);
+	heap_modify_key(heap, key, -1);
 	while(!heap_is_empty(heap)) {
 		printf("deleting min: %d->%d\n", HEAP_MIN_KEY(heap), (int)HEAP_MIN_VALUE(heap));
 		heap_delete_min(heap);

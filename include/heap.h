@@ -140,12 +140,21 @@ inline void heap_delete_min(struct Heap * heap)
 }
 
 /**
- * If you modified a value directly, use this function to put it in right position
+ * modify a key directly
  */
-inline void heap_reindex(struct Heap * heap, int index)
+inline void heap_modify_key(struct Heap * heap, int oldkey, int newkey)
 {
-	if (index <= 0 || index > heap->size) return;
+	// find and modify
+	int index = -1;
+	for (index=1; index<=heap->size;index++) {
+		if (heap->keys[index] == oldkey) {
+			heap->keys[index] = newkey;	
+			break;
+		}
+	}
 
+	if (index == -1) return; 	// not found
+	
     int now = index;
 	int key = heap->keys[index];
 	void * value = heap->values[index];
@@ -156,6 +165,18 @@ inline void heap_reindex(struct Heap * heap, int index)
             now /= 2;
     }
 	HEAP_ASSIGN(heap, now, key, value);
+}
+
+/**
+ * reverse lookup data->key
+ */
+inline int heap_lookup_value(struct Heap * heap, void * data)
+{
+	int i;
+	for (i=1;i<=heap->size;i++) {
+		if (heap->values[i] == data) return heap->keys[i];
+	}
+	return -INT_MAX;
 }
 
 #endif //
