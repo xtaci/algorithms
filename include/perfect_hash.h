@@ -9,14 +9,14 @@
 
 struct PerfSlotL2 {
 	uint32_t cnt; // collison count
-	uint32_t value;	
+	void * value;	
 };
 
 struct PerfSlotL1 {
 	uint32_t cnt; // collison count
 	struct uhash_params params;   // 2nd level 
 	struct PerfSlotL2 * lv2_slots;
-	uint32_t value;	
+	void * value;	
 } PerfSlotL1;
 
 struct PerfHT {
@@ -147,7 +147,7 @@ inline void perfect_hash_destroy(struct PerfHT * ht)
 /**
  * set a key->value pair in the table
  */
-inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, uint32_t value)
+inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, void * value)
 {
 	uint32_t hash;
 	hash  = uhash_integer(&ht->params, key);
@@ -168,7 +168,7 @@ inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, uint32_t value)
 	}
 }
 
-inline uint32_t perfect_hash_get(struct PerfHT * ht, uint32_t key)
+inline void * perfect_hash_get(struct PerfHT * ht, uint32_t key)
 {
 	uint32_t hash;
 	hash  = uhash_integer(&ht->params, key);
@@ -186,7 +186,7 @@ inline uint32_t perfect_hash_get(struct PerfHT * ht, uint32_t key)
 		}
 	}
 	
-	return -1;
+	return NULL;
 }
 
 #endif //

@@ -139,4 +139,23 @@ inline void heap_delete_min(struct Heap * heap)
 		HEAP_ASSIGN(heap, now, lastKey, lastValue);
 }
 
+/**
+ * If you modified a value directly, use this function to put it in right position
+ */
+inline void heap_reindex(struct Heap * heap, int index)
+{
+	if (index <= 0 || index > heap->size) return;
+
+    int now = index;
+	int key = heap->keys[index];
+	void * value = heap->values[index];
+
+    while(heap->keys[now/2] > key) 
+    {
+			HEAP_COPY(heap, now, now/2);
+            now /= 2;
+    }
+	HEAP_ASSIGN(heap, now, key, value);
+}
+
 #endif //
