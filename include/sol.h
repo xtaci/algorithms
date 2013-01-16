@@ -1,11 +1,20 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Self Organized linked-list
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * SELF ORGANIZED LINKED-LIST
+ *
  * Features:
  * 1. Implementation of MTF (move-to-front)
  * 2. Implementation of MAO (move-ahead-one position)
  * 3. Based on double linked list
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Self-organizing_list
+ *
+ ******************************************************************************/
 
 #ifndef __SOL_H__
 #define __SOL_H__

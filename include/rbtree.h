@@ -1,12 +1,20 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Red-Black Tree
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * RED-BLACK TREE
+ *
  * Features:
  * 1. balanced tree
  * 2. O(logn) lookup performance
- * 3. functions:
-      
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Red_black_tree
+ *     
+ ******************************************************************************/
+
 #ifndef __RBTREE_H__
 #define __RBTREE_H__
 

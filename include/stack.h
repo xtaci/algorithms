@@ -1,9 +1,19 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Stack Implementation
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * STACK
+ *
  * Features:
  * 1. Stack with capcity 
- *******************************************/
+ * 
+ * http://en.wikipedia.org/wiki/Stack_(abstract_data_type)
+ *
+ ******************************************************************************/
+
 #ifndef __STACK_H__
 #define __STACK_H__
 

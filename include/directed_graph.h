@@ -1,9 +1,19 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Directed Graph Data Structure
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * DIRECTED GRAPH 
+ *
  * Features:
  * 1. Adjacency List Implementation
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Directed_graph
+ *
+ ******************************************************************************/
+
 #ifndef __DIRECTED_GRAPH_H__
 #define __DIRECTED_GRAPH_H__
 

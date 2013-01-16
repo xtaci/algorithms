@@ -1,8 +1,18 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Insertion Sort 
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ * 
+ * INSERTION SORT 
+ *
  * 1. sort array in O(n^2) time.
- *******************************************/
+ * 
+ * http://en.wikipedia.org/wiki/Insertion_sort
+ *
+ ******************************************************************************/
+
 #ifndef __INSERTION_SORT_H__
 #define __INSERTION_SORT_H__
 

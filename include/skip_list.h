@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * SKIP LIST
+ *
+ * http://en.wikipedia.org/wiki/Skip_list
+ *
+ ******************************************************************************/
+ 
 #ifndef __SKIP_LIST_H__
 #define __SKIP_LIST_H__
 #include <stdlib.h>

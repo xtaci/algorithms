@@ -1,7 +1,14 @@
 /*******************************************************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Prim's Algorithm(minimum spanning tree)
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * PRIM'S ALGORITHM -- MINIMUM SPANNING TREE
+ *
  * Features:
+ *
  *   Prim's algorithm is a greedy algorithm that finds a minimum spanning tree
  * for a connected weighted undirected graph. This means it finds a subset of 
  * the edges that forms a tree that includes every vertex, where the total 
@@ -10,6 +17,9 @@
  * independently by computer scientist Robert C. Prim in 1957 and rediscovered
  * by Edsger Dijkstra in 1959. Therefore it is also sometimes called the DJP
  * algorithm, the Jarník algorithm, or the Prim–Jarník algorithm.
+ *
+ * http://en.wikipedia.org/wiki/Prim%27s_algorithm
+ *
  ******************************************************************************/
 
 #ifndef __PRIM_MST_H__
@@ -86,7 +96,19 @@ inline struct PrimAdjacent * prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
 }
 
 /**
- * calculate the MST, Prim's Algorithm. 
+ * Prim's Algorithm. 
+ *
+ * Input: A non-empty connected weighted graph with vertices V and edges E 
+ *        (the weights can be negative).
+ *
+ * Initialize: Vnew = {x}, where x is an arbitrary node (starting point) from V, Enew = {}
+ *
+ * Repeat until Vnew = V:
+ *   1. Choose an edge {u, v} with minimal weight such that u is in Vnew and v
+ *      is not (if there are multiple edges with the same weight, any of them may be picked)
+ *   2. Add v to Vnew, and {u, v} to Enew
+ *
+ * Output: Vnew and Enew describe a minimal spanning tree
  */
 inline struct UndirectedGraph * prim_mst_run(struct PrimGraph * pg)
 {

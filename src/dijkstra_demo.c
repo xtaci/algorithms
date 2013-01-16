@@ -47,7 +47,7 @@ int main(void)
 	int i;
 	for(i=0;i < dr->num_vertex;i++) {
 		printf("previous of %u is ", dr->vertex_ids[i]);
-		void * pre = (uint32_t)perfect_hash_get(dr->previous, dr->vertex_ids[i]);
+		void * pre = perfect_hash_get(dr->previous, dr->vertex_ids[i]);
 		if (pre ==undefined) { printf("undefined\n"); }
 		else printf("%u\n", (uint32_t)pre);
 	}

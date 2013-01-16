@@ -1,10 +1,19 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Random-Select Algorithm
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * RANDOM-SELECT
+ *
  * Features:
  * 1. select the smallest k-th element
  * 2. will modify orignal list
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Order_statistic
+ *
+ ******************************************************************************/
 
 #ifndef __RANDOM_SELECT_H__
 #define __RANDOM_SELECT_H__

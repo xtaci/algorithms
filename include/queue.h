@@ -1,9 +1,18 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Queue Implementation
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ * QUEUE 
+ *
  * Features:
  * 1. Queue with capcity 
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Queue_(data_structure)
+ *
+ ******************************************************************************/
+
 #ifndef __QUEUE_H__
 #define __QUEUE_H__
 /**

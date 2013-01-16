@@ -1,9 +1,18 @@
-/*****************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Fisher Yates's shuffle algorithm
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * FISHER YATES'S SHUFFLE 
+ *
  * Features:
  * 1. shuffle list in O(n) time.
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ * 
+ ******************************************************************************/
 
 #ifndef __SHUFFLE_H__
 #define __SHUFFLE_H__

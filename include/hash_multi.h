@@ -1,12 +1,19 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Hash by multiplication
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ * 
+ * HASH BY MULTIPLICATION
+ *
  * Features:
  * 	1. h(k) = (A*k mod 2^w) >> (w-r)
  *  2. bucket size(m): 2^r, eg, m = 8 = 2^3
  *	3. w: word size (usually 32-bit)
  * 	4. the value of A is chosen between 2^(w-r) and 2^w odd number.
- *******************************************/
+ *
+ ******************************************************************************/
 
 #ifndef __HASH_MULTIPLICATION_H__
 #define __HASH_MULTIPLICATION_H__

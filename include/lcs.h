@@ -1,10 +1,15 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Largest Common Sequence
- * Features:
- * 1. Implementation of 
- http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
- *******************************************/
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * LARGEST COMMON SEQUENCE
+ *
+ * http://en.wikipedia.org/wiki/Longest_common_subsequence_problem
+ *
+ ******************************************************************************/
 
 #ifndef __LCS_H__
 #define __LCS_H__

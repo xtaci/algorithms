@@ -1,10 +1,20 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * QuickSort Algorithm
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * QUICKSORT
+ *
  * Features:
  * 1. sort array in O(nlogn) time.
  * 2. most generic fast sorting algorithm
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Quick_sort
+ *
+ ******************************************************************************/
+
 #ifndef __QUICKSORT_H__
 #define __QUICKSORT_H__
 

@@ -1,5 +1,10 @@
-/*****************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
  * Heap Data structure
  *
  * Heaps can be used as an array. For any key at array position I,
@@ -10,7 +15,9 @@
  *
  * 1. Insert – Insert an key.
  * 2. Delete minimum – Delete and return the smallest item in the heap.
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Binary_heap
+ ******************************************************************************/
 
 #ifndef __HEAP_H__
 #define __HEAP_H__

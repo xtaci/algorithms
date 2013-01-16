@@ -1,11 +1,21 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Interval-Tree
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * INTERVAL-TREE
+ *
  * Features:
- * 1. balanced tree
+ * 1. red-black tree based
  * 2. O(logn) lookup performance
  * 3. range search [low, high]
- *******************************************/
+ * 
+ * http://en.wikipedia.org/wiki/Interval_tree
+ *
+ ******************************************************************************/
+
 #ifndef __INTERVAL_TREE_H__
 #define __INTERVAL_TREE_H__
 

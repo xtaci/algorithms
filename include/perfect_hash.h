@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * PERFECT HASH
+ * 
+ * http://en.wikipedia.org/wiki/Perfect_hash 
+ *
+ ******************************************************************************/
 #ifndef __PERFECT_HASH_H__
 #define __PERFECT_HASH_H__
 #include <stdio.h>

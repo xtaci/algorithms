@@ -1,10 +1,20 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Radix Sort 
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * RADIX SORT 
+ *
  * Features: 
  *  1. sort unsigned 32-bit array in O(n) time
  *  2. subset sorted with couting sort.
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Radix_sort
+ *
+ ******************************************************************************/
+
 #ifndef __RADIX_SORT_H__
 #define __RADIX_SORT_H__
 

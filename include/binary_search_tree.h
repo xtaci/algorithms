@@ -1,13 +1,22 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Binary Search Tree
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * BINARY SEARCH TREE
+ *
  * Features:
  * 1. Expected search time is O(nlogn).
  * 2. Data should be !!!SHUFFLED!!! first before tree creation.
  * 3. First initialize the value of the root (pointer to the 
-      structure treeNode) with NULL. eg:
-      treeNode *root = NULL
- *******************************************/
+ *    structure treeNode) with NULL. eg:
+ *    treeNode *root = NULL
+ *
+ * http://en.wikipedia.org/wiki/Binary_search_tree
+ *
+ ******************************************************************************/
 
 #ifndef __BINARY_SEARCH_TREE_H__
 #define __BINARY_SEARCH_TREE_H__

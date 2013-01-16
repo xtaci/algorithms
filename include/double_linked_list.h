@@ -1,12 +1,20 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Double Linked-List From Linux Kernel
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * DOUBLE LINKED-LIST FROM LINUX KERNEL
+ *
  * Features:
  * 1. clean
  * 2. data independent
  * 3. data structure contains  next & prev pointer(in list_head struct),
-      not like linked-list contains data
- *******************************************/
+ *    not like linked-list contains data
+ *
+ * http://en.wikipedia.org/wiki/Double_linked_list
+ ******************************************************************************/
 
 #ifndef __DOUBLE_LINKED_LIST_H__
 #define __DOUBLE_LINKED_LIST_H__

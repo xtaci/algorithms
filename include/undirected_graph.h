@@ -1,9 +1,19 @@
-/*******************************************
- * DANIEL'S PRIVATE ALGORITHM IMPLEMENTAIONS
- * Undirected Graph Data Structure
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * UNDIRECTED GRAPH
+ *
  * Features:
  * 1. Adjacency List Implementation
- *******************************************/
+ *
+ * http://en.wikipedia.org/wiki/Undirected_graph
+ *
+ ******************************************************************************/
+
 #ifndef __UNDIRECTED_GRAPH_H__
 #define __UNDIRECTED_GRAPH_H__
 
