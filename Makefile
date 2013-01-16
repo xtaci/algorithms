@@ -27,7 +27,8 @@ PROGRAMS =	insertion_sort_demo \
 			lcs_demo	\
 			graph_demo \
 			prim_mst_demo \
-			directed_graph_demo 
+			directed_graph_demo \
+			dijkstra_demo 
 			
 
 all: $(PROGRAMS)
@@ -99,6 +100,9 @@ prim_mst_demo: $(SRCDIR)/prim_mst_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 directed_graph_demo: $(SRCDIR)/directed_graph_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+dijkstra_demo: $(SRCDIR)/dijkstra_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:
