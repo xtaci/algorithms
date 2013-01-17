@@ -48,7 +48,7 @@ static inline void dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t ne
 	int index;
 	int key = new_weight;
 	if ((index=heap_find_data(heap, (void *)id))!=-1) {
-		heap_modify_key(heap, index, key);
+		heap_decrease_key(heap, index, key);
 	}
 }
 

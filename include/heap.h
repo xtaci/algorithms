@@ -147,11 +147,11 @@ inline void heap_delete_min(struct Heap * heap)
 }
 
 /**
- * modify a key directly
+ * so called DECREASE KEY operation.
  */
-inline void heap_modify_key(struct Heap * heap, int index, int key)
+inline void heap_decrease_key(struct Heap * heap, int index, int key)
 {
-	if (index == -1) return; 	// not found
+	if (key >= heap->keys[index]) return; 	// violate DECREASE meanning.
 	
     int now = index;
 	void * value = heap->values[index];
