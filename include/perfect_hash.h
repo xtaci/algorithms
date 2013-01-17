@@ -180,7 +180,7 @@ inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, void * value)
 	}
 }
 
-inline void * perfect_hash_get(struct PerfHT * ht, uint32_t key)
+inline void * perfect_hash_get(const struct PerfHT * ht, uint32_t key)
 {
 	uint32_t hash;
 	hash  = uhash_integer(&ht->params, key);

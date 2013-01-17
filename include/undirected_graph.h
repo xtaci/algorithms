@@ -81,7 +81,7 @@ static inline void undirected_graph_del_me_from_adjacent(struct Adjacent * a, ui
 /**
  * find an adjacent list with vertex id == id 
  */
-static inline struct Adjacent * undirected_graph_lookup(struct UndirectedGraph * g, uint32_t id)
+static inline struct Adjacent * undirected_graph_lookup(const struct UndirectedGraph * g, uint32_t id)
 {
 	struct Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_node){
@@ -221,7 +221,7 @@ inline void undirected_graph_del_edge(struct UndirectedGraph * g, uint32_t x, ui
 /**
  * print a graph
  */
-inline void undirected_graph_print(struct UndirectedGraph * g)
+inline void undirected_graph_print(const struct UndirectedGraph * g)
 {
 	struct Adjacent * a;
 	printf("Graph : %d vertex, %d edges\n", g->num_vertex,g->num_edges);

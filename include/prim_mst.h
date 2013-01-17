@@ -68,7 +68,7 @@ static inline void prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent 
 /**
  * init prim's graph using undirected graph.
  */
-inline struct PrimGraph * prim_mst_init(struct UndirectedGraph * g)
+inline struct PrimGraph * prim_mst_init(const struct UndirectedGraph * g)
 {
 	struct PrimGraph * pg = (struct PrimGraph*)malloc(sizeof(struct PrimGraph));
 	INIT_LIST_HEAD(&pg->pa_head);
@@ -159,7 +159,7 @@ inline struct UndirectedGraph * prim_mst_run(struct PrimGraph * pg)
 /**
  * print the PrimGraph
  */
-inline void prim_mst_print(struct PrimGraph * pg)
+inline void prim_mst_print(const struct PrimGraph * pg)
 {
 	struct PrimAdjacent * pa;
 	printf("Prim Graph: \n");

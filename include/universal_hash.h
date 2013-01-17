@@ -49,7 +49,7 @@ inline void uhash_init(struct uhash_params * params, uint32_t max_element)
 /**
  * hash a key
  */
-inline int uhash_integer(struct uhash_params * params, uint32_t key)
+inline int uhash_integer(const struct uhash_params * params, uint32_t key)
 {
 	uint32_t k[KLEN];
 	uint32_t sum;

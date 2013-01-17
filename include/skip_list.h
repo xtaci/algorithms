@@ -70,13 +70,11 @@ static inline struct SkipSet * sl_make_skipset() {
     return ss;
 }
 
-
-
 /**
  * search the given key from the skip list
  * if the key is not exist, return INT_MIN
  */
-inline int32_t sl_get(struct SkipSet* ss, int key) 
+inline int32_t sl_get(const struct SkipSet* ss, int key) 
 {
     int i;
     struct SkipNode* x = ss->header;

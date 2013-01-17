@@ -167,7 +167,7 @@ inline void heap_decrease_key(struct Heap * heap, int index, int key)
 /**
  * find the index where data resides
  */
-inline int heap_find_data(struct Heap * heap, void * data)
+inline int heap_find_data(const struct Heap * heap, const void * data)
 {
 	int i;
     for (i=1;i<=heap->size;i++) {

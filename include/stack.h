@@ -79,7 +79,7 @@ inline void pop(Stack *S)
  * get top element into *rval
  * returns false when the stack is empty.
  */
-inline void * top(Stack *S)
+inline void * top(const Stack *S)
 {
 	if(S->size==0)
 	{

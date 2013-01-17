@@ -83,7 +83,7 @@ static inline void directed_graph_del_me_from_adjacent(struct DirectedGraph * g,
 /**
  * find an adjacent list with vertex id == id 
  */
-inline struct Adjacent * directed_graph_lookup(struct DirectedGraph * g, uint32_t id)
+inline struct Adjacent * directed_graph_lookup(const struct DirectedGraph * g, uint32_t id)
 {
 	struct Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_node){
@@ -96,7 +96,7 @@ inline struct Adjacent * directed_graph_lookup(struct DirectedGraph * g, uint32_
 /**
  * test if an edge exists
  */
-static inline bool directed_graph_is_adjacent(struct Adjacent * from, struct Adjacent * to)
+static inline bool directed_graph_is_adjacent(const struct Adjacent * from, const struct Adjacent * to)
 {
 	struct Vertex * v;
 	list_for_each_entry(v, &from->v_head, v_node){
@@ -206,7 +206,7 @@ inline void directed_graph_del_edge(struct DirectedGraph * g, uint32_t x, uint32
 /**
  * print a graph
  */
-inline void directed_graph_print(struct DirectedGraph * g)
+inline void directed_graph_print(const struct DirectedGraph * g)
 {
 	struct Adjacent * a;
 	printf("Graph : %d vertex, %d edges\n", g->num_vertex,g->num_edges);

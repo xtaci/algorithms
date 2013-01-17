@@ -79,7 +79,7 @@ inline void Dequeue(Queue *Q)
  * front
  * returns false when queue is empty
  */
-inline int front(Queue *Q, int * rval)
+inline int front(const Queue *Q, int * rval)
 {
 	if(Q->size==0)
 	{

@@ -35,7 +35,7 @@ struct MultiHT {
 /**
  * multi_hash_hash.
  */
-inline uint32_t multi_hash_hash(uint32_t key, struct MultiHT * ht)
+inline uint32_t multi_hash_hash(uint32_t key, const struct MultiHT * ht)
 {
 	uint32_t hash;
 	hash = ((ht->A * key)&0xFFFFFFFF)>>(BITWIDTH-ht->r); //mod 2^w equals logic bitmask ops
