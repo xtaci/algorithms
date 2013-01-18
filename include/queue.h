@@ -15,6 +15,10 @@
 
 #ifndef __QUEUE_H__
 #define __QUEUE_H__
+
+#include <stdbool.h>
+#include <stdint.h>
+
 /**
  * Queue has five properties. capacity stands for the maximum number of 
  * elements Queue can hold. Size stands for the current size of the Queue
@@ -24,25 +28,25 @@
  */
 typedef struct Queue
 {
-	int capacity;
-	int size;
-	int front;
-	int rear;
-	int *elements;
+	uint32_t capacity;
+	uint32_t size;
+	uint32_t front;
+	int32_t rear;
+	void ** elements;
 }Queue;
 
 /**
- * createQueue function takes argument the maximum number of elements the Queue
+ * create_queue function takes argument the maximum number of elements the Queue
  * can hold, creates a Queue according to it and returns a pointer to the
  * Queue. 
  */
-inline Queue * createQueue(int maxElements)
+inline Queue * create_queue(uint32_t maxElements)
 {
 	/* Create a Queue */
 	Queue *Q;
 	Q = (Queue *)malloc(sizeof(Queue));
 	/* Initialise its properties */
-	Q->elements = (int *)malloc(sizeof(int)*maxElements);
+	Q->elements = (void **)malloc(sizeof(void*)*maxElements);
 	Q->size = 0;
 	Q->capacity = maxElements;
 	Q->front = 0;
@@ -54,7 +58,7 @@ inline Queue * createQueue(int maxElements)
 /**
  * Dequeue
  */
-inline void Dequeue(Queue *Q)
+inline void dequeue(Queue *Q)
 {
 	/* If Queue size is zero then it is empty. So we cannot pop */
 	if(Q->size==0)
@@ -76,25 +80,25 @@ inline void Dequeue(Queue *Q)
 }
 
 /**
- * front
- * returns false when queue is empty
+ * return the front element.
  */
-inline int front(const Queue *Q, int * rval)
+inline void * queue_front(const Queue *Q)
 {
-	if(Q->size==0)
-	{
-		return false;
-	}
 	/* Return the element which is at the front*/
-	*rval = Q->elements[Q->front];
-	return true;
+	return Q->elements[Q->front];
+}
+
+inline bool queue_is_empty(const Queue * Q)
+{
+	if (Q->size ==0) return true;
+	return false;
 }
 
 /**
  * Enqueue
  * returns false when queue is full
  */
-inline int Enqueue(Queue *Q,int element)
+inline bool enqueue(Queue *Q, void * element)
 {
 	/* If the Queue is full, we cannot push an element into it as there is no space for it.*/
 	if(Q->size == Q->capacity)

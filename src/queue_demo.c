@@ -6,18 +6,22 @@
 
 int main()
 {
-	Queue *Q = createQueue(5);
-	Enqueue(Q,1);
-	Enqueue(Q,2);
-	Enqueue(Q,3);
-	Enqueue(Q,4);
-	int rval;
-	front(Q, &rval);
-	printf("Front element is %d\n",rval);
-	Enqueue(Q,5);
-	Dequeue(Q);
-	Enqueue(Q,6);
-	front(Q, &rval);
-	printf("Front element is %d\n",rval);
+	const int MAXELEMENT = 20;
+	Queue *Q = create_queue(MAXELEMENT);
+	int i;
+
+	for (i=0;i<MAXELEMENT;i++) {
+		int value = rand()%1000;
+		printf("queuing %d\n", value);
+		enqueue(Q,(void*)value);
+	}
+
+	printf("> DEQUEUE\n");
+	while(!queue_is_empty(Q)) {
+		int rval = (int)queue_front(Q);
+		printf("dequeue %d\n",rval);
+		dequeue(Q);
+	}
+
 	exit(0);
 }
