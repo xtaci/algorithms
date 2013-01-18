@@ -23,9 +23,9 @@
 #include "generic.h"
 #include "prime.h"
 
-struct MultiHT {
+struct MultiHash {
 	uint64_t A;
-	uint32_t r; // prime
+	uint32_t r; // prime, init your hash table with size -> r
 };
 
 #define BITWIDTH 32
@@ -35,7 +35,7 @@ struct MultiHT {
 /**
  * multi_hash_hash.
  */
-inline uint32_t multi_hash_hash(uint32_t key, const struct MultiHT * ht)
+inline uint32_t multi_hash_hash(const struct MultiHash * ht, uint32_t key)
 {
 	uint32_t hash;
 	hash = ((ht->A * key)&0xFFFFFFFF)>>(BITWIDTH-ht->r); //mod 2^w equals logic bitmask ops
@@ -45,7 +45,7 @@ inline uint32_t multi_hash_hash(uint32_t key, const struct MultiHT * ht)
 /**
  * init a hash table with size specified.
  */
-inline struct MultiHT * multi_hash_init(uint32_t size)
+inline struct MultiHash * multi_hash_init(uint32_t size)
 {
 	// find prime larger than log2(size)
 	uint32_t r = ceil(log2(size));
@@ -57,7 +57,7 @@ inline struct MultiHT * multi_hash_init(uint32_t size)
 		}
 	}
 
-	struct MultiHT * ht = (struct MultiHT *) malloc(sizeof(struct MultiHT));
+	struct MultiHash * ht = (struct MultiHash *) malloc(sizeof(struct MultiHash));
 	uint32_t a = 1 << (BITWIDTH-r);
 	ht->A = a+1;
 	ht->r = r;

@@ -12,6 +12,7 @@ PROGRAMS =	insertion_sort_demo \
 			random_select_demo \
 			prime_sieve_eratosthenes \
 			hash_multi_demo \
+			hash_table_demo \
 			double_linked_list_demo \
 			stack_demo \
 			queue_demo \
@@ -56,6 +57,9 @@ prime_sieve_eratosthenes: $(SRCDIR)/prime_sieve_eratosthenes.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
 
 hash_multi_demo: $(SRCDIR)/hash_multi_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
+
+hash_table_demo: $(SRCDIR)/hash_table_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
 
 double_linked_list_demo: $(SRCDIR)/double_linked_list_demo.c $(DEPS)
