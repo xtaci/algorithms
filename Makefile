@@ -30,7 +30,8 @@ PROGRAMS =	insertion_sort_demo \
 			prim_mst_demo \
 			directed_graph_demo \
 			dijkstra_demo 	\
-			bellman_ford_demo 
+			bellman_ford_demo \
+			graph_search_demo
 			
 
 all: $(PROGRAMS)
@@ -112,6 +113,9 @@ dijkstra_demo: $(SRCDIR)/dijkstra_demo.c $(DEPS)
 
 bellman_ford_demo: $(SRCDIR)/bellman_ford_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+graph_search_demo: $(SRCDIR)/graph_search_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
 
 clean:
 	rm $(PROGRAMS)

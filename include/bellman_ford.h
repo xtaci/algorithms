@@ -67,7 +67,7 @@ struct BFWorkspace {
 	uint32_t vertex_ids[1];
 };
 
-static inline void bellman_ford_init(const struct DirectedGraph * g, const struct Adjacent * source, struct BFWorkspace * bfw)
+static inline void bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFWorkspace * bfw)
 {
 	// Step 1: initialize graph
 	struct Adjacent * a;
@@ -105,7 +105,7 @@ static inline void bellman_ford_init(const struct DirectedGraph * g, const struc
 /**
  * do the real work
  */
-inline struct BFWorkspace * bellman_ford_run(const struct DirectedGraph * g, const struct Adjacent * source)
+inline struct BFWorkspace * bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
 {
 	struct BFWorkspace * bfw =
 		 (struct BFWorkspace *)malloc(sizeof(struct BFWorkspace) + sizeof(uint32_t) * g->num_vertex);
@@ -121,7 +121,7 @@ inline struct BFWorkspace * bellman_ford_run(const struct DirectedGraph * g, con
 		int j;
 
 		for (j=0; j<bfw->num_vertex;j++) { // for each eage in the whole graph
-			struct Adjacent * u = directed_graph_lookup(g, bfw->vertex_ids[j]);
+			struct Adjacent * u = graph_lookup(g, bfw->vertex_ids[j]);
 			struct Vertex * v;
 			int32_t dist_u = (int32_t)perfect_hash_get(dist, bfw->vertex_ids[j]);
 
@@ -138,7 +138,7 @@ inline struct BFWorkspace * bellman_ford_run(const struct DirectedGraph * g, con
 
 	// Step 3: check for negative-weight cycles
     for (i=0;i<bfw->num_vertex;i++) {  // for each eage in the whole graph 
-		struct Adjacent * u = directed_graph_lookup(g, bfw->vertex_ids[i]);
+		struct Adjacent * u = graph_lookup(g, bfw->vertex_ids[i]);
         struct Vertex * v;
 		int32_t dist_u = (int32_t)perfect_hash_get(dist, bfw->vertex_ids[i]);
 

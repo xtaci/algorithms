@@ -9,9 +9,9 @@
 /**
  * randomly generate a graph, for test purpose
  */
-struct DirectedGraph * directed_graph_rand(int nvertex) 
+struct Graph * directed_graph_rand(int nvertex) 
 {
-	struct DirectedGraph * g = directed_graph_create();
+	struct Graph * g = directed_graph_create();
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
@@ -38,11 +38,11 @@ int main(void)
 {
 	srand(time(NULL));
 	int NVERTEX = 50;
-	struct DirectedGraph * g = directed_graph_rand(NVERTEX);
+	struct Graph * g = directed_graph_rand(NVERTEX);
 	directed_graph_print(g);
 
 	printf("finding bellman-ford shortest path starting from 3: \n");	
-	struct BFWorkspace * bfw = bellman_ford_run(g, directed_graph_lookup(g,3));
+	struct BFWorkspace * bfw = bellman_ford_run(g, graph_lookup(g,3));
 	int i;
 	for(i=0;i < bfw->num_vertex;i++) {
 		printf("previous of %u is ", bfw->vertex_ids[i]);
@@ -57,7 +57,7 @@ int main(void)
 	directed_graph_add_edge(g,0,1, -1);
 	directed_graph_add_edge(g,1,2, -1);
 	directed_graph_add_edge(g,2,0, -1);
-	bfw = bellman_ford_run(g, directed_graph_lookup(g,3));
+	bfw = bellman_ford_run(g, graph_lookup(g,3));
 
 	printf("\nwe %s have negative weighted cycle.\n", bfw->has_neg_cycle?"DO":"DON'T");
 

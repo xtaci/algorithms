@@ -9,9 +9,9 @@
 /**
  * randomly generate a graph, for test purpose
  */
-struct UndirectedGraph * undirected_graph_rand(int nvertex) 
+struct Graph * undirected_graph_rand(int nvertex) 
 {
-	struct UndirectedGraph * g = undirected_graph_create();
+	struct Graph * g = undirected_graph_create();
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
@@ -39,7 +39,7 @@ int main(void)
 {
 	srand(time(NULL));
 	int NVERTEX = 10;
-	struct UndirectedGraph * g = undirected_graph_rand(NVERTEX);
+	struct Graph * g = undirected_graph_rand(NVERTEX);
 	undirected_graph_print(g);
 
 	printf("Generating Prim's Graph: \n");	
@@ -47,7 +47,7 @@ int main(void)
 	prim_mst_print(pg);
 
 	printf("Generating Minimal spanning tree: \n");	
-	struct UndirectedGraph * mst = prim_mst_run(pg);
+	struct Graph * mst = prim_mst_run(pg);
 	undirected_graph_print(mst);
 
 	exit(0);	

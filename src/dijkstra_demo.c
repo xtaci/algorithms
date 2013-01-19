@@ -9,9 +9,9 @@
 /**
  * randomly generate a graph, for test purpose
  */
-struct DirectedGraph * directed_graph_rand(int nvertex) 
+struct Graph * directed_graph_rand(int nvertex) 
 {
-	struct DirectedGraph * g = directed_graph_create();
+	struct Graph * g = directed_graph_create();
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
@@ -39,11 +39,11 @@ int main(void)
 {
 	srand(time(NULL));
 	int NVERTEX = 50;
-	struct DirectedGraph * g = directed_graph_rand(NVERTEX);
+	struct Graph * g = directed_graph_rand(NVERTEX);
 	directed_graph_print(g);
 
 	printf("finding Dijkstra shortest path starting from 0: \n");	
-	struct DijkWorkspace * dr = dijkstra_run(g, directed_graph_lookup(g,0));
+	struct DijkWorkspace * dr = dijkstra_run(g, graph_lookup(g,0));
 	int i;
 	for(i=0;i < dr->num_vertex;i++) {
 		printf("previous of %u is ", dr->vertex_ids[i]);

@@ -7,9 +7,9 @@
 /**
  * randomly generate a graph, for test purpose
  */
-struct DirectedGraph * directed_graph_rand(int nvertex) 
+struct Graph * directed_graph_rand(int nvertex) 
 {
-	struct DirectedGraph * g = directed_graph_create();
+	struct Graph * g = directed_graph_create();
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
@@ -36,7 +36,7 @@ int main()
 {
 	srand(time(NULL));
 	int NVERTEX = 20;
-	struct DirectedGraph * g = directed_graph_rand(NVERTEX);
+	struct Graph * g = directed_graph_rand(NVERTEX);
 	directed_graph_print(g);
 
 	printf("Random Delete Vertex:\n");

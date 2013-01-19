@@ -52,7 +52,7 @@ static inline void dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t ne
 	}
 }
 
-static inline void dijkstra_init(const struct DirectedGraph * g, const struct Adjacent * source, struct DijkWorkspace * dr)
+static inline void dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct DijkWorkspace * dr)
 {
 
 	// binary heap init
@@ -123,7 +123,7 @@ static inline void dijkstra_init(const struct DirectedGraph * g, const struct Ad
 		end while
 	return dist;
  */
-inline struct DijkWorkspace * dijkstra_run(const struct DirectedGraph * g, const struct Adjacent * source)
+inline struct DijkWorkspace * dijkstra_run(const struct Graph * g, const struct Adjacent * source)
 {
 	struct DijkWorkspace * dr =
 		 (struct DijkWorkspace *)malloc(sizeof(struct DijkWorkspace) + sizeof(uint32_t) * g->num_vertex);
@@ -134,7 +134,7 @@ inline struct DijkWorkspace * dijkstra_run(const struct DirectedGraph * g, const
 	struct PerfHT * previous = dr->previous;
 
 	while(!heap_is_empty(Q)) {    // The main loop
-		struct Adjacent * u = directed_graph_lookup(g, (uint32_t)HEAP_MIN_VALUE(Q));
+		struct Adjacent * u = graph_lookup(g, (uint32_t)HEAP_MIN_VALUE(Q));
 		int dist_u = HEAP_MIN_KEY(Q);
 		heap_delete_min(Q);
 

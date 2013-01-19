@@ -68,7 +68,7 @@ static inline void prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent 
 /**
  * init prim's graph using undirected graph.
  */
-inline struct PrimGraph * prim_mst_init(const struct UndirectedGraph * g)
+inline struct PrimGraph * prim_mst_init(const struct Graph * g)
 {
 	struct PrimGraph * pg = (struct PrimGraph*)malloc(sizeof(struct PrimGraph));
 	INIT_LIST_HEAD(&pg->pa_head);
@@ -110,9 +110,9 @@ inline struct PrimAdjacent * prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
  *
  * Output: Vnew and Enew describe a minimal spanning tree
  */
-inline struct UndirectedGraph * prim_mst_run(struct PrimGraph * pg)
+inline struct Graph * prim_mst_run(struct PrimGraph * pg)
 {
-	struct UndirectedGraph * mst = undirected_graph_create(); // empty set == Vnew
+	struct Graph * mst = undirected_graph_create(); // empty set == Vnew
 	
 	// choose the first vertex as the starting point
 	struct PrimAdjacent * pa;
@@ -132,7 +132,7 @@ inline struct UndirectedGraph * prim_mst_run(struct PrimGraph * pg)
 			pa = prim_mst_lookup(pg, a->v.id);
 			while (!heap_is_empty(pa->heap)) { 	// find one neighbour
 				v = (struct Vertex *)HEAP_MIN_VALUE(pa->heap); 
-				if (undirected_graph_lookup(mst,v->id)==NULL) {  // if new V appears 
+				if (graph_lookup(mst,v->id)==NULL) {  // if new V appears 
 					if (HEAP_MIN_KEY(pa->heap) < weight) {
 						weight = HEAP_MIN_KEY(pa->heap);
 						best_to = v->id;
