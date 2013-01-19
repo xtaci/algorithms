@@ -26,5 +26,7 @@ int main()
 		printf("getting %d->%d\n", i, value);
 	}
 
+	hash_table_destroy(ht);
+
 	exit(0);
 }

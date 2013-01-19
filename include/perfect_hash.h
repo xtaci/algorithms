@@ -50,7 +50,7 @@ inline static void perfect_hash_lv2_slot_init(struct PerfSlotL1 * lv1_slot, Stac
 	struct PerfSlotL2 * lv2_slots = (struct PerfSlotL2 *) malloc(sizeof(struct PerfSlotL2) * lv1_slot->params.prime);
 	lv1_slot->lv2_slots = lv2_slots;
 	
-	Stack *S2 = createStack(lv1_slot->cnt);
+	Stack *S2 = create_stack(lv1_slot->cnt);
 
 retry:
 	memset(lv2_slots,0,sizeof(struct PerfSlotL2) * lv1_slot->params.prime);
@@ -85,7 +85,7 @@ retry:
 inline static void perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], int len)
 {
 	// stacks for temporary storing keys
-	Stack *S1 = createStack(len);
+	Stack *S1 = create_stack(len);
 
 	struct PerfSlotL1 * slots = ht->slots;
 	int i;

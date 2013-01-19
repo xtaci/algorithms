@@ -31,7 +31,7 @@ int main(void)
 	
 	struct Array2D * arr = lcs_length(X, MAXN, Y, MAXN);
 	
-	Stack * s = createStack(100);	
+	Stack * s = create_stack(100);	
 	lcs_backtrack(s, arr, X, Y, MAXN, MAXN);
 
 	printf("the largest common sequence is : \n");

@@ -112,4 +112,25 @@ inline void * hash_table_get(struct HashTable * ht, uint32_t key)
 	return NULL;
 }
 
+/**
+ * hash table destroy
+ */
+inline void hash_table_destroy(struct HashTable * ht)
+{
+	if (ht==NULL) return;
+	free(ht->multi);
+
+	struct HashKV * kv, *nkv;
+	int i;
+	for (i=0;i<ht->size;i++) {
+		list_for_each_entry_safe(kv,nkv,&ht->slots[i].head, node){
+			list_del(&kv->node);
+			free(kv);
+		}
+	}
+
+	free(ht->slots);
+	free(ht);
+}
+
 #endif //

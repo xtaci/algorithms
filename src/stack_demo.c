@@ -3,7 +3,7 @@
 
 int main()
 {
-	Stack * S = createStack(4);
+	Stack * S = create_stack(4);
 	push(S,(void *)7);
 	push(S,(void *)5);
 	push(S,(void *)-1);

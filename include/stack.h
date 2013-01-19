@@ -38,7 +38,7 @@ typedef struct Stack
  * can hold, creates a stack according to it and returns a pointer to 
  * the stack. 
  */
-inline Stack * createStack(int maxElements)
+inline Stack * create_stack(int maxElements)
 {
 	/* Create a Stack */
 	Stack *S;
@@ -55,6 +55,11 @@ inline void destroyStack(Stack * S)
 {
 	free(S->elements);
 	free(S);
+}
+
+inline bool stack_is_empty(Stack * S)
+{
+	return (S->size==0)?true:false;
 }
 
 /**
