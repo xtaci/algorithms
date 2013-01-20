@@ -31,7 +31,8 @@ PROGRAMS =	insertion_sort_demo \
 			directed_graph_demo \
 			dijkstra_demo 	\
 			bellman_ford_demo \
-			graph_search_demo
+			graph_search_demo \
+			hash_string_demo
 			
 
 all: $(PROGRAMS)
@@ -115,6 +116,9 @@ bellman_ford_demo: $(SRCDIR)/bellman_ford_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 graph_search_demo: $(SRCDIR)/graph_search_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
+
+hash_string_demo: $(SRCDIR)/hash_string_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
 
 clean:
