@@ -32,7 +32,8 @@ PROGRAMS =	insertion_sort_demo \
 			dijkstra_demo 	\
 			bellman_ford_demo \
 			graph_search_demo \
-			hash_string_demo
+			hash_string_demo \
+			bitset_demo	
 			
 
 all: $(PROGRAMS)
@@ -119,7 +120,10 @@ graph_search_demo: $(SRCDIR)/graph_search_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
 
 hash_string_demo: $(SRCDIR)/hash_string_demo.c $(DEPS)
-	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+bitset_demo: $(SRCDIR)/bitset_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:
 	rm $(PROGRAMS)
