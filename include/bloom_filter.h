@@ -114,13 +114,13 @@ inline bool bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t
 	uint32_t strhash = hash_string(str,len);
 
 	int i;
-	bool filter=true;
+
 	for(i=0;i<bf->k;i++) {
 		uint32_t hash = uhash_integer(&bf->hash[i], strhash);
-		filter = filter && bitset_test(bf->bitset, hash); // once false, forever false
+		if (!bitset_test(bf->bitset, hash))	return false;
 	}
 
-	return filter;
+	return true;
 }
 
 /**
