@@ -3,7 +3,7 @@
  * Universal Hashing 
  * Features:
  * 1. randomized hash function, random a1,a2.. a32
- * 2. alloc your storage larger than uhash_params->prime 
+ * 2. alloc your storage larger than UHash->prime 
  * 3. the collsion expectation:
 	  E[Cx] = (n - 1 ) / m (n: number of elements, m: bucket size--prime number)
  * 4. this set has m^(r+1) different hash functions.
@@ -17,7 +17,7 @@
 int main(void)
 {
 	int MAXELEMENT = 7;
-	struct uhash_params params;
+	struct UHash params;
 	uhash_init(&params, MAXELEMENT);
 
 	srand(time(NULL));

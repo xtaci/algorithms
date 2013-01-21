@@ -22,7 +22,7 @@
 #include <imath.h>
 #include <random.h>
 
-struct uhash_params {
+struct UHash {
 	uint32_t a[KLEN];
 	uint32_t prime;	
 };
@@ -30,7 +30,7 @@ struct uhash_params {
 /**
  * init an universal hash struct
  */
-inline void uhash_init(struct uhash_params * params, uint32_t max_element)
+inline void uhash_init(struct UHash * params, uint32_t max_element)
 {
 	int i;
 	// the size of the hash bucket is the prime larger than 2 * max_element
@@ -49,7 +49,7 @@ inline void uhash_init(struct uhash_params * params, uint32_t max_element)
 /**
  * hash a key
  */
-inline int uhash_integer(const struct uhash_params * params, uint32_t key)
+inline int uhash_integer(const struct UHash * params, uint32_t key)
 {
 	uint32_t k[KLEN];
 	uint32_t sum;

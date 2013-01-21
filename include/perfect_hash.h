@@ -26,14 +26,14 @@ struct PerfSlotL2 {
 
 struct PerfSlotL1 {
 	uint32_t cnt; // collison count
-	struct uhash_params params;   // 2nd level 
+	struct UHash params;   // 2nd level 
 	struct PerfSlotL2 * lv2_slots;
 	void * value;	
 } PerfSlotL1;
 
 struct PerfHT {
 	struct PerfSlotL1 * slots;
-	struct uhash_params params;   // 1st level 
+	struct UHash params;   // 1st level 
 	uint32_t num_slots;
 };
 

@@ -33,7 +33,8 @@ PROGRAMS =	insertion_sort_demo \
 			bellman_ford_demo \
 			graph_search_demo \
 			hash_string_demo \
-			bitset_demo	
+			bitset_demo	\
+			bloom_filter_demo	
 			
 
 all: $(PROGRAMS)
@@ -123,6 +124,9 @@ hash_string_demo: $(SRCDIR)/hash_string_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 bitset_demo: $(SRCDIR)/bitset_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+bloom_filter_demo: $(SRCDIR)/bloom_filter_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:
