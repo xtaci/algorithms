@@ -33,6 +33,8 @@ int main(void)
 		printf("checking %s->%s\n", strs2[i], bloom_filter_test(bf, strs2[i], strlen(strs2[i]))?"true":"false");
 	}
 
+	bloom_filter_destroy(bf);
+
 	exit(0);
 
 }
