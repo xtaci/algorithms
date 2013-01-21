@@ -34,7 +34,8 @@ PROGRAMS =	insertion_sort_demo \
 			graph_search_demo \
 			hash_string_demo \
 			bitset_demo	\
-			bloom_filter_demo	
+			bloom_filter_demo \
+			sha1_demo
 			
 
 all: $(PROGRAMS)
@@ -127,6 +128,9 @@ bitset_demo: $(SRCDIR)/bitset_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 bloom_filter_demo: $(SRCDIR)/bloom_filter_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+sha1_demo: $(SRCDIR)/sha1_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:

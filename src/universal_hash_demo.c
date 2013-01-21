@@ -12,15 +12,19 @@
 #include <string.h>
 #include <time.h>
 
+#include "sha1.h"
+
 #include "universal_hash.h"
+#define TEST "this is a string"
 
 int main(void)
 {
-	int MAXELEMENT = 7;
+	int MAXELEMENT = 1000;
 	struct UHash params;
-	uhash_init(&params, MAXELEMENT);
 
 	srand(time(NULL));
+	uhash_init(&params, MAXELEMENT);
+
 	int i;
 	for (i = 0; i < MAXELEMENT; i++)
 	{
@@ -28,6 +32,22 @@ int main(void)
 		
 		printf("hashing %d --> %d\n", key, uhash_integer(&params, key));
 	}
+
+	SHA1Context sha;
+
+	sha1_reset(&sha);
+	sha1_input(&sha, (const unsigned char *) TEST, strlen(TEST));
+
+	if (sha1_ok(&sha))
+    {
+		int i;
+        for(i = 0; i < 5 ; i++)
+        {
+            printf("%x", sha.digest[i]);
+        }
+	}
+	
+	printf("\n -- hashing big int into %d\n", uhash_bigint(&params, sha.digest,5)); 
 
 	exit(0);
 }
