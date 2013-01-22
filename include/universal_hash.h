@@ -65,13 +65,13 @@ inline uint32_t uhash_integer(const struct UHash * params, uint64_t key)
 
 /**
  * hash an arbitary length integer.
- * len, number of 32-bit integer, max len is 64
+ * len, number of 32-bit integer, max len is 32
  */
 inline uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len)
 {
-	assert(len <=64);
+	assert(len <=32);
 
-	uint32_t k[len];
+	uint32_t k[len*32];
 	integer big_sum = create_integer(len);set_zero_integer(big_sum);
 	integer big_key = create_integer(len);
 	integer tmp = create_integer(1);
@@ -79,7 +79,7 @@ inline uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32
 
 	int i;
 	for (i=0;i<len;i++) {
-		big_key.c[i] = key[len-i-1];
+		big_key.c[i] = key[i];
 	}
 
 	i = 0;
@@ -88,6 +88,7 @@ inline uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32
 		divide_small_integer(big_key, params->prime, quotient);
 		if (is_zero_integer(quotient)) break;
 		k[i] = mod_small_integer(big_key, params->prime);
+		mod_small_integer(big_key, params->prime);
 		copy_integer(quotient, big_key);
 		i++;
 	}

@@ -16,6 +16,7 @@
 
 #include <stdlib.h>  
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>  
 #include <limits.h>
 
@@ -49,7 +50,7 @@ void shift_right_one_integer(integer arg);
 component_t mod_small_integer(integer left, component_t right);
 void mod_integer(integer left, integer right, integer result);
 void divide_small_integer(integer left, component_t right, integer result);
-int is_zero_integer(integer x);
+bool is_zero_integer(integer x);
 
 
 inline integer create_integer(int components) {
@@ -70,12 +71,12 @@ inline void set_zero_integer(integer i) {
 }
 
 
-inline int is_zero_integer(integer x) {
+inline bool is_zero_integer(integer x) {
     int i;
     for(i=0; i < x.num_components; i++) {
-        if (x.c[i] != 0) return 0;
+        if (x.c[i] != 0) return false;
     }
-    return 1;
+    return true;
 }
 
 inline void copy_integer(integer source, integer target) {

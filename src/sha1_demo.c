@@ -12,7 +12,7 @@ int main(void)
 	sha1_reset(&sha);
 	sha1_input(&sha, (const unsigned char *) TESTA, strlen(TESTA));
 
-	if (sha1_ok(&sha))
+	if (sha1_final(&sha))
     {
         printf("sha %s --> ", TESTA);
 		int i;

@@ -27,6 +27,7 @@
 #include "universal_hash.h"
 #include "hash_string.h"
 #include "bitset.h"
+#include "sha1.h"
 
 struct BloomFilter {
 	uint32_t k;	// num of hash functions
@@ -97,11 +98,14 @@ inline struct BloomFilter * bloom_filter_create(uint32_t k, uint32_t m, uint32_t
  */
 inline void bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t len)
 {
-	uint32_t strhash = hash_string(str,len);
+	SHA1Context sha;
+	sha1_reset(&sha);
+	sha1_input(&sha, (const unsigned char *)str, len);
+	sha1_final(&sha);
 
 	int i;
 	for(i=0;i<bf->k;i++) {
-		uint32_t hash = uhash_integer(&bf->hash[i], strhash);
+		uint32_t hash = uhash_bigint(&bf->hash[i], sha.digest, 5);
 		bitset_set(bf->bitset, hash);
 	}
 }
@@ -111,12 +115,15 @@ inline void bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t
  */
 inline bool bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t len)
 {
-	uint32_t strhash = hash_string(str,len);
+	SHA1Context sha;
+	sha1_reset(&sha);
+	sha1_input(&sha, (const unsigned char *)str, len);
+	sha1_final(&sha);
 
 	int i;
 
 	for(i=0;i<bf->k;i++) {
-		uint32_t hash = uhash_integer(&bf->hash[i], strhash);
+		uint32_t hash = uhash_bigint(&bf->hash[i], sha.digest, 5);
 		if (!bitset_test(bf->bitset, hash))	return false;
 	}
 

@@ -38,7 +38,7 @@ int main(void)
 	sha1_reset(&sha);
 	sha1_input(&sha, (const unsigned char *) TEST, strlen(TEST));
 
-	if (sha1_ok(&sha))
+	if (sha1_final(&sha))
     {
 		int i;
         for(i = 0; i < 5 ; i++)

@@ -71,7 +71,7 @@ typedef struct SHA1Context
 void sha1_process_block(SHA1Context *);
 void sha1_pad(SHA1Context *);
 void sha1_reset(SHA1Context *);
-bool sha1_ok(SHA1Context *);
+bool sha1_final(SHA1Context *);
 void sha1_input(SHA1Context *, const unsigned char *, unsigned);
 
 /*  
@@ -108,7 +108,7 @@ inline void sha1_reset(SHA1Context *context)
 }
 
 /*  
- *  sha1_ok
+ *  sha1_final
  *
  *  Description:
  *      This function will return the 160-bit message digest into the
@@ -124,7 +124,7 @@ inline void sha1_reset(SHA1Context *context)
  *  Comments:
  *
  */
-inline bool sha1_ok(SHA1Context *context)
+inline bool sha1_final(SHA1Context *context)
 {
     if (context->corrupted) {
         return false;
