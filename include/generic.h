@@ -51,28 +51,26 @@ inline int choose_pivot(int i,int j)
 
 /**
  * pass in array with *len
- * return new len
+ * set newlen
  */
-inline int remove_dup(int a[], int len)
-{
-	int i;
-	int newlen = len;
-	for (i=0; i<newlen; i++) {
-		int key = a[i];
-		int j;
-		for (j=i+1;j<newlen;j++) {
-			if(key == a[j]) {
-				// found dup, move left one position.
-				int k;
-				for (k=j;k<newlen-1;k++) {
-					a[k] = a[k+1];
-				}
-				newlen--;
-			}
-		}
-	}
-	
-	return newlen;	
-}
+#define remove_dup(a,len, newlen) 	\
+do {								\
+	int i;							\
+	newlen = len;					\
+	for (i=0; i<newlen; i++) {		\
+		int key = a[i];				\
+		int j;						\
+		for (j=i+1;j<newlen;j++) {	\
+			if(key == a[j]) {		\
+				/* found dup, move left one position. */ \
+				int k;				\
+				for (k=j;k<newlen-1;k++) {	\
+					a[k] = a[k+1];			\
+				}							\
+				newlen--;					\
+			}						\
+		}							\
+	}								\
+} while (0)
 
 #endif //

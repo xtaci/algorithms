@@ -115,10 +115,11 @@ inline struct PerfHT * perfect_hash_init(uint32_t keys[],int len)
 	struct PerfHT * ht = (struct PerfHT *)malloc(sizeof(struct PerfHT));
 
 	// remove duplicate keys
-	len = remove_dup(keys, len);
+	int newlen;
+	remove_dup(keys, len, newlen);
 
 	// 1-level hashing 
-	uhash_init(&ht->params, len);
+	uhash_init(&ht->params, newlen);
 	
 	struct PerfSlotL1 * slots = 
 			(struct PerfSlotL1 *) malloc(sizeof(struct PerfSlotL1)*ht->params.prime);
@@ -127,7 +128,7 @@ inline struct PerfHT * perfect_hash_init(uint32_t keys[],int len)
 	ht->slots = slots;
 
 	int i;
-	for (i = 0; i < len; i++) {
+	for (i = 0; i < newlen; i++) {
 		uint32_t hash = uhash_integer(&ht->params, keys[i]);
 		slots[hash].cnt++;
 	}
@@ -137,7 +138,7 @@ inline struct PerfHT * perfect_hash_init(uint32_t keys[],int len)
 	}
 
 	// 2-level processing
-	perfect_hash_lv2_init(ht, keys, len);
+	perfect_hash_lv2_init(ht, keys, newlen);
 
 	return ht;
 }
