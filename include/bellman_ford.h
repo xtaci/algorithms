@@ -57,7 +57,7 @@
 #include "directed_graph.h"
 #include "perfect_hash.h"
 
-#define undefined (void*)-1
+#define undefined (uintptr_t)-1
 
 struct BFWorkspace {
 	struct PerfHT * dist; 
@@ -87,14 +87,14 @@ static inline void bellman_ford_init(const struct Graph * g, const struct Adjace
 
 	perfect_hash_set(dist, bfw->vertex_ids[0], 0);
 	for(i=1;i<bfw->num_vertex;i++) {
-		perfect_hash_set(dist, bfw->vertex_ids[i], (void*)INT_MAX);
+		perfect_hash_set(dist, bfw->vertex_ids[i], (uintptr_t)INT_MAX);
 	}
 
 	// hash table for node -> previous node, for trackback
 	struct PerfHT * previous = perfect_hash_init(bfw->vertex_ids, g->num_vertex);
 	// set initial value to undefined
 	for(i=0;i<bfw->num_vertex;i++) {
-		perfect_hash_set(previous, bfw->vertex_ids[i], undefined);
+		perfect_hash_set(previous, bfw->vertex_ids[i], (uintptr_t)undefined);
 	}
 
 	bfw->dist = dist;
@@ -129,8 +129,8 @@ inline struct BFWorkspace * bellman_ford_run(const struct Graph * g, const struc
 				int32_t dist_v = (int32_t)perfect_hash_get(dist, v->id);
 
 				if (dist_u + v->weight < dist_v) {
-					perfect_hash_set(dist, v->id, (void*)(dist_u + v->weight));
-					perfect_hash_set(previous, v->id, (void *)u->v.id);
+					perfect_hash_set(dist, v->id, (uintptr_t)(dist_u + v->weight));
+					perfect_hash_set(previous, v->id, (uintptr_t)u->v.id);
 				}
 			}
 		}

@@ -43,8 +43,8 @@ inline void breadth_first_search(const struct Graph * g, uint32_t source)
 
 	// init
 	Queue * Q = create_queue(g->num_vertex);
-	enqueue(Q, (void*)root->v.id);
-	hash_table_set(ht, root->v.id, (void*)MARK);
+	enqueue(Q, (uintptr_t)root->v.id);
+	hash_table_set(ht, root->v.id, (uintptr_t)MARK);
 	
 	while(!queue_is_empty(Q)) {
 		uint32_t t = (uint32_t)queue_front(Q);	
@@ -54,8 +54,8 @@ inline void breadth_first_search(const struct Graph * g, uint32_t source)
 		struct Adjacent * a = graph_lookup(g, t);
 		list_for_each_entry(v, &a->v_head, v_node) {
 			if ((uint32_t)hash_table_get(ht, v->id)!=MARK) {
-				hash_table_set(ht, v->id, (void*)MARK);
-				enqueue(Q, (void*)v->id); 
+				hash_table_set(ht, v->id, (uintptr_t)MARK);
+				enqueue(Q, (uintptr_t)v->id); 
 			}
 		}
 	}
@@ -73,8 +73,8 @@ inline void depth_first_search(const struct Graph *g, uint32_t source)
 
 	// init
 	Stack * S = create_stack(g->num_vertex);
-	push(S, (void*)root->v.id);
-	hash_table_set(ht, root->v.id, (void*)MARK);
+	push(S, (uintptr_t)root->v.id);
+	hash_table_set(ht, root->v.id, (uintptr_t)MARK);
 	
 	while(!stack_is_empty(S)) {
 		uint32_t t = (uint32_t)top(S);	
@@ -84,8 +84,8 @@ inline void depth_first_search(const struct Graph *g, uint32_t source)
 		struct Adjacent * a = graph_lookup(g, t);
 		list_for_each_entry(v, &a->v_head, v_node) {
 			if ((uint32_t)hash_table_get(ht, v->id)!=MARK) {
-				hash_table_set(ht, v->id, (void*)MARK);
-				push(S, (void*)v->id); 
+				hash_table_set(ht, v->id, (uintptr_t)MARK);
+				push(S, (uintptr_t)v->id); 
 			}
 		}
 	}

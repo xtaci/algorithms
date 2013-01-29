@@ -45,36 +45,36 @@ typedef struct dostree_t {
 /**
  * Interfaces
  */
-dostree dostree_create();
-void dostree_insert(dostree t, int key);
-dostree_node dostree_lookup(dostree_node n, int i);
-void dostree_delete(dostree t, dostree_node node);
+inline dostree dostree_create();
+inline void dostree_insert(dostree t, int key);
+inline dostree_node dostree_lookup(dostree_node n, int i);
+inline void dostree_delete(dostree t, dostree_node node);
 
 /**
  * Auxillary functions
  */
-static dostree_node grandparent(dostree t, dostree_node n);
-static dostree_node sibling(dostree t, dostree_node n);
-static dostree_node uncle(dostree t, dostree_node n);
-static color node_color(dostree_node n);
+static inline dostree_node grandparent(dostree t, dostree_node n);
+static inline dostree_node sibling(dostree t, dostree_node n);
+static inline dostree_node uncle(dostree t, dostree_node n);
+static inline color node_color(dostree_node n);
 
-static dostree_node new_node(dostree t, int key, color node_color);
-static void rotate_left(dostree t, dostree_node n);
-static void rotate_right(dostree t, dostree_node n);
+static inline dostree_node new_node(dostree t, int key, color node_color);
+static inline void rotate_left(dostree t, dostree_node n);
+static inline void rotate_right(dostree t, dostree_node n);
 
-static void replace_node(dostree t, dostree_node oldn, dostree_node newn);
-static void insert_case1(dostree t, dostree_node n);
-static void insert_case2(dostree t, dostree_node n);
-static void insert_case3(dostree t, dostree_node n);
-static void insert_case4(dostree t, dostree_node n);
-static void insert_case5(dostree t, dostree_node n);
-static dostree_node maximum_node(dostree t, dostree_node root);
-static void delete_case1(dostree t, dostree_node n);
-static void delete_case2(dostree t, dostree_node n);
-static void delete_case3(dostree t, dostree_node n);
-static void delete_case4(dostree t, dostree_node n);
-static void delete_case5(dostree t, dostree_node n);
-static void delete_case6(dostree t, dostree_node n);
+static inline void replace_node(dostree t, dostree_node oldn, dostree_node newn);
+static inline void insert_case1(dostree t, dostree_node n);
+static inline void insert_case2(dostree t, dostree_node n);
+static inline void insert_case3(dostree t, dostree_node n);
+static inline void insert_case4(dostree t, dostree_node n);
+static inline void insert_case5(dostree t, dostree_node n);
+static inline dostree_node maximum_node(dostree t, dostree_node root);
+static inline void delete_case1(dostree t, dostree_node n);
+static inline void delete_case2(dostree t, dostree_node n);
+static inline void delete_case3(dostree t, dostree_node n);
+static inline void delete_case4(dostree t, dostree_node n);
+static inline void delete_case5(dostree t, dostree_node n);
+static inline void delete_case6(dostree t, dostree_node n);
 
 static void fixup_size(dostree t, dostree_node x);
 

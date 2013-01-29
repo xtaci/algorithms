@@ -32,7 +32,7 @@ typedef struct Queue
 	uint32_t size;
 	uint32_t front;
 	int32_t rear;
-	void ** elements;
+	uintptr_t * elements;
 }Queue;
 
 /**
@@ -46,7 +46,7 @@ inline Queue * create_queue(uint32_t maxElements)
 	Queue *Q;
 	Q = (Queue *)malloc(sizeof(Queue));
 	/* Initialise its properties */
-	Q->elements = (void **)malloc(sizeof(void*)*maxElements);
+	Q->elements = (uintptr_t *)malloc(sizeof(uintptr_t)*maxElements);
 	Q->size = 0;
 	Q->capacity = maxElements;
 	Q->front = 0;
@@ -82,7 +82,7 @@ inline void dequeue(Queue *Q)
 /**
  * return the front element.
  */
-inline void * queue_front(const Queue *Q)
+inline uintptr_t queue_front(const Queue *Q)
 {
 	/* Return the element which is at the front*/
 	return Q->elements[Q->front];
@@ -98,7 +98,7 @@ inline bool queue_is_empty(const Queue * Q)
  * Enqueue
  * returns false when queue is full
  */
-inline bool enqueue(Queue *Q, void * element)
+inline bool enqueue(Queue *Q, uintptr_t element)
 {
 	/* If the Queue is full, we cannot push an element into it as there is no space for it.*/
 	if(Q->size == Q->capacity)

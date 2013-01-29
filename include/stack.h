@@ -81,8 +81,8 @@ inline void pop(Stack *S)
 }
 
 /**
- * get top element into *rval
- * returns false when the stack is empty.
+ * get top element
+ * returns 0 when the stack is empty.
  */
 inline uintptr_t top(const Stack *S)
 {

@@ -46,38 +46,38 @@ typedef struct inttree_t {
 /**
  * Interfaces
  */
-inttree inttree_create();
-void inttree_insert(inttree t, int low, int high);
-inttree_node inttree_lookup(inttree t, int low, int high);
-void inttree_delete(inttree t, inttree_node n);
+inline inttree inttree_create();
+inline void inttree_insert(inttree t, int low, int high);
+inline inttree_node inttree_lookup(inttree t, int low, int high);
+inline void inttree_delete(inttree t, inttree_node n);
 
 /**
  * Auxillary functions
  */
-static inttree_node grandparent(inttree t, inttree_node n);
-static inttree_node sibling(inttree t, inttree_node n);
-static inttree_node uncle(inttree t, inttree_node n);
-static color node_color(inttree_node n);
+static inline inttree_node grandparent(inttree t, inttree_node n);
+static inline inttree_node sibling(inttree t, inttree_node n);
+static inline inttree_node uncle(inttree t, inttree_node n);
+static inline color node_color(inttree_node n);
 
-static inttree_node new_node(inttree t, int low, int high, color node_color);
-static void rotate_left(inttree t, inttree_node n);
-static void rotate_right(inttree t, inttree_node n);
+static inline inttree_node new_node(inttree t, int low, int high, color node_color);
+static inline void rotate_left(inttree t, inttree_node n);
+static inline void rotate_right(inttree t, inttree_node n);
 
-static void replace_node(inttree t, inttree_node oldn, inttree_node newn);
-static void insert_case1(inttree t, inttree_node n);
-static void insert_case2(inttree t, inttree_node n);
-static void insert_case3(inttree t, inttree_node n);
-static void insert_case4(inttree t, inttree_node n);
-static void insert_case5(inttree t, inttree_node n);
-static inttree_node maximum_node(inttree t, inttree_node root);
-static void delete_case1(inttree t, inttree_node n);
-static void delete_case2(inttree t, inttree_node n);
-static void delete_case3(inttree t, inttree_node n);
-static void delete_case4(inttree t, inttree_node n);
-static void delete_case5(inttree t, inttree_node n);
-static void delete_case6(inttree t, inttree_node n);
+static inline void replace_node(inttree t, inttree_node oldn, inttree_node newn);
+static inline void insert_case1(inttree t, inttree_node n);
+static inline void insert_case2(inttree t, inttree_node n);
+static inline void insert_case3(inttree t, inttree_node n);
+static inline void insert_case4(inttree t, inttree_node n);
+static inline void insert_case5(inttree t, inttree_node n);
+static inline inttree_node maximum_node(inttree t, inttree_node root);
+static inline void delete_case1(inttree t, inttree_node n);
+static inline void delete_case2(inttree t, inttree_node n);
+static inline void delete_case3(inttree t, inttree_node n);
+static inline void delete_case4(inttree t, inttree_node n);
+static inline void delete_case5(inttree t, inttree_node n);
+static inline void delete_case6(inttree t, inttree_node n);
 
-static void fixup_max(inttree t,inttree_node x);
+static inline void fixup_max(inttree t,inttree_node x);
 
 
 /* program should define i_nil by the macro following */

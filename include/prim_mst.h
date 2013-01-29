@@ -61,7 +61,7 @@ static inline void prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent 
 
 	struct Vertex * v;
 	list_for_each_entry(v, &a->v_head, v_node){
-		heap_insert(pa->heap, v->weight, v);  // weight->vertex
+		heap_insert(pa->heap, v->weight, (uintptr_t)v);  // weight->vertex
 	}
 }
 

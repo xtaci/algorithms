@@ -63,7 +63,7 @@ inline void lcs_backtrack(Stack * s, struct Array2D * C, const int32_t X[], int3
 {
 	if (i==0 || j==0) return;
 	else if (X[i-1] == Y[j-1]) { 
-		push(s, (void *)X[i-1]);
+		push(s, (uintptr_t)X[i-1]);
 		lcs_backtrack(s, C, X, Y, i-1, j-1);
 	}
 	else {

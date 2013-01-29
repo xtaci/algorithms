@@ -32,7 +32,7 @@ struct Heap {
 	uint32_t size;
 	uint32_t max;
 	int * keys;
-	void ** values;
+	uintptr_t * values;
 };
 
 #define HEAP_COPY(heap, to, from) 		\
@@ -72,14 +72,14 @@ inline struct Heap * heap_init(int max)
 	heap->max = max+1;
 	heap->keys = (int *)malloc(sizeof(int) * heap->max);
     heap->keys[0] = -INT_MAX;
-	heap->values= (void **)malloc(sizeof(void *) * heap->max);
+	heap->values= (uintptr_t *)malloc(sizeof(uintptr_t) * heap->max);
 	return heap;
 }
 
 /**
  * heap_insert an key->value pair into the heap 
  */
-inline void heap_insert(struct Heap * heap, int key, void * value)
+inline void heap_insert(struct Heap * heap, int key, uintptr_t value)
 {
 		// heap full, just return;
 		if(heap->size == heap->max) return; 
@@ -109,7 +109,7 @@ inline void heap_delete_min(struct Heap * heap)
            If it does not fit, take minimum key among both its children and replaces parent with it.
            Again See if the last key fits in that place.*/
         int lastKey;
-		void * lastValue;	
+		uintptr_t lastValue;	
  		int child,now;
 
 		// empty heap, just return
@@ -154,7 +154,7 @@ inline void heap_decrease_key(struct Heap * heap, int index, int key)
 	if (key >= heap->keys[index]) return; 	// violate DECREASE meanning.
 	
     int now = index;
-	void * value = heap->values[index];
+	uintptr_t value = heap->values[index];
 
     while(heap->keys[now/2] > key) 
     {
@@ -167,7 +167,7 @@ inline void heap_decrease_key(struct Heap * heap, int index, int key)
 /**
  * find the index where data resides
  */
-inline int heap_find_data(const struct Heap * heap, const void * data)
+inline int heap_find_data(const struct Heap * heap, const uintptr_t data)
 {
 	int i;
     for (i=1;i<=heap->size;i++) {

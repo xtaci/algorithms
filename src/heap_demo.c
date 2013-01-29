@@ -12,7 +12,7 @@ int main()
 	srand(time(NULL));
 	for (i=0;i < MAXELEMENTS; i++) {
 		int value = rand()%1000;
-		heap_insert(heap, 100-i, (void *)value);
+		heap_insert(heap, 100-i, (uintptr_t)value);
 
 		printf("inserting: %d->%d\n", 100-i, value);
 	}

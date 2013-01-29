@@ -13,7 +13,7 @@ int main()
 	for (i=0;i<MAXELEMENT;i++) {
 		int value = rand()%1000;
 		printf("queuing %d\n", value);
-		enqueue(Q,(void*)value);
+		enqueue(Q,(uintptr_t)value);
 	}
 
 	printf("> DEQUEUE\n");

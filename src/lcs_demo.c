@@ -35,8 +35,8 @@ int main(void)
 	lcs_backtrack(s, arr, X, Y, MAXN, MAXN);
 
 	printf("the largest common sequence is : \n");
-	void * v;
-	while((v=top(s))!=NULL) {
+	uintptr_t v;
+	while((v=top(s))!=0) {
 		int e = (int)v;
 		printf("%c->", (char)e);
 		pop(s);

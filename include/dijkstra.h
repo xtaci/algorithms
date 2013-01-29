@@ -33,7 +33,7 @@
 #include "stack.h"
 #include "perfect_hash.h"
 
-#define undefined (void*)-1
+#define undefined (uintptr_t)-1
 
 struct DijkWorkspace {
 	struct Heap * Q;
@@ -47,7 +47,7 @@ static inline void dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t ne
 {	
 	int index;
 	int key = new_weight;
-	if ((index=heap_find_data(heap, (void *)id))!=-1) {
+	if ((index=heap_find_data(heap, (uintptr_t)id))!=-1) {
 		heap_decrease_key(heap, index, key);
 	}
 }
@@ -58,13 +58,13 @@ static inline void dijkstra_init(const struct Graph * g, const struct Adjacent *
 	// binary heap init
 	struct Heap * Q = heap_init(g->num_vertex);
 	struct Adjacent * a;
-	heap_insert(Q, 0, (void*)source->v.id);	// weight->id binary heap
+	heap_insert(Q, 0, (uintptr_t)source->v.id);	// weight->id binary heap
 
 	int i=1;
 	list_for_each_entry(a, &g->a_head, a_node){
 		if (source->v.id != a->v.id) {
 			dr->vertex_ids[i++] = a->v.id;
-			heap_insert(Q, INT_MAX, (void*)a->v.id);
+			heap_insert(Q, INT_MAX, (uintptr_t)a->v.id);
 		}
 	}
 
@@ -76,7 +76,7 @@ static inline void dijkstra_init(const struct Graph * g, const struct Adjacent *
 
 	perfect_hash_set(dist, dr->vertex_ids[0], 0);
 	for(i=1;i<dr->num_vertex;i++) {
-		perfect_hash_set(dist, dr->vertex_ids[i], (void*)INT_MAX);
+		perfect_hash_set(dist, dr->vertex_ids[i], (uintptr_t)INT_MAX);
 	}
 
 	// hash table for node -> previous node, for trackback
@@ -147,9 +147,9 @@ inline struct DijkWorkspace * dijkstra_run(const struct Graph * g, const struct 
 			uint32_t alt = dist_u + v->weight;
 			uint32_t dist_v = (uint32_t)perfect_hash_get(dist, v->id);
 			if (alt < dist_v) {
-				perfect_hash_set(dist, v->id, (void*)alt);
+				perfect_hash_set(dist, v->id, (uintptr_t)alt);
 				dijkstra_reorder(Q, v->id, alt);
-				perfect_hash_set(previous, v->id, (void *)u->v.id);
+				perfect_hash_set(previous, v->id, (uintptr_t)u->v.id);
 			}
 		}
 	}
