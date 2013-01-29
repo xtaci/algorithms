@@ -17,12 +17,13 @@
 
 #ifndef __RBTREE_H__
 #define __RBTREE_H__
+#include <stdint.h>
 
 enum rbtree_node_color { RED, BLACK };
 typedef enum rbtree_node_color color;
 typedef struct rbtree_node_t {
-    void* key;
-    void* value;
+    uintptr_t key;
+    uintptr_t value;
     struct rbtree_node_t* left;
     struct rbtree_node_t* right;
     struct rbtree_node_t* parent;
@@ -36,41 +37,39 @@ typedef struct rbtree_t {
 /**
  * Interfaces
  */
-typedef int (*compare_func)(void* left, void* right);
-rbtree rbtree_create();
-void rbtree_insert(rbtree t, void* key, void* value, compare_func compare);
-void * rbtree_lookup(rbtree t, void* key, compare_func compare);
-void rbtree_delete(rbtree t, void* key, compare_func compare);
+typedef int (*compare_func)(uintptr_t left, uintptr_t right);
+inline rbtree rbtree_create();
+inline void rbtree_insert(rbtree t, uintptr_t key, uintptr_t value, compare_func compare);
+inline uintptr_t rbtree_lookup(rbtree t, uintptr_t key, compare_func compare);
+inline void rbtree_delete(rbtree t, uintptr_t key, compare_func compare);
 
 
 /**
  * Auxillary functions
  */
+static inline rbtree_node grandparent(rbtree_node n);
+static inline rbtree_node sibling(rbtree_node n);
+static inline rbtree_node uncle(rbtree_node n);
+static inline color node_color(rbtree_node n);
 
-static rbtree_node grandparent(rbtree_node n);
-static rbtree_node sibling(rbtree_node n);
-static rbtree_node uncle(rbtree_node n);
-static color node_color(rbtree_node n);
+static inline rbtree_node new_node(uintptr_t key, uintptr_t value, color node_color, rbtree_node left, rbtree_node right);
+static inline rbtree_node lookup_node(rbtree t, uintptr_t key, compare_func compare);
+static inline void rotate_left(rbtree t, rbtree_node n);
+static inline void rotate_right(rbtree t, rbtree_node n);
 
-static rbtree_node new_node(void* key, void* value, color node_color, rbtree_node left, rbtree_node right);
-static rbtree_node lookup_node(rbtree t, void* key, compare_func compare);
-static void rotate_left(rbtree t, rbtree_node n);
-static void rotate_right(rbtree t, rbtree_node n);
-
-static void replace_node(rbtree t, rbtree_node oldn, rbtree_node newn);
-static void insert_case1(rbtree t, rbtree_node n);
-static void insert_case2(rbtree t, rbtree_node n);
-static void insert_case3(rbtree t, rbtree_node n);
-static void insert_case4(rbtree t, rbtree_node n);
-static void insert_case5(rbtree t, rbtree_node n);
-static rbtree_node maximum_node(rbtree_node root);
-static void delete_case1(rbtree t, rbtree_node n);
-static void delete_case2(rbtree t, rbtree_node n);
-static void delete_case3(rbtree t, rbtree_node n);
-static void delete_case4(rbtree t, rbtree_node n);
-static void delete_case5(rbtree t, rbtree_node n);
-static void delete_case6(rbtree t, rbtree_node n);
-
+static inline void replace_node(rbtree t, rbtree_node oldn, rbtree_node newn);
+static inline void insert_case1(rbtree t, rbtree_node n);
+static inline void insert_case2(rbtree t, rbtree_node n);
+static inline void insert_case3(rbtree t, rbtree_node n);
+static inline void insert_case4(rbtree t, rbtree_node n);
+static inline void insert_case5(rbtree t, rbtree_node n);
+static inline rbtree_node maximum_node(rbtree_node root);
+static inline void delete_case1(rbtree t, rbtree_node n);
+static inline void delete_case2(rbtree t, rbtree_node n);
+static inline void delete_case3(rbtree t, rbtree_node n);
+static inline void delete_case4(rbtree t, rbtree_node n);
+static inline void delete_case5(rbtree t, rbtree_node n);
+static inline void delete_case6(rbtree t, rbtree_node n);
 
 static inline rbtree_node grandparent(rbtree_node n) {
     assert (n != NULL);
@@ -109,7 +108,7 @@ inline rbtree rbtree_create() {
     return t;
 }
 
-static inline rbtree_node new_node(void* key, void* value, color rbtree_node_color, rbtree_node left, rbtree_node right) {
+static inline rbtree_node new_node(uintptr_t key, uintptr_t value, color rbtree_node_color, rbtree_node left, rbtree_node right) {
     rbtree_node result = malloc(sizeof(struct rbtree_node_t));
     result->key = key;
     result->value = value;
@@ -122,7 +121,7 @@ static inline rbtree_node new_node(void* key, void* value, color rbtree_node_col
     return result;
 }
 
-static inline rbtree_node lookup_node(rbtree t, void* key, compare_func compare) {
+static inline rbtree_node lookup_node(rbtree t, uintptr_t key, compare_func compare) {
     rbtree_node n = t->root;
     while (n != NULL) {
         int comp_result = compare(key, n->key);
@@ -142,9 +141,9 @@ static inline rbtree_node lookup_node(rbtree t, void* key, compare_func compare)
  * rbtree_lookup
  * search in red-black tree
  */
-inline void * rbtree_lookup(rbtree t, void* key, compare_func compare) {
+inline uintptr_t rbtree_lookup(rbtree t, uintptr_t key, compare_func compare) {
     rbtree_node n = lookup_node(t, key, compare);
-    return n == NULL ? NULL : n->value;
+    return n == NULL ? 0 : n->value;
 }
 
 static inline void rotate_left(rbtree t, rbtree_node n) {
@@ -188,7 +187,7 @@ static inline void replace_node(rbtree t, rbtree_node oldn, rbtree_node newn) {
  * insert a key-value pair into red-black tree
  * you must specify your own compare function
  */
-inline void rbtree_insert(rbtree t, void* key, void* value, compare_func compare) {
+inline void rbtree_insert(rbtree t, uintptr_t key, uintptr_t value, compare_func compare) {
     rbtree_node inserted_node = new_node(key, value, RED, NULL, NULL);
     if (t->root == NULL) {
         t->root = inserted_node;
@@ -273,7 +272,7 @@ static inline void insert_case5(rbtree t, rbtree_node n) {
 /**
  * delete the key in the red-black tree
  */
-inline void rbtree_delete(rbtree t, void* key, compare_func compare) {
+inline void rbtree_delete(rbtree t, uintptr_t key, compare_func compare) {
     rbtree_node child;
     rbtree_node n = lookup_node(t, key, compare);
     if (n == NULL) return;  /* Key not found, do nothing */

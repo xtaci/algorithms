@@ -134,4 +134,4 @@ sha1_demo: $(SRCDIR)/sha1_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:
-	rm $(PROGRAMS)
+	rm -rf $(PROGRAMS) *.dSYM

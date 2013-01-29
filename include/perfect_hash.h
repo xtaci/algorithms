@@ -21,14 +21,14 @@
 
 struct PerfSlotL2 {
 	uint32_t cnt; // collison count
-	void * value;	
+	uintptr_t value;	
 };
 
 struct PerfSlotL1 {
 	uint32_t cnt; // collison count
 	struct UHash params;   // 2nd level 
 	struct PerfSlotL2 * lv2_slots;
-	void * value;	
+	uintptr_t value;	
 } PerfSlotL1;
 
 struct PerfHT {
@@ -61,7 +61,7 @@ retry:
 	int j;
 
 	for(j=0; j<lv1_slot->cnt;j++) {
-		key = (uint32_t)top(collides);push(S2,(void *)key);
+		key = (uint32_t)top(collides);push(S2,(uintptr_t)key);
 		pop(collides);
 		int hash = uhash_integer(&lv1_slot->params, key);
 		
@@ -69,7 +69,7 @@ retry:
 			// collide again!!! rollback stack ops
 			int r;
 			for(r=j;r>=0;r--) {
-				key =(uint32_t)top(S2);push(collides,(void *)key);
+				key =(uint32_t)top(S2);push(collides,(uintptr_t)key);
 				pop(S2);
 			}
 			goto retry;
@@ -97,7 +97,7 @@ inline static void perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], in
 			// find collide keys
 			for(j=0;j<len;j++) {
 				if(uhash_integer(&ht->params, keys[j]) == i) {
-					push(S1, (void *)keys[j]);
+					push(S1, (uintptr_t)keys[j]);
 				}
 			}
 			// 
@@ -159,7 +159,7 @@ inline void perfect_hash_destroy(struct PerfHT * ht)
 /**
  * set a key->value pair in the table
  */
-inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, void * value)
+inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, uintptr_t value)
 {
 	uint32_t hash;
 	hash  = uhash_integer(&ht->params, key);
@@ -180,7 +180,7 @@ inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, void * value)
 	}
 }
 
-inline void * perfect_hash_get(const struct PerfHT * ht, uint32_t key)
+inline uintptr_t perfect_hash_get(const struct PerfHT * ht, uint32_t key)
 {
 	uint32_t hash;
 	hash  = uhash_integer(&ht->params, key);
@@ -198,7 +198,7 @@ inline void * perfect_hash_get(const struct PerfHT * ht, uint32_t key)
 		}
 	}
 	
-	return NULL;
+	return 0;
 }
 
 #endif //

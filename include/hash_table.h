@@ -24,7 +24,7 @@
 
 struct HashKV {
 	uint32_t key;
-	void * value;
+	uintptr_t value;
 	struct list_head node;
 };
 
@@ -62,7 +62,7 @@ inline struct HashTable * hash_table_create(uint32_t num_elements)
 /**
  * set a value
  */
-inline void hash_table_set(struct HashTable * ht, uint32_t key, void *value)
+inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
 {
 	uint32_t hash = multi_hash_hash(ht->multi, key);
 
@@ -92,7 +92,7 @@ inline void hash_table_set(struct HashTable * ht, uint32_t key, void *value)
 /**
  * get a value
  */
-inline void * hash_table_get(struct HashTable * ht, uint32_t key)
+inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 {
 	uint32_t hash = multi_hash_hash(ht->multi, key);
 
@@ -109,7 +109,7 @@ inline void * hash_table_get(struct HashTable * ht, uint32_t key)
 		}
 	}
 
-	return NULL;
+	return 0;
 }
 
 /**

@@ -16,7 +16,7 @@ int main()
 	int i;
 	for(i = 0; i < MAX_ELEMENTS; i++ ){
 		int32_t value = rand()%1000;
-		hash_table_set(ht, i, (void *)value);
+		hash_table_set(ht, i, (uintptr_t)value);
 
 		printf("setting %d->%d\n", i, value);
 	}

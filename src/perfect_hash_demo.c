@@ -36,7 +36,7 @@ int main(void)
 
 	for (i = 0; i < MAXELEMENT; i++) {
 		printf("set %d --> %d\n", keys[i],values[i]);
-		perfect_hash_set(ht, keys[i], (void*)values[i]);
+		perfect_hash_set(ht, keys[i], (uintptr_t)values[i]);
 	}
 	
 	for (i = 0; i < MAXELEMENT; i++) {

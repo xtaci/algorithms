@@ -21,7 +21,7 @@ int main()
 	printlist(list,MAX_ELEMENTS);
 
 	// sort the list using insertion sort
-	radixsort(list, MAX_ELEMENTS);  
+	radix_sort(list, MAX_ELEMENTS);  
 	check_order(list, MAX_ELEMENTS);
 
 	// print the result

@@ -48,7 +48,7 @@ inline static void radix(int byte, const unsigned N, const uint32_t *source, uin
 /**
  * radix sort a given unsigned 32-bit integer array of size N
  */
-inline void radixsort(uint32_t *source, const unsigned N)
+inline void radix_sort(uint32_t *source, const unsigned N)
 {
 	uint32_t *temp = (uint32_t *)malloc(sizeof(uint32_t)*N);
 	radix(0, N, source, temp);

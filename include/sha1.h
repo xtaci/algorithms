@@ -68,11 +68,11 @@ typedef struct SHA1Context
                 ((word) >> (32-(bits))))
 
 /* Function prototypes */
-void sha1_process_block(SHA1Context *);
-void sha1_pad(SHA1Context *);
-void sha1_reset(SHA1Context *);
-bool sha1_final(SHA1Context *);
-void sha1_input(SHA1Context *, const unsigned char *, unsigned);
+inline void sha1_process_block(SHA1Context *);
+inline void sha1_pad(SHA1Context *);
+inline void sha1_reset(SHA1Context *);
+inline bool sha1_final(SHA1Context *);
+inline void sha1_input(SHA1Context *, const unsigned char *, unsigned);
 
 /*  
  *  sha1_reset

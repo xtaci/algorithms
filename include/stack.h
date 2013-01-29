@@ -30,7 +30,7 @@ typedef struct Stack
 {
 	int capacity;
 	int size;
-	void ** elements;
+	uintptr_t * elements;
 } Stack;
 
 /*
@@ -44,7 +44,7 @@ inline Stack * create_stack(int maxElements)
 	Stack *S;
 	S = (Stack *)malloc(sizeof(Stack));
 	/* Initialise its properties */
-	S->elements = (void **)malloc(sizeof(void *)*maxElements);
+	S->elements = (uintptr_t *)malloc(sizeof(uintptr_t)*maxElements);
 	S->size = 0;
 	S->capacity = maxElements;
 	/* Return the pointer */
@@ -84,11 +84,11 @@ inline void pop(Stack *S)
  * get top element into *rval
  * returns false when the stack is empty.
  */
-inline void * top(const Stack *S)
+inline uintptr_t top(const Stack *S)
 {
 	if(S->size==0)
 	{
-		return NULL;
+		return 0;
 	}
 	/* Return the topmost element */
 	return S->elements[S->size-1];
@@ -98,7 +98,7 @@ inline void * top(const Stack *S)
  * push an element into the stack
  * returns false when stack is full.
  */
-inline bool push(Stack *S, void * element)
+inline bool push(Stack *S, uintptr_t element)
 {
 	/* If the stack is full, we cannot push an element into it as there is no space for it.*/
 	if(S->size == S->capacity)

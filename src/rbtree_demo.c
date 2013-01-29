@@ -32,11 +32,11 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 
 #include "rbtree.h"
 
-static int compare_int(void* left, void* right);
+static int compare_int(uintptr_t left, uintptr_t right);
 static void print_tree(rbtree t);
 static void print_tree_helper(rbtree_node n, int indent);
 
-int compare_int(void* leftp, void* rightp) {
+int compare_int(uintptr_t leftp, uintptr_t rightp) {
     int left = (int)leftp;
     int right = (int)rightp;
     if (left < right) 
@@ -92,8 +92,8 @@ int main() {
         int key  = rand() % 100;
         int value = rand() % 10000;
         printf("[%d, %d]\t", key, value);
-        rbtree_insert(t, (void*)key, (void*)value, compare_int);
-        assert(rbtree_lookup(t, (void*)key, compare_int) == (void*)value);
+        rbtree_insert(t, (uintptr_t)key, (uintptr_t)value, compare_int);
+        assert(rbtree_lookup(t, (uintptr_t)key, compare_int) == (uintptr_t)value);
     }
 
 	printf("\n");
@@ -103,7 +103,7 @@ int main() {
     for(i=0; i<MAXELEMENT; i++) {
         int key = rand() % 100;
         printf("[%d]\t", key);
-        rbtree_delete(t, (void*)key, compare_int);
+        rbtree_delete(t, (uintptr_t)key, compare_int);
     }
 
 	printf("\n");
