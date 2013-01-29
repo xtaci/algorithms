@@ -16,6 +16,7 @@ PROGRAMS =	insertion_sort_demo \
 			double_linked_list_demo \
 			stack_demo \
 			queue_demo \
+			priority_queue_demo \
 			prime_test \
 			universal_hash_demo \
 			perfect_hash_demo \
@@ -74,6 +75,9 @@ stack_demo: $(SRCDIR)/stack_demo.c $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 queue_demo: $(SRCDIR)/queue_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+priority_queue_demo: $(SRCDIR)/priority_queue_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 prime_test: $(SRCDIR)/prime_test.c $(DEPS)
