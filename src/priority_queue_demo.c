@@ -19,10 +19,13 @@ int main(void)
 		printf("queueing: value:%u-> pri: %d\n", i, pri);
 	}
 
+	printf("count# %d\n", pq_count(pq));
 	while(!pq_is_empty(pq)){
-		int value = (int)pq_dequeue(pq);
-		printf("dequeue: %d\n", value);
+		uint32_t pri;
+		int value = (int)pq_dequeue(pq, &pri);
+		printf("dequeue: %d --> pri: %d\n", value, pri);
 	}
-
+	printf("count# %d\n", pq_count(pq));
+	pq_destroy(pq);
 	exit(0);
 }

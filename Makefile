@@ -36,7 +36,8 @@ PROGRAMS =	insertion_sort_demo \
 			hash_string_demo \
 			bitset_demo	\
 			bloom_filter_demo \
-			sha1_demo
+			sha1_demo	\
+			huffman_demo
 			
 
 all: $(PROGRAMS)
@@ -135,6 +136,9 @@ bloom_filter_demo: $(SRCDIR)/bloom_filter_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 sha1_demo: $(SRCDIR)/sha1_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+huffman_demo: $(SRCDIR)/huffman_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 clean:

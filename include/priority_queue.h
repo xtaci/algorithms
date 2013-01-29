@@ -36,6 +36,7 @@ struct PQNode {
  * definition of a Priority Queue.
  */
 struct PQ {
+	uint32_t count;
 	struct list_head head;	
 };
 
@@ -46,6 +47,7 @@ inline struct PQ * pq_create()
 {
 	struct PQ * pq;
 	pq = (struct PQ *) malloc(sizeof(struct PQ));
+	pq->count = 0;
 	INIT_LIST_HEAD(&pq->head);
 	return pq;
 }
@@ -62,15 +64,25 @@ inline void pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
 	if (list_empty(&pq->head))
 	{
 		list_add(&n->node, &pq->head);
+		pq->count++;
 	}
 	else
 	{
 		struct PQNode * pos;
+		bool found = false;
 		list_for_each_entry(pos, &pq->head, node) {
 			if (n->priority <= pos->priority) {
 				__list_add(&n->node, pos->node.prev, &pos->node);
+				pq->count++;
+				found = true;
 				break;
 			}
+		}
+
+		// priority larger than every node
+		if (!found) {
+			list_add_tail(&n->node, &pq->head);
+			pq->count++;
 		}
 	}
 
@@ -80,15 +92,17 @@ inline void pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
 /**
  * dequeue the most priority element
  */
-inline uintptr_t pq_dequeue(struct PQ *pq)
+inline uintptr_t pq_dequeue(struct PQ *pq, uint32_t * prio )
 {
 	if (list_empty(&pq->head)) return 0;
 
 	struct PQNode * n;
 	n = list_entry(pq->head.next, struct PQNode, node);
 	list_del(&n->node);
+	pq->count--;
 
 	uintptr_t ret = n->value;
+	*prio = n->priority;
 	free(n);
 
 	return ret;
@@ -101,6 +115,25 @@ inline bool pq_is_empty(struct PQ *pq)
 {
 	if (list_empty(&pq->head)) return true;
 	return false;
+}
+
+/**
+ * get the exact number of data
+ */
+inline uint32_t pq_count(struct PQ *pq)
+{
+	return pq->count;
+}
+
+/**
+ * safe destroy the priority queue
+ */
+inline void pq_destroy(struct PQ * pq)
+{
+	struct PQNode * pos, * n;
+	list_for_each_entry_safe(pos,n, &pq->head, node) {
+		list_del(&pos->node);
+	}
 }
 
 #endif //
