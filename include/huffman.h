@@ -63,7 +63,7 @@ typedef struct {
  * for building symbol lookup table
  */
 static inline void 
-huffman_traverse(struct HuffNode * node, struct HashTable * ht, int k, char code[256])
+__huffman_traverse(struct HuffNode * node, struct HashTable * ht, int k, char code[256])
 {
 	//If we reach the end we introduce the code in the table
 	if(node->left == NULL && node->right == NULL)
@@ -82,47 +82,42 @@ huffman_traverse(struct HuffNode * node, struct HashTable * ht, int k, char code
 	if(node->left!=NULL)
 	{
 		code[k] = '0';
-		huffman_traverse(node->left,ht, k+1,code);
+		__huffman_traverse(node->left,ht, k+1,code);
 	}
 
 	//We concatenate a 1 for each step to the right
 	if(node->right!=NULL)
 	{
 		code[k] = '1';
-		huffman_traverse(node->right,ht, k+1,code);
+		__huffman_traverse(node->right,ht, k+1,code);
 	}
 }  
 
 /**
  * Symbol Table Initialization for encoding proc.
  */
-static inline void huffman_sym_init(struct HuffTree *tree)
+static inline void __huffman_sym_init(struct HuffTree *tree)
 {
 	// init
 	tree->ht = hash_table_create(256);	
 	char code[256];
-	huffman_traverse(tree->root, tree->ht, 0, code); 
+	__huffman_traverse(tree->root, tree->ht, 0, code); 
 }
 
 /**
- * Construct a Huffman Tree with a sample string, the string must contain 
- * every characters passing to encode function.
+ * recreate the huff tree from an array[256] i.e. 8bit 
+ * useful for peer reconstructing decoding tree.
  */
-inline struct HuffTree * huffman_create(char * sample)
+inline struct HuffTree * huffman_recreate(uint32_t freqs[])
 {
 	// we create the tree
 	struct HuffTree * tree = (struct HuffTree *)malloc(sizeof(struct HuffTree));
-
-	// count frequency for each char(8-bit).
-	memset(&tree->freqs, 0, sizeof(tree->freqs));
-	
-	int i;	
-	for(i=0; sample[i]!='\0'; i++)
-		tree->freqs[(unsigned char) sample[i]]++;
+	memcpy(tree->freqs, freqs, sizeof(tree->freqs));
 
 	// construct a priority queue for huffman tree building
 	struct PQ * pq =  pq_create();
 
+	int i;
 	for(i=0; i<256; i++)
 		if(tree->freqs[i] !=0)
 		{
@@ -159,11 +154,28 @@ inline struct HuffTree * huffman_create(char * sample)
 	pq_destroy(pq);
 
 	// construct symbol lookup table
-	huffman_sym_init(tree);
+	__huffman_sym_init(tree);
 			
 	return tree;
+
 }
 
+/**
+ * Construct a Huffman Tree with a sample string, the string must contain 
+ * every characters passing to encode function.
+ */
+inline struct HuffTree * huffman_create(char * sample)
+{
+	// count frequency for each char(8-bit).
+	uint32_t freqs[256];
+	memset(freqs, 0, sizeof(freqs));
+	
+	int i;	
+	for(i=0; sample[i]!='\0'; i++)
+		freqs[(unsigned char) sample[i]]++;
+
+	return huffman_recreate(freqs);	
+}
 
 /**
  * Encoding 
