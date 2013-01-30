@@ -9,6 +9,7 @@ PROGRAMS =	insertion_sort_demo \
 			radix_sort_demo \
 			shuffle_demo \
 			quick_sort_demo \
+			merge_sort_demo \
 			random_select_demo \
 			prime_sieve_eratosthenes \
 			hash_multi_demo \
@@ -55,6 +56,9 @@ shuffle_demo: $(SRCDIR)/shuffle_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 quick_sort_demo: $(SRCDIR)/quick_sort_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+
+merge_sort_demo: $(SRCDIR)/merge_sort_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 random_select_demo: $(SRCDIR)/random_select_demo.c $(DEPS)
