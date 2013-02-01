@@ -6,7 +6,7 @@
 
 int main(void)
 {
-	struct WordSeg * ws = word_seg_init("./src/dict.txt");
+	struct WordSeg * ws = word_seg_init("./src/dict.txt.sogou");
 	
 	char buf[128];
 	printf("input a sentence in GB18030 encoding :\n");

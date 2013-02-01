@@ -112,13 +112,11 @@ static inline struct WordEP * __word_seg_new_ep()
 /**
  * add a new word to the hashtable
  */
-static inline void __word_seg_add(struct HashTable * wordht, char * word, uint32_t count)
+static inline void __word_seg_add(struct HashTable * wordht, char * word)
 {
 	int i=0;
 	int len = strlen(word);
 	int num_char = 0;
-	//
-	count=1;
 
 	while(word[i]!='\0') {
 		uint32_t CH;
@@ -133,15 +131,15 @@ static inline void __word_seg_add(struct HashTable * wordht, char * word, uint32
 		}
 
 		if (i==len && (num_char==1)) { // single word
-			wep->SC[SINGLE]+=count;
+			wep->SC[SINGLE]+=1;
 		} else {
 			if (num_char==1) {	// begin
-				wep->SC[BEGIN]+=count;
+				wep->SC[BEGIN]+=1;
 			} else {
 				if (i==len) { //end 
-					wep->SC[END]+=count;	
+					wep->SC[END]+=1;	
 				} else {	// otherwise we are in middle
-					wep->SC[MIDDLE]+=count;
+					wep->SC[MIDDLE]+=1;
 				}
 			}
 		}
@@ -203,16 +201,15 @@ inline struct WordSeg * word_seg_init(char * path)
 	
 	FILE * fp;	
 	char word[64];	// the longest word should be less than 64 char
-	int count;
 	
 	fp = fopen(path, "r");
 	if (fp==NULL) {
 		perror(__func__);
 	} else {
 		while(!feof(fp)) {
-			fscanf(fp, "%s%d%*[^\n]", word, &count);
+			fscanf(fp, "%s%*[^\n]", word);
 			//			printf("read %s count %d\n", word, count);
-			__word_seg_add(ws->wordht, word, count);
+			__word_seg_add(ws->wordht, word);
 		}
 	}
 	fclose(fp);
@@ -265,7 +262,7 @@ inline Queue * word_seg_run(struct WordSeg * ws, char * str)
 			int state_max = 0;
 			int k;
 			for(k=0;k<4;k++) {
-				double prob = V[wc-1][k] * TP[k][j] * wep->EP[k];
+				double prob = V[wc-1][k] * TP[k][j] * wep->EP[j];
 				if (prob > prob_max) {
 					prob_max = prob;
 					state_max = k;
