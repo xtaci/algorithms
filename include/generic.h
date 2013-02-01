@@ -77,7 +77,7 @@ do {								\
  * Read from the string encoded in GB18030 into WORD
  * return the length of the WORD
  */
-inline short gb18030_read(char * str, int start, uint32_t * WORD)
+inline short gb18030_read(const char * str, int start, uint32_t * WORD)
 {
 	unsigned char * w = (unsigned char *)&str[start];
 
@@ -99,7 +99,7 @@ inline short gb18030_read(char * str, int start, uint32_t * WORD)
 /**
  * print a gb18030 char
  */
-inline void gb18030_putchar(uint32_t WORD)
+inline void gb18030_putchar(const uint32_t WORD)
 {
 	unsigned char w0 = (WORD&0xFF000000)>>24;
 	unsigned char w1 = (WORD&0xFF0000)>>16;

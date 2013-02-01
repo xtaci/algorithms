@@ -9,8 +9,11 @@
  *
  * Features:
  * 1. based on Hidden Markov Model
+ * 2. definition the states in B,E,M,S 
+ * 3. solve the hidden states with viterbi algorithm.
  *
  * http://en.wikipedia.org/wiki/Hidden_Markov_model
+ * http://en.wikipedia.org/wiki/Viterbi_algorithm
  *
  ******************************************************************************/
 
@@ -112,7 +115,7 @@ static inline struct WordEP * __word_seg_new_ep()
 /**
  * add a new word to the hashtable
  */
-static inline void __word_seg_add(struct HashTable * wordht, char * word)
+static inline void __word_seg_add(struct HashTable * wordht, const char * word)
 {
 	int i=0;
 	int len = strlen(word);
@@ -193,8 +196,13 @@ static inline void __word_seg_calc_all(struct HashTable * wordht)
 
 /**
  * init a WordSeg struct by a given file
+ * format:
+ * WORD1 .....
+ * WORD2
+ * ....
+ * WORDN
  */
-inline struct WordSeg * word_seg_init(char * path)
+inline struct WordSeg * word_seg_init(const char * path)
 {
 	struct WordSeg * ws = (struct WordSeg*)malloc(sizeof(struct WordSeg));
 	ws->wordht = hash_table_create(GB18030_NR);
@@ -220,16 +228,18 @@ inline struct WordSeg * word_seg_init(char * path)
 }
 
 /**
- * print the most possible B,E,M,S sequence for a sentence
- * The Viterbi algorithm
+ * return the most possible B,E,M,S sequence(FIFO) for a sentence
+ * using The Viterbi algorithm
+ *
+ * you should strip the , . white-spaces first before entering this 
+ * function
  */
-inline Queue * word_seg_run(struct WordSeg * ws, char * str)
+inline Queue * word_seg_run(struct WordSeg * ws, const char * str)
 {
 	// the position of string cursor
 	int pos = 0;
 	int len = strlen(str);
 	
-
 	double V[len][4];
 	struct WordEP * wep;
 	uint32_t CH;
@@ -240,28 +250,28 @@ inline Queue * word_seg_run(struct WordSeg * ws, char * str)
 	memset(path,0, sizeof(path));
 	memset(newpath,0, sizeof(newpath));
 
-	// Initialize
+	// Initialize base case. the first observation.
 	int i;
 	pos = gb18030_read(str, pos, &CH);
 	wep = (struct WordEP *)hash_table_get(ws->wordht, CH); 
-	
+		
 	for(i=0; i<4;i++) {	
 		V[0][i] = SP[i] * wep->EP[i];
 		path[i][0] = i+'0';
 	}
 
-	// Run Viterbi for each word except the first one.
+	// Run Viterbi for observation > 1
 	int wc=1; // word count;
 	while(pos<len) {
 		pos += gb18030_read(str, pos, &CH);
 		wep = (struct WordEP *)hash_table_get(ws->wordht, CH);
-
+		
 		int j;
 		for(j=0;j<4;j++) {
 			double prob_max = 0.0f;
 			int state_max = 0;
 			int k;
-			for(k=0;k<4;k++) {
+			for(k=0;k<4;k++) { // like relaxation step in Dijkstra.
 				double prob = V[wc-1][k] * TP[k][j] * wep->EP[j];
 				if (prob > prob_max) {
 					prob_max = prob;
@@ -303,5 +313,26 @@ inline Queue * word_seg_run(struct WordSeg * ws, char * str)
 	return q;
 }
 
+/**
+ * replace the unknown chars with white-space.
+ */
+inline void word_seg_strip(struct WordSeg * ws, char * str)
+{
+	int pos = 0;
+	int len = strlen(str);
+	uint32_t CH;
+	
+	while(pos<len) {
+		int wordlen = gb18030_read(str, pos, &CH);
+		struct WordEP * wep = (struct WordEP *)hash_table_get(ws->wordht, CH);
+		if (wep == NULL) {
+			int k;
+			for (k=0;k<wordlen;k++){
+				str[pos+k] = ' ';
+			}
+		}
+		pos+=wordlen;
+	}
+}
 
 #endif //
