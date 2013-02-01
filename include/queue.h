@@ -121,4 +121,13 @@ inline bool enqueue(Queue *Q, uintptr_t element)
 	}
 }
 
+/**
+ * queue destroy 
+ */
+inline void queue_destroy(Queue * Q)
+{
+	free(Q->elements);
+	free(Q);
+}
+
 #endif //

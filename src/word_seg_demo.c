@@ -27,6 +27,7 @@ int main(void)
 			dequeue(q);
 		}
 		printf("\n");
+		queue_destroy(q);		
 	}
 	
 	exit(0);
