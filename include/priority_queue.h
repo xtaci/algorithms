@@ -8,7 +8,8 @@
  * PRIORITY QUEUE 
  *
  * Features:
- * 1. A queue with prioity implemented in double linked list
+ * 1. A queue with prioity implemented in double linked list.
+ * 2. The queue is in ascending order of priority.
  *
  * http://en.wikipedia.org/wiki/Priority_queue
  *
@@ -24,7 +25,7 @@
 #include "double_linked_list.h"
 
 /**
- * definition of node of priority queue.
+ * definition of a node of priority queue.
  */
 struct PQNode {
 	uint32_t priority;		
@@ -61,13 +62,14 @@ inline void pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
 	n->priority = priority;
 	n->value = value;
 
-	if (list_empty(&pq->head))
+	if (list_empty(&pq->head))	// empty list, just add in.
 	{
 		list_add(&n->node, &pq->head);
 		pq->count++;
 	}
 	else
 	{
+		// sequentially find the apropriate position
 		struct PQNode * pos;
 		bool found = false;
 		list_for_each_entry(pos, &pq->head, node) {
@@ -79,8 +81,7 @@ inline void pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
 			}
 		}
 
-		// priority larger than every node
-		if (!found) {
+		if (!found) {	// we reach the end of the list.
 			list_add_tail(&n->node, &pq->head);
 			pq->count++;
 		}
@@ -90,7 +91,9 @@ inline void pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
 }
 
 /**
- * dequeue the most priority element
+ * dequeue the most priority element, i.e. the first element.
+ * return 0 when the list is empty.
+ * check pq_is_empty() before pq_dequeue().
  */
 inline uintptr_t pq_dequeue(struct PQ *pq, uint32_t * prio )
 {

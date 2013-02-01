@@ -69,7 +69,7 @@ enum WORDTAG {
  * SINGLE	-> S B M E
  * ... 		-> S B M E
  */
-static float TP[4][4] = {
+static const float TP[4][4] = {
 	{0.5f, 0.5f, 0.0f, 0.0f}, // S
 	{0.0f, 0.0f, 0.5f, 0.5f}, // B
 	{0.0f, 0.0f, 0.5f, 0.5f}, // M
@@ -79,7 +79,7 @@ static float TP[4][4] = {
 /**
  * the start probability of state
  */
-static float SP[4] = {0.5f, 0.5f, 0.0f, 0.0f};
+static const float SP[4] = {0.5f, 0.5f, 0.0f, 0.0f};
 
 /**
  * word state definition
