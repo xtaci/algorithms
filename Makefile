@@ -78,7 +78,7 @@ double_linked_list_demo: $(SRCDIR)/double_linked_list_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 stack_demo: $(SRCDIR)/stack_demo.c $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 queue_demo: $(SRCDIR)/queue_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
@@ -144,10 +144,10 @@ sha1_demo: $(SRCDIR)/sha1_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 huffman_demo: $(SRCDIR)/huffman_demo.c $(DEPS)
-	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
 
 word_seg_demo: $(SRCDIR)/word_seg_demo.c $(DEPS)
-	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -lm
 
 clean:
 	rm -rf $(PROGRAMS) *.dSYM
