@@ -4,8 +4,6 @@
 #include <stdlib.h> /* rand() */
 #include "dos_tree.h"
 
-DEFINE_DOSTREE_NIL_NODE;
-
 void print_tree(dostree t);
 void print_tree_helper(dostree t, dostree_node n, int indent);
 

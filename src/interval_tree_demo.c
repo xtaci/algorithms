@@ -5,8 +5,6 @@
 
 #include "interval_tree.h"
 
-DEFINE_INTTREE_NIL_NODE;
-
 void print_tree(inttree t);
 void print_tree_helper(inttree t, inttree_node n, int indent);
 

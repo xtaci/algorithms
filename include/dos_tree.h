@@ -78,15 +78,12 @@ static inline void delete_case6(dostree t, dostree_node n);
 
 static void fixup_size(dostree t, dostree_node x);
 
-/* program should define dos_nil by the macro folkeying */
-extern dostree_node dos_nil;
-/**
- * this macro should be called once and only.
- */
-#define DEFINE_DOSTREE_NIL_NODE	 	\
-	struct dostree_node_t dos_nil_t = 	\
-		{.key = INT_MIN, .size=0, .color=BLACK, .left=&dos_nil_t, .right=&dos_nil_t, .parent=&dos_nil_t};\
-	dostree_node dos_nil = &dos_nil_t;
+
+#ifdef __COMPILE_OBJ__
+struct dostree_node_t dos_nil_t = 
+	{.key = INT_MIN, .size=0, .color=BLACK, .left=&dos_nil_t, .right=&dos_nil_t, .parent=&dos_nil_t};
+dostree_node dos_nil = &dos_nil_t;
+#endif
  
 
 /**

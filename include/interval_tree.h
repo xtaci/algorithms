@@ -80,15 +80,14 @@ static inline void delete_case6(inttree t, inttree_node n);
 static inline void fixup_max(inttree t,inttree_node x);
 
 
-/* program should define i_nil by the macro following */
-extern inttree_node i_nil;
 /**
- * this macro should be called once and only.
+ * define once for a object(.o) output. 
  */
-#define DEFINE_INTTREE_NIL_NODE	 	\
-	struct inttree_node_t i_nil_t = 	\
-		{.low = INT_MIN, .high=INT_MIN, .color=BLACK, .left=&i_nil_t, .right=&i_nil_t, .parent=&i_nil_t};\
-	inttree_node i_nil = &i_nil_t;
+#ifdef __COMPILE_OBJ__
+struct inttree_node_t i_nil_t = 
+	{.low = INT_MIN, .high=INT_MIN, .color=BLACK, .left=&i_nil_t, .right=&i_nil_t, .parent=&i_nil_t};
+inttree_node i_nil = &i_nil_t;
+#endif
  
 static inline inttree_node grandparent(inttree t, inttree_node n) {
     assert (n != i_nil);

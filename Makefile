@@ -102,10 +102,10 @@ rbtree_demo: $(SRCDIR)/rbtree_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
 
 interval_tree_demo: $(SRCDIR)/interval_tree_demo.c $(DEPS)
-	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -D__COMPILE_OBJ__
 
 dos_tree_demo: $(SRCDIR)/dos_tree_demo.c $(DEPS)
-	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
+	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR) -D__COMPILE_OBJ__
 
 skip_list_demo: $(SRCDIR)/skip_list_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< -I$(INCLUDEDIR)
