@@ -40,6 +40,8 @@ typedef struct dostree_node_t {
 
 typedef struct dostree_t {
     dostree_node root;
+	struct dostree_node_t nil_t;
+	dostree_node nil;
 } *dostree;
 
 /**
@@ -47,7 +49,7 @@ typedef struct dostree_t {
  */
 inline dostree dostree_create();
 inline void dostree_insert(dostree t, int key);
-inline dostree_node dostree_lookup(dostree_node n, int i);
+inline dostree_node dostree_lookup(dostree t, dostree_node n, int i);
 inline void dostree_delete(dostree t, dostree_node node);
 
 /**
@@ -78,35 +80,27 @@ static inline void delete_case6(dostree t, dostree_node n);
 
 static void fixup_size(dostree t, dostree_node x);
 
-
-#ifdef __COMPILE_OBJ__
-struct dostree_node_t dos_nil_t = 
-	{.key = INT_MIN, .size=0, .color=BLACK, .left=&dos_nil_t, .right=&dos_nil_t, .parent=&dos_nil_t};
-dostree_node dos_nil = &dos_nil_t;
-#endif
- 
-
 /**
  *  Travels up to the root fixing the size fields after
  *  an insertion or deletion 
  */
 static inline void fixup_size(dostree t, dostree_node x)
 {
-	while(x != dos_nil) {
+	while(x != t->nil) {
 		x->size = x->left->size + x->right->size + 1;
 		x = x->parent;
 	}
 }
 static inline dostree_node grandparent(dostree t, dostree_node n) {
-    assert (n != dos_nil);
-    assert (n->parent != dos_nil); /* Not the root dostree_node */
-    assert (n->parent->parent != dos_nil); /* Not child of root */
+    assert (n != t->nil);
+    assert (n->parent != t->nil); /* Not the root dostree_node */
+    assert (n->parent->parent != t->nil); /* Not child of root */
     return n->parent->parent;
 }
 
 static inline dostree_node sibling(dostree t, dostree_node n) {
-    assert (n != dos_nil);
-    assert (n->parent != dos_nil); /* Root dostree_node has no sibling */
+    assert (n != t->nil);
+    assert (n->parent != t->nil); /* Root dostree_node has no sibling */
     if (n == n->parent->left)
         return n->parent->right;
     else
@@ -114,9 +108,9 @@ static inline dostree_node sibling(dostree t, dostree_node n) {
 }
 
 static inline dostree_node uncle(dostree t, dostree_node n) {
-    assert (n != dos_nil);
-    assert (n->parent != dos_nil); /* Root dostree_node has no uncle */
-    assert (n->parent->parent != dos_nil); /* Children of root have no uncle */
+    assert (n != t->nil);
+    assert (n->parent != t->nil); /* Root dostree_node has no uncle */
+    assert (n->parent->parent != t->nil); /* Children of root have no uncle */
     return sibling(t,n->parent);
 }
 
@@ -128,7 +122,14 @@ static inline color node_color(dostree_node n) { return n->color; }
  */
 inline dostree dostree_create() {
     dostree t = malloc(sizeof(struct dostree_t));
-	t->root = dos_nil;
+	t->nil_t.key 	= INT_MIN;
+	t->nil_t.size	= 0;
+	t->nil_t.color 	= BLACK;
+	t->nil_t.left 	= &t->nil_t;
+	t->nil_t.right	= &t->nil_t;
+	t->nil_t.parent	= &t->nil_t;
+	t->nil = &t->nil_t;
+	t->root = t->nil;
     return t;
 }
 
@@ -136,9 +137,9 @@ static inline dostree_node new_node(dostree t, int key, color dostree_node_color
     dostree_node result = malloc(sizeof(struct dostree_node_t));
     result->key = key;
     result->color = dostree_node_color;
-    result->left = dos_nil;
-    result->right = dos_nil;
-    result->parent = dos_nil;
+    result->left = t->nil;
+    result->right = t->nil;
+    result->parent = t->nil;
     return result;
 }
 
@@ -147,19 +148,19 @@ static inline dostree_node new_node(dostree t, int key, color dostree_node_color
  *
  * select the i-th largest element
  */
-inline dostree_node dostree_lookup(dostree_node n, int i) {
-	if (n == dos_nil) return dos_nil;
+inline dostree_node dostree_lookup(dostree t, dostree_node n, int i) {
+	if (n == t->nil) return t->nil;
 	int size = n->left->size + 1;
 	if(i == size) return n;
-	if(i < size ) return dostree_lookup(n->left, i);
-	else return dostree_lookup(n->right, i-size);
+	if(i < size ) return dostree_lookup(t, n->left, i);
+	else return dostree_lookup(t, n->right, i-size);
 }
 
 static inline void rotate_left(dostree t, dostree_node n) {
     dostree_node r = n->right;
     replace_node(t, n, r);
     n->right = r->left;
-    if (r->left != dos_nil) {
+    if (r->left != t->nil) {
         r->left->parent = n;
     }
     r->left = n;
@@ -174,7 +175,7 @@ static inline void rotate_right(dostree t, dostree_node n) {
     dostree_node L = n->left;
     replace_node(t, n, L);
     n->left = L->right;
-    if (L->right != dos_nil) {
+    if (L->right != t->nil) {
         L->right->parent = n;
     }
     L->right = n;
@@ -186,7 +187,7 @@ static inline void rotate_right(dostree t, dostree_node n) {
 }
 
 static inline void replace_node(dostree t, dostree_node oldn, dostree_node newn) {
-    if (oldn->parent == dos_nil) {
+    if (oldn->parent == t->nil) {
         t->root = newn;
     } else {
         if (oldn == oldn->parent->left)
@@ -194,7 +195,7 @@ static inline void replace_node(dostree t, dostree_node oldn, dostree_node newn)
         else
             oldn->parent->right = newn;
     }
-    if (newn != dos_nil) {
+    if (newn != t->nil) {
         newn->parent = oldn->parent;
     }
 }
@@ -205,7 +206,7 @@ static inline void replace_node(dostree t, dostree_node oldn, dostree_node newn)
  */
 inline void dostree_insert(dostree t, int key) {
     dostree_node inserted_node = new_node(t, key, RED);
-    if (t->root == dos_nil) {
+    if (t->root == t->nil) {
         t->root = inserted_node;
 	}
 	else {
@@ -216,14 +217,14 @@ inline void dostree_insert(dostree t, int key) {
 				free (inserted_node);
 				return;
 			} else if (key < n->key) {
-				if (n->left == dos_nil) {
+				if (n->left == t->nil) {
 					n->left = inserted_node;
 					break;
 				} else {
 					n = n->left;
 				}
 			} else {
-				if (n->right == dos_nil) {
+				if (n->right == t->nil) {
 					n->right = inserted_node;
 					break;
 				} else {
@@ -240,7 +241,7 @@ inline void dostree_insert(dostree t, int key) {
 }
 
 static inline void insert_case1(dostree t, dostree_node n) {
-    if (n->parent == dos_nil)
+    if (n->parent == t->nil)
         n->color = BLACK;
     else
         insert_case2(t, n);
@@ -291,8 +292,8 @@ static inline void insert_case5(dostree t, dostree_node n) {
  */
 inline void dostree_delete(dostree t, dostree_node n) {
     dostree_node child;
-    if (n == dos_nil) return;
-    if (n->left != dos_nil && n->right != dos_nil) {
+    if (n == t->nil) return;
+    if (n->left != t->nil && n->right != t->nil) {
         /* Copy key/value from predecessor and then delete it instead */
         dostree_node pred = maximum_node(t, n->left);
         n->key = pred->key;
@@ -300,14 +301,14 @@ inline void dostree_delete(dostree t, dostree_node n) {
         n = pred;
     }
 
-    assert(n->left == dos_nil || n->right == dos_nil);
-    child = n->right == dos_nil ? n->left  : n->right;
+    assert(n->left == t->nil || n->right == t->nil);
+    child = n->right == t->nil ? n->left  : n->right;
     if (node_color(n) == BLACK) {
         n->color = node_color(child);
         delete_case1(t, n);
     }
     replace_node(t, n, child);
-    if (n->parent == dos_nil && child != dos_nil)
+    if (n->parent == t->nil && child != t->nil)
         child->color = BLACK;
     free(n);
 	
@@ -316,13 +317,13 @@ inline void dostree_delete(dostree t, dostree_node n) {
 }
 
 static inline dostree_node maximum_node(dostree t, dostree_node n) {
-    while (n->right != dos_nil) {
+    while (n->right != t->nil) {
         n = n->right;
     }
     return n;
 }
 static inline void delete_case1(dostree t, dostree_node n) {
-    if (n->parent == dos_nil)
+    if (n->parent == t->nil)
         return;
     else
         delete_case2(t, n);

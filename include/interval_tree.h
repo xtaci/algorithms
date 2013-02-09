@@ -41,6 +41,8 @@ typedef struct inttree_node_t {
 
 typedef struct inttree_t {
     inttree_node root;
+	struct inttree_node_t nil_t;   //nil definition
+	inttree_node nil;
 } *inttree;
 
 /**
@@ -79,26 +81,16 @@ static inline void delete_case6(inttree t, inttree_node n);
 
 static inline void fixup_max(inttree t,inttree_node x);
 
-
-/**
- * define once for a object(.o) output. 
- */
-#ifdef __COMPILE_OBJ__
-struct inttree_node_t i_nil_t = 
-	{.low = INT_MIN, .high=INT_MIN, .color=BLACK, .left=&i_nil_t, .right=&i_nil_t, .parent=&i_nil_t};
-inttree_node i_nil = &i_nil_t;
-#endif
- 
 static inline inttree_node grandparent(inttree t, inttree_node n) {
-    assert (n != i_nil);
-    assert (n->parent != i_nil); /* Not the root inttree_node */
-    assert (n->parent->parent != i_nil); /* Not child of root */
+    assert (n != t->nil);
+    assert (n->parent != t->nil); /* Not the root inttree_node */
+    assert (n->parent->parent != t->nil); /* Not child of root */
     return n->parent->parent;
 }
 
 static inline inttree_node sibling(inttree t, inttree_node n) {
-    assert (n != i_nil);
-    assert (n->parent != i_nil); /* Root inttree_node has no sibling */
+    assert (n != t->nil);
+    assert (n->parent != t->nil); /* Root inttree_node has no sibling */
     if (n == n->parent->left)
         return n->parent->right;
     else
@@ -106,9 +98,9 @@ static inline inttree_node sibling(inttree t, inttree_node n) {
 }
 
 static inline inttree_node uncle(inttree t, inttree_node n) {
-    assert (n != i_nil);
-    assert (n->parent != i_nil); /* Root inttree_node has no uncle */
-    assert (n->parent->parent != i_nil); /* Children of root have no uncle */
+    assert (n != t->nil);
+    assert (n->parent != t->nil); /* Root inttree_node has no uncle */
+    assert (n->parent->parent != t->nil); /* Children of root have no uncle */
     return sibling(t,n->parent);
 }
 
@@ -120,7 +112,14 @@ static inline color node_color(inttree_node n) { return n->color; }
  */
 inline inttree inttree_create() {
     inttree t = malloc(sizeof(struct inttree_t));
-    t->root = i_nil;
+	t->nil_t.low = INT_MIN;
+	t->nil_t .high=INT_MIN;
+	t->nil_t.color=BLACK;
+	t->nil_t.left=&t->nil_t;
+	t->nil_t.right=&t->nil_t;
+	t->nil_t.parent=&t->nil_t;
+	t->nil = &t->nil_t;
+    t->root = t->nil;
     return t;
 }
 
@@ -129,9 +128,9 @@ static inline inttree_node new_node(inttree t, int low, int high, color inttree_
     result->low = low;
     result->high = high;
     result->color = inttree_node_color;
-    result->left = i_nil;
-    result->right = i_nil;
-    result->parent = i_nil;
+    result->left = t->nil;
+    result->right = t->nil;
+    result->parent = t->nil;
     return result;
 }
 
@@ -143,8 +142,8 @@ static inline inttree_node new_node(inttree t, int low, int high, color inttree_
  */
 inline inttree_node inttree_lookup(inttree t, int low, int high) {
     inttree_node x = t->root;
-    while (x != i_nil && (low > x->high || x->low > high) ) {
-		if (x->left !=i_nil && low <=x->left->m) x = x->left;
+    while (x != t->nil && (low > x->high || x->low > high) ) {
+		if (x->left !=t->nil && low <=x->left->m) x = x->left;
 		else x = x->right;
     }
     return x;
@@ -154,7 +153,7 @@ static inline void rotate_left(inttree t, inttree_node n) {
     inttree_node r = n->right;
     replace_node(t, n, r);
     n->right = r->left;
-    if (r->left != i_nil) {
+    if (r->left != t->nil) {
         r->left->parent = n;
     }
     r->left = n;
@@ -168,7 +167,7 @@ static inline void rotate_right(inttree t, inttree_node n) {
     inttree_node L = n->left;
     replace_node(t, n, L);
     n->left = L->right;
-    if (L->right != i_nil) {
+    if (L->right != t->nil) {
         L->right->parent = n;
     }
     L->right = n;
@@ -179,7 +178,7 @@ static inline void rotate_right(inttree t, inttree_node n) {
 }
 
 static inline void replace_node(inttree t, inttree_node oldn, inttree_node newn) {
-    if (oldn->parent == i_nil) {
+    if (oldn->parent == t->nil) {
         t->root = newn;
     } else {
         if (oldn == oldn->parent->left)
@@ -187,7 +186,7 @@ static inline void replace_node(inttree t, inttree_node oldn, inttree_node newn)
         else
             oldn->parent->right = newn;
     }
-    if (newn != i_nil) {
+    if (newn != t->nil) {
         newn->parent = oldn->parent;
     }
 }
@@ -198,7 +197,7 @@ static inline void replace_node(inttree t, inttree_node oldn, inttree_node newn)
  */
 inline void inttree_insert(inttree t, int low, int high) {
     inttree_node inserted_node = new_node(t,low, high, RED);
-	if (t->root == i_nil) {
+	if (t->root == t->nil) {
         t->root = inserted_node;
     } else {
         inttree_node n = t->root;
@@ -208,14 +207,14 @@ inline void inttree_insert(inttree t, int low, int high) {
 				free (inserted_node);
 				return;
 			} else if (low < n->low) {
-				if (n->left == i_nil) {
+				if (n->left == t->nil) {
 					n->left = inserted_node;
 					break;
 				} else {
 					n = n->left;
 				}
 			} else {
-				if (n->right == i_nil) {
+				if (n->right == t->nil) {
 					n->right = inserted_node;
 					break;
 				} else {
@@ -238,14 +237,14 @@ inline void inttree_insert(inttree t, int low, int high) {
  */
 static inline void fixup_max(inttree t,inttree_node x)
 {
-	while(x != i_nil) {
+	while(x != t->nil) {
 		x->m = Max(x->high,Max(x->left->m,x->right->m));
 		x=x->parent;
 	}
 }
 
 static inline void insert_case1(inttree t, inttree_node n) {
-    if (n->parent == i_nil)
+    if (n->parent == t->nil)
         n->color = BLACK;
     else
         insert_case2(t, n);
@@ -296,8 +295,8 @@ static inline void insert_case5(inttree t, inttree_node n) {
  */
 inline void inttree_delete(inttree t, inttree_node n) {
     inttree_node child;
-    if (n == i_nil) return;
-    if (n->left != i_nil && n->right != i_nil) {
+    if (n == t->nil) return;
+    if (n->left != t->nil && n->right != t->nil) {
         /* Copy key/value from predecessor and then delete it instead */
         inttree_node pred = maximum_node(t, n->left);
         n->low = pred->low;
@@ -305,14 +304,14 @@ inline void inttree_delete(inttree t, inttree_node n) {
         n = pred;
     }
 
-    assert(n->left == i_nil || n->right == i_nil);
-    child = n->right == i_nil ? n->left  : n->right;
+    assert(n->left == t->nil || n->right == t->nil);
+    child = n->right == t->nil ? n->left  : n->right;
     if (node_color(n) == BLACK) {
         n->color = node_color(child);
         delete_case1(t, n);
     }
     replace_node(t, n, child);
-    if (n->parent == i_nil && child != i_nil)
+    if (n->parent == t->nil && child != t->nil)
         child->color = BLACK;
     free(n);
 
@@ -321,13 +320,13 @@ inline void inttree_delete(inttree t, inttree_node n) {
 }
 
 static inline inttree_node maximum_node(inttree t, inttree_node n) {
-    while (n->right != i_nil) {
+    while (n->right != t->nil) {
         n = n->right;
     }
     return n;
 }
 static inline void delete_case1(inttree t, inttree_node n) {
-    if (n->parent == i_nil)
+    if (n->parent == t->nil)
         return;
     else
         delete_case2(t, n);

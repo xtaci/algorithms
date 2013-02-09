@@ -18,11 +18,11 @@ void print_tree(dostree t) {
 
 void print_tree_helper(dostree t, dostree_node n, int indent) {
     int i;
-    if (n == dos_nil) {
+    if (n == t->nil) {
         fputs("<empty tree>", stdout);
         return;
     }
-    if (n->right != dos_nil) {
+    if (n->right != t->nil) {
         print_tree_helper(t, n->right, indent + INDENT_STEP);
     }
     for(i=0; i<indent; i++)
@@ -31,7 +31,7 @@ void print_tree_helper(dostree t, dostree_node n, int indent) {
         printf("[key:%d size:%d]\n", n->key,n->size);
     else
         printf("*[key:%d size:%d]\n", n->key, n->size);
-    if (n->left != dos_nil) {
+    if (n->left != t->nil) {
         print_tree_helper(t, n->left, indent + INDENT_STEP);
     }
 }
@@ -54,8 +54,8 @@ int main(void)
     print_tree(t);
 
 	for(i=0; i<MAXELEMENT; i++) {
-		dostree_node n = dostree_lookup(t->root,i+1);
-		if(n!=dos_nil) printf("the %dth element is %d\n\n", i+1, n->key);
+		dostree_node n = dostree_lookup(t, t->root,i+1);
+		if(n!=t->nil) printf("the %dth element is %d\n\n", i+1, n->key);
     }
     
 	print_tree(t);
@@ -63,15 +63,15 @@ int main(void)
 	printf("deleteing %d smallest elements\n", MAXELEMENT/2);
 	for(i=0; i<MAXELEMENT/2; i++) {
 		// deleting half elements
-		dostree_node n = dostree_lookup(t->root,1);
+		dostree_node n = dostree_lookup(t, t->root,1);
 		dostree_delete(t, n);
     }
 
     print_tree(t);
 
 	for(i=0; i<MAXELEMENT/2; i++) {
-		dostree_node n = dostree_lookup(t->root,i+1);
-		if(n!=dos_nil) printf("the %dth element is %d\n\n", i+1, n->key);
+		dostree_node n = dostree_lookup(t, t->root,i+1);
+		if(n!=t->nil) printf("the %dth element is %d\n\n", i+1, n->key);
     }
 
 	exit(0);

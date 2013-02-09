@@ -19,11 +19,11 @@ void print_tree(inttree t) {
 
 void print_tree_helper(inttree t, inttree_node n, int indent) {
     int i;
-    if (n == i_nil) {
+    if (n == t->nil) {
         fputs("<empty tree>", stdout);
         return;
     }
-    if (n->right != i_nil) {
+    if (n->right != t->nil) {
         print_tree_helper(t, n->right, indent + INDENT_STEP);
     }
     for(i=0; i<indent; i++)
@@ -32,7 +32,7 @@ void print_tree_helper(inttree t, inttree_node n, int indent) {
         printf("[%d %d, m->%d]\n", n->low,n->high,n->m);
     else
         printf("*[%d %d, m->%d]\n", n->low, n->high,n->m);
-    if (n->left != i_nil) {
+    if (n->left != t->nil) {
         print_tree_helper(t, n->left, indent + INDENT_STEP);
     }
 }
@@ -60,7 +60,7 @@ int main() {
 
 	for(i=0; i<MAXELEMENT; i++) {
 		inttree_node n = inttree_lookup(t,low,high);
-		if (n!=i_nil) {
+		if (n!=t->nil) {
 			printf("found & delete: [%d %d]\n", n->low, n->high);
 			inttree_delete(t,n);	
 		}
