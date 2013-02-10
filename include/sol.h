@@ -23,7 +23,7 @@
 /**
  * Move a node to the front
  */
-inline void list_mtf(struct list_head *entry, struct list_head *head)
+static inline void list_mtf(struct list_head *entry, struct list_head *head)
 {
 	if (entry->prev == head) return;
 	__list_del(entry->prev, entry->next);
@@ -34,7 +34,7 @@ inline void list_mtf(struct list_head *entry, struct list_head *head)
 /**
  * Move a node ahead one position
  */
-inline void list_mao(struct list_head *entry, struct list_head * head)
+static inline void list_mao(struct list_head *entry, struct list_head * head)
 {
 	// if the entry in the 1st position
 	if (entry->prev == head) return;

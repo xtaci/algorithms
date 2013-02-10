@@ -21,7 +21,7 @@
 /**
  * the random_select partition routine
  */
-inline int partition(int list[],int begin, int end)
+static inline int partition(int list[],int begin, int end)
 {
 	int pivot_idx = choose_pivot(begin,end);
     int pivot = list[pivot_idx];
@@ -47,7 +47,7 @@ inline int partition(int list[],int begin, int end)
 /**
  * select the k-th smallest number in 'list' of range [begin, end]
  */
-inline int random_select(int list[], int begin, int end, int k)
+static inline int random_select(int list[], int begin, int end, int k)
 {
 	if(begin == end)
 		return begin;

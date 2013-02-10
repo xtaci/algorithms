@@ -47,10 +47,10 @@ typedef struct dostree_t {
 /**
  * Interfaces
  */
-inline dostree dostree_create();
-inline void dostree_insert(dostree t, int key);
-inline dostree_node dostree_lookup(dostree t, dostree_node n, int i);
-inline void dostree_delete(dostree t, dostree_node node);
+static inline dostree dostree_create();
+static inline void dostree_insert(dostree t, int key);
+static inline dostree_node dostree_lookup(dostree t, dostree_node n, int i);
+static inline void dostree_delete(dostree t, dostree_node node);
 
 /**
  * Auxillary functions
@@ -120,7 +120,7 @@ static inline color node_color(dostree_node n) { return n->color; }
  * dostree_create
  * init an interval tree
  */
-inline dostree dostree_create() {
+static inline dostree dostree_create() {
     dostree t = malloc(sizeof(struct dostree_t));
 	t->nil_t.key 	= INT_MIN;
 	t->nil_t.size	= 0;
@@ -148,7 +148,7 @@ static inline dostree_node new_node(dostree t, int key, color dostree_node_color
  *
  * select the i-th largest element
  */
-inline dostree_node dostree_lookup(dostree t, dostree_node n, int i) {
+static inline dostree_node dostree_lookup(dostree t, dostree_node n, int i) {
 	if (n == t->nil) return t->nil;
 	int size = n->left->size + 1;
 	if(i == size) return n;
@@ -204,7 +204,7 @@ static inline void replace_node(dostree t, dostree_node oldn, dostree_node newn)
  * dostree_insert
  * insert a new key into the dos tree
  */
-inline void dostree_insert(dostree t, int key) {
+static inline void dostree_insert(dostree t, int key) {
     dostree_node inserted_node = new_node(t, key, RED);
     if (t->root == t->nil) {
         t->root = inserted_node;
@@ -290,7 +290,7 @@ static inline void insert_case5(dostree t, dostree_node n) {
 /**
  * delete the key in the red-black tree
  */
-inline void dostree_delete(dostree t, dostree_node n) {
+static inline void dostree_delete(dostree t, dostree_node n) {
     dostree_node child;
     if (n == t->nil) return;
     if (n->left != t->nil && n->right != t->nil) {

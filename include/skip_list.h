@@ -74,7 +74,7 @@ static inline struct SkipSet * sl_make_skipset() {
  * search the given key from the skip list
  * if the key is not exist, return INT_MIN
  */
-inline int32_t sl_get(const struct SkipSet* ss, int key) 
+static inline int32_t sl_get(const struct SkipSet* ss, int key) 
 {
     int i;
     struct SkipNode* x = ss->header;
@@ -94,7 +94,7 @@ inline int32_t sl_get(const struct SkipSet* ss, int key)
 /**
  * insert a key->key pair into the list
  */
-inline void sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
+static inline void sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
     int i;
     struct SkipNode * x = ss->header;	
     struct SkipNode * update[SL_MAX_LEVEL + 1];
@@ -134,7 +134,7 @@ inline void sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
 /**
  * delete a node by it's key
  */
-inline void sl_delete(struct SkipSet* ss, int key) {
+static inline void sl_delete(struct SkipSet* ss, int key) {
     int i;
     struct SkipNode* x = ss->header;	
     struct SkipNode* update[SL_MAX_LEVEL + 1];

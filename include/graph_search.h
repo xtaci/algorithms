@@ -34,7 +34,7 @@
 
 #define MARK 0xDEADU
 
-inline void breadth_first_search(const struct Graph * g, uint32_t source)
+static inline void breadth_first_search(const struct Graph * g, uint32_t source)
 {
 	struct Adjacent * root = graph_lookup(g, source);
 	struct HashTable * ht = hash_table_create(g->num_vertex);		
@@ -64,7 +64,7 @@ inline void breadth_first_search(const struct Graph * g, uint32_t source)
 	printf("\n");
 }
 
-inline void depth_first_search(const struct Graph *g, uint32_t source)
+static inline void depth_first_search(const struct Graph *g, uint32_t source)
 {
 	struct Adjacent * root = graph_lookup(g, source);
 	struct HashTable * ht = hash_table_create(g->num_vertex);		

@@ -35,12 +35,12 @@ typedef struct {
   unsigned char digest[16];     /* actual digest after MD5Final call */
 } MD5_CTX;
 
-inline void MD5Init (MD5_CTX * mdContext);
-inline void MD5Update (MD5_CTX * mdContext, unsigned char * inBuf, uint32_t inLen);
-inline void MD5Final (MD5_CTX *mdContext);
+static inline void MD5Init (MD5_CTX * mdContext);
+static inline void MD5Update (MD5_CTX * mdContext, unsigned char * inBuf, uint32_t inLen);
+static inline void MD5Final (MD5_CTX *mdContext);
 
 /* forward declaration */
-inline static void MD5Transform (uint32_t * buf, uint32_t * in);
+static inline void MD5Transform (uint32_t * buf, uint32_t * in);
 
 /* F, G and H are basic MD5 functions: selection, majority, parity */
 #define F(x, y, z) (((x) & (y)) | ((~x) & (z)))
@@ -77,7 +77,7 @@ inline static void MD5Transform (uint32_t * buf, uint32_t * in);
 /**
  * MD5 initialization. Begins an MD5 operation, writing a new context.
  */
-inline void MD5Init (MD5_CTX * mdContext)
+static inline void MD5Init (MD5_CTX * mdContext)
 {
 	mdContext->i[0] = mdContext->i[1] = (uint32_t)0;
 
@@ -94,7 +94,7 @@ inline void MD5Init (MD5_CTX * mdContext)
  * operation, processing another message block, and updating the
  * context.
  */
-inline void MD5Update (MD5_CTX * mdContext, unsigned char * inBuf, uint32_t inLen)
+static inline void MD5Update (MD5_CTX * mdContext, unsigned char * inBuf, uint32_t inLen)
 {
 	uint32_t in[16];
 	int mdi;
@@ -130,7 +130,7 @@ inline void MD5Update (MD5_CTX * mdContext, unsigned char * inBuf, uint32_t inLe
  * MD5 finalization. Ends an MD5 message-digest operation, writing the
  * the message digest and zeroizing the context.
  */
-inline void MD5Final (MD5_CTX *mdContext)
+static inline void MD5Final (MD5_CTX *mdContext)
 {
 	static unsigned char PADDING[64] = {
 	  0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -182,7 +182,7 @@ inline void MD5Final (MD5_CTX *mdContext)
 /**
  * Basic MD5 step. Transform buf based on in.
  */
-inline static void MD5Transform (uint32_t * buf, uint32_t * in)
+static inline void MD5Transform (uint32_t * buf, uint32_t * in)
 {
 	uint32_t a = buf[0], b = buf[1], c = buf[2], d = buf[3];
 

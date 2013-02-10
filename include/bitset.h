@@ -28,7 +28,7 @@ struct BitSet {
 /**
  * size -- in bits
  */
-inline struct BitSet * bitset_create(uint32_t size)
+static inline struct BitSet * bitset_create(uint32_t size)
 {
 	struct BitSet * bs = (struct BitSet *)malloc(sizeof(struct BitSet));
 
@@ -44,7 +44,7 @@ inline struct BitSet * bitset_create(uint32_t size)
 /**
  * set 1 to position [bit]
  */
-inline void bitset_set(struct BitSet * bs, uint32_t bit)
+static inline void bitset_set(struct BitSet * bs, uint32_t bit)
 {
 	if (bit>=bs->size) return;
 
@@ -57,7 +57,7 @@ inline void bitset_set(struct BitSet * bs, uint32_t bit)
 /**
  * set 0 to position [bit]
  */
-inline void bitset_unset(struct BitSet * bs, uint32_t bit)
+static inline void bitset_unset(struct BitSet * bs, uint32_t bit)
 {
 	if (bit>=bs->size) return;
 
@@ -70,7 +70,7 @@ inline void bitset_unset(struct BitSet * bs, uint32_t bit)
 /**
  * test a bit , true if set, false if not.
  */
-inline bool bitset_test(struct BitSet * bs, uint32_t bit)
+static inline bool bitset_test(struct BitSet * bs, uint32_t bit)
 {
 	if (bit>=bs->size) return false;
 
@@ -84,7 +84,7 @@ inline bool bitset_test(struct BitSet * bs, uint32_t bit)
 /**
  * safely free
  */
-inline void bitset_destroy(struct BitSet *bs)
+static inline void bitset_destroy(struct BitSet *bs)
 {
 	if(bs->bits)free(bs->bits);
 	free(bs);

@@ -24,7 +24,7 @@ struct Array2D
 /**
  * create a 2-D array of size nrow * ncol
  */
-inline struct Array2D * array2d_create(uint32_t nrow, uint32_t ncol)
+static inline struct Array2D * array2d_create(uint32_t nrow, uint32_t ncol)
 {
 	struct Array2D * arr = (struct Array2D *)malloc(sizeof(struct Array2D));
 	arr->nrow = nrow;
@@ -36,7 +36,7 @@ inline struct Array2D * array2d_create(uint32_t nrow, uint32_t ncol)
 /**
  * save destroy and free array
  */
-inline void array2d_destroy(struct Array2D * array)
+static inline void array2d_destroy(struct Array2D * array)
 {
 	free(array->data);
 	free(array);
@@ -45,7 +45,7 @@ inline void array2d_destroy(struct Array2D * array)
 /**
  * get value from [row, col]
  */
-inline int array2d_get(struct Array2D * array, uint32_t row, uint32_t col)
+static inline int array2d_get(struct Array2D * array, uint32_t row, uint32_t col)
 {
 	return array->data[array->ncol * row + col];
 }
@@ -53,7 +53,7 @@ inline int array2d_get(struct Array2D * array, uint32_t row, uint32_t col)
 /**
  * set value to [row, col]
  */
-inline void array2d_set(struct Array2D * array, uint32_t row, uint32_t col, int value)
+static inline void array2d_set(struct Array2D * array, uint32_t row, uint32_t col, int value)
 {
 	array->data[array->ncol * row + col] = value;
 }

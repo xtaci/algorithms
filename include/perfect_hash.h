@@ -41,7 +41,7 @@ struct PerfHT {
  * init level-2 slots with known collides 
  * the routine will find another hash function never collides again!!
  */
-inline static void perfect_hash_lv2_slot_init(struct PerfSlotL1 * lv1_slot, Stack * collides)
+static inline void perfect_hash_lv2_slot_init(struct PerfSlotL1 * lv1_slot, Stack * collides)
 {
 // init another hash function & 2nd level 
 	uint32_t bucket = lv1_slot->cnt * lv1_slot->cnt;
@@ -82,7 +82,7 @@ retry:
  * level-2 hash pre-work
  * collect collides for each level-1 slots
  */
-inline static void perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], int len)
+static inline void perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], int len)
 {
 	// stacks for temporary storing keys
 	Stack *S1 = create_stack(len);
@@ -110,7 +110,7 @@ inline static void perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], in
 /**
  * init a perfect hash table, all keys should be provided first
  */
-inline struct PerfHT * perfect_hash_init(uint32_t keys[],int len)
+static inline struct PerfHT * perfect_hash_init(uint32_t keys[],int len)
 {
 	struct PerfHT * ht = (struct PerfHT *)malloc(sizeof(struct PerfHT));
 
@@ -146,7 +146,7 @@ inline struct PerfHT * perfect_hash_init(uint32_t keys[],int len)
 /**
  * destroy the hash table
  */
-inline void perfect_hash_destroy(struct PerfHT * ht)
+static inline void perfect_hash_destroy(struct PerfHT * ht)
 {
 	int i;
 	for (i=0; i<ht->params.prime; i++) {
@@ -160,7 +160,7 @@ inline void perfect_hash_destroy(struct PerfHT * ht)
 /**
  * set a key->value pair in the table
  */
-inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, uintptr_t value)
+static inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, uintptr_t value)
 {
 	uint32_t hash;
 	hash  = uhash_integer(&ht->params, key);
@@ -181,7 +181,7 @@ inline void perfect_hash_set(struct PerfHT * ht, uint32_t key, uintptr_t value)
 	}
 }
 
-inline uintptr_t perfect_hash_get(const struct PerfHT * ht, uint32_t key)
+static inline uintptr_t perfect_hash_get(const struct PerfHT * ht, uint32_t key)
 {
 	uint32_t hash;
 	hash  = uhash_integer(&ht->params, key);

@@ -65,7 +65,7 @@ do {										\
 /**
  * heap init
  */
-inline struct Heap * heap_init(int max)
+static inline struct Heap * heap_init(int max)
 {
 	struct Heap * heap = (struct Heap *)malloc(sizeof(struct Heap));
 	heap->size = 0;
@@ -79,7 +79,7 @@ inline struct Heap * heap_init(int max)
 /**
  * heap_insert an key->value pair into the heap 
  */
-inline void heap_insert(struct Heap * heap, int key, uintptr_t value)
+static inline void heap_insert(struct Heap * heap, int key, uintptr_t value)
 {
 		// heap full, just return;
 		if(heap->size == heap->max) return; 
@@ -97,12 +97,12 @@ inline void heap_insert(struct Heap * heap, int key, uintptr_t value)
 		HEAP_ASSIGN(heap, now, key, value);
 }
 
-inline bool heap_is_empty(struct Heap * heap)
+static inline bool heap_is_empty(struct Heap * heap)
 {
 	return (heap->size==0)?true:false;
 }
 
-inline void heap_delete_min(struct Heap * heap)
+static inline void heap_delete_min(struct Heap * heap)
 {
         /* heap[1] is the minimum key. So we remove heap[1]. Size of the heap is decreased. 
            Now heap[1] has to be filled. We put the last key in its place and see if it fits.
@@ -149,7 +149,7 @@ inline void heap_delete_min(struct Heap * heap)
 /**
  * so called DECREASE KEY operation.
  */
-inline void heap_decrease_key(struct Heap * heap, int index, int key)
+static inline void heap_decrease_key(struct Heap * heap, int index, int key)
 {
 	if (key >= heap->keys[index]) return; 	// violate DECREASE meanning.
 	
@@ -167,7 +167,7 @@ inline void heap_decrease_key(struct Heap * heap, int index, int key)
 /**
  * find the index where data resides
  */
-inline int heap_find_data(const struct Heap * heap, const uintptr_t data)
+static inline int heap_find_data(const struct Heap * heap, const uintptr_t data)
 {
 	int i;
     for (i=1;i<=heap->size;i++) {

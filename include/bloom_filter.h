@@ -72,7 +72,7 @@ struct BloomFilter {
  * m--> bit set size
  * n--> problem set size
 */
-inline struct BloomFilter * bloom_filter_create(uint32_t k, uint32_t m, uint32_t n)
+static inline struct BloomFilter * bloom_filter_create(uint32_t k, uint32_t m, uint32_t n)
 {
 	assert(m>n);
 	assert(k>0);
@@ -96,7 +96,7 @@ inline struct BloomFilter * bloom_filter_create(uint32_t k, uint32_t m, uint32_t
 /**
  * hash a string, and set the corresponding bits
  */
-inline void bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t len)
+static inline void bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t len)
 {
 	SHA1Context sha;
 	sha1_reset(&sha);
@@ -113,7 +113,7 @@ inline void bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t
 /**
  * test whether a string is in the bloom filter
  */
-inline bool bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t len)
+static inline bool bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t len)
 {
 	SHA1Context sha;
 	sha1_reset(&sha);
@@ -133,7 +133,7 @@ inline bool bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t
 /**
  * safely destroy
  */
-inline void bloom_filter_destroy(struct BloomFilter *bf)
+static inline void bloom_filter_destroy(struct BloomFilter *bf)
 {
 	if(bf->bitset) bitset_destroy(bf->bitset);
 	free(bf);

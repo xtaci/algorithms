@@ -40,7 +40,7 @@ typedef struct Queue
  * can hold, creates a Queue according to it and returns a pointer to the
  * Queue. 
  */
-inline Queue * create_queue(uint32_t maxElements)
+static inline Queue * create_queue(uint32_t maxElements)
 {
 	/* Create a Queue */
 	Queue *Q;
@@ -58,7 +58,7 @@ inline Queue * create_queue(uint32_t maxElements)
 /**
  * Dequeue
  */
-inline void dequeue(Queue *Q)
+static inline void dequeue(Queue *Q)
 {
 	/* If Queue size is zero then it is empty. So we cannot pop */
 	if(Q->size==0)
@@ -82,13 +82,13 @@ inline void dequeue(Queue *Q)
 /**
  * return the front element.
  */
-inline uintptr_t queue_front(const Queue *Q)
+static inline uintptr_t queue_front(const Queue *Q)
 {
 	/* Return the element which is at the front*/
 	return Q->elements[Q->front];
 }
 
-inline bool queue_is_empty(const Queue * Q)
+static inline bool queue_is_empty(const Queue * Q)
 {
 	if (Q->size ==0) return true;
 	return false;
@@ -98,7 +98,7 @@ inline bool queue_is_empty(const Queue * Q)
  * Enqueue
  * returns false when queue is full
  */
-inline bool enqueue(Queue *Q, uintptr_t element)
+static inline bool enqueue(Queue *Q, uintptr_t element)
 {
 	/* If the Queue is full, we cannot push an element into it as there is no space for it.*/
 	if(Q->size == Q->capacity)
@@ -124,7 +124,7 @@ inline bool enqueue(Queue *Q, uintptr_t element)
 /**
  * queue destroy 
  */
-inline void queue_destroy(Queue * Q)
+static inline void queue_destroy(Queue * Q)
 {
 	free(Q->elements);
 	free(Q);

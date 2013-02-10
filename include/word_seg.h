@@ -202,7 +202,7 @@ static inline void __word_seg_calc_all(struct HashTable * wordht)
  * ....
  * WORDN
  */
-inline struct WordSeg * word_seg_init(const char * path)
+static inline struct WordSeg * word_seg_init(const char * path)
 {
 	struct WordSeg * ws = (struct WordSeg*)malloc(sizeof(struct WordSeg));
 	ws->wordht = hash_table_create(GB18030_NR);
@@ -234,7 +234,7 @@ inline struct WordSeg * word_seg_init(const char * path)
  * you should strip the , . white-spaces first before entering this 
  * function
  */
-inline Queue * word_seg_run(struct WordSeg * ws, const char * str)
+static inline Queue * word_seg_run(struct WordSeg * ws, const char * str)
 {
 	// the position of string cursor
 	int pos = 0;
@@ -316,7 +316,7 @@ inline Queue * word_seg_run(struct WordSeg * ws, const char * str)
 /**
  * replace the unknown chars with white-space.
  */
-inline void word_seg_strip(struct WordSeg * ws, char * str)
+static inline void word_seg_strip(struct WordSeg * ws, char * str)
 {
 	int pos = 0;
 	int len = strlen(str);

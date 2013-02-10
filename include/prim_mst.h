@@ -68,7 +68,7 @@ static inline void prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent 
 /**
  * init prim's graph using undirected graph.
  */
-inline struct PrimGraph * prim_mst_init(const struct Graph * g)
+static inline struct PrimGraph * prim_mst_init(const struct Graph * g)
 {
 	struct PrimGraph * pg = (struct PrimGraph*)malloc(sizeof(struct PrimGraph));
 	INIT_LIST_HEAD(&pg->pa_head);
@@ -85,7 +85,7 @@ inline struct PrimGraph * prim_mst_init(const struct Graph * g)
  * lookup up a given id
  * the related adjacent list is returned.
  */ 
-inline struct PrimAdjacent * prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
+static inline struct PrimAdjacent * prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
 {
 	struct PrimAdjacent * pa;
 	list_for_each_entry(pa, &pg->pa_head, pa_node){
@@ -110,7 +110,7 @@ inline struct PrimAdjacent * prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
  *
  * Output: Vnew and Enew describe a minimal spanning tree
  */
-inline struct Graph * prim_mst_run(struct PrimGraph * pg)
+static inline struct Graph * prim_mst_run(struct PrimGraph * pg)
 {
 	struct Graph * mst = undirected_graph_create(); // empty set == Vnew
 	
@@ -159,7 +159,7 @@ inline struct Graph * prim_mst_run(struct PrimGraph * pg)
 /**
  * print the PrimGraph
  */
-inline void prim_mst_print(const struct PrimGraph * pg)
+static inline void prim_mst_print(const struct PrimGraph * pg)
 {
 	struct PrimAdjacent * pa;
 	printf("Prim Graph: \n");

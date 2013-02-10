@@ -105,7 +105,7 @@ static inline void bellman_ford_init(const struct Graph * g, const struct Adjace
 /**
  * do the real work
  */
-inline struct BFWorkspace * bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
+static inline struct BFWorkspace * bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
 {
 	struct BFWorkspace * bfw =
 		 (struct BFWorkspace *)malloc(sizeof(struct BFWorkspace) + sizeof(uint32_t) * g->num_vertex);

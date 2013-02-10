@@ -36,24 +36,24 @@ typedef struct {
     int num_components;
 } integer;
 
-integer create_integer(int components);
-void free_integer(integer i);
-void set_zero_integer(integer i);
-void copy_integer(integer source, integer target);
-void add_integer(integer left, integer right, integer result);
-void subtract_integer(integer left, integer right, integer result);
-void multiply_small_integer(integer left, component_t right, integer result);
-void multiply_integer(integer left, integer right, integer result);
-int compare_integers(integer left, integer right);
-void shift_left_one_integer(integer arg);
-void shift_right_one_integer(integer arg);
-component_t mod_small_integer(integer left, component_t right);
-void mod_integer(integer left, integer right, integer result);
-void divide_small_integer(integer left, component_t right, integer result);
-bool is_zero_integer(integer x);
+static inline integer create_integer(int components);
+static inline void free_integer(integer i);
+static inline void set_zero_integer(integer i);
+static inline void copy_integer(integer source, integer target);
+static inline void add_integer(integer left, integer right, integer result);
+static inline void subtract_integer(integer left, integer right, integer result);
+static inline void multiply_small_integer(integer left, component_t right, integer result);
+static inline void multiply_integer(integer left, integer right, integer result);
+static inline int compare_integers(integer left, integer right);
+static inline void shift_left_one_integer(integer arg);
+static inline void shift_right_one_integer(integer arg);
+static inline component_t mod_small_integer(integer left, component_t right);
+static inline void mod_integer(integer left, integer right, integer result);
+static inline void divide_small_integer(integer left, component_t right, integer result);
+static inline bool is_zero_integer(integer x);
 
 
-inline integer create_integer(int components) {
+static inline integer create_integer(int components) {
     integer result;
     result.num_components = components;
     result.c = (component_t*)malloc(sizeof(component_t)*components);
@@ -61,17 +61,17 @@ inline integer create_integer(int components) {
 }
 
 
-inline void free_integer(integer i) {
+static inline void free_integer(integer i) {
     free(i.c);
 }
 
 
-inline void set_zero_integer(integer i) {
+static inline void set_zero_integer(integer i) {
     memset(i.c, 0, sizeof(component_t)*i.num_components);
 }
 
 
-inline bool is_zero_integer(integer x) {
+static inline bool is_zero_integer(integer x) {
     int i;
     for(i=0; i < x.num_components; i++) {
         if (x.c[i] != 0) return false;
@@ -79,7 +79,7 @@ inline bool is_zero_integer(integer x) {
     return true;
 }
 
-inline void copy_integer(integer source, integer target) {
+static inline void copy_integer(integer source, integer target) {
     memmove(target.c, source.c,
             sizeof(component_t)*MIN(source.num_components, target.num_components));
     if (target.num_components > source.num_components) {
@@ -88,7 +88,7 @@ inline void copy_integer(integer source, integer target) {
     }
 }
 
-inline void add_integer(integer left, integer right, integer result) {
+static inline void add_integer(integer left, integer right, integer result) {
     double_component_t carry = 0;
     int i;
     for(i=0; i<left.num_components || i<right.num_components || carry != 0; i++) {
@@ -105,7 +105,7 @@ inline void add_integer(integer left, integer right, integer result) {
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-inline void subtract_integer(integer left, integer right, integer result) {
+static inline void subtract_integer(integer left, integer right, integer result) {
     int borrow = 0;
     int i;
     for(i=0; i<left.num_components; i++) {
@@ -129,7 +129,7 @@ inline void subtract_integer(integer left, integer right, integer result) {
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-inline void multiply_small_integer(integer left, component_t right, integer result) {
+static inline void multiply_small_integer(integer left, component_t right, integer result) {
     double_component_t carry = 0;
     int i;
     for(i=0; i<left.num_components || carry != 0; i++) {
@@ -142,7 +142,7 @@ inline void multiply_small_integer(integer left, component_t right, integer resu
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-inline void multiply_integer(integer left, integer right, integer result) {
+static inline void multiply_integer(integer left, integer right, integer result) {
     int i, lidx, ridx;
     double_component_t carry = 0;
     int max_size_no_carry;
@@ -167,7 +167,7 @@ inline void multiply_integer(integer left, integer right, integer result) {
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-inline int compare_integers(integer left, integer right) {
+static inline int compare_integers(integer left, integer right) {
     int i = MAX(left.num_components - 1, right.num_components - 1);
     for ( ; i >= 0; i--) {
         component_t left_comp =
@@ -182,7 +182,7 @@ inline int compare_integers(integer left, integer right) {
     return 0;
 }
 
-inline void shift_left_one_integer(integer arg) {
+static inline void shift_left_one_integer(integer arg) {
     int i;
     arg.c[arg.num_components - 1] <<= 1;
     for (i = arg.num_components - 2; i >= 0; i--) {
@@ -191,7 +191,7 @@ inline void shift_left_one_integer(integer arg) {
     }
 }
 
-inline void shift_right_one_integer(integer arg) {
+static inline void shift_right_one_integer(integer arg) {
     int i;
     arg.c[0] >>= 1;
     for (i = 1; i < arg.num_components; i++) {
@@ -200,7 +200,7 @@ inline void shift_right_one_integer(integer arg) {
     }
 }
 
-inline component_t mod_small_integer(integer left, component_t right) {
+static inline component_t mod_small_integer(integer left, component_t right) {
     double_component_t mod_two_power = 1;
     double_component_t result = 0;
     int i, bit;
@@ -221,7 +221,7 @@ inline component_t mod_small_integer(integer left, component_t right) {
     return (component_t)result;
 }
 
-inline void mod_integer(integer left, integer right, integer result) {
+static inline void mod_integer(integer left, integer right, integer result) {
     integer mod_two_power = create_integer(right.num_components + 1);
     int i, bit;
     set_zero_integer(result);
@@ -244,7 +244,7 @@ inline void mod_integer(integer left, integer right, integer result) {
     free_integer(mod_two_power);
 }
 
-inline void divide_small_integer(integer left, component_t right, integer result) {
+static inline void divide_small_integer(integer left, component_t right, integer result) {
     double_component_t dividend = 0;
     int i;
     for (i = left.num_components - 1; i >= 0; i--) {

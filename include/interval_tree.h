@@ -48,10 +48,10 @@ typedef struct inttree_t {
 /**
  * Interfaces
  */
-inline inttree inttree_create();
-inline void inttree_insert(inttree t, int low, int high);
-inline inttree_node inttree_lookup(inttree t, int low, int high);
-inline void inttree_delete(inttree t, inttree_node n);
+static inline inttree inttree_create();
+static inline void inttree_insert(inttree t, int low, int high);
+static inline inttree_node inttree_lookup(inttree t, int low, int high);
+static inline void inttree_delete(inttree t, inttree_node n);
 
 /**
  * Auxillary functions
@@ -110,7 +110,7 @@ static inline color node_color(inttree_node n) { return n->color; }
  * inttree_create
  * init an interval tree
  */
-inline inttree inttree_create() {
+static inline inttree inttree_create() {
     inttree t = malloc(sizeof(struct inttree_t));
 	t->nil_t.low = INT_MIN;
 	t->nil_t .high=INT_MIN;
@@ -140,7 +140,7 @@ static inline inttree_node new_node(inttree t, int low, int high, color inttree_
  * search range [low, high] for overlap, return only one element
  * use lookup & delete & insert schema to get multiple elements
  */
-inline inttree_node inttree_lookup(inttree t, int low, int high) {
+static inline inttree_node inttree_lookup(inttree t, int low, int high) {
     inttree_node x = t->root;
     while (x != t->nil && (low > x->high || x->low > high) ) {
 		if (x->left !=t->nil && low <=x->left->m) x = x->left;
@@ -195,7 +195,7 @@ static inline void replace_node(inttree t, inttree_node oldn, inttree_node newn)
  * inttree_insert
  * insert range [low, high] into red-black tree
  */
-inline void inttree_insert(inttree t, int low, int high) {
+static inline void inttree_insert(inttree t, int low, int high) {
     inttree_node inserted_node = new_node(t,low, high, RED);
 	if (t->root == t->nil) {
         t->root = inserted_node;
@@ -293,7 +293,7 @@ static inline void insert_case5(inttree t, inttree_node n) {
 /**
  * delete the key in the red-black tree
  */
-inline void inttree_delete(inttree t, inttree_node n) {
+static inline void inttree_delete(inttree t, inttree_node n) {
     inttree_node child;
     if (n == t->nil) return;
     if (n->left != t->nil && n->right != t->nil) {

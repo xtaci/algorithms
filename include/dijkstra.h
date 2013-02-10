@@ -123,7 +123,7 @@ static inline void dijkstra_init(const struct Graph * g, const struct Adjacent *
 		end while
 	return dist;
  */
-inline struct DijkWorkspace * dijkstra_run(const struct Graph * g, const struct Adjacent * source)
+static inline struct DijkWorkspace * dijkstra_run(const struct Graph * g, const struct Adjacent * source)
 {
 	struct DijkWorkspace * dr =
 		 (struct DijkWorkspace *)malloc(sizeof(struct DijkWorkspace) + sizeof(uint32_t) * g->num_vertex);

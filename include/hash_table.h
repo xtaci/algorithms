@@ -42,7 +42,7 @@ struct HashTable {
 /**
  * hash table create with size
  */
-inline struct HashTable * hash_table_create(uint32_t num_elements)
+static inline struct HashTable * hash_table_create(uint32_t num_elements)
 {
 	struct HashTable * ht = (struct HashTable *)malloc(sizeof(struct HashTable));
 	// init multiplication hash function
@@ -62,7 +62,7 @@ inline struct HashTable * hash_table_create(uint32_t num_elements)
 /**
  * set a value
  */
-inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
+static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
 {
 	uint32_t hash = multi_hash_hash(ht->multi, key);
 
@@ -92,7 +92,7 @@ inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
 /**
  * get a value
  */
-inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
+static inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 {
 	uint32_t hash = multi_hash_hash(ht->multi, key);
 
@@ -115,7 +115,7 @@ inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 /**
  * hash table destroy
  */
-inline void hash_table_destroy(struct HashTable * ht)
+static inline void hash_table_destroy(struct HashTable * ht)
 {
 	if (ht==NULL) return;
 	free(ht->multi);

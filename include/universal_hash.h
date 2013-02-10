@@ -34,7 +34,7 @@ struct UHash {
 /**
  * init an universal hash struct
  */
-inline void uhash_init(struct UHash * params, uint32_t max_element)
+static inline void uhash_init(struct UHash * params, uint32_t max_element)
 {
 	int i;
 	// the size of the hash bucket is the prime larger than 2 * max_element
@@ -53,7 +53,7 @@ inline void uhash_init(struct UHash * params, uint32_t max_element)
 /**
  * hash a key
  */
-inline uint32_t uhash_integer(const struct UHash * params, uint64_t key)
+static inline uint32_t uhash_integer(const struct UHash * params, uint64_t key)
 {
 	uint32_t k[KLEN];
 	uint32_t sum;
@@ -67,7 +67,7 @@ inline uint32_t uhash_integer(const struct UHash * params, uint64_t key)
  * hash an arbitary length integer.
  * len, number of 32-bit integer, max len is 32
  */
-inline uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len)
+static inline uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len)
 {
 	assert(len <=32);
 

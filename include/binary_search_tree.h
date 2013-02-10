@@ -35,7 +35,7 @@ typedef struct treeNode
 /**
  * search he minimal element in the binary search tree.
  */
-inline treeNode * bst_find_min(treeNode *node)
+static inline treeNode * bst_find_min(treeNode *node)
 {
 	if(node==NULL)
 	{
@@ -51,7 +51,7 @@ inline treeNode * bst_find_min(treeNode *node)
 /**
  * search the maximal element in the binary search tree.
  */
-inline treeNode * bst_find_max(treeNode *node)
+static inline treeNode * bst_find_max(treeNode *node)
 {
 	if(node==NULL)
 	{
@@ -67,7 +67,7 @@ inline treeNode * bst_find_max(treeNode *node)
 /**
  * insert a new data into the binary search tree.
  */
-inline treeNode * bst_insert(treeNode *node,int data)
+static inline treeNode * bst_insert(treeNode *node,int data)
 {
 	if (node==NULL)
 	{

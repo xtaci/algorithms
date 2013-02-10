@@ -68,11 +68,11 @@ typedef struct SHA1Context
                 ((word) >> (32-(bits))))
 
 /* Function prototypes */
-inline void sha1_process_block(SHA1Context *);
-inline void sha1_pad(SHA1Context *);
-inline void sha1_reset(SHA1Context *);
-inline bool sha1_final(SHA1Context *);
-inline void sha1_input(SHA1Context *, const unsigned char *, unsigned);
+static inline void sha1_process_block(SHA1Context *);
+static inline void sha1_pad(SHA1Context *);
+static inline void sha1_reset(SHA1Context *);
+static inline bool sha1_final(SHA1Context *);
+static inline void sha1_input(SHA1Context *, const unsigned char *, unsigned);
 
 /*  
  *  sha1_reset
@@ -91,7 +91,7 @@ inline void sha1_input(SHA1Context *, const unsigned char *, unsigned);
  *  Comments:
  *
  */
-inline void sha1_reset(SHA1Context *context)
+static inline void sha1_reset(SHA1Context *context)
 {
     context->m_low             = 0;
     context->m_high            = 0;
@@ -124,7 +124,7 @@ inline void sha1_reset(SHA1Context *context)
  *  Comments:
  *
  */
-inline bool sha1_final(SHA1Context *context)
+static inline bool sha1_final(SHA1Context *context)
 {
     if (context->corrupted) {
         return false;
@@ -160,7 +160,7 @@ inline bool sha1_final(SHA1Context *context)
  *  Comments:
  *
  */
-inline void sha1_input(SHA1Context         *context,
+static inline void sha1_input(SHA1Context         *context,
                     const unsigned char *message_array,
                     unsigned            length)
 {
@@ -217,7 +217,7 @@ inline void sha1_input(SHA1Context         *context,
  *         
  *
  */
-inline void sha1_process_block(SHA1Context *context)
+static inline void sha1_process_block(SHA1Context *context)
 {
     const unsigned K[] =            /* Constants defined in SHA-1   */      
     {
@@ -325,7 +325,7 @@ inline void sha1_process_block(SHA1Context *context)
  *  Comments:
  *
  */
-inline void sha1_pad(SHA1Context *context)
+static inline void sha1_pad(SHA1Context *context)
 {
     /*
      *  Check to see if the current message block is too small to hold

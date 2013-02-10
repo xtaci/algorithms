@@ -38,10 +38,10 @@ typedef struct rbtree_t {
  * Interfaces
  */
 typedef int (*compare_func)(uintptr_t left, uintptr_t right);
-inline rbtree rbtree_create();
-inline void rbtree_insert(rbtree t, uintptr_t key, uintptr_t value, compare_func compare);
-inline uintptr_t rbtree_lookup(rbtree t, uintptr_t key, compare_func compare);
-inline void rbtree_delete(rbtree t, uintptr_t key, compare_func compare);
+static inline rbtree rbtree_create();
+static inline void rbtree_insert(rbtree t, uintptr_t key, uintptr_t value, compare_func compare);
+static inline uintptr_t rbtree_lookup(rbtree t, uintptr_t key, compare_func compare);
+static inline void rbtree_delete(rbtree t, uintptr_t key, compare_func compare);
 
 
 /**
@@ -102,7 +102,7 @@ static inline color node_color(rbtree_node n) {
  * rbtree_create
  * init a red-black tree 
  */
-inline rbtree rbtree_create() {
+static inline rbtree rbtree_create() {
     rbtree t = malloc(sizeof(struct rbtree_t));
     t->root = NULL;
     return t;
@@ -141,7 +141,7 @@ static inline rbtree_node lookup_node(rbtree t, uintptr_t key, compare_func comp
  * rbtree_lookup
  * search in red-black tree
  */
-inline uintptr_t rbtree_lookup(rbtree t, uintptr_t key, compare_func compare) {
+static inline uintptr_t rbtree_lookup(rbtree t, uintptr_t key, compare_func compare) {
     rbtree_node n = lookup_node(t, key, compare);
     return n == NULL ? 0 : n->value;
 }
@@ -187,7 +187,7 @@ static inline void replace_node(rbtree t, rbtree_node oldn, rbtree_node newn) {
  * insert a key-value pair into red-black tree
  * you must specify your own compare function
  */
-inline void rbtree_insert(rbtree t, uintptr_t key, uintptr_t value, compare_func compare) {
+static inline void rbtree_insert(rbtree t, uintptr_t key, uintptr_t value, compare_func compare) {
     rbtree_node inserted_node = new_node(key, value, RED, NULL, NULL);
     if (t->root == NULL) {
         t->root = inserted_node;
@@ -272,7 +272,7 @@ static inline void insert_case5(rbtree t, rbtree_node n) {
 /**
  * delete the key in the red-black tree
  */
-inline void rbtree_delete(rbtree t, uintptr_t key, compare_func compare) {
+static inline void rbtree_delete(rbtree t, uintptr_t key, compare_func compare) {
     rbtree_node child;
     rbtree_node n = lookup_node(t, key, compare);
     if (n == NULL) return;  /* Key not found, do nothing */
