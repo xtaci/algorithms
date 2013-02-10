@@ -42,7 +42,8 @@ PROGRAMS =  insertion_sort_demo \
 			bloom_filter_demo \
 			sha1_demo	\
 			huffman_demo \
-			word_seg_demo 
+			word_seg_demo \
+			md5_demo
 			
 
 all: $(PROGRAMS)
@@ -150,6 +151,9 @@ huffman_demo: $(SRCDIR)/huffman_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 word_seg_demo: $(SRCDIR)/word_seg_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS) 
+
+md5_demo: $(SRCDIR)/md5_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS) 
 
 clean:

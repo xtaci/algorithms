@@ -5,13 +5,16 @@
 
 /**
  * test endianness of current machine 
+ * mem: 0D 0C 0B 0A //big endian 
+ * mem: 0A 0B 0C 0D //little endian 
+ * V=0x0D0C0B0A
  */
 inline bool is_big_endian()
 {
-	int v=1;
+	int v=0x0D0C0B0A;
 	char c = *(char*)&v;
 
-	if (c == 1)	return false;
+	if (c == 0x0A)	return false;
 	return true;
 }
 
