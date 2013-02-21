@@ -22,25 +22,34 @@
 #include "double_linked_list.h"
 #include "hash_multi.h"
 
+/**
+ * definiton of Key-Value pair.
+ */
 struct HashKV {
-	uint32_t key;
-	uintptr_t value;
+	uint32_t key;	// 32-bit key
+	uintptr_t value;	// value can be used as a pointer.
 	struct list_head node;
 };
 
+/**
+ * define a Hash slot, a hash slot contains arbitary HashKV (key-value pair),
+ * depending on hash collision.
+ */
 struct HashSlot {
-	struct HashKV kv; 
-	struct list_head head;	
-};
-
-struct HashTable {
-	uint32_t size;		
-	struct HashSlot * slots;
-	struct MultiHash * multi;
+	struct list_head head;	// the HashKV list head
 };
 
 /**
- * hash table create with size
+ * definition of a hash table.
+ */
+struct HashTable {
+	uint32_t size;		// the size of the hash table.
+	struct HashSlot * slots;	// all of the slots
+	struct MultiHash * multi;	// the hash function parameter.
+};
+
+/**
+ * create a hash table with size -- 'num_elements' .
  */
 static inline struct HashTable * hash_table_create(uint32_t num_elements)
 {
@@ -52,7 +61,6 @@ static inline struct HashTable * hash_table_create(uint32_t num_elements)
 
 	int i;
 	for (i=0; i<ht->size; i++) {
-		ht->slots[i].kv.key = UINT_MAX;
 		INIT_LIST_HEAD(&ht->slots[i].head);
 	}
 
@@ -60,28 +68,24 @@ static inline struct HashTable * hash_table_create(uint32_t num_elements)
 }
 
 /**
- * set a value
+ * add a key-value pair to the hash table. 
  */
 static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
 {
+	// hash the key using a hash function.
 	uint32_t hash = multi_hash(ht->multi, key);
 
-	// found 
-	if (ht->slots[hash].kv.key == key) {
-		ht->slots[hash].kv.value = value;
-		return;
-	}
-	
-	// try list	
+	//  we iterate through the list.
 	struct HashKV * kv;
 	list_for_each_entry(kv, &ht->slots[hash].head, node){
-		if (kv->key == key) {
+		if (kv->key == key) {	// ok, found in the list.
 			kv->value = value;
 			return;
 		}
 	}
 
-	// create new key, and insert into list
+	// reaching here means a new key is given,
+	// create a new HashKV struct for it.
 	kv = (struct HashKV *)malloc(sizeof(struct HashKV));	
 	kv->key = key;
 	kv->value = value;
@@ -90,21 +94,17 @@ static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t
 }
 
 /**
- * get a value
+ * get a value with given 'key'
+ * returns 0 when the 'key' in not in the table.
  */
 static inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 {
 	uint32_t hash = multi_hash(ht->multi, key);
 
-	// found 
-	if (ht->slots[hash].kv.key == key) {
-		return ht->slots[hash].kv.value;
-	}
-	
-	// try list	
+	// iterate through the list
 	struct HashKV * kv;
 	list_for_each_entry(kv, &ht->slots[hash].head, node){
-		if (kv->key == key) {
+		if (kv->key == key) {	// ok, we found it.
 			return kv->value;
 		}
 	}
@@ -113,7 +113,7 @@ static inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 }
 
 /**
- * hash table destroy
+ * destroy the hash table, free spaces.
  */
 static inline void hash_table_destroy(struct HashTable * ht)
 {
