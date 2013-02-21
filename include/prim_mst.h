@@ -51,7 +51,7 @@ struct PrimGraph {
 /**
  * add an adjacent list to prim's graph
  */
-static inline void prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent * a)
+static inline void __prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent * a)
 {
 	struct PrimAdjacent * pa = (struct PrimAdjacent *)malloc(sizeof(struct PrimAdjacent));		
 	list_add_tail(&pa->pa_node, &pg->pa_head);
@@ -75,7 +75,7 @@ static inline struct PrimGraph * prim_mst_init(const struct Graph * g)
 
 	struct Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_node){
-		prim_mst_add_adjacent(pg, a);
+		__prim_mst_add_adjacent(pg, a);
 	}
 
 	return pg;
@@ -85,7 +85,7 @@ static inline struct PrimGraph * prim_mst_init(const struct Graph * g)
  * lookup up a given id
  * the related adjacent list is returned.
  */ 
-static inline struct PrimAdjacent * prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
+static inline struct PrimAdjacent * __prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
 {
 	struct PrimAdjacent * pa;
 	list_for_each_entry(pa, &pg->pa_head, pa_node){
@@ -129,7 +129,7 @@ static inline struct Graph * prim_mst_run(struct PrimGraph * pg)
 		// for each Vnew, find a new vertex in V that has minimal weight.
 		struct Adjacent * a; 
 		list_for_each_entry(a, &mst->a_head, a_node){
-			pa = prim_mst_lookup(pg, a->v.id);
+			pa = __prim_mst_lookup(pg, a->v.id);
 			while (!heap_is_empty(pa->heap)) { 	// find one neighbour
 				v = (struct Vertex *)HEAP_MIN_VALUE(pa->heap); 
 				if (graph_lookup(mst,v->id)==NULL) {  // if new V appears 

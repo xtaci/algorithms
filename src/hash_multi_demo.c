@@ -17,7 +17,7 @@ int main()
 	int i;
 	for(i = 0; i < MAX_ELEMENTS; i++ ){
 		uint32_t key = rand()%1000;
-		printf("hash %d --> %d\n", key, multi_hash_hash(ht, key) );
+		printf("hash %d --> %d\n", key, multi_hash(ht, key) );
 	}
 	
 	exit(0);

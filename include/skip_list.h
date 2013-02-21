@@ -40,7 +40,7 @@ struct SkipSet {
 /**
  * get the random promote level 
  */
-static inline int sl_random_level() {
+static inline int __sl_random_level() {
     int lvl = 0;
 	// the possibility is 1/2 for each level	
     while(RAND_NORM() < 0.5f && lvl < SL_MAX_LEVEL)
@@ -52,7 +52,7 @@ static inline int sl_random_level() {
 /**
  * make a node with specified level & key
  */
-static inline struct SkipNode * sl_make_node(int level, int key, int value) {
+static inline struct SkipNode * __sl_make_node(int level, int key, int value) {
     struct SkipNode * n = (struct SkipNode *)malloc(sizeof(struct SkipNode));
 
 	// the max forward entry for a key is : level + 1
@@ -65,7 +65,7 @@ static inline struct SkipNode * sl_make_node(int level, int key, int value) {
 
 static inline struct SkipSet * sl_make_skipset() {
     struct SkipSet * ss = (struct SkipSet*)malloc(sizeof(struct SkipSet));
-    ss->header = sl_make_node(SL_MAX_LEVEL, 0, 0);
+    ss->header = __sl_make_node(SL_MAX_LEVEL, 0, 0);
     ss->level = 0;
     return ss;
 }
@@ -111,7 +111,7 @@ static inline void sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
 
 	// if it's not the largest key or duplicated key (middle ones)
     if(x == NULL || x->key != key) {        
-        int lvl = sl_random_level();	// random promotion
+        int lvl = __sl_random_level();	// random promotion
  
 		// for nodes higer than  current max level
 		// make 'header node' as it's prev
@@ -121,7 +121,7 @@ static inline void sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
 			}
 			ss->level = lvl;
 		}
-        x = sl_make_node(lvl, key, value);
+        x = __sl_make_node(lvl, key, value);
 		
 		// for each node travlling down, relink into the skiplist
 		for(i = 0; i <= lvl; i++) {

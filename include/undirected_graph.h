@@ -25,7 +25,7 @@
 #include "graph_defs.h"
 #include "double_linked_list.h"
 
-static inline struct Vertex * undirected_graph_new_vertex(uint32_t id)
+static inline struct Vertex * __undirected_graph_new_vertex(uint32_t id)
 {
 	struct Vertex * v = (struct Vertex *)malloc(sizeof(struct Vertex));		
 	v->id = id;
@@ -37,7 +37,7 @@ static inline struct Vertex * undirected_graph_new_vertex(uint32_t id)
 /**
  * delete a vertex from adjacent list
  */
-static inline void undirected_graph_del_me_from_adjacent(struct Adjacent * a, uint32_t id)
+static inline void __undirected_graph_del_me_from_adjacent(struct Adjacent * a, uint32_t id)
 {
 	struct Vertex * v, *vn;
 	list_for_each_entry_safe(v, vn, &a->v_head, v_node){
@@ -104,7 +104,7 @@ static inline void undirected_graph_del_vertex(struct Graph * g, uint32_t id)
 	// find connected-vertex
 	list_for_each_entry_safe(v, vn, &a->v_head, v_node){
 		struct Adjacent * neigh = graph_lookup(g, v->id);
-		undirected_graph_del_me_from_adjacent(neigh, id);
+		__undirected_graph_del_me_from_adjacent(neigh, id);
 		list_del(&v->v_node);
 		free(v);
 		neigh->num_neigh--;
@@ -130,11 +130,11 @@ static inline bool undirected_graph_add_edge(struct Graph * g, uint32_t x, uint3
 	if (undirected_graph_is_adjacent(a1, a2)) return false;
 	
 	// create new vertex & add to adjacent list
-	struct Vertex * n = undirected_graph_new_vertex(y);
+	struct Vertex * n = __undirected_graph_new_vertex(y);
 	n->weight = weight;
 	list_add_tail(&n->v_node, &a1->v_head);
 	
-	n = undirected_graph_new_vertex(x);
+	n = __undirected_graph_new_vertex(x);
 	n->weight = weight;
 	list_add_tail(&n->v_node, &a2->v_head);
 

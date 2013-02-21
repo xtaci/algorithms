@@ -26,7 +26,7 @@
 #include "graph_defs.h"
 #include "double_linked_list.h"
 
-static inline struct Vertex * directed_graph_new_vertex(uint32_t id)
+static inline struct Vertex * __directed_graph_new_vertex(uint32_t id)
 {
 	struct Vertex * v = (struct Vertex *)malloc(sizeof(struct Vertex));		
 	v->id = id;
@@ -38,7 +38,7 @@ static inline struct Vertex * directed_graph_new_vertex(uint32_t id)
 /**
  * delete a vertex from adjacent list
  */
-static inline void directed_graph_del_me_from_adjacent(struct Graph * g, struct Adjacent * a, uint32_t id)
+static inline void __directed_graph_del_me_from_adjacent(struct Graph * g, struct Adjacent * a, uint32_t id)
 {
 	struct Vertex * v, *vn;
 	list_for_each_entry_safe(v, vn, &a->v_head, v_node){
@@ -106,7 +106,7 @@ static inline void directed_graph_del_vertex(struct Graph * g, uint32_t id)
 	// delete every connection, iterator through every vertex
 	struct Adjacent * tmp_adj;
 	list_for_each_entry(tmp_adj, &g->a_head, a_node){
-		if (tmp_adj->v.id != a->v.id) directed_graph_del_me_from_adjacent(g, tmp_adj, id);
+		if (tmp_adj->v.id != a->v.id) __directed_graph_del_me_from_adjacent(g, tmp_adj, id);
 	}
 
 	// delete adjacent list itself.
@@ -130,7 +130,7 @@ static inline bool directed_graph_add_edge(struct Graph * g, uint32_t x, uint32_
 	if (directed_graph_is_adjacent(a1, a2)) return false;
 
 	// create new vertex & add to adjacent list
-	struct Vertex * n = directed_graph_new_vertex(y);
+	struct Vertex * n = __directed_graph_new_vertex(y);
 	n->weight = weight;
 	list_add_tail(&n->v_node, &a1->v_head);
 	

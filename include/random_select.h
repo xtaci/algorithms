@@ -21,7 +21,7 @@
 /**
  * the random_select partition routine
  */
-static inline int partition(int list[],int begin, int end)
+static inline int __partition(int list[],int begin, int end)
 {
 	int pivot_idx = choose_pivot(begin,end);
     int pivot = list[pivot_idx];
@@ -52,7 +52,7 @@ static inline int random_select(int list[], int begin, int end, int k)
 	if(begin == end)
 		return begin;
    
-	int pivot_idx = partition(list, begin, end);
+	int pivot_idx = __partition(list, begin, end);
 	int human_idx = pivot_idx - begin + 1;
 
 	if(k == human_idx)

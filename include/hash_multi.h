@@ -33,9 +33,9 @@ struct MultiHash {
 #define MULTI_HASH_TABLE_SIZE(ht) 1<<(ht->r)
 
 /**
- * multi_hash_hash.
+ * multi_hash.
  */
-static inline uint32_t multi_hash_hash(const struct MultiHash * ht, uint32_t key)
+static inline uint32_t multi_hash(const struct MultiHash * ht, uint32_t key)
 {
 	uint32_t hash;
 	hash = ((ht->A * key)&0xFFFFFFFF)>>(BITWIDTH-ht->r); //mod 2^w equals logic bitmask ops

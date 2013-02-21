@@ -43,7 +43,7 @@ struct DijkWorkspace {
 	uint32_t vertex_ids[1];
 };
 
-static inline void dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t new_weight)
+static inline void __dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t new_weight)
 {	
 	int index;
 	int key = new_weight;
@@ -148,7 +148,7 @@ static inline struct DijkWorkspace * dijkstra_run(const struct Graph * g, const 
 			uint32_t dist_v = (uint32_t)perfect_hash_get(dist, v->id);
 			if (alt < dist_v) {
 				perfect_hash_set(dist, v->id, (uintptr_t)alt);
-				dijkstra_reorder(Q, v->id, alt);
+				__dijkstra_reorder(Q, v->id, alt);
 				perfect_hash_set(previous, v->id, (uintptr_t)u->v.id);
 			}
 		}

@@ -64,7 +64,7 @@ static inline struct HashTable * hash_table_create(uint32_t num_elements)
  */
 static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
 {
-	uint32_t hash = multi_hash_hash(ht->multi, key);
+	uint32_t hash = multi_hash(ht->multi, key);
 
 	// found 
 	if (ht->slots[hash].kv.key == key) {
@@ -94,7 +94,7 @@ static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t
  */
 static inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 {
-	uint32_t hash = multi_hash_hash(ht->multi, key);
+	uint32_t hash = multi_hash(ht->multi, key);
 
 	// found 
 	if (ht->slots[hash].kv.key == key) {

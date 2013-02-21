@@ -41,7 +41,7 @@ struct PerfHT {
  * init level-2 slots with known collides 
  * the routine will find another hash function never collides again!!
  */
-static inline void perfect_hash_lv2_slot_init(struct PerfSlotL1 * lv1_slot, Stack * collides)
+static inline void __perfect_hash_lv2_slot_init(struct PerfSlotL1 * lv1_slot, Stack * collides)
 {
 // init another hash function & 2nd level 
 	uint32_t bucket = lv1_slot->cnt * lv1_slot->cnt;
@@ -82,7 +82,7 @@ retry:
  * level-2 hash pre-work
  * collect collides for each level-1 slots
  */
-static inline void perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], int len)
+static inline void __perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], int len)
 {
 	// stacks for temporary storing keys
 	Stack *S1 = create_stack(len);
@@ -101,7 +101,7 @@ static inline void perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], in
 				}
 			}
 			// 
-			perfect_hash_lv2_slot_init(&slots[i], S1); 
+			__perfect_hash_lv2_slot_init(&slots[i], S1); 
 		}
 	}
 	destroyStack(S1);
@@ -138,7 +138,7 @@ static inline struct PerfHT * perfect_hash_init(uint32_t keys[],int len)
 	}
 
 	// 2-level processing
-	perfect_hash_lv2_init(ht, keys, newlen);
+	__perfect_hash_lv2_init(ht, keys, newlen);
 
 	return ht;
 }
