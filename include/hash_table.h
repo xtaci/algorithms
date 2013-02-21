@@ -28,23 +28,22 @@
 struct HashKV {
 	uint32_t key;	// 32-bit key
 	uintptr_t value;	// value can be used as a pointer.
-	struct list_head node;
+	struct list_head node;	// KV is a list element.
 };
 
 /**
  * define a Hash slot, a hash slot contains arbitary HashKV (key-value pair),
  * depending on hash collision.
+ * we use a list structure to represent the slot.
  */
-struct HashSlot {
-	struct list_head head;	// the HashKV list head
-};
+typedef struct list_head HashSlot;
 
 /**
  * definition of a hash table.
  */
 struct HashTable {
 	uint32_t size;		// the size of the hash table.
-	struct HashSlot * slots;	// all of the slots
+	HashSlot * slots;	// all of the slots
 	struct MultiHash * multi;	// the hash function parameter.
 };
 
@@ -57,11 +56,11 @@ static inline struct HashTable * hash_table_create(uint32_t num_elements)
 	// init multiplication hash function
 	ht->multi = multi_hash_init(num_elements);
 	ht->size = MULTI_HASH_TABLE_SIZE(ht->multi);
-	ht->slots = (struct HashSlot *)malloc(sizeof(struct HashSlot) * ht->size);
+	ht->slots = (HashSlot *)malloc(sizeof(HashSlot) * ht->size);
 
 	int i;
 	for (i=0; i<ht->size; i++) {
-		INIT_LIST_HEAD(&ht->slots[i].head);
+		INIT_LIST_HEAD(&ht->slots[i]);
 	}
 
 	return ht;
@@ -77,7 +76,7 @@ static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t
 
 	//  we iterate through the list.
 	struct HashKV * kv;
-	list_for_each_entry(kv, &ht->slots[hash].head, node){
+	list_for_each_entry(kv, &ht->slots[hash], node){
 		if (kv->key == key) {	// ok, found in the list.
 			kv->value = value;
 			return;
@@ -90,7 +89,7 @@ static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t
 	kv->key = key;
 	kv->value = value;
 	
-	list_add(&kv->node, &ht->slots[hash].head);
+	list_add(&kv->node, &ht->slots[hash]);
 }
 
 /**
@@ -103,7 +102,7 @@ static inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 
 	// iterate through the list
 	struct HashKV * kv;
-	list_for_each_entry(kv, &ht->slots[hash].head, node){
+	list_for_each_entry(kv, &ht->slots[hash], node){
 		if (kv->key == key) {	// ok, we found it.
 			return kv->value;
 		}
@@ -123,7 +122,7 @@ static inline void hash_table_destroy(struct HashTable * ht)
 	struct HashKV * kv, *nkv;
 	int i;
 	for (i=0;i<ht->size;i++) {
-		list_for_each_entry_safe(kv,nkv,&ht->slots[i].head, node){
+		list_for_each_entry_safe(kv,nkv,&ht->slots[i], node){
 			list_del(&kv->node);
 			free(kv);
 		}
