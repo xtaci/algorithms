@@ -19,7 +19,8 @@
 /**
  * insertion sort an array
  */
-static inline void insertion_sort(int *array , int number_of_elements)
+static inline void 
+insertion_sort(int *array , int number_of_elements)
 {
 	int iter,jter;
 	for(iter=1;iter<number_of_elements;iter++)

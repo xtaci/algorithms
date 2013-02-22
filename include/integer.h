@@ -7,7 +7,8 @@
  *
  * INTEGER -- OF ARBITARY LENGTH
  *
- * Retrieved from: http://en.literateprograms.org/Arbitrary-precision_integer_arithmetic_(C)?oldid=16902
+ * Retrieved from: 
+ * http://en.literateprograms.org/Arbitrary-precision_integer_arithmetic_(C)?oldid=16902
  *
  ******************************************************************************/
 
@@ -53,7 +54,8 @@ static inline void divide_small_integer(integer left, component_t right, integer
 static inline bool is_zero_integer(integer x);
 
 
-static inline integer create_integer(int components) {
+static inline integer 
+create_integer(int components) {
     integer result;
     result.num_components = components;
     result.c = (component_t*)malloc(sizeof(component_t)*components);
@@ -61,17 +63,20 @@ static inline integer create_integer(int components) {
 }
 
 
-static inline void free_integer(integer i) {
+static inline void 
+free_integer(integer i) {
     free(i.c);
 }
 
 
-static inline void set_zero_integer(integer i) {
+static inline void 
+set_zero_integer(integer i) {
     memset(i.c, 0, sizeof(component_t)*i.num_components);
 }
 
 
-static inline bool is_zero_integer(integer x) {
+static inline bool 
+is_zero_integer(integer x) {
     int i;
     for(i=0; i < x.num_components; i++) {
         if (x.c[i] != 0) return false;
@@ -79,7 +84,8 @@ static inline bool is_zero_integer(integer x) {
     return true;
 }
 
-static inline void copy_integer(integer source, integer target) {
+static inline void 
+copy_integer(integer source, integer target) {
     memmove(target.c, source.c,
             sizeof(component_t)*MIN(source.num_components, target.num_components));
     if (target.num_components > source.num_components) {
@@ -88,7 +94,8 @@ static inline void copy_integer(integer source, integer target) {
     }
 }
 
-static inline void add_integer(integer left, integer right, integer result) {
+static inline void 
+add_integer(integer left, integer right, integer result) {
     double_component_t carry = 0;
     int i;
     for(i=0; i<left.num_components || i<right.num_components || carry != 0; i++) {
@@ -105,7 +112,8 @@ static inline void add_integer(integer left, integer right, integer result) {
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-static inline void subtract_integer(integer left, integer right, integer result) {
+static inline void 
+subtract_integer(integer left, integer right, integer result) {
     int borrow = 0;
     int i;
     for(i=0; i<left.num_components; i++) {
@@ -129,7 +137,8 @@ static inline void subtract_integer(integer left, integer right, integer result)
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-static inline void multiply_small_integer(integer left, component_t right, integer result) {
+static inline void 
+multiply_small_integer(integer left, component_t right, integer result) {
     double_component_t carry = 0;
     int i;
     for(i=0; i<left.num_components || carry != 0; i++) {
@@ -142,7 +151,8 @@ static inline void multiply_small_integer(integer left, component_t right, integ
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-static inline void multiply_integer(integer left, integer right, integer result) {
+static inline void 
+multiply_integer(integer left, integer right, integer result) {
     int i, lidx, ridx;
     double_component_t carry = 0;
     int max_size_no_carry;
@@ -167,7 +177,8 @@ static inline void multiply_integer(integer left, integer right, integer result)
     for ( ; i < result.num_components; i++) { result.c[i] = 0; }
 }
 
-static inline int compare_integers(integer left, integer right) {
+static inline int 
+compare_integers(integer left, integer right) {
     int i = MAX(left.num_components - 1, right.num_components - 1);
     for ( ; i >= 0; i--) {
         component_t left_comp =
@@ -182,7 +193,8 @@ static inline int compare_integers(integer left, integer right) {
     return 0;
 }
 
-static inline void shift_left_one_integer(integer arg) {
+static inline void 
+shift_left_one_integer(integer arg) {
     int i;
     arg.c[arg.num_components - 1] <<= 1;
     for (i = arg.num_components - 2; i >= 0; i--) {
@@ -191,7 +203,8 @@ static inline void shift_left_one_integer(integer arg) {
     }
 }
 
-static inline void shift_right_one_integer(integer arg) {
+static inline void 
+shift_right_one_integer(integer arg) {
     int i;
     arg.c[0] >>= 1;
     for (i = 1; i < arg.num_components; i++) {
@@ -200,7 +213,8 @@ static inline void shift_right_one_integer(integer arg) {
     }
 }
 
-static inline component_t mod_small_integer(integer left, component_t right) {
+static inline component_t 
+mod_small_integer(integer left, component_t right) {
     double_component_t mod_two_power = 1;
     double_component_t result = 0;
     int i, bit;
@@ -221,7 +235,8 @@ static inline component_t mod_small_integer(integer left, component_t right) {
     return (component_t)result;
 }
 
-static inline void mod_integer(integer left, integer right, integer result) {
+static inline void 
+mod_integer(integer left, integer right, integer result) {
     integer mod_two_power = create_integer(right.num_components + 1);
     int i, bit;
     set_zero_integer(result);
@@ -244,7 +259,8 @@ static inline void mod_integer(integer left, integer right, integer result) {
     free_integer(mod_two_power);
 }
 
-static inline void divide_small_integer(integer left, component_t right, integer result) {
+static inline void 
+divide_small_integer(integer left, component_t right, integer result) {
     double_component_t dividend = 0;
     int i;
     for (i = left.num_components - 1; i >= 0; i--) {

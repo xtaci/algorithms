@@ -24,18 +24,21 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+/**
+ * binary search tree definiton.
+ */
 typedef struct treeNode
 {
-	int32_t data;
-	struct treeNode *left;
-	struct treeNode *right;
-
-}treeNode;
+	int32_t data;	// data
+	struct treeNode *left;	// left child
+	struct treeNode *right;	// right child
+} treeNode;
 
 /**
  * search he minimal element in the binary search tree.
  */
-static inline treeNode * bst_find_min(treeNode *node)
+static inline treeNode * 
+bst_find_min(treeNode *node)
 {
 	if(node==NULL)
 	{
@@ -51,7 +54,8 @@ static inline treeNode * bst_find_min(treeNode *node)
 /**
  * search the maximal element in the binary search tree.
  */
-static inline treeNode * bst_find_max(treeNode *node)
+static inline treeNode * 
+bst_find_max(treeNode *node)
 {
 	if(node==NULL)
 	{
@@ -67,7 +71,8 @@ static inline treeNode * bst_find_max(treeNode *node)
 /**
  * insert a new data into the binary search tree.
  */
-static inline treeNode * bst_insert(treeNode *node,int data)
+static inline treeNode * 
+bst_insert(treeNode *node,int data)
 {
 	if (node==NULL)
 	{

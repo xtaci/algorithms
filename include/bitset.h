@@ -19,16 +19,20 @@
 #include <stdbool.h>
 #include <string.h>
 
+/**
+ * definition of bitset structure
+ */
 struct BitSet {
 	uint32_t size;	//size in bits
-	uint32_t bytes;
-	unsigned char * bits;
+	uint32_t bytes; // size in bytes
+	unsigned char * bits; // the bits
 };
 
 /**
  * size -- in bits
  */
-static inline struct BitSet * bitset_create(uint32_t size)
+static inline struct BitSet * 
+bitset_create(uint32_t size)
 {
 	struct BitSet * bs = (struct BitSet *)malloc(sizeof(struct BitSet));
 
@@ -44,7 +48,8 @@ static inline struct BitSet * bitset_create(uint32_t size)
 /**
  * set 1 to position [bit]
  */
-static inline void bitset_set(struct BitSet * bs, uint32_t bit)
+static inline void 
+bitset_set(struct BitSet * bs, uint32_t bit)
 {
 	if (bit>=bs->size) return;
 
@@ -57,7 +62,8 @@ static inline void bitset_set(struct BitSet * bs, uint32_t bit)
 /**
  * set 0 to position [bit]
  */
-static inline void bitset_unset(struct BitSet * bs, uint32_t bit)
+static inline void 
+bitset_unset(struct BitSet * bs, uint32_t bit)
 {
 	if (bit>=bs->size) return;
 
@@ -70,7 +76,8 @@ static inline void bitset_unset(struct BitSet * bs, uint32_t bit)
 /**
  * test a bit , true if set, false if not.
  */
-static inline bool bitset_test(struct BitSet * bs, uint32_t bit)
+static inline bool 
+bitset_test(struct BitSet * bs, uint32_t bit)
 {
 	if (bit>=bs->size) return false;
 
@@ -84,7 +91,8 @@ static inline bool bitset_test(struct BitSet * bs, uint32_t bit)
 /**
  * safely free
  */
-static inline void bitset_destroy(struct BitSet *bs)
+static inline void 
+bitset_destroy(struct BitSet *bs)
 {
 	if(bs->bits)free(bs->bits);
 	free(bs);

@@ -23,7 +23,8 @@
 /**
  * the quick-sort partition routine
  */
-static inline int __partition(int list[],int begin, int end)
+static inline int 
+__partition(int list[],int begin, int end)
 {
 	int pivot_idx = choose_pivot(begin,end);
     int pivot = list[pivot_idx];
@@ -49,7 +50,8 @@ static inline int __partition(int list[],int begin, int end)
 /**
  * quick sort an array of range [begin, end]
  */
-static inline void quicksort(int list[],int begin,int end)
+static inline void 
+quicksort(int list[],int begin,int end)
 {
 	if( begin < end)
 	{

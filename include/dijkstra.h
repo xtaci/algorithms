@@ -35,15 +35,22 @@
 
 #define undefined (uintptr_t)-1
 
+/**
+ * the dijkstra algorithm workspace
+ */
 struct DijkWorkspace {
-	struct Heap * Q;
-	struct PerfHT * dist; 
-	struct PerfHT * previous; 
-	uint32_t num_vertex;	
-	uint32_t vertex_ids[1];
+	struct Heap * Q;		// a binary heap
+	struct PerfHT * dist; 	// distance hash table
+	struct PerfHT * previous; 	// previous vertex hash table
+	uint32_t num_vertex;		// total num of vertex
+	uint32_t vertex_ids[1];		// all the vertex ids
 };
 
-static inline void __dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t new_weight)
+/**
+ * reorder operation i.e. heap decrease key operation.
+ */
+static inline void
+__dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t new_weight)
 {	
 	int index;
 	int key = new_weight;
@@ -52,9 +59,12 @@ static inline void __dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t 
 	}
 }
 
-static inline void dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct DijkWorkspace * dr)
+/**
+ * init dijkstra workspace
+ */
+static inline void 
+__dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct DijkWorkspace * dr)
 {
-
 	// binary heap init
 	struct Heap * Q = heap_init(g->num_vertex);
 	struct Adjacent * a;
@@ -123,12 +133,13 @@ static inline void dijkstra_init(const struct Graph * g, const struct Adjacent *
 		end while
 	return dist;
  */
-static inline struct DijkWorkspace * dijkstra_run(const struct Graph * g, const struct Adjacent * source)
+static inline struct DijkWorkspace * 
+dijkstra_run(const struct Graph * g, const struct Adjacent * source)
 {
 	struct DijkWorkspace * dr =
 		 (struct DijkWorkspace *)malloc(sizeof(struct DijkWorkspace) + sizeof(uint32_t) * g->num_vertex);
 
-	dijkstra_init(g, source, dr);
+	__dijkstra_init(g, source, dr);
 	struct Heap * Q = dr->Q;
 	struct PerfHT * dist = dr->dist;
 	struct PerfHT * previous = dr->previous;

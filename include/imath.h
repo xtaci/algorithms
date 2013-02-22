@@ -33,7 +33,8 @@ do { \
  * k -- must be size of KLEN * sizeof(uint32_t)
  */
 #define KLEN 64
-static inline void m_based(uint64_t key, int m, uint32_t k[]) 
+static inline void 
+m_based(uint64_t key, int m, uint32_t k[]) 
 {
 	memset(k,0,sizeof(uint32_t) * KLEN);
 

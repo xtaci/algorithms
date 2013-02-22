@@ -29,12 +29,15 @@
 #include "bitset.h"
 #include "sha1.h"
 
+/**
+ * definiton of bloom filter structure
+ */
 struct BloomFilter {
 	uint32_t k;	// num of hash functions
 	uint32_t m;	// num of bits
 	uint32_t n;	// total elements
-	struct BitSet * bitset;
-	struct UHash hash[1];
+	struct BitSet * bitset;	// the bit set structure.
+	struct UHash hash[1];	// universal hash parameters
 };
 
 /**
@@ -72,7 +75,8 @@ struct BloomFilter {
  * m--> bit set size
  * n--> problem set size
 */
-static inline struct BloomFilter * bloom_filter_create(uint32_t k, uint32_t m, uint32_t n)
+static inline struct BloomFilter * 
+bloom_filter_create(uint32_t k, uint32_t m, uint32_t n)
 {
 	assert(m>n);
 	assert(k>0);
@@ -96,7 +100,8 @@ static inline struct BloomFilter * bloom_filter_create(uint32_t k, uint32_t m, u
 /**
  * hash a string, and set the corresponding bits
  */
-static inline void bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t len)
+static inline void 
+bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t len)
 {
 	SHA1Context sha;
 	sha1_reset(&sha);
@@ -113,7 +118,8 @@ static inline void bloom_filter_set(struct BloomFilter * bf, const char * str, u
 /**
  * test whether a string is in the bloom filter
  */
-static inline bool bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t len)
+static inline bool 
+bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t len)
 {
 	SHA1Context sha;
 	sha1_reset(&sha);
@@ -133,7 +139,8 @@ static inline bool bloom_filter_test(struct BloomFilter *bf, const char * str, u
 /**
  * safely destroy
  */
-static inline void bloom_filter_destroy(struct BloomFilter *bf)
+static inline void 
+bloom_filter_destroy(struct BloomFilter *bf)
 {
 	if(bf->bitset) bitset_destroy(bf->bitset);
 	free(bf);

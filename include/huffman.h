@@ -43,7 +43,7 @@ struct HuffNode{
  * The Huffman tree definition
  */
 struct HuffTree {
-	struct HuffNode *root;
+	struct HuffNode *root;	// the root node.
 	struct HashTable * ht;	// hash table for encoding lookup
 	uint32_t freqs[256];		// frequency array, you can pass this array 
 								// to the peer for constructing huffman
@@ -96,7 +96,8 @@ __huffman_traverse(struct HuffNode * node, struct HashTable * ht, int k, char co
 /**
  * Symbol Table Initialization for encoding proc.
  */
-static inline void __huffman_sym_init(struct HuffTree *tree)
+static inline void 
+__huffman_sym_init(struct HuffTree *tree)
 {
 	// init
 	tree->ht = hash_table_create(256);	
@@ -108,7 +109,8 @@ static inline void __huffman_sym_init(struct HuffTree *tree)
  * recreate the huff tree from an array[256] i.e. 8bit 
  * useful for peer reconstructing decoding tree.
  */
-static inline struct HuffTree * huffman_recreate(uint32_t freqs[])
+static inline struct HuffTree * 
+huffman_recreate(uint32_t freqs[])
 {
 	// we create the tree
 	struct HuffTree * tree = (struct HuffTree *)malloc(sizeof(struct HuffTree));
@@ -164,7 +166,8 @@ static inline struct HuffTree * huffman_recreate(uint32_t freqs[])
  * Construct a Huffman Tree with a sample string, the string must contain 
  * every characters passing to encode function.
  */
-static inline struct HuffTree * huffman_create(char * sample)
+static inline struct HuffTree * 
+huffman_create(char * sample)
 {
 	// count frequency for each char(8-bit).
 	uint32_t freqs[256];
@@ -214,7 +217,8 @@ huffman_encode(struct HashTable * ht, char * msg, char * codes)
  * decoding is based on tree traversal
  * pass length of Bits
  */
-void huffman_decode(struct HuffTree * tree, char * codes, uint32_t length)
+void 
+huffman_decode(struct HuffTree * tree, char * codes, uint32_t length)
 {
 	struct HuffNode * node = tree->root;
 
