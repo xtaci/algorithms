@@ -57,7 +57,7 @@ pq_create()
 /**
  * queue a value with priority into the priority queue.
  */
-static inline void 
+static void 
 pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
 {
 	struct PQNode * n = (struct PQNode *)malloc(sizeof(struct PQNode));

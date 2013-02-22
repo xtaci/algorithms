@@ -62,7 +62,7 @@ typedef struct {
 /**
  * for building symbol lookup table
  */
-static inline void 
+static void 
 __huffman_traverse(struct HuffNode * node, struct HashTable * ht, int k, char code[256])
 {
 	//If we reach the end we introduce the code in the table
@@ -109,7 +109,7 @@ __huffman_sym_init(struct HuffTree *tree)
  * recreate the huff tree from an array[256] i.e. 8bit 
  * useful for peer reconstructing decoding tree.
  */
-static inline struct HuffTree * 
+static struct HuffTree * 
 huffman_recreate(uint32_t freqs[])
 {
 	// we create the tree
@@ -186,7 +186,7 @@ huffman_create(char * sample)
  * ie. the length of string
  * the length in BITS will be returned.
  */
-static inline uint32_t
+static uint32_t
 huffman_encode(struct HashTable * ht, char * msg, char * codes)
 {
 	int i;
@@ -217,7 +217,7 @@ huffman_encode(struct HashTable * ht, char * msg, char * codes)
  * decoding is based on tree traversal
  * pass length of Bits
  */
-void 
+static void 
 huffman_decode(struct HuffTree * tree, char * codes, uint32_t length)
 {
 	struct HuffNode * node = tree->root;

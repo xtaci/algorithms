@@ -19,7 +19,7 @@
 /**
  * insertion sort an array
  */
-static inline void 
+static void 
 insertion_sort(int *array , int number_of_elements)
 {
 	int iter,jter;

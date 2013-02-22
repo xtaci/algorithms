@@ -38,7 +38,7 @@ __undirected_graph_new_vertex(uint32_t id)
 /**
  * delete a vertex from adjacent list
  */
-static inline void 
+static void 
 __undirected_graph_del_me_from_adjacent(struct Adjacent * a, uint32_t id)
 {
 	struct Vertex * v, *vn;
@@ -54,7 +54,7 @@ __undirected_graph_del_me_from_adjacent(struct Adjacent * a, uint32_t id)
 /**
  * test if an edge exists
  */
-static inline bool 
+static bool 
 undirected_graph_is_adjacent(struct Adjacent * from, struct Adjacent * to)
 {
 	struct Vertex * v;
@@ -100,7 +100,7 @@ undirected_graph_add_vertex(struct Graph * g, uint32_t id)
 /**
  * delete a vertex with specified id 
  */
-static inline void 
+static void 
 undirected_graph_del_vertex(struct Graph * g, uint32_t id)
 {
 	struct Adjacent * a = graph_lookup(g, id);
@@ -127,7 +127,7 @@ undirected_graph_del_vertex(struct Graph * g, uint32_t id)
 /**
  * add an edge for x<->y
  */
-static inline bool 
+static bool 
 undirected_graph_add_edge(struct Graph * g, uint32_t x, uint32_t y, int32_t weight)
 {
 	struct Adjacent * a1 = graph_lookup(g, x);
@@ -155,7 +155,7 @@ undirected_graph_add_edge(struct Graph * g, uint32_t x, uint32_t y, int32_t weig
 /**
  * delete an edge for x<->y
  */
-static inline void 
+static void 
 undirected_graph_del_edge(struct Graph * g, uint32_t x, uint32_t y)
 {
 	struct Adjacent * a1 = graph_lookup(g, x);
@@ -187,7 +187,7 @@ undirected_graph_del_edge(struct Graph * g, uint32_t x, uint32_t y)
 /**
  * print a graph
  */
-static inline void 
+static void 
 undirected_graph_print(const struct Graph * g)
 {
 	struct Adjacent * a;

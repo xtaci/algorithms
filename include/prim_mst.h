@@ -113,7 +113,7 @@ __prim_mst_lookup(struct PrimGraph * pg, uint32_t id)
  *
  * Output: Vnew and Enew describe a minimal spanning tree
  */
-static inline struct Graph * 
+static struct Graph * 
 prim_mst_run(struct PrimGraph * pg)
 {
 	struct Graph * mst = undirected_graph_create(); // empty set == Vnew

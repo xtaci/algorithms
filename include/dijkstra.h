@@ -62,7 +62,7 @@ __dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t new_weight)
 /**
  * init dijkstra workspace
  */
-static inline void 
+static void 
 __dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct DijkWorkspace * dr)
 {
 	// binary heap init
@@ -133,7 +133,7 @@ __dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct D
 		end while
 	return dist;
  */
-static inline struct DijkWorkspace * 
+static struct DijkWorkspace * 
 dijkstra_run(const struct Graph * g, const struct Adjacent * source)
 {
 	struct DijkWorkspace * dr =

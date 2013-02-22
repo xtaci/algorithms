@@ -27,7 +27,7 @@
 /**
  * couting sort
  */
-static inline void 
+static void 
 __radix(int byte, const unsigned N, const uint32_t *source, uint32_t *dest)
 {
 	unsigned count[256];
@@ -49,7 +49,7 @@ __radix(int byte, const unsigned N, const uint32_t *source, uint32_t *dest)
 /**
  * radix sort a given unsigned 32-bit integer array of size N
  */
-static inline void 
+static void 
 radix_sort(uint32_t *source, const unsigned N)
 {
 	uint32_t *temp = (uint32_t *)malloc(sizeof(uint32_t)*N);
@@ -63,7 +63,7 @@ radix_sort(uint32_t *source, const unsigned N)
 /**
  * check whether the array is in order
  */
-static inline void 
+static void 
 check_order(const uint32_t *data, unsigned N)
 {
 	for(--N ; N > 0; --N, ++data)

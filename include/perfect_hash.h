@@ -41,7 +41,7 @@ struct PerfHT {
  * init level-2 slots with known collides 
  * the routine will find another hash function never collides again!!
  */
-static inline void 
+static void 
 __perfect_hash_lv2_slot_init(struct PerfSlotL1 * lv1_slot, Stack * collides)
 {
 // init another hash function & 2nd level 
@@ -83,7 +83,7 @@ retry:
  * level-2 hash pre-work
  * collect collides for each level-1 slots
  */
-static inline void 
+static void 
 __perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], int len)
 {
 	// stacks for temporary storing keys
@@ -112,7 +112,7 @@ __perfect_hash_lv2_init(struct PerfHT * ht, uint32_t keys[], int len)
 /**
  * init a perfect hash table, all keys should be provided first
  */
-static inline struct PerfHT * 
+static struct PerfHT * 
 perfect_hash_init(uint32_t keys[],int len)
 {
 	struct PerfHT * ht = (struct PerfHT *)malloc(sizeof(struct PerfHT));
@@ -149,7 +149,7 @@ perfect_hash_init(uint32_t keys[],int len)
 /**
  * destroy the hash table
  */
-static inline void 
+static void 
 perfect_hash_destroy(struct PerfHT * ht)
 {
 	int i;
@@ -164,7 +164,7 @@ perfect_hash_destroy(struct PerfHT * ht)
 /**
  * set a key->value pair in the table
  */
-static inline void 
+static void 
 perfect_hash_set(struct PerfHT * ht, uint32_t key, uintptr_t value)
 {
 	uint32_t hash;
@@ -186,7 +186,7 @@ perfect_hash_set(struct PerfHT * ht, uint32_t key, uintptr_t value)
 	}
 }
 
-static inline uintptr_t 
+static uintptr_t 
 perfect_hash_get(const struct PerfHT * ht, uint32_t key)
 {
 	uint32_t hash;

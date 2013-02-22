@@ -113,7 +113,7 @@ heap_is_empty(struct Heap * heap)
 /**
  * delete the min element --> heap top.
  */
-static inline void 
+static void 
 heap_delete_min(struct Heap * heap)
 {
     // heap[1] is the minimum key. So we remove heap[1].

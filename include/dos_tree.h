@@ -59,7 +59,7 @@ static inline dostree_node __dostree_new_node(int key, color
  * first, we recalc the child size,
  * then, travels up to the root.
  */
-static inline void 
+static void 
 __fixup_size(rbtree_node n)
 {	
 	if (n==NULL) return;
@@ -133,7 +133,7 @@ dostree_lookup(rbtree_node n, int i)
  * dostree_insert
  * insert a new key into the dos tree
  */
-static inline void 
+static void 
 dostree_insert(rbtree t, int key) 
 {
 	dostree_node inserted_node = __dostree_new_node(key, RED, NULL, NULL);
@@ -176,7 +176,7 @@ dostree_insert(rbtree t, int key)
 /**
  * delete the key in the red-black tree
  */
-static inline void
+static void
 dostree_delete(rbtree t, dostree_node x)
 {
 	rbtree_node child;

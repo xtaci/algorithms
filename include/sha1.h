@@ -68,11 +68,11 @@ typedef struct SHA1Context
                 ((word) >> (32-(bits))))
 
 /* Function prototypes */
-static inline void sha1_process_block(SHA1Context *);
-static inline void sha1_pad(SHA1Context *);
-static inline void sha1_reset(SHA1Context *);
-static inline bool sha1_final(SHA1Context *);
-static inline void sha1_input(SHA1Context *, const unsigned char *, unsigned);
+static void sha1_process_block(SHA1Context *);
+static void sha1_pad(SHA1Context *);
+static void sha1_reset(SHA1Context *);
+static bool sha1_final(SHA1Context *);
+static void sha1_input(SHA1Context *, const unsigned char *, unsigned);
 
 /*  
  *  sha1_reset
@@ -162,7 +162,7 @@ sha1_final(SHA1Context *context)
  *  Comments:
  *
  */
-static inline void 
+static void 
 sha1_input(SHA1Context         *context,
                     const unsigned char *message_array,
                     unsigned            length)
@@ -220,7 +220,7 @@ sha1_input(SHA1Context         *context,
  *         
  *
  */
-static inline void 
+static void 
 sha1_process_block(SHA1Context *context)
 {
     const unsigned K[] =            /* Constants defined in SHA-1   */      
@@ -329,7 +329,7 @@ sha1_process_block(SHA1Context *context)
  *  Comments:
  *
  */
-static inline void 
+static void 
 sha1_pad(SHA1Context *context)
 {
     /*

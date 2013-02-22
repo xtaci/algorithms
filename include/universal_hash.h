@@ -69,7 +69,7 @@ uhash_integer(const struct UHash * params, uint64_t key)
  * hash an arbitary length integer.
  * len, number of 32-bit integer, max len is 32
  */
-static inline uint32_t 
+static uint32_t 
 uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len)
 {
 	assert(len <=32);

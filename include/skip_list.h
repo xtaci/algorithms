@@ -98,7 +98,7 @@ sl_get(const struct SkipSet* ss, int key)
 /**
  * insert a key->key pair into the list
  */
-static inline void 
+static void 
 sl_insert(struct SkipSet * ss, int32_t key, int32_t value) 
 {
 	int i;
@@ -140,7 +140,7 @@ sl_insert(struct SkipSet * ss, int32_t key, int32_t value)
 /**
  * delete a node by it's key
  */
-static inline void 
+static void 
 sl_delete(struct SkipSet* ss, int key) 
 {
 	int i;

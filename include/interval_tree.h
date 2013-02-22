@@ -41,16 +41,16 @@ typedef struct ivltree_node_t {
  * Interfaces
  */
 static inline rbtree ivltree_create();
-static inline void ivltree_insert(rbtree t, int low, int high);
-static inline ivltree_node ivltree_lookup(rbtree t, int low, int high);
-static inline void ivltree_delete(rbtree t, ivltree_node n);
+static void ivltree_insert(rbtree t, int low, int high);
+static ivltree_node ivltree_lookup(rbtree t, int low, int high);
+static void ivltree_delete(rbtree t, ivltree_node n);
 
 /**
  * Auxillary functions
  */
-static inline ivltree_node __ivltree_new_node(int low, int high, 
+static ivltree_node __ivltree_new_node(int low, int high, 
 			color rbtree_node_color, rbtree_node left, rbtree_node right);
-static inline void __fixup_max(rbtree_node n);
+static void __fixup_max(rbtree_node n);
 
 /**
  * ivltree_create
@@ -68,7 +68,7 @@ ivltree_create()
 /**
  *  malloc a new node, and set default vales.
  */
-static inline ivltree_node 
+static ivltree_node 
 __ivltree_new_node(int low, int high, 
 		color rbtree_node_color, rbtree_node left, rbtree_node right) 
 {
@@ -96,7 +96,7 @@ __ivltree_new_node(int low, int high,
  *
  * NULL is returned if not found.
  */
-static inline ivltree_node 
+static ivltree_node 
 ivltree_lookup(rbtree t, int low, int high) 
 {
     rbtree_node n = t->root;
@@ -112,7 +112,7 @@ ivltree_lookup(rbtree t, int low, int high)
  * ivltree_insert
  * insert range [low, high] into red-black tree
  */
-static inline void 
+static void 
 ivltree_insert(rbtree t, int low, int high) 
 {
 	ivltree_node inserted_node = __ivltree_new_node(low, high, RED, NULL, NULL);
@@ -154,7 +154,7 @@ ivltree_insert(rbtree t, int low, int high)
  * first, we recalc the sibling  & childsize,
  * then travels up to the root fixing the m field.
  */
-static inline void 
+static void 
 __fixup_max(rbtree_node n)
 {
 	if (n==NULL) return;
@@ -194,7 +194,7 @@ __fixup_max(rbtree_node n)
 /**
  * delete the key in the red-black tree
  */
-static inline void 
+static void 
 ivltree_delete(rbtree t, ivltree_node x) 
 {
 	rbtree_node child;

@@ -35,7 +35,7 @@ struct Graph {
 /**
  * find an adjacent list with vertex id == id 
  */
-static inline struct Adjacent * 
+static struct Adjacent * 
 graph_lookup(const struct Graph * g, uint32_t id)
 {
 	struct Adjacent * a;

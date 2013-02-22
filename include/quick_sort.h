@@ -23,7 +23,7 @@
 /**
  * the quick-sort partition routine
  */
-static inline int 
+static int 
 __partition(int list[],int begin, int end)
 {
 	int pivot_idx = choose_pivot(begin,end);

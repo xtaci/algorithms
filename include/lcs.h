@@ -34,7 +34,7 @@
 	6	U	0	1	1	2	3	3	3	4
 	7	Z	0	1	2	2	3	3	3	4
  */
-static inline struct Array2D * 
+static struct Array2D * 
 lcs_length(const int32_t X[], uint32_t m, const int32_t Y[], uint32_t n)
 {
 	struct Array2D * arr = array2d_create(m+1, n+1);
@@ -60,7 +60,7 @@ lcs_length(const int32_t X[], uint32_t m, const int32_t Y[], uint32_t n)
 /**
  * pass an empty stack, pop out the result in sequential order. 
  */
-static inline void 
+static void 
 lcs_backtrack(Stack * s, struct Array2D * C, 
 				const int32_t X[], int32_t Y[], 
 				const uint32_t i, uint32_t j)

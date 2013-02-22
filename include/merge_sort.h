@@ -59,7 +59,7 @@ merge_sort(int *array, int left, int right)
 /**
  * Merge functions merges the two sorted parts. Sorted parts will be from [left, mid] and [mid+1, right].
  */
-static inline void 
+static void 
 __merge(int *array, int left, int mid, int right)
 {
         /*We need a Temporary array to store the new sorted part*/

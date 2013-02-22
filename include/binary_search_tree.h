@@ -71,7 +71,7 @@ bst_find_max(treeNode *node)
 /**
  * insert a new data into the binary search tree.
  */
-static inline treeNode * 
+static treeNode * 
 bst_insert(treeNode *node,int data)
 {
 	if (node==NULL)
