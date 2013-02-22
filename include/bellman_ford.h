@@ -5,7 +5,7 @@
  * /--\ | (_| (_) |  |  |_ | | | | | _> 
  *         _|                      
  *
- # BELLMAN-FORD ALGORITHM
+ * BELLMAN-FORD ALGORITHM
  *
  *   The Bellman–Ford algorithm computes single-source shortest paths in a
  * weighted digraph. For graphs with only non-negative edge weights, the faster
