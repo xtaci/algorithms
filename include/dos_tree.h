@@ -76,7 +76,7 @@ __fixup_size(rbtree_node n)
 
 	// fix up to the root
 	while(n != NULL) {
-		// fix sibling, possible rotation.
+		// fix sibling, caused by left/right rotation.
 		rbtree_node s;
 		if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
 			DOSNODE(s)->size = DOSNODE_SIZE(s->left) + DOSNODE_SIZE(s->right)+ 1;

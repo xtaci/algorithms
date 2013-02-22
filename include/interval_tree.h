@@ -175,7 +175,7 @@ __fixup_max(rbtree_node n)
 
 	// fix up to the root
 	while(n != NULL) {
-		// fix sibling
+		// fix sibling, caused by left/right rotation 
 		rbtree_node s;
 		if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
 			int max_left = s->left?IVLNODE(s->left)->m:INT_MIN;	
