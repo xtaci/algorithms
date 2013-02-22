@@ -50,7 +50,8 @@ struct HashTable {
 /**
  * create a hash table with size -- 'num_elements' .
  */
-static inline struct HashTable * hash_table_create(uint32_t num_elements)
+static inline struct HashTable * 
+hash_table_create(uint32_t num_elements)
 {
 	struct HashTable * ht = (struct HashTable *)malloc(sizeof(struct HashTable));
 	// init multiplication hash function
@@ -69,7 +70,8 @@ static inline struct HashTable * hash_table_create(uint32_t num_elements)
 /**
  * add a key-value pair to the hash table. 
  */
-static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
+static inline void 
+hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t value)
 {
 	// hash the key using a hash function.
 	uint32_t hash = multi_hash(ht->multi, key);
@@ -96,7 +98,8 @@ static inline void hash_table_set(struct HashTable * ht, uint32_t key, uintptr_t
  * get a value with given 'key'
  * returns 0 when the 'key' in not in the table.
  */
-static inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
+static inline uintptr_t 
+hash_table_get(struct HashTable * ht, uint32_t key)
 {
 	uint32_t hash = multi_hash(ht->multi, key);
 
@@ -114,7 +117,8 @@ static inline uintptr_t hash_table_get(struct HashTable * ht, uint32_t key)
 /**
  * destroy the hash table, free spaces.
  */
-static inline void hash_table_destroy(struct HashTable * ht)
+static inline void 
+hash_table_destroy(struct HashTable * ht)
 {
 	if (ht==NULL) return;
 	free(ht->multi);

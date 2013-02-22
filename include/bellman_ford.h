@@ -74,7 +74,8 @@ struct BFWorkspace {
 /**
  * internal workspace init procedure. hash table and vertex_ids is initialized.
  */
-static inline void __bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFWorkspace * bfw)
+static inline void 
+__bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFWorkspace * bfw)
 {
 	// gather vertex ids, the source vertex id is in vertex_ids[0].
 	struct Adjacent * a;
@@ -113,7 +114,8 @@ static inline void __bellman_ford_init(const struct Graph * g, const struct Adja
 /**
  * do the real work
  */
-static inline struct BFWorkspace * bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
+static inline struct BFWorkspace * 
+bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
 {
 	// init the workspace.
 	struct BFWorkspace * bfw =
