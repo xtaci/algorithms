@@ -173,16 +173,16 @@ __fixup_max(rbtree_node n)
 		IVLNODE(child)->m = Max(IVLNODE(child)->high, Max(max_left, max_right));
 	}
 
-	// fix sibling
-	rbtree_node s;
-	if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
-		int max_left = s->left?IVLNODE(s->left)->m:INT_MIN;	
-		int max_right = s->right?IVLNODE(s->right)->m:INT_MIN;	
-		IVLNODE(s)->m = Max(IVLNODE(s)->high, Max(max_left, max_right));
-	}
-
 	// fix up to the root
 	while(n != NULL) {
+		// fix sibling
+		rbtree_node s;
+		if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
+			int max_left = s->left?IVLNODE(s->left)->m:INT_MIN;	
+			int max_right = s->right?IVLNODE(s->right)->m:INT_MIN;	
+			IVLNODE(s)->m = Max(IVLNODE(s)->high, Max(max_left, max_right));
+		}
+
 		int max_left = n->left?IVLNODE(n->left)->m:INT_MIN;	
 		int max_right = n->right?IVLNODE(n->right)->m:INT_MIN;	
 

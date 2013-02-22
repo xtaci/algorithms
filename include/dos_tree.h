@@ -31,9 +31,9 @@
  * dynamic order stat node structure definition
  */
 typedef struct dostree_node_t {
-    int key;	// the key	
+	int key;	// the key	
 	int size;	// the size of this subtree
-	struct rbtree_node_t node;
+	struct rbtree_node_t node;	// also, it's a red-black tree node.
 } *dostree_node;
 
 #define DOSNODE(rbnode) \
@@ -56,7 +56,7 @@ static inline dostree_node __dostree_new_node(int key, color
  
 
 /**
- * first, we recalc the sibling & child size,
+ * first, we recalc the child size,
  * then, travels up to the root.
  */
 static inline void 
@@ -74,14 +74,14 @@ __fixup_size(rbtree_node n)
 		DOSNODE(child)->size = DOSNODE_SIZE(child->left) + DOSNODE_SIZE(child->right) + 1;
 	}
 
-	// fix sibling
-	rbtree_node s;
-	if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
-		DOSNODE(s)->size = DOSNODE_SIZE(s->left) + DOSNODE_SIZE(s->right)+ 1;
-	}
-
 	// fix up to the root
 	while(n != NULL) {
+		// fix sibling, possible rotation.
+		rbtree_node s;
+		if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
+			DOSNODE(s)->size = DOSNODE_SIZE(s->left) + DOSNODE_SIZE(s->right)+ 1;
+		}
+
 		DOSNODE(n)->size = DOSNODE_SIZE(n->left) + DOSNODE_SIZE(n->right)+ 1;
 		n = n->parent;
 	}
@@ -92,23 +92,25 @@ __fixup_size(rbtree_node n)
  * init an  dynamic order stat tree, same as red-black tree
  */
 static inline rbtree 
-dostree_create() {
-    rbtree t = malloc(sizeof(struct rbtree_t));
-    t->root = NULL;
-    return t;
+dostree_create() 
+{
+	rbtree t = malloc(sizeof(struct rbtree_t));
+	t->root = NULL;
+	return t;
 }
 
 static inline dostree_node 
-__dostree_new_node(int key, color rbtree_node_color, rbtree_node left, rbtree_node right) {
-    dostree_node result = malloc(sizeof(struct dostree_node_t));
-    result->key = key;
-    result->node.color = rbtree_node_color;
-    result->node.left = NULL;
-    result->node.right = NULL;
+__dostree_new_node(int key, color rbtree_node_color, rbtree_node left, rbtree_node right) 
+{
+	dostree_node result = malloc(sizeof(struct dostree_node_t));
+	result->key = key;
+	result->node.color = rbtree_node_color;
+	result->node.left = NULL;
+	result->node.right = NULL;
 	if(left !=NULL) left->parent = &result->node;
 	if(right!=NULL) right->parent = &result->node;
-    result->node.parent = NULL;
-    return result;
+	result->node.parent = NULL;
+	return result;
 }
 
 /**
@@ -117,7 +119,8 @@ __dostree_new_node(int key, color rbtree_node_color, rbtree_node left, rbtree_no
  * select the i-th largest element
  */
 static inline dostree_node 
-dostree_lookup(rbtree_node n, int i) {
+dostree_lookup(rbtree_node n, int i) 
+{
 	if (n == NULL) return NULL;	 // beware of NULL pointer
 	int size = DOSNODE_SIZE(n->left) + 1;
 
@@ -133,11 +136,11 @@ dostree_lookup(rbtree_node n, int i) {
 static inline void 
 dostree_insert(rbtree t, int key) 
 {
-    dostree_node inserted_node = __dostree_new_node(key, RED, NULL, NULL);
-   	rbtree_node n = t->root;
+	dostree_node inserted_node = __dostree_new_node(key, RED, NULL, NULL);
+	rbtree_node n = t->root;
 
-    if (t->root == NULL) {
-        t->root = &inserted_node->node;
+	if (t->root == NULL) {
+		t->root = &inserted_node->node;
 	}
 	else {
 		while (1) {
@@ -161,7 +164,7 @@ dostree_insert(rbtree t, int key)
 				}
 			}
 		}
-    	inserted_node->node.parent = n;	
+		inserted_node->node.parent = n;	
 	}
 
 	__insert_case1(t, &inserted_node->node);
@@ -176,28 +179,28 @@ dostree_insert(rbtree t, int key)
 static inline void
 dostree_delete(rbtree t, dostree_node x)
 {
-    rbtree_node child;
-    if (x == NULL) return;
+	rbtree_node child;
+	if (x == NULL) return;
 	rbtree_node n = &x->node;
 
-    if (n->left != NULL && n->right != NULL) {
-        /* Copy key/value from predecessor and then delete it instead */
-        rbtree_node pred = __maximum_node(n->left);
-        DOSNODE(n)->key = DOSNODE(pred)->key;
+	if (n->left != NULL && n->right != NULL) {
+		/* Copy key/value from predecessor and then delete it instead */
+		rbtree_node pred = __maximum_node(n->left);
+		DOSNODE(n)->key = DOSNODE(pred)->key;
 		DOSNODE(n)->size = DOSNODE(pred)->size;
-        n = pred;
-    }
+		n = pred;
+	}
 
-    assert(n->left == NULL || n->right == NULL);
-    child = n->right == NULL ? n->left  : n->right;
-    if (__node_color(n) == BLACK) {
-        n->color = __node_color(child);
-        __delete_case1(t, n);
-    }
-    __replace_node(t, n, child);
-    if (n->parent == NULL && child != NULL)
-        child->color = BLACK;
-	
+	assert(n->left == NULL || n->right == NULL);
+	child = n->right == NULL ? n->left  : n->right;
+	if (__node_color(n) == BLACK) {
+		n->color = __node_color(child);
+		__delete_case1(t, n);
+	}
+	__replace_node(t, n, child);
+	if (n->parent == NULL && child != NULL)
+		child->color = BLACK;
+
 	// fix up size
 	__fixup_size(n);
 	free(DOSNODE(n));

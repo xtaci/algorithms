@@ -67,7 +67,7 @@ int main(void)
 
     print_tree(t);
 
-	for(i=0; i<MAXELEMENT/2; i++) {
+	for(i=0; i<MAXELEMENT/2+1; i++) {
 		dostree_node n = dostree_lookup(t->root,i+1);
 		if(n!=NULL) printf("the %dth element is %d\n\n", i+1, n->key);
     }
