@@ -91,7 +91,8 @@ static inline void sha1_input(SHA1Context *, const unsigned char *, unsigned);
  *  Comments:
  *
  */
-static inline void sha1_reset(SHA1Context *context)
+static inline void 
+sha1_reset(SHA1Context *context)
 {
     context->m_low             = 0;
     context->m_high            = 0;
@@ -124,7 +125,8 @@ static inline void sha1_reset(SHA1Context *context)
  *  Comments:
  *
  */
-static inline bool sha1_final(SHA1Context *context)
+static inline bool 
+sha1_final(SHA1Context *context)
 {
     if (context->corrupted) {
         return false;
@@ -160,7 +162,8 @@ static inline bool sha1_final(SHA1Context *context)
  *  Comments:
  *
  */
-static inline void sha1_input(SHA1Context         *context,
+static inline void 
+sha1_input(SHA1Context         *context,
                     const unsigned char *message_array,
                     unsigned            length)
 {
@@ -217,7 +220,8 @@ static inline void sha1_input(SHA1Context         *context,
  *         
  *
  */
-static inline void sha1_process_block(SHA1Context *context)
+static inline void 
+sha1_process_block(SHA1Context *context)
 {
     const unsigned K[] =            /* Constants defined in SHA-1   */      
     {
@@ -325,7 +329,8 @@ static inline void sha1_process_block(SHA1Context *context)
  *  Comments:
  *
  */
-static inline void sha1_pad(SHA1Context *context)
+static inline void 
+sha1_pad(SHA1Context *context)
 {
     /*
      *  Check to see if the current message block is too small to hold

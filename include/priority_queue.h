@@ -44,7 +44,8 @@ struct PQ {
 /**
  * create an empty priority queue.
  */
-static inline struct PQ * pq_create()
+static inline struct PQ * 
+pq_create()
 {
 	struct PQ * pq;
 	pq = (struct PQ *) malloc(sizeof(struct PQ));
@@ -56,7 +57,8 @@ static inline struct PQ * pq_create()
 /**
  * queue a value with priority into the priority queue.
  */
-static inline void pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
+static inline void 
+pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
 {
 	struct PQNode * n = (struct PQNode *)malloc(sizeof(struct PQNode));
 	n->priority = priority;
@@ -95,7 +97,8 @@ static inline void pq_queue(struct PQ * pq, uintptr_t value, uint32_t priority)
  * return 0 when the list is empty.
  * check pq_is_empty() before pq_dequeue().
  */
-static inline uintptr_t pq_dequeue(struct PQ *pq, uint32_t * prio )
+static inline uintptr_t 
+pq_dequeue(struct PQ *pq, uint32_t * prio )
 {
 	if (list_empty(&pq->head)) return 0;
 
@@ -114,7 +117,8 @@ static inline uintptr_t pq_dequeue(struct PQ *pq, uint32_t * prio )
 /**
  * test whether the priority queue is empty
  */
-static inline bool pq_is_empty(struct PQ *pq)
+static inline bool 
+pq_is_empty(struct PQ *pq)
 {
 	if (list_empty(&pq->head)) return true;
 	return false;
@@ -123,7 +127,8 @@ static inline bool pq_is_empty(struct PQ *pq)
 /**
  * get the exact number of data
  */
-static inline uint32_t pq_count(struct PQ *pq)
+static inline uint32_t 
+pq_count(struct PQ *pq)
 {
 	return pq->count;
 }
@@ -131,7 +136,8 @@ static inline uint32_t pq_count(struct PQ *pq)
 /**
  * safe destroy the priority queue
  */
-static inline void pq_destroy(struct PQ * pq)
+static inline void 
+pq_destroy(struct PQ * pq)
 {
 	struct PQNode * pos, * n;
 	list_for_each_entry_safe(pos,n, &pq->head, node) {

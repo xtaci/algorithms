@@ -40,7 +40,8 @@ static inline void __merge(int * , int , int , int );
 /**
  * sort an array from left->right 
  */
-static inline void merge_sort(int *array, int left, int right)
+static inline void 
+merge_sort(int *array, int left, int right)
 {
         int mid = (left+right)/2;
         /* We have to sort only when left<right because when left=right it is anyhow sorted*/
@@ -58,7 +59,8 @@ static inline void merge_sort(int *array, int left, int right)
 /**
  * Merge functions merges the two sorted parts. Sorted parts will be from [left, mid] and [mid+1, right].
  */
-static inline void __merge(int *array, int left, int mid, int right)
+static inline void 
+__merge(int *array, int left, int mid, int right)
 {
         /*We need a Temporary array to store the new sorted part*/
         int tempArray[right-left+1];

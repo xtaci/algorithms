@@ -24,7 +24,8 @@
 /**
  * shuffle the 'list' of length 'len'
  */
-static inline void shuffle(int * list, int len)
+static inline void 
+shuffle(int * list, int len)
 {
 	srand(time(NULL));
 	int i = len, j;

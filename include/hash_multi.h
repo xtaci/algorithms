@@ -35,7 +35,8 @@ struct MultiHash {
 /**
  * multi_hash.
  */
-static inline uint32_t multi_hash(const struct MultiHash * ht, uint32_t key)
+static inline uint32_t 
+multi_hash(const struct MultiHash * ht, uint32_t key)
 {
 	uint32_t hash;
 	hash = ((ht->A * key)&0xFFFFFFFF)>>(BITWIDTH-ht->r); //mod 2^w equals logic bitmask ops
@@ -45,7 +46,8 @@ static inline uint32_t multi_hash(const struct MultiHash * ht, uint32_t key)
 /**
  * init a hash table with size specified.
  */
-static inline struct MultiHash * multi_hash_init(uint32_t size)
+static inline struct MultiHash * 
+multi_hash_init(uint32_t size)
 {
 	// find prime larger than log2(size)
 	uint32_t r = ceil(log2(size));

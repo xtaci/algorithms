@@ -39,7 +39,8 @@ typedef struct Stack
  * can hold, creates a stack according to it and returns a pointer to 
  * the stack. 
  */
-static inline Stack * create_stack(int maxElements)
+static inline Stack * 
+create_stack(int maxElements)
 {
 	/* Create a Stack */
 	Stack *S;
@@ -52,13 +53,15 @@ static inline Stack * create_stack(int maxElements)
 	return S;
 }
 
-static inline void destroyStack(Stack * S)
+static inline void 
+destroyStack(Stack * S)
 {
 	free(S->elements);
 	free(S);
 }
 
-static inline bool stack_is_empty(Stack * S)
+static inline bool 
+stack_is_empty(Stack * S)
 {
 	return (S->size==0)?true:false;
 }
@@ -66,7 +69,8 @@ static inline bool stack_is_empty(Stack * S)
 /**
  * pop an element and store in *rval
  */
-static inline void pop(Stack *S)
+static inline void 
+pop(Stack *S)
 {
 	/* If stack size is zero then it is empty. So we cannot pop */
 	if(S->size==0)
@@ -85,7 +89,8 @@ static inline void pop(Stack *S)
  * get top element
  * returns 0 when the stack is empty.
  */
-static inline uintptr_t top(const Stack *S)
+static inline uintptr_t 
+top(const Stack *S)
 {
 	if(S->size==0)
 	{
@@ -99,7 +104,8 @@ static inline uintptr_t top(const Stack *S)
  * push an element into the stack
  * returns false when stack is full.
  */
-static inline bool push(Stack *S, uintptr_t element)
+static inline bool 
+push(Stack *S, uintptr_t element)
 {
 	/* If the stack is full, we cannot push an element into it as there is no space for it.*/
 	if(S->size == S->capacity)

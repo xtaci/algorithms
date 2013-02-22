@@ -40,7 +40,8 @@ struct SkipSet {
 /**
  * get the random promote level 
  */
-static inline int __sl_random_level() {
+static inline int 
+__sl_random_level() {
     int lvl = 0;
 	// the possibility is 1/2 for each level	
     while(RAND_NORM() < 0.5f && lvl < SL_MAX_LEVEL)
@@ -63,7 +64,8 @@ static inline struct SkipNode * __sl_make_node(int level, int key, int value) {
     return n;
 }
 
-static inline struct SkipSet * sl_make_skipset() {
+static inline struct SkipSet * 
+sl_make_skipset() {
     struct SkipSet * ss = (struct SkipSet*)malloc(sizeof(struct SkipSet));
     ss->header = __sl_make_node(SL_MAX_LEVEL, 0, 0);
     ss->level = 0;
@@ -74,7 +76,8 @@ static inline struct SkipSet * sl_make_skipset() {
  * search the given key from the skip list
  * if the key is not exist, return INT_MIN
  */
-static inline int32_t sl_get(const struct SkipSet* ss, int key) 
+static inline int32_t 
+sl_get(const struct SkipSet* ss, int key) 
 {
     int i;
     struct SkipNode* x = ss->header;
@@ -94,7 +97,8 @@ static inline int32_t sl_get(const struct SkipSet* ss, int key)
 /**
  * insert a key->key pair into the list
  */
-static inline void sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
+static inline void 
+sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
     int i;
     struct SkipNode * x = ss->header;	
     struct SkipNode * update[SL_MAX_LEVEL + 1];
@@ -134,7 +138,8 @@ static inline void sl_insert(struct SkipSet * ss, int32_t key, int32_t value) {
 /**
  * delete a node by it's key
  */
-static inline void sl_delete(struct SkipSet* ss, int key) {
+static inline void 
+sl_delete(struct SkipSet* ss, int key) {
     int i;
     struct SkipNode* x = ss->header;	
     struct SkipNode* update[SL_MAX_LEVEL + 1];

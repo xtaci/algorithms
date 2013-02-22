@@ -104,7 +104,8 @@ struct WordSeg {
 /**
  * init a new WordEP struct
  */
-static inline struct WordEP * __word_seg_new_ep()
+static inline struct WordEP * 
+__word_seg_new_ep()
 {
 	struct WordEP *	wep = (struct WordEP *)malloc(sizeof(struct WordEP));	
 	wep->EP[0] = wep->EP[1] = wep->EP[2] = wep->EP[3] = 0.0f;
@@ -115,7 +116,8 @@ static inline struct WordEP * __word_seg_new_ep()
 /**
  * add a new word to the hashtable
  */
-static inline void __word_seg_add(struct HashTable * wordht, const char * word)
+static inline void 
+__word_seg_add(struct HashTable * wordht, const char * word)
 {
 	int i=0;
 	int len = strlen(word);
@@ -152,7 +154,8 @@ static inline void __word_seg_add(struct HashTable * wordht, const char * word)
 /**
  * calc a single word emission probability by its count in each state
  */
-static inline void __word_seg_calc_ep(struct WordEP *wep)
+static inline void 
+__word_seg_calc_ep(struct WordEP *wep)
 {
 	double sum = wep->SC[0]+wep->SC[1]+wep->SC[2]+wep->SC[3];
 	wep->EP[SINGLE] = wep->SC[SINGLE]/sum;
@@ -164,7 +167,8 @@ static inline void __word_seg_calc_ep(struct WordEP *wep)
 /**
  * calculate the emission probability for each word
  */
-static inline void __word_seg_calc_all(struct HashTable * wordht)
+static inline void 
+__word_seg_calc_all(struct HashTable * wordht)
 {
 	unsigned char i, j, m, n;
 	struct WordEP * wep; 
@@ -202,7 +206,8 @@ static inline void __word_seg_calc_all(struct HashTable * wordht)
  * ....
  * WORDN
  */
-static inline struct WordSeg * word_seg_init(const char * path)
+static inline struct WordSeg * 
+word_seg_init(const char * path)
 {
 	struct WordSeg * ws = (struct WordSeg*)malloc(sizeof(struct WordSeg));
 	ws->wordht = hash_table_create(GB18030_NR);
@@ -234,7 +239,8 @@ static inline struct WordSeg * word_seg_init(const char * path)
  * you should strip the , . white-spaces first before entering this 
  * function
  */
-static inline Queue * word_seg_run(struct WordSeg * ws, const char * str)
+static inline Queue * 
+word_seg_run(struct WordSeg * ws, const char * str)
 {
 	// the position of string cursor
 	int pos = 0;
@@ -316,7 +322,8 @@ static inline Queue * word_seg_run(struct WordSeg * ws, const char * str)
 /**
  * replace the unknown chars with white-space.
  */
-static inline void word_seg_strip(struct WordSeg * ws, char * str)
+static inline void 
+word_seg_strip(struct WordSeg * ws, char * str)
 {
 	int pos = 0;
 	int len = strlen(str);

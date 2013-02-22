@@ -15,7 +15,8 @@
 /**
  * check whether a given number is a prime number.
  */
-static inline int is_prime(unsigned int n)
+static inline int 
+is_prime(unsigned int n)
 {
 	unsigned int p;
 	if (!(n & 1) || n < 2 ) return n == 2;
