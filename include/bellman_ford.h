@@ -57,19 +57,26 @@
 #include "directed_graph.h"
 #include "perfect_hash.h"
 
+// define undefined previous vertex.
 #define undefined (uintptr_t)-1
 
+/**
+ * workspace for bellman ford algorithm.
+ */
 struct BFWorkspace {
-	struct PerfHT * dist; 
-	struct PerfHT * previous; 
-	bool has_neg_cycle;		// negative weighted cycle
-	uint32_t num_vertex;	
-	uint32_t vertex_ids[1];
+	struct PerfHT * dist; 	// hash table for distance.
+	struct PerfHT * previous; 	// hash table for previous vertex
+	bool has_neg_cycle;		// negative weighted cycle mark.
+	uint32_t num_vertex;	// total num of vertex
+	uint32_t vertex_ids[1];	// the vertex ids array.
 };
 
-static inline void bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFWorkspace * bfw)
+/**
+ * internal workspace init procedure. hash table and vertex_ids is initialized.
+ */
+static inline void __bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFWorkspace * bfw)
 {
-	// Step 1: initialize graph
+	// gather vertex ids, the source vertex id is in vertex_ids[0].
 	struct Adjacent * a;
 
 	int i=1;
@@ -82,7 +89,8 @@ static inline void bellman_ford_init(const struct Graph * g, const struct Adjace
 	bfw->num_vertex = g->num_vertex;
 	bfw->vertex_ids[0] = source->v.id;
 
-	// hash table for id->dist , set inital distance to INT_MAX
+	// create hash table for vertex->distance, and set the initial
+	// distance to this vertex of 'INT_MAX'
 	struct PerfHT * dist = perfect_hash_init(bfw->vertex_ids, g->num_vertex);
 
 	perfect_hash_set(dist, bfw->vertex_ids[0], 0);
@@ -90,16 +98,16 @@ static inline void bellman_ford_init(const struct Graph * g, const struct Adjace
 		perfect_hash_set(dist, bfw->vertex_ids[i], (uintptr_t)INT_MAX);
 	}
 
-	// hash table for node -> previous node, for trackback
+	// create hash table for 'vertex' -> 'previous vertex', for trackback.
 	struct PerfHT * previous = perfect_hash_init(bfw->vertex_ids, g->num_vertex);
-	// set initial value to undefined
+	// set 'previous' value of each vertex to 'undefined'.
 	for(i=0;i<bfw->num_vertex;i++) {
 		perfect_hash_set(previous, bfw->vertex_ids[i], (uintptr_t)undefined);
 	}
 
 	bfw->dist = dist;
 	bfw->previous = previous;
-	bfw->has_neg_cycle = false;
+	bfw->has_neg_cycle = false;	// negative cycle mark set to 'false'.
 }
 
 /**
@@ -107,15 +115,16 @@ static inline void bellman_ford_init(const struct Graph * g, const struct Adjace
  */
 static inline struct BFWorkspace * bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
 {
+	// init the workspace.
 	struct BFWorkspace * bfw =
 		 (struct BFWorkspace *)malloc(sizeof(struct BFWorkspace) + sizeof(uint32_t) * g->num_vertex);
 
-	bellman_ford_init(g, source, bfw);
+	__bellman_ford_init(g, source, bfw);
 
 	struct PerfHT * dist = bfw->dist;
 	struct PerfHT * previous = bfw->previous;
 
-	// Step 2: relax edges repeatedly	
+	//  relax edges repeatedly	
 	int i;
 	for (i=0;i<bfw->num_vertex-1;i++) {    // loop |V| -1 times
 		int j;
@@ -136,7 +145,7 @@ static inline struct BFWorkspace * bellman_ford_run(const struct Graph * g, cons
 		}
 	}
 
-	// Step 3: check for negative-weight cycles
+	//  check for negative-weight cycles
     for (i=0;i<bfw->num_vertex;i++) {  // for each eage in the whole graph 
 		struct Adjacent * u = graph_lookup(g, bfw->vertex_ids[i]);
         struct Vertex * v;
