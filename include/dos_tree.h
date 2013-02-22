@@ -25,121 +25,89 @@
 #include "generic.h"
 #include "stack.h"
 #include "double_linked_list.h"
+#include "rbtree.h"
 
-
-enum dostree_node_color { RED, BLACK };
-typedef enum dostree_node_color color;
+/**
+ * dynamic order stat node structure definition
+ */
 typedef struct dostree_node_t {
-    int key;
-	int size;
-    struct dostree_node_t* left;
-    struct dostree_node_t* right;
-    struct dostree_node_t* parent;
-    enum dostree_node_color color;
+    int key;	// the key	
+	int size;	// the size of this subtree
+	struct rbtree_node_t node;
 } *dostree_node;
 
-typedef struct dostree_t {
-    dostree_node root;
-	struct dostree_node_t nil_t;
-	dostree_node nil;
-} *dostree;
+#define DOSNODE(rbnode) \
+	((dostree_node)((char *)rbnode - (unsigned long)(&((dostree_node)0)->node)))
+
+#define DOSNODE_SIZE(rbnode) \
+	(rbnode?DOSNODE(rbnode)->size:0)
 
 /**
  * Interfaces
  */
-static inline dostree dostree_create();
-static inline void dostree_insert(dostree t, int key);
-static inline dostree_node dostree_lookup(dostree t, dostree_node n, int i);
-static inline void dostree_delete(dostree t, dostree_node node);
+static inline rbtree dostree_create();
+static inline void dostree_insert(rbtree t, int key);
+static inline dostree_node dostree_lookup(rbtree_node n, int i);
+static inline void dostree_delete(rbtree t, dostree_node node);
+
+static void __fixup_size(rbtree_node x);
+static inline dostree_node __dostree_new_node(int key, color 
+			rbtree_node_color, rbtree_node left, rbtree_node right);
+ 
 
 /**
- * Auxillary functions
+ * first, we recalc the sibling & child size,
+ * then, travels up to the root.
  */
-static inline dostree_node grandparent(dostree t, dostree_node n);
-static inline dostree_node sibling(dostree t, dostree_node n);
-static inline dostree_node uncle(dostree t, dostree_node n);
-static inline color node_color(dostree_node n);
+static inline void 
+__fixup_size(rbtree_node n)
+{	
+	if (n==NULL) return;
 
-static inline dostree_node new_node(dostree t, int key, color node_color);
-static inline void rotate_left(dostree t, dostree_node n);
-static inline void rotate_right(dostree t, dostree_node n);
+	// fix children
+	rbtree_node child;
+	if ((child = n->left)) {
+		DOSNODE(child)->size = DOSNODE_SIZE(child->left) + DOSNODE_SIZE(child->right) + 1;
+	}
 
-static inline void replace_node(dostree t, dostree_node oldn, dostree_node newn);
-static inline void insert_case1(dostree t, dostree_node n);
-static inline void insert_case2(dostree t, dostree_node n);
-static inline void insert_case3(dostree t, dostree_node n);
-static inline void insert_case4(dostree t, dostree_node n);
-static inline void insert_case5(dostree t, dostree_node n);
-static inline dostree_node maximum_node(dostree t, dostree_node root);
-static inline void delete_case1(dostree t, dostree_node n);
-static inline void delete_case2(dostree t, dostree_node n);
-static inline void delete_case3(dostree t, dostree_node n);
-static inline void delete_case4(dostree t, dostree_node n);
-static inline void delete_case5(dostree t, dostree_node n);
-static inline void delete_case6(dostree t, dostree_node n);
+	if ((child = n->right)) {
+		DOSNODE(child)->size = DOSNODE_SIZE(child->left) + DOSNODE_SIZE(child->right) + 1;
+	}
 
-static void fixup_size(dostree t, dostree_node x);
+	// fix sibling
+	rbtree_node s;
+	if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
+		DOSNODE(s)->size = DOSNODE_SIZE(s->left) + DOSNODE_SIZE(s->right)+ 1;
+	}
 
-/**
- *  Travels up to the root fixing the size fields after
- *  an insertion or deletion 
- */
-static inline void fixup_size(dostree t, dostree_node x)
-{
-	while(x != t->nil) {
-		x->size = x->left->size + x->right->size + 1;
-		x = x->parent;
+	// fix up to the root
+	while(n != NULL) {
+		DOSNODE(n)->size = DOSNODE_SIZE(n->left) + DOSNODE_SIZE(n->right)+ 1;
+		n = n->parent;
 	}
 }
-static inline dostree_node grandparent(dostree t, dostree_node n) {
-    assert (n != t->nil);
-    assert (n->parent != t->nil); /* Not the root dostree_node */
-    assert (n->parent->parent != t->nil); /* Not child of root */
-    return n->parent->parent;
-}
-
-static inline dostree_node sibling(dostree t, dostree_node n) {
-    assert (n != t->nil);
-    assert (n->parent != t->nil); /* Root dostree_node has no sibling */
-    if (n == n->parent->left)
-        return n->parent->right;
-    else
-        return n->parent->left;
-}
-
-static inline dostree_node uncle(dostree t, dostree_node n) {
-    assert (n != t->nil);
-    assert (n->parent != t->nil); /* Root dostree_node has no uncle */
-    assert (n->parent->parent != t->nil); /* Children of root have no uncle */
-    return sibling(t,n->parent);
-}
-
-static inline color node_color(dostree_node n) { return n->color; }
 
 /**
  * dostree_create
- * init an interval tree
+ * init an  dynamic order stat tree, same as red-black tree
  */
-static inline dostree dostree_create() {
-    dostree t = malloc(sizeof(struct dostree_t));
-	t->nil_t.key 	= INT_MIN;
-	t->nil_t.size	= 0;
-	t->nil_t.color 	= BLACK;
-	t->nil_t.left 	= &t->nil_t;
-	t->nil_t.right	= &t->nil_t;
-	t->nil_t.parent	= &t->nil_t;
-	t->nil = &t->nil_t;
-	t->root = t->nil;
+static inline rbtree 
+dostree_create() {
+    rbtree t = malloc(sizeof(struct rbtree_t));
+    t->root = NULL;
     return t;
 }
 
-static inline dostree_node new_node(dostree t, int key, color dostree_node_color) {
+static inline dostree_node 
+__dostree_new_node(int key, color rbtree_node_color, rbtree_node left, rbtree_node right) {
     dostree_node result = malloc(sizeof(struct dostree_node_t));
     result->key = key;
-    result->color = dostree_node_color;
-    result->left = t->nil;
-    result->right = t->nil;
-    result->parent = t->nil;
+    result->node.color = rbtree_node_color;
+    result->node.left = NULL;
+    result->node.right = NULL;
+	if(left !=NULL) left->parent = &result->node;
+	if(right!=NULL) right->parent = &result->node;
+    result->node.parent = NULL;
     return result;
 }
 
@@ -148,260 +116,91 @@ static inline dostree_node new_node(dostree t, int key, color dostree_node_color
  *
  * select the i-th largest element
  */
-static inline dostree_node dostree_lookup(dostree t, dostree_node n, int i) {
-	if (n == t->nil) return t->nil;
-	int size = n->left->size + 1;
-	if(i == size) return n;
-	if(i < size ) return dostree_lookup(t, n->left, i);
-	else return dostree_lookup(t, n->right, i-size);
-}
+static inline dostree_node 
+dostree_lookup(rbtree_node n, int i) {
+	if (n == NULL) return NULL;	 // beware of NULL pointer
+	int size = DOSNODE_SIZE(n->left) + 1;
 
-static inline void rotate_left(dostree t, dostree_node n) {
-    dostree_node r = n->right;
-    replace_node(t, n, r);
-    n->right = r->left;
-    if (r->left != t->nil) {
-        r->left->parent = n;
-    }
-    r->left = n;
-    n->parent = r;
-
-	// recalc size
-	n->size = n->left->size + n->right->size + 1;
-	r->size = r->left->size + r->right->size + 1;
-}
-
-static inline void rotate_right(dostree t, dostree_node n) {
-    dostree_node L = n->left;
-    replace_node(t, n, L);
-    n->left = L->right;
-    if (L->right != t->nil) {
-        L->right->parent = n;
-    }
-    L->right = n;
-    n->parent = L;
-
-	// recalc size
-	n->size = n->left->size + n->right->size + 1;
-	L->size = L->left->size + L->right->size + 1;
-}
-
-static inline void replace_node(dostree t, dostree_node oldn, dostree_node newn) {
-    if (oldn->parent == t->nil) {
-        t->root = newn;
-    } else {
-        if (oldn == oldn->parent->left)
-            oldn->parent->left = newn;
-        else
-            oldn->parent->right = newn;
-    }
-    if (newn != t->nil) {
-        newn->parent = oldn->parent;
-    }
+	if(i == size) return DOSNODE(n);
+	if(i < size ) return dostree_lookup(n->left, i);
+	else return dostree_lookup(n->right, i-size);
 }
 
 /**
  * dostree_insert
  * insert a new key into the dos tree
  */
-static inline void dostree_insert(dostree t, int key) {
-    dostree_node inserted_node = new_node(t, key, RED);
-    if (t->root == t->nil) {
-        t->root = inserted_node;
+static inline void 
+dostree_insert(rbtree t, int key) 
+{
+    dostree_node inserted_node = __dostree_new_node(key, RED, NULL, NULL);
+   	rbtree_node n = t->root;
+
+    if (t->root == NULL) {
+        t->root = &inserted_node->node;
 	}
 	else {
-    	dostree_node n = t->root;
 		while (1) {
-			if (key == n->key) {
+			if (key == DOSNODE(n)->key) {
 				/* inserted_node isn't going to be used, don't leak it */
 				free (inserted_node);
 				return;
-			} else if (key < n->key) {
-				if (n->left == t->nil) {
-					n->left = inserted_node;
+			} else if (key < DOSNODE(n)->key) {
+				if (n->left == NULL) {
+					n->left = &inserted_node->node;
 					break;
 				} else {
 					n = n->left;
 				}
 			} else {
-				if (n->right == t->nil) {
-					n->right = inserted_node;
+				if (n->right == NULL) {
+					n->right = &inserted_node->node;
 					break;
 				} else {
 					n = n->right;
 				}
 			}
 		}
-    	inserted_node->parent = n;
+    	inserted_node->node.parent = n;	
 	}
-	insert_case1(t, inserted_node);
+
+	__insert_case1(t, &inserted_node->node);
 
 	// fixup all size
-	fixup_size(t, inserted_node);
-}
-
-static inline void insert_case1(dostree t, dostree_node n) {
-    if (n->parent == t->nil)
-        n->color = BLACK;
-    else
-        insert_case2(t, n);
-}
-
-static inline void insert_case2(dostree t, dostree_node n) {
-    if (node_color(n->parent) == BLACK)
-        return; /* Tree is still valid */
-    else
-        insert_case3(t, n);
-}
-
-static inline void insert_case3(dostree t, dostree_node n) {
-    if (node_color(uncle(t,n)) == RED) {
-        n->parent->color = BLACK;
-        uncle(t,n)->color = BLACK;
-        grandparent(t,n)->color = RED;
-        insert_case1(t, grandparent(t,n));
-    } else {
-        insert_case4(t, n);
-    }
-}
-
-static inline void insert_case4(dostree t, dostree_node n) {
-    if (n == n->parent->right && n->parent == grandparent(t,n)->left) {
-        rotate_left(t, n->parent);
-        n = n->left;
-    } else if (n == n->parent->left && n->parent == grandparent(t,n)->right) {
-        rotate_right(t, n->parent);
-        n = n->right;
-    }
-    insert_case5(t, n);
-}
-
-static inline void insert_case5(dostree t, dostree_node n) {
-    n->parent->color = BLACK;
-    grandparent(t,n)->color = RED;
-    if (n == n->parent->left && n->parent == grandparent(t,n)->left) {
-        rotate_right(t, grandparent(t,n));
-    } else {
-        assert (n == n->parent->right && n->parent == grandparent(t,n)->right);
-        rotate_left(t, grandparent(t,n));
-    }
+	__fixup_size(&inserted_node->node);
 }
 
 /**
  * delete the key in the red-black tree
  */
-static inline void dostree_delete(dostree t, dostree_node n) {
-    dostree_node child;
-    if (n == t->nil) return;
-    if (n->left != t->nil && n->right != t->nil) {
+static inline void
+dostree_delete(rbtree t, dostree_node x)
+{
+    rbtree_node child;
+    if (x == NULL) return;
+	rbtree_node n = &x->node;
+
+    if (n->left != NULL && n->right != NULL) {
         /* Copy key/value from predecessor and then delete it instead */
-        dostree_node pred = maximum_node(t, n->left);
-        n->key = pred->key;
-		n->size = pred->size;
+        rbtree_node pred = __maximum_node(n->left);
+        DOSNODE(n)->key = DOSNODE(pred)->key;
+		DOSNODE(n)->size = DOSNODE(pred)->size;
         n = pred;
     }
 
-    assert(n->left == t->nil || n->right == t->nil);
-    child = n->right == t->nil ? n->left  : n->right;
-    if (node_color(n) == BLACK) {
-        n->color = node_color(child);
-        delete_case1(t, n);
+    assert(n->left == NULL || n->right == NULL);
+    child = n->right == NULL ? n->left  : n->right;
+    if (__node_color(n) == BLACK) {
+        n->color = __node_color(child);
+        __delete_case1(t, n);
     }
-    replace_node(t, n, child);
-    if (n->parent == t->nil && child != t->nil)
+    __replace_node(t, n, child);
+    if (n->parent == NULL && child != NULL)
         child->color = BLACK;
-    free(n);
 	
 	// fix up size
-	fixup_size(t, child);
-}
-
-static inline dostree_node maximum_node(dostree t, dostree_node n) {
-    while (n->right != t->nil) {
-        n = n->right;
-    }
-    return n;
-}
-static inline void delete_case1(dostree t, dostree_node n) {
-    if (n->parent == t->nil)
-        return;
-    else
-        delete_case2(t, n);
-}
-static inline void delete_case2(dostree t, dostree_node n) {
-    if (node_color(sibling(t,n)) == RED) {
-        n->parent->color = RED;
-        sibling(t,n)->color = BLACK;
-        if (n == n->parent->left)
-            rotate_left(t, n->parent);
-        else
-            rotate_right(t, n->parent);
-    }
-    delete_case3(t, n);
-}
-
-static inline void delete_case3(dostree t, dostree_node n) {
-    if (node_color(n->parent) == BLACK &&
-        node_color(sibling(t,n)) == BLACK &&
-        node_color(sibling(t,n)->left) == BLACK &&
-        node_color(sibling(t,n)->right) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        delete_case1(t, n->parent);
-    }
-    else
-        delete_case4(t, n);
-}
-
-static inline void delete_case4(dostree t, dostree_node n) {
-    if (node_color(n->parent) == RED &&
-        node_color(sibling(t,n)) == BLACK &&
-        node_color(sibling(t,n)->left) == BLACK &&
-        node_color(sibling(t,n)->right) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        n->parent->color = BLACK;
-    }
-    else
-        delete_case5(t, n);
-}
-
-static inline void delete_case5(dostree t, dostree_node n) {
-    if (n == n->parent->left &&
-        node_color(sibling(t,n)) == BLACK &&
-        node_color(sibling(t,n)->left) == RED &&
-        node_color(sibling(t,n)->right) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        sibling(t,n)->left->color = BLACK;
-        rotate_right(t, sibling(t,n));
-    }
-    else if (n == n->parent->right &&
-             node_color(sibling(t,n)) == BLACK &&
-             node_color(sibling(t,n)->right) == RED &&
-             node_color(sibling(t,n)->left) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        sibling(t,n)->right->color = BLACK;
-        rotate_left(t, sibling(t,n));
-    }
-    delete_case6(t, n);
-}
-
-static inline void delete_case6(dostree t, dostree_node n) {
-    sibling(t,n)->color = node_color(n->parent);
-    n->parent->color = BLACK;
-    if (n == n->parent->left) {
-        assert (node_color(sibling(t,n)->right) == RED);
-        sibling(t,n)->right->color = BLACK;
-        rotate_left(t, n->parent);
-    }
-    else
-    {
-        assert (node_color(sibling(t,n)->left) == RED);
-        sibling(t,n)->left->color = BLACK;
-        rotate_right(t, n->parent);
-    }
+	__fixup_size(n);
+	free(DOSNODE(n));
 }
 
 #endif

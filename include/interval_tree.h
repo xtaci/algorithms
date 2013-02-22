@@ -50,7 +50,7 @@ static inline void ivltree_delete(rbtree t, ivltree_node n);
  */
 static inline ivltree_node __ivltree_new_node(int low, int high, 
 			color rbtree_node_color, rbtree_node left, rbtree_node right);
-static inline void __fixup_max(rbtree t,rbtree_node n);
+static inline void __fixup_max(rbtree_node n);
 
 /**
  * ivltree_create
@@ -147,16 +147,41 @@ ivltree_insert(rbtree t, int low, int high)
 	__insert_case1(t, &inserted_node->node);
 
 	// fix the m all the way up
-	__fixup_max(t, &inserted_node->node);
+	__fixup_max(&inserted_node->node);
 }
 
 /**
- *  Travels up to the root fixing the maxHigh fields after
- *  an insertion or deletion 
+ * first, we recalc the sibling  & childsize,
+ * then travels up to the root fixing the m field.
  */
 static inline void 
-__fixup_max(rbtree t, rbtree_node n)
+__fixup_max(rbtree_node n)
 {
+	if (n==NULL) return;
+
+	// fix children
+	rbtree_node child;
+	if ((child = n->left)) {
+		int max_left = child->left?IVLNODE(child->left)->m:INT_MIN;	
+		int max_right = child->right?IVLNODE(child->right)->m:INT_MIN;	
+		IVLNODE(child)->m = Max(IVLNODE(child)->high, Max(max_left, max_right));
+	}
+
+	if ((child = n->right)) {
+		int max_left = child->left?IVLNODE(child->left)->m:INT_MIN;	
+		int max_right = child->right?IVLNODE(child->right)->m:INT_MIN;	
+		IVLNODE(child)->m = Max(IVLNODE(child)->high, Max(max_left, max_right));
+	}
+
+	// fix sibling
+	rbtree_node s;
+	if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
+		int max_left = s->left?IVLNODE(s->left)->m:INT_MIN;	
+		int max_right = s->right?IVLNODE(s->right)->m:INT_MIN;	
+		IVLNODE(s)->m = Max(IVLNODE(s)->high, Max(max_left, max_right));
+	}
+
+	// fix up to the root
 	while(n != NULL) {
 		int max_left = n->left?IVLNODE(n->left)->m:INT_MIN;	
 		int max_right = n->right?IVLNODE(n->right)->m:INT_MIN;	
@@ -193,10 +218,10 @@ ivltree_delete(rbtree t, ivltree_node x)
 	__replace_node(t, n, child);
 	if (n->parent == NULL && child != NULL)
 		child->color = BLACK;
-	free(IVLNODE(n));
 
 	// fix up max 
-	__fixup_max(t, child);
+	__fixup_max(n);
+	free(IVLNODE(n));
 }
 
 #endif //
