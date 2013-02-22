@@ -34,11 +34,9 @@ array2d_create(uint32_t nrow, uint32_t ncol)
 {
 	struct Array2D * arr = (struct Array2D *)malloc(sizeof(struct Array2D));
 	
-	if (arr!=NULL) {
-		arr->nrow = nrow;
-		arr->ncol = ncol;
-		arr->data = (int *)malloc(nrow * ncol * sizeof(int));
-	}
+	arr->nrow = nrow;
+	arr->ncol = ncol;
+	arr->data = (int *)malloc(nrow * ncol * sizeof(int));
 
 	return arr;
 }
