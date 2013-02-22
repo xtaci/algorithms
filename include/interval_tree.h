@@ -54,7 +54,8 @@ static inline void __fixup_max(rbtree t,rbtree_node n);
 
 /**
  * ivltree_create
- * init an interval tree
+ * initialized an interval tree
+ * same as init an red-black tree
  */
 static inline rbtree 
 ivltree_create() 
@@ -64,20 +65,23 @@ ivltree_create()
     return t;
 }
 
+/**
+ *  malloc a new node, and set default vales.
+ */
 static inline ivltree_node 
 __ivltree_new_node(int low, int high, 
 		color rbtree_node_color, rbtree_node left, rbtree_node right) 
 {
-    ivltree_node result = malloc(sizeof(struct ivltree_node_t));
-    result->low = low;
-    result->high = high;
-    result->node.color = rbtree_node_color;
-    result->node.left = left;
-    result->node.right = right;
+	ivltree_node result = malloc(sizeof(struct ivltree_node_t));
+	result->low = low;
+	result->high = high;
+	result->node.color = rbtree_node_color;
+	result->node.left = left;
+	result->node.right = right;
 	if(left !=NULL) left->parent = &result->node;
 	if(right!=NULL) right->parent = &result->node;
-    result->node.parent = NULL;
-    return result;
+	result->node.parent = NULL;
+	return result;
 }
 
 
@@ -92,7 +96,8 @@ __ivltree_new_node(int low, int high,
  *
  * NULL is returned if not found.
  */
-static inline ivltree_node ivltree_lookup(rbtree t, int low, int high) 
+static inline ivltree_node 
+ivltree_lookup(rbtree t, int low, int high) 
 {
     rbtree_node n = t->root;
     while (n != NULL && (low > IVLNODE(n)->high || IVLNODE(n)->low > high)) { // should search in childs
@@ -107,13 +112,14 @@ static inline ivltree_node ivltree_lookup(rbtree t, int low, int high)
  * ivltree_insert
  * insert range [low, high] into red-black tree
  */
-static inline void ivltree_insert(rbtree t, int low, int high) 
+static inline void 
+ivltree_insert(rbtree t, int low, int high) 
 {
-    ivltree_node inserted_node = __ivltree_new_node(low, high, RED, NULL, NULL);
+	ivltree_node inserted_node = __ivltree_new_node(low, high, RED, NULL, NULL);
 	if (t->root == NULL) {
-        t->root = &inserted_node->node;
-    } else {
-        rbtree_node n = t->root;
+		t->root = &inserted_node->node;
+	} else {
+		rbtree_node n = t->root;
 		while (1) {
 			if (low == IVLNODE(n)->low) {
 				/* inserted_node isn't going to be used, don't leak it */
@@ -137,9 +143,9 @@ static inline void ivltree_insert(rbtree t, int low, int high)
 		}
 		inserted_node->node.parent = n;
 	}
-    
-    __insert_case1(t, &inserted_node->node);
-	
+
+	__insert_case1(t, &inserted_node->node);
+
 	// fix the m all the way up
 	__fixup_max(t, &inserted_node->node);
 }
@@ -163,30 +169,31 @@ __fixup_max(rbtree t, rbtree_node n)
 /**
  * delete the key in the red-black tree
  */
-static inline void ivltree_delete(rbtree t, ivltree_node x) 
+static inline void 
+ivltree_delete(rbtree t, ivltree_node x) 
 {
-    rbtree_node child;
-    if (x == NULL) return;
+	rbtree_node child;
+	if (x == NULL) return;
 	rbtree_node n = &x->node;
 
-    if (n->left != NULL && n->right != NULL) {
-        /* Copy key/value from predecessor and then delete it instead */
-        rbtree_node pred = __maximum_node(n->left);
-        IVLNODE(n)->low = IVLNODE(pred)->low;
-        IVLNODE(n)->high= IVLNODE(pred)->high;
-        n = pred;
-    }
+	if (n->left != NULL && n->right != NULL) {
+		/* Copy key/value from predecessor and then delete it instead */
+		rbtree_node pred = __maximum_node(n->left);
+		IVLNODE(n)->low = IVLNODE(pred)->low;
+		IVLNODE(n)->high= IVLNODE(pred)->high;
+		n = pred;
+	}
 
-    assert(n->left == NULL || n->right == NULL);
-    child = n->right == NULL ? n->left : n->right;
-    if (__node_color(n) == BLACK) {
-        n->color = __node_color(child);
-        __delete_case1(t, n);
-    }
-    __replace_node(t, n, child);
-    if (n->parent == NULL && child != NULL)
-        child->color = BLACK;
-    free(IVLNODE(n));
+	assert(n->left == NULL || n->right == NULL);
+	child = n->right == NULL ? n->left : n->right;
+	if (__node_color(n) == BLACK) {
+		n->color = __node_color(child);
+		__delete_case1(t, n);
+	}
+	__replace_node(t, n, child);
+	if (n->parent == NULL && child != NULL)
+		child->color = BLACK;
+	free(IVLNODE(n));
 
 	// fix up max 
 	__fixup_max(t, child);
