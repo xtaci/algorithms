@@ -5,42 +5,42 @@
 
 #include "interval_tree.h"
 
-void print_tree(inttree t);
-void print_tree_helper(inttree t, inttree_node n, int indent);
+void print_tree(rbtree t);
+void print_tree_helper(rbtree_node n, int indent);
 
 #define INDENT_STEP  4
 
-void print_tree_helper(inttree t, inttree_node n, int indent);
-
-void print_tree(inttree t) {
-    print_tree_helper(t, t->root, 0);
+void print_tree(rbtree t) {
+    print_tree_helper(t->root, 0);
     puts("");
 }
 
-void print_tree_helper(inttree t, inttree_node n, int indent) {
+void print_tree_helper(rbtree_node n, int indent) {
     int i;
-    if (n == t->nil) {
+
+    if (n == NULL) {
         fputs("<empty tree>", stdout);
         return;
     }
-    if (n->right != t->nil) {
-        print_tree_helper(t, n->right, indent + INDENT_STEP);
+
+    if (n->right != NULL) {
+        print_tree_helper(n->right, indent + INDENT_STEP);
     }
     for(i=0; i<indent; i++)
         fputs(" ", stdout);
     if (n->color == BLACK)
-        printf("[%d %d, m->%d]\n", n->low,n->high,n->m);
+        printf("[%d %d, m->%d]\n", IVLNODE(n)->low,IVLNODE(n)->high,IVLNODE(n)->m);
     else
-        printf("*[%d %d, m->%d]\n", n->low, n->high,n->m);
-    if (n->left != t->nil) {
-        print_tree_helper(t, n->left, indent + INDENT_STEP);
+        printf("*[%d %d, m->%d]\n", IVLNODE(n)->low, IVLNODE(n)->high,IVLNODE(n)->m);
+    if (n->left != NULL) {
+        print_tree_helper(n->left, indent + INDENT_STEP);
     }
 }
 
 
 int main() {
     int i;
-    inttree t = inttree_create();
+    rbtree t = ivltree_create();
     print_tree(t);
 
 	srand(time(NULL));
@@ -49,7 +49,7 @@ int main() {
         int low = rand() % 100;
         int high = low + rand() % 100;
         printf("Inserting [%d,%d]\n\n", low, high);
-        inttree_insert(t, low, high);
+        ivltree_insert(t, low, high);
     }
 
     print_tree(t);
@@ -59,10 +59,10 @@ int main() {
     int high = 10;
 
 	for(i=0; i<MAXELEMENT; i++) {
-		inttree_node n = inttree_lookup(t,low,high);
-		if (n!=t->nil) {
+		ivltree_node n = ivltree_lookup(t,low,high);
+		if (n!=NULL) {
 			printf("found & delete: [%d %d]\n", n->low, n->high);
-			inttree_delete(t,n);	
+			ivltree_delete(t,n);	
 		}
     }
 

@@ -25,386 +25,171 @@
 #include "generic.h"
 #include "stack.h"
 #include "double_linked_list.h"
+#include "rbtree.h"
 
-
-enum inttree_node_color { RED, BLACK };
-typedef enum inttree_node_color color;
-typedef struct inttree_node_t {
-    int low;
-    int high;
-	int m;
-    struct inttree_node_t* left;
-    struct inttree_node_t* right;
-    struct inttree_node_t* parent;
-    enum inttree_node_color color;
-} *inttree_node;
-
-typedef struct inttree_t {
-    inttree_node root;
-	struct inttree_node_t nil_t;   //nil definition
-	inttree_node nil;
-} *inttree;
+/**
+ * Interval-Tree node definition
+ */
+typedef struct ivltree_node_t {
+	int low;	// lower-bound
+	int high;	// higher-bound
+	int m;		// max subtree upper bound value
+	struct rbtree_node_t node;	// red-black tree structure
+} *ivltree_node;
 
 /**
  * Interfaces
  */
-static inline inttree inttree_create();
-static inline void inttree_insert(inttree t, int low, int high);
-static inline inttree_node inttree_lookup(inttree t, int low, int high);
-static inline void inttree_delete(inttree t, inttree_node n);
+static inline rbtree ivltree_create();
+static inline void ivltree_insert(rbtree t, int low, int high);
+static inline ivltree_node ivltree_lookup(rbtree t, int low, int high);
+static inline void ivltree_delete(rbtree t, ivltree_node n);
 
 /**
  * Auxillary functions
  */
-static inline inttree_node grandparent(inttree t, inttree_node n);
-static inline inttree_node sibling(inttree t, inttree_node n);
-static inline inttree_node uncle(inttree t, inttree_node n);
-static inline color node_color(inttree_node n);
-
-static inline inttree_node new_node(inttree t, int low, int high, color node_color);
-static inline void rotate_left(inttree t, inttree_node n);
-static inline void rotate_right(inttree t, inttree_node n);
-
-static inline void replace_node(inttree t, inttree_node oldn, inttree_node newn);
-static inline void insert_case1(inttree t, inttree_node n);
-static inline void insert_case2(inttree t, inttree_node n);
-static inline void insert_case3(inttree t, inttree_node n);
-static inline void insert_case4(inttree t, inttree_node n);
-static inline void insert_case5(inttree t, inttree_node n);
-static inline inttree_node maximum_node(inttree t, inttree_node root);
-static inline void delete_case1(inttree t, inttree_node n);
-static inline void delete_case2(inttree t, inttree_node n);
-static inline void delete_case3(inttree t, inttree_node n);
-static inline void delete_case4(inttree t, inttree_node n);
-static inline void delete_case5(inttree t, inttree_node n);
-static inline void delete_case6(inttree t, inttree_node n);
-
-static inline void fixup_max(inttree t,inttree_node x);
-
-static inline inttree_node grandparent(inttree t, inttree_node n) {
-    assert (n != t->nil);
-    assert (n->parent != t->nil); /* Not the root inttree_node */
-    assert (n->parent->parent != t->nil); /* Not child of root */
-    return n->parent->parent;
-}
-
-static inline inttree_node sibling(inttree t, inttree_node n) {
-    assert (n != t->nil);
-    assert (n->parent != t->nil); /* Root inttree_node has no sibling */
-    if (n == n->parent->left)
-        return n->parent->right;
-    else
-        return n->parent->left;
-}
-
-static inline inttree_node uncle(inttree t, inttree_node n) {
-    assert (n != t->nil);
-    assert (n->parent != t->nil); /* Root inttree_node has no uncle */
-    assert (n->parent->parent != t->nil); /* Children of root have no uncle */
-    return sibling(t,n->parent);
-}
-
-static inline color node_color(inttree_node n) { return n->color; }
+static inline ivltree_node __ivltree_new_node(int low, int high, 
+			color rbtree_node_color, rbtree_node left, rbtree_node right);
+static inline void __fixup_max(rbtree t,rbtree_node n);
 
 /**
- * inttree_create
+ * ivltree_create
  * init an interval tree
  */
-static inline inttree inttree_create() {
-    inttree t = malloc(sizeof(struct inttree_t));
-	t->nil_t.low = INT_MIN;
-	t->nil_t .high=INT_MIN;
-	t->nil_t.color=BLACK;
-	t->nil_t.left=&t->nil_t;
-	t->nil_t.right=&t->nil_t;
-	t->nil_t.parent=&t->nil_t;
-	t->nil = &t->nil_t;
-    t->root = t->nil;
+static inline rbtree 
+ivltree_create() 
+{
+    rbtree t = malloc(sizeof(struct rbtree_t));
+    t->root = NULL;
     return t;
 }
 
-static inline inttree_node new_node(inttree t, int low, int high, color inttree_node_color) {
-    inttree_node result = malloc(sizeof(struct inttree_node_t));
+static inline ivltree_node 
+__ivltree_new_node(int low, int high, 
+		color rbtree_node_color, rbtree_node left, rbtree_node right) 
+{
+    ivltree_node result = malloc(sizeof(struct ivltree_node_t));
     result->low = low;
     result->high = high;
-    result->color = inttree_node_color;
-    result->left = t->nil;
-    result->right = t->nil;
-    result->parent = t->nil;
+    result->node.color = rbtree_node_color;
+    result->node.left = left;
+    result->node.right = right;
+	if(left !=NULL) left->parent = &result->node;
+	if(right!=NULL) right->parent = &result->node;
+    result->node.parent = NULL;
     return result;
 }
 
+
+#define IVLNODE(rbnode) \
+	((ivltree_node)((char *)rbnode - (unsigned long)(&((ivltree_node)0)->node)))
+
 /**
- * inttree_lookup
+ * ivltree_lookup
  *
  * search range [low, high] for overlap, return only one element
  * use lookup & delete & insert schema to get multiple elements
+ *
+ * NULL is returned if not found.
  */
-static inline inttree_node inttree_lookup(inttree t, int low, int high) {
-    inttree_node x = t->root;
-    while (x != t->nil && (low > x->high || x->low > high) ) {
-		if (x->left !=t->nil && low <=x->left->m) x = x->left;
-		else x = x->right;
+static inline ivltree_node ivltree_lookup(rbtree t, int low, int high) 
+{
+    rbtree_node n = t->root;
+    while (n != NULL && (low > IVLNODE(n)->high || IVLNODE(n)->low > high)) { // should search in childs
+		if (n->left !=NULL && low <=IVLNODE(n->left)->m) n = n->left; // path choice on m.
+		else n = n->right;
     }
-    return x;
-}
 
-static inline void rotate_left(inttree t, inttree_node n) {
-    inttree_node r = n->right;
-    replace_node(t, n, r);
-    n->right = r->left;
-    if (r->left != t->nil) {
-        r->left->parent = n;
-    }
-    r->left = n;
-    n->parent = r;
-	// fix m
-	n->m = Max(n->left->m, Max(n->right->m, n->high));
-    r->m = Max(n->m, Max(r->right->m, r->high));
-}
-
-static inline void rotate_right(inttree t, inttree_node n) {
-    inttree_node L = n->left;
-    replace_node(t, n, L);
-    n->left = L->right;
-    if (L->right != t->nil) {
-        L->right->parent = n;
-    }
-    L->right = n;
-    n->parent = L;
-	// fix m
-	n->m = Max(n->left->m, Max(n->right->m,n->high));
-    L->m = Max(L->left->m, Max(n->m,L->high));
-}
-
-static inline void replace_node(inttree t, inttree_node oldn, inttree_node newn) {
-    if (oldn->parent == t->nil) {
-        t->root = newn;
-    } else {
-        if (oldn == oldn->parent->left)
-            oldn->parent->left = newn;
-        else
-            oldn->parent->right = newn;
-    }
-    if (newn != t->nil) {
-        newn->parent = oldn->parent;
-    }
+    return n==NULL?NULL:IVLNODE(n); // beware of the NULL pointer
 }
 
 /**
- * inttree_insert
+ * ivltree_insert
  * insert range [low, high] into red-black tree
  */
-static inline void inttree_insert(inttree t, int low, int high) {
-    inttree_node inserted_node = new_node(t,low, high, RED);
-	if (t->root == t->nil) {
-        t->root = inserted_node;
+static inline void ivltree_insert(rbtree t, int low, int high) 
+{
+    ivltree_node inserted_node = __ivltree_new_node(low, high, RED, NULL, NULL);
+	if (t->root == NULL) {
+        t->root = &inserted_node->node;
     } else {
-        inttree_node n = t->root;
+        rbtree_node n = t->root;
 		while (1) {
-			if (low == n->low) {
+			if (low == IVLNODE(n)->low) {
 				/* inserted_node isn't going to be used, don't leak it */
 				free (inserted_node);
 				return;
-			} else if (low < n->low) {
-				if (n->left == t->nil) {
-					n->left = inserted_node;
+			} else if (low < IVLNODE(n)->low) {
+				if (n->left == NULL) {
+					n->left = &inserted_node->node;
 					break;
 				} else {
 					n = n->left;
 				}
 			} else {
-				if (n->right == t->nil) {
-					n->right = inserted_node;
+				if (n->right == NULL) {
+					n->right = &inserted_node->node;
 					break;
 				} else {
 					n = n->right;
 				}
 			}
 		}
-		inserted_node->parent = n;
+		inserted_node->node.parent = n;
 	}
     
-    insert_case1(t, inserted_node);
+    __insert_case1(t, &inserted_node->node);
 	
 	// fix the m all the way up
-	fixup_max(t, inserted_node);
+	__fixup_max(t, &inserted_node->node);
 }
 
 /**
  *  Travels up to the root fixing the maxHigh fields after
  *  an insertion or deletion 
  */
-static inline void fixup_max(inttree t,inttree_node x)
+static inline void 
+__fixup_max(rbtree t, rbtree_node n)
 {
-	while(x != t->nil) {
-		x->m = Max(x->high,Max(x->left->m,x->right->m));
-		x=x->parent;
+	while(n != NULL) {
+		int max_left = n->left?IVLNODE(n->left)->m:INT_MIN;	
+		int max_right = n->right?IVLNODE(n->right)->m:INT_MIN;	
+
+		IVLNODE(n)->m = Max(IVLNODE(n)->high, Max(max_left, max_right));
+		n=n->parent;
 	}
-}
-
-static inline void insert_case1(inttree t, inttree_node n) {
-    if (n->parent == t->nil)
-        n->color = BLACK;
-    else
-        insert_case2(t, n);
-}
-
-static inline void insert_case2(inttree t, inttree_node n) {
-    if (node_color(n->parent) == BLACK)
-        return; /* Tree is still valid */
-    else
-        insert_case3(t, n);
-}
-
-static inline void insert_case3(inttree t, inttree_node n) {
-    if (node_color(uncle(t,n)) == RED) {
-        n->parent->color = BLACK;
-        uncle(t,n)->color = BLACK;
-        grandparent(t,n)->color = RED;
-        insert_case1(t, grandparent(t,n));
-    } else {
-        insert_case4(t, n);
-    }
-}
-
-static inline void insert_case4(inttree t, inttree_node n) {
-    if (n == n->parent->right && n->parent == grandparent(t,n)->left) {
-        rotate_left(t, n->parent);
-        n = n->left;
-    } else if (n == n->parent->left && n->parent == grandparent(t,n)->right) {
-        rotate_right(t, n->parent);
-        n = n->right;
-    }
-    insert_case5(t, n);
-}
-
-static inline void insert_case5(inttree t, inttree_node n) {
-    n->parent->color = BLACK;
-    grandparent(t,n)->color = RED;
-    if (n == n->parent->left && n->parent == grandparent(t,n)->left) {
-        rotate_right(t, grandparent(t,n));
-    } else {
-        assert (n == n->parent->right && n->parent == grandparent(t,n)->right);
-        rotate_left(t, grandparent(t,n));
-    }
 }
 
 /**
  * delete the key in the red-black tree
  */
-static inline void inttree_delete(inttree t, inttree_node n) {
-    inttree_node child;
-    if (n == t->nil) return;
-    if (n->left != t->nil && n->right != t->nil) {
+static inline void ivltree_delete(rbtree t, ivltree_node x) 
+{
+    rbtree_node child;
+    if (x == NULL) return;
+	rbtree_node n = &x->node;
+
+    if (n->left != NULL && n->right != NULL) {
         /* Copy key/value from predecessor and then delete it instead */
-        inttree_node pred = maximum_node(t, n->left);
-        n->low = pred->low;
-        n->high= pred->high;
+        rbtree_node pred = __maximum_node(n->left);
+        IVLNODE(n)->low = IVLNODE(pred)->low;
+        IVLNODE(n)->high= IVLNODE(pred)->high;
         n = pred;
     }
 
-    assert(n->left == t->nil || n->right == t->nil);
-    child = n->right == t->nil ? n->left  : n->right;
-    if (node_color(n) == BLACK) {
-        n->color = node_color(child);
-        delete_case1(t, n);
+    assert(n->left == NULL || n->right == NULL);
+    child = n->right == NULL ? n->left : n->right;
+    if (__node_color(n) == BLACK) {
+        n->color = __node_color(child);
+        __delete_case1(t, n);
     }
-    replace_node(t, n, child);
-    if (n->parent == t->nil && child != t->nil)
+    __replace_node(t, n, child);
+    if (n->parent == NULL && child != NULL)
         child->color = BLACK;
-    free(n);
+    free(IVLNODE(n));
 
 	// fix up max 
-	fixup_max(t, child);
+	__fixup_max(t, child);
 }
 
-static inline inttree_node maximum_node(inttree t, inttree_node n) {
-    while (n->right != t->nil) {
-        n = n->right;
-    }
-    return n;
-}
-static inline void delete_case1(inttree t, inttree_node n) {
-    if (n->parent == t->nil)
-        return;
-    else
-        delete_case2(t, n);
-}
-static inline void delete_case2(inttree t, inttree_node n) {
-    if (node_color(sibling(t,n)) == RED) {
-        n->parent->color = RED;
-        sibling(t,n)->color = BLACK;
-        if (n == n->parent->left)
-            rotate_left(t, n->parent);
-        else
-            rotate_right(t, n->parent);
-    }
-    delete_case3(t, n);
-}
-
-static inline void delete_case3(inttree t, inttree_node n) {
-    if (node_color(n->parent) == BLACK &&
-        node_color(sibling(t,n)) == BLACK &&
-        node_color(sibling(t,n)->left) == BLACK &&
-        node_color(sibling(t,n)->right) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        delete_case1(t, n->parent);
-    }
-    else
-        delete_case4(t, n);
-}
-
-static inline void delete_case4(inttree t, inttree_node n) {
-    if (node_color(n->parent) == RED &&
-        node_color(sibling(t,n)) == BLACK &&
-        node_color(sibling(t,n)->left) == BLACK &&
-        node_color(sibling(t,n)->right) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        n->parent->color = BLACK;
-    }
-    else
-        delete_case5(t, n);
-}
-
-static inline void delete_case5(inttree t, inttree_node n) {
-    if (n == n->parent->left &&
-        node_color(sibling(t,n)) == BLACK &&
-        node_color(sibling(t,n)->left) == RED &&
-        node_color(sibling(t,n)->right) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        sibling(t,n)->left->color = BLACK;
-        rotate_right(t, sibling(t,n));
-    }
-    else if (n == n->parent->right &&
-             node_color(sibling(t,n)) == BLACK &&
-             node_color(sibling(t,n)->right) == RED &&
-             node_color(sibling(t,n)->left) == BLACK)
-    {
-        sibling(t,n)->color = RED;
-        sibling(t,n)->right->color = BLACK;
-        rotate_left(t, sibling(t,n));
-    }
-    delete_case6(t, n);
-}
-
-static inline void delete_case6(inttree t, inttree_node n) {
-    sibling(t,n)->color = node_color(n->parent);
-    n->parent->color = BLACK;
-    if (n == n->parent->left) {
-        assert (node_color(sibling(t,n)->right) == RED);
-        sibling(t,n)->right->color = BLACK;
-        rotate_left(t, n->parent);
-    }
-    else
-    {
-        assert (node_color(sibling(t,n)->left) == RED);
-        sibling(t,n)->left->color = BLACK;
-        rotate_right(t, n->parent);
-    }
-}
-
-#endif
+#endif //
