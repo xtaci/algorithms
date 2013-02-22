@@ -148,19 +148,19 @@ bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
 	}
 
 	//  check for negative-weight cycles
-    for (i=0;i<bfw->num_vertex;i++) {  // for each eage in the whole graph 
+	for (i=0;i<bfw->num_vertex;i++) {  // for each eage in the whole graph 
 		struct Adjacent * u = graph_lookup(g, bfw->vertex_ids[i]);
-        struct Vertex * v;
+		struct Vertex * v;
 		int32_t dist_u = (int32_t)perfect_hash_get(dist, bfw->vertex_ids[i]);
 
-        list_for_each_entry(v, &u->v_head, v_node){
-            int32_t dist_v = (int32_t)perfect_hash_get(dist, v->id);
+		list_for_each_entry(v, &u->v_head, v_node){
+			int32_t dist_v = (int32_t)perfect_hash_get(dist, v->id);
 
-            if (dist_u + v->weight < dist_v) {
+			if (dist_u + v->weight < dist_v) {
 				bfw->has_neg_cycle = true;	// graph contains a negative-weight cycle
 				goto neg_cycle_found;
-            }
-        }	
+			}
+		}	
 	}
 
 neg_cycle_found:
