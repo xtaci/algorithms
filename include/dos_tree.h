@@ -49,40 +49,28 @@ static inline rbtree dostree_create();
 static inline void dostree_insert(rbtree t, int key);
 static inline dostree_node dostree_lookup(rbtree_node n, int i);
 static inline void dostree_delete(rbtree t, dostree_node node);
-
-static void __fixup_size(rbtree_node x);
 static inline dostree_node __dostree_new_node(int key, color 
 			rbtree_node_color, rbtree_node left, rbtree_node right);
- 
 
 /**
- * first, we recalc the child size,
- * then, travels up to the root.
+ * left/right rotation call back function
+ */
+static void __dos_fix_rotation(rbtree_node n, rbtree_node parent)
+{
+	DOSNODE(parent)->size = DOSNODE_SIZE(n);
+	DOSNODE(n)->size = DOSNODE_SIZE(n->left) + DOSNODE_SIZE(n->right) + 1;
+}
+
+/**
+ * fix procedure caused by deletion
  */
 static void 
-__fixup_size(rbtree_node n)
+__dos_fixup_size(rbtree_node n)
 {	
-	if (n==NULL) return;
-
-	// fix children
-	rbtree_node child;
-	if ((child = n->left)) {
-		DOSNODE(child)->size = DOSNODE_SIZE(child->left) + DOSNODE_SIZE(child->right) + 1;
-	}
-
-	if ((child = n->right)) {
-		DOSNODE(child)->size = DOSNODE_SIZE(child->left) + DOSNODE_SIZE(child->right) + 1;
-	}
-
 	// fix up to the root
+	n = n->parent;
 	while(n != NULL) {
-		// fix sibling, caused by left/right rotation.
-		rbtree_node s;
-		if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
-			DOSNODE(s)->size = DOSNODE_SIZE(s->left) + DOSNODE_SIZE(s->right)+ 1;
-		}
-
-		DOSNODE(n)->size = DOSNODE_SIZE(n->left) + DOSNODE_SIZE(n->right)+ 1;
+		DOSNODE(n)->size -= 1;
 		n = n->parent;
 	}
 }
@@ -96,6 +84,7 @@ dostree_create()
 {
 	rbtree t = malloc(sizeof(struct rbtree_t));
 	t->root = NULL;
+	t->cb_left = t->cb_right =  __dos_fix_rotation;
 	return t;
 }
 
@@ -104,6 +93,7 @@ __dostree_new_node(int key, color rbtree_node_color, rbtree_node left, rbtree_no
 {
 	dostree_node result = malloc(sizeof(struct dostree_node_t));
 	result->key = key;
+	result->size = 1;
 	result->node.color = rbtree_node_color;
 	result->node.left = NULL;
 	result->node.right = NULL;
@@ -144,11 +134,9 @@ dostree_insert(rbtree t, int key)
 	}
 	else {
 		while (1) {
-			if (key == DOSNODE(n)->key) {
-				/* inserted_node isn't going to be used, don't leak it */
-				free (inserted_node);
-				return;
-			} else if (key < DOSNODE(n)->key) {
+			// incr 1 for each node on the path traversed from the root
+			DOSNODE(n)->size+=1;
+			if (key < DOSNODE(n)->key) {
 				if (n->left == NULL) {
 					n->left = &inserted_node->node;
 					break;
@@ -167,10 +155,8 @@ dostree_insert(rbtree t, int key)
 		inserted_node->node.parent = n;	
 	}
 
+	// fix red-black properties
 	__insert_case1(t, &inserted_node->node);
-
-	// fixup all size
-	__fixup_size(&inserted_node->node);
 }
 
 /**
@@ -182,7 +168,11 @@ dostree_delete(rbtree t, dostree_node x)
 	rbtree_node child;
 	if (x == NULL) return;
 	rbtree_node n = &x->node;
+	
+	// phase 1. fix up size
+	__dos_fixup_size(n);
 
+	// phase 2. handle red-black properties, and deletion work.
 	if (n->left != NULL && n->right != NULL) {
 		/* Copy key/value from predecessor and then delete it instead */
 		rbtree_node pred = __maximum_node(n->left);
@@ -201,8 +191,6 @@ dostree_delete(rbtree t, dostree_node x)
 	if (n->parent == NULL && child != NULL)
 		child->color = BLACK;
 
-	// fix up size
-	__fixup_size(n);
 	free(DOSNODE(n));
 }
 

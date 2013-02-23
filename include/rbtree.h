@@ -30,8 +30,15 @@ typedef struct rbtree_node_t {
     enum rbtree_node_color color;
 } *rbtree_node;
 
+/**
+ * According to rotation operation, n1 is the node, n2 is parent node affected by rotation
+ */
+typedef int (*rotate_callback)(rbtree_node n1, rbtree_node n2);
+
 typedef struct rbtree_t {
     rbtree_node root;
+	rotate_callback cb_left;
+	rotate_callback cb_right;	
 } *rbtree;
 
 /**
@@ -115,6 +122,8 @@ rbtree_create()
 {
     rbtree t = malloc(sizeof(struct rbtree_t));
     t->root = NULL;
+	t->cb_left = NULL;
+	t->cb_right = NULL;
     return t;
 }
 
@@ -171,6 +180,8 @@ __rotate_left(rbtree t, rbtree_node n)
     }
     r->left = n;
     n->parent = r;
+
+	if (t->cb_left!=NULL) (*t->cb_left)(n, r);		// rotation call back 
 }
 
 static void 
@@ -184,6 +195,8 @@ __rotate_right(rbtree t, rbtree_node n)
     }
     L->right = n;
     n->parent = L;
+
+	if (t->cb_right!=NULL) (*t->cb_right)(n, L);		// rotation call back 
 }
 
 static void 
