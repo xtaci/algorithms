@@ -66,7 +66,8 @@ static void __ivltree_fix_rotation(rbtree_node n, rbtree_node parent)
 	IVLNODE(parent)->m = IVLNODE(n)->m;
 
 	// update node 'm' value by it's children.
-	IVLNODE(n)->m = Max(IVLNODE(n)->high, Max(IVLNODE_M(n->left), IVLNODE_M(n->right)));
+	IVLNODE(n)->m = 
+		Max(IVLNODE(n)->high, Max(IVLNODE_M(n->left), IVLNODE_M(n->right)));
 }
 
 /**
@@ -84,7 +85,11 @@ static void __ivltree_fixup_m(rbtree_node n)
 		//		n(m_new)	  sibling(m)
 		// 
 		//
-		IVLNODE(n->parent)->m = Max(IVLNODE(n->parent)->high, Max(m_new, IVLNODE_M(__sibling(n))));
+		IVLNODE(n->parent)->m = 
+			Max(IVLNODE(n->parent)->high, Max(m_new, IVLNODE_M(__sibling(n))));
+
+		if(IVLNODE_M(n->parent) > m) break;	// since node n does not affect
+											//  the result anymore, we break.
 		n = n->parent;
 	}
 }
