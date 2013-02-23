@@ -37,6 +37,12 @@ typedef struct ivltree_node_t {
 	struct rbtree_node_t node;	// red-black tree structure
 } *ivltree_node;
 
+#define IVLNODE(rbnode) \
+	((ivltree_node)((char *)rbnode - (unsigned long)(&((ivltree_node)0)->node)))
+
+#define IVLNODE_M(rbnode) \
+	(rbnode?IVLNODE(rbnode)->m:INT_MIN)
+
 /**
  * Interfaces
  */
@@ -50,7 +56,38 @@ static void ivltree_delete(rbtree t, ivltree_node n);
  */
 static ivltree_node __ivltree_new_node(int low, int high, 
 			color rbtree_node_color, rbtree_node left, rbtree_node right);
-static void __fixup_max(rbtree_node n);
+
+/**
+ * fix 'm' value caused by rotation
+ */
+static void __ivltree_fix_rotation(rbtree_node n, rbtree_node parent)
+{
+	// parent inherit max m value
+	IVLNODE(parent)->m = IVLNODE(n)->m;
+
+	// update node 'm' value by it's children.
+	IVLNODE(n)->m = Max(IVLNODE(n)->high, Max(IVLNODE_M(n->left), IVLNODE_M(n->right)));
+}
+
+/**
+ * fix up 'm' value caued by deletion
+ */
+static void __ivltree_fixup_m(rbtree_node n)
+{
+	int m = IVLNODE(n)->m;
+	int m_new = Max(IVLNODE_M(n->left), IVLNODE_M(n->right));
+
+	while(n->parent !=NULL) {
+		//
+		// 		   parent(high)
+		//         /	      \
+		//		n(m_new)	  sibling(m)
+		// 
+		//
+		IVLNODE(n->parent)->m = Max(IVLNODE(n->parent)->high, Max(m_new, IVLNODE_M(__sibling(n))));
+		n = n->parent;
+	}
+}
 
 /**
  * ivltree_create
@@ -62,6 +99,7 @@ ivltree_create()
 {
     rbtree t = malloc(sizeof(struct rbtree_t));
     t->root = NULL;
+	t->cb_left = t->cb_right = __ivltree_fix_rotation;
     return t;
 }
 
@@ -75,6 +113,7 @@ __ivltree_new_node(int low, int high,
 	ivltree_node result = malloc(sizeof(struct ivltree_node_t));
 	result->low = low;
 	result->high = high;
+	result->m = high;
 	result->node.color = rbtree_node_color;
 	result->node.left = left;
 	result->node.right = right;
@@ -85,8 +124,6 @@ __ivltree_new_node(int low, int high,
 }
 
 
-#define IVLNODE(rbnode) \
-	((ivltree_node)((char *)rbnode - (unsigned long)(&((ivltree_node)0)->node)))
 
 /**
  * ivltree_lookup
@@ -121,11 +158,13 @@ ivltree_insert(rbtree t, int low, int high)
 	} else {
 		rbtree_node n = t->root;
 		while (1) {
-			if (low == IVLNODE(n)->low) {
-				/* inserted_node isn't going to be used, don't leak it */
-				free (inserted_node);
-				return;
-			} else if (low < IVLNODE(n)->low) {
+			// update 'm' for each node traversed from root
+			if (inserted_node->m > IVLNODE(n)->m) {
+				IVLNODE(n)->m = inserted_node->m;
+			}
+
+			// find a proper position
+			if (low < IVLNODE(n)->low) {
 				if (n->left == NULL) {
 					n->left = &inserted_node->node;
 					break;
@@ -143,52 +182,7 @@ ivltree_insert(rbtree t, int low, int high)
 		}
 		inserted_node->node.parent = n;
 	}
-
 	__insert_case1(t, &inserted_node->node);
-
-	// fix the m all the way up
-	__fixup_max(&inserted_node->node);
-}
-
-/**
- * first, we recalc the sibling  & childsize,
- * then travels up to the root fixing the m field.
- */
-static void 
-__fixup_max(rbtree_node n)
-{
-	if (n==NULL) return;
-
-	// fix children
-	rbtree_node child;
-	if ((child = n->left)) {
-		int max_left = child->left?IVLNODE(child->left)->m:INT_MIN;	
-		int max_right = child->right?IVLNODE(child->right)->m:INT_MIN;	
-		IVLNODE(child)->m = Max(IVLNODE(child)->high, Max(max_left, max_right));
-	}
-
-	if ((child = n->right)) {
-		int max_left = child->left?IVLNODE(child->left)->m:INT_MIN;	
-		int max_right = child->right?IVLNODE(child->right)->m:INT_MIN;	
-		IVLNODE(child)->m = Max(IVLNODE(child)->high, Max(max_left, max_right));
-	}
-
-	// fix up to the root
-	while(n != NULL) {
-		// fix sibling, caused by left/right rotation 
-		rbtree_node s;
-		if (n->parent !=NULL && (s=__sibling(n))!=NULL) {
-			int max_left = s->left?IVLNODE(s->left)->m:INT_MIN;	
-			int max_right = s->right?IVLNODE(s->right)->m:INT_MIN;	
-			IVLNODE(s)->m = Max(IVLNODE(s)->high, Max(max_left, max_right));
-		}
-
-		int max_left = n->left?IVLNODE(n->left)->m:INT_MIN;	
-		int max_right = n->right?IVLNODE(n->right)->m:INT_MIN;	
-
-		IVLNODE(n)->m = Max(IVLNODE(n)->high, Max(max_left, max_right));
-		n=n->parent;
-	}
 }
 
 /**
@@ -201,6 +195,10 @@ ivltree_delete(rbtree t, ivltree_node x)
 	if (x == NULL) return;
 	rbtree_node n = &x->node;
 
+	// phase 1. fixup the 'm' value until m is not the max value of the path.
+	__ivltree_fixup_m(n);
+
+	// phase 2. red black tree deletion
 	if (n->left != NULL && n->right != NULL) {
 		/* Copy key/value from predecessor and then delete it instead */
 		rbtree_node pred = __maximum_node(n->left);
@@ -219,8 +217,6 @@ ivltree_delete(rbtree t, ivltree_node x)
 	if (n->parent == NULL && child != NULL)
 		child->color = BLACK;
 
-	// fix up max 
-	__fixup_max(n);
 	free(IVLNODE(n));
 }
 

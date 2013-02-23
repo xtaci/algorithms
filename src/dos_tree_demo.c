@@ -72,5 +72,6 @@ int main(void)
 		if(n!=NULL) printf("the %dth element is %d\n\n", i+1, n->key);
     }
 
+    print_tree(t);
 	exit(0);
 }
