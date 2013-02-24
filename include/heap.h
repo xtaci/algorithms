@@ -80,6 +80,16 @@ heap_init(int max)
 }
 
 /**
+ * heap free method
+ */
+static inline void 
+heap_free(struct Heap * heap)
+{
+	free(heap->kvs);
+	free(heap);
+}
+
+/**
  * insert a 'key'->'value' pair into the heap.
  */
 static inline void 

@@ -53,5 +53,7 @@ int main(void)
 		else printf("%u\n", (uint32_t)pre);
 	}
 
+	dijkstra_free(dr);
+	graph_free(g);
 	exit(0);	
 }

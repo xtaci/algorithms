@@ -125,4 +125,13 @@ dijkstra_run(const struct Graph * g, const struct Adjacent * source)
 	return dr;
 }
 
+static void
+dijkstra_free(struct DijkstraResult * result)
+{
+	hash_table_destroy(result->dist);
+	hash_table_destroy(result->previous);
+	heap_free(result->Q);
+	free(result);
+}
+
 #endif //
