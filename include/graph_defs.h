@@ -64,4 +64,24 @@ graph_get_vertex(const struct Graph * g, uint32_t from, uint32_t to)
 	return NULL;
 }
 
+/**
+ * graph free, safely destroy graph.
+ */
+static void 
+graph_free(struct Graph * g)
+{
+	struct Adjacent * a, *an;
+	list_for_each_entry_safe(a, an, &g->a_head, a_node){
+		struct Vertex * v, *vn;
+		list_for_each_entry_safe(v, vn, &a->v_head, v_node){
+			list_del(&v->v_node);
+			free(v);
+		}
+		list_del(&a->a_node);
+		free(a);
+	}
+	
+	free(g);
+}
+
 #endif //

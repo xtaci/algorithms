@@ -59,6 +59,7 @@ int main(void)
 	}
 
 	edmonds_karp_free(result);
+	graph_free(g);
 
 	exit(0);
 }
