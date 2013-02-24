@@ -78,6 +78,9 @@ static void __ivltree_fixup_m(rbtree_node n)
 	int m = IVLNODE(n)->m;
 	int m_new = Max(IVLNODE_M(n->left), IVLNODE_M(n->right));
 
+	// if current 'm' is not decided by n->high, just return.
+	if (m==m_new) return;
+
 	while(n->parent !=NULL) {
 		//
 		// 		   parent(high)
