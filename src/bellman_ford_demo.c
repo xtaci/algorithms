@@ -43,10 +43,11 @@ int main(void)
 
 	printf("finding bellman-ford shortest path starting from 3: \n");	
 	struct BFWorkspace * bfw = bellman_ford_run(g, graph_lookup(g,3));
-	int i;
-	for(i=0;i < bfw->num_vertex;i++) {
-		printf("previous of %u is ", bfw->vertex_ids[i]);
-		uintptr_t pre = perfect_hash_get(bfw->previous, bfw->vertex_ids[i]);
+	
+	struct Adjacent * a;
+	list_for_each_entry(a, &g->a_head, a_node) {
+		printf("previous of %u is ", a->v.id);
+		uintptr_t pre = hash_table_get(bfw->previous, a->v.id);
 		if (pre ==undefined) { printf("undefined\n"); }
 		else printf("%u\n", (uint32_t)pre);
 	}
