@@ -52,6 +52,7 @@ int main(void)
 		else printf("%u\n", (uint32_t)pre);
 	}
 	printf("\nwe %s have negative weighted cycle.\n", bfw->has_neg_cycle?"DO":"DON'T");
+	bellman_ford_free(bfw);
 
 	printf("\nconstructing a negative cycle and run again\n");	
 	// construct a negative cycle;
@@ -62,5 +63,7 @@ int main(void)
 
 	printf("\nwe %s have negative weighted cycle.\n", bfw->has_neg_cycle?"DO":"DON'T");
 
+	bellman_ford_free(bfw);
+	graph_free(g);
 	exit(0);	
 }

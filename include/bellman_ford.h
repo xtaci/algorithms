@@ -149,4 +149,12 @@ neg_cycle_found:
 	return bfw;
 }
 
+static void 
+bellman_ford_free(struct BFResult * result)
+{
+	hash_table_destroy(result->previous);	
+	hash_table_destroy(result->dist);	
+	free(result);
+}
+
 #endif //
