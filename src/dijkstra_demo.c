@@ -29,11 +29,9 @@ struct Graph * directed_graph_rand(int nvertex)
 			}
 		}
 	}
-
 	
 	return g;
 }
-
 
 int main(void)
 {
@@ -43,11 +41,14 @@ int main(void)
 	directed_graph_print(g);
 
 	printf("finding Dijkstra shortest path starting from 0: \n");	
-	struct DijkWorkspace * dr = dijkstra_run(g, graph_lookup(g,0));
-	int i;
-	for(i=0;i < dr->num_vertex;i++) {
-		printf("previous of %u is ", dr->vertex_ids[i]);
-		uintptr_t pre = perfect_hash_get(dr->previous, dr->vertex_ids[i]);
+	struct Adjacent * source = graph_lookup(g,0);
+	struct DijkWorkspace * dr = dijkstra_run(g, source);
+
+	struct Adjacent * a;
+
+	list_for_each_entry(a, &g->a_head, a_node){
+		printf("previous of %u is ", a->v.id);
+		uintptr_t pre = hash_table_get(dr->previous, a->v.id);
 		if (pre ==undefined) { printf("undefined\n"); }
 		else printf("%u\n", (uint32_t)pre);
 	}

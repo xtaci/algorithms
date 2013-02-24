@@ -22,7 +22,7 @@ struct Array2D
 {
 	uint32_t nrow;	// num of rows
 	uint32_t ncol;	// num of columns
-	int * data;		// the place where the array resides.
+	uintptr_t * data;		// the place where the array resides.
 };
 
 /**
@@ -36,7 +36,7 @@ array2d_create(uint32_t nrow, uint32_t ncol)
 	
 	arr->nrow = nrow;
 	arr->ncol = ncol;
-	arr->data = (int *)malloc(nrow * ncol * sizeof(int));
+	arr->data = (uintptr_t *)malloc(nrow * ncol * sizeof(uintptr_t));
 
 	return arr;
 }
@@ -54,7 +54,7 @@ array2d_destroy(struct Array2D * array)
 /**
  * get value from given row and col
  */
-static inline int 
+static inline uintptr_t
 array2d_get(struct Array2D * array, uint32_t row, uint32_t col)
 {
 	return array->data[array->ncol * row + col];
