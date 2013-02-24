@@ -59,5 +59,6 @@ int main()
 	}
 
 	undirected_graph_print(g);
+	graph_free(g);
 	exit(0);
 }

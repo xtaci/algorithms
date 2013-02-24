@@ -62,6 +62,7 @@ breadth_first_search(const struct Graph * g, uint32_t source)
 	}
 
 	hash_table_destroy(ht);	
+	queue_destroy(Q);
 	printf("\n");
 }
 
@@ -93,6 +94,7 @@ depth_first_search(const struct Graph *g, uint32_t source)
 	}
 	
 	hash_table_destroy(ht);	
+	destroyStack(S);
 	printf("\n");
 }
 

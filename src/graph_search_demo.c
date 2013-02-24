@@ -45,5 +45,6 @@ int main()
 	printf("depth first search: \n");
 	depth_first_search(g, 0);
 
+	graph_free(g);
 	exit(0);
 }
