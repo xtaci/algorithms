@@ -63,7 +63,7 @@
 /**
  * workspace for bellman ford algorithm.
  */
-struct BFWorkspace {
+struct BFResult {
 	struct HashTable * dist; 	// hash table for distance.
 	struct HashTable * previous; 	// hash table for previous vertex
 	bool has_neg_cycle;		// negative weighted cycle mark.
@@ -73,7 +73,7 @@ struct BFWorkspace {
  * internal workspace init procedure. hash table and vertex_ids is initialized.
  */
 static void 
-__bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFWorkspace * bfw)
+__bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFResult * bfw)
 {
 	struct HashTable * dist = hash_table_create(g->num_vertex);
 	struct HashTable * previous = hash_table_create(g->num_vertex);
@@ -98,12 +98,12 @@ __bellman_ford_init(const struct Graph * g, const struct Adjacent * source, stru
 /**
  * do the real work
  */
-static struct BFWorkspace * 
+static struct BFResult * 
 bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
 {
 	// init the workspace.
-	struct BFWorkspace * bfw =
-		 (struct BFWorkspace *)malloc(sizeof(struct BFWorkspace));
+	struct BFResult * bfw =
+		 (struct BFResult *)malloc(sizeof(struct BFResult));
 
 	__bellman_ford_init(g, source, bfw);
 

@@ -38,7 +38,7 @@
 /**
  * the dijkstra algorithm workspace
  */
-struct DijkWorkspace {
+struct DijkstraResult {
 	struct Heap * Q;		// a binary heap
 	struct HashTable * dist; 	// distance hash table
 	struct HashTable * previous; 	// previous vertex hash table
@@ -61,7 +61,7 @@ __dijkstra_reorder(struct Heap * heap, uint32_t id, uint32_t new_weight)
  * init dijkstra workspace
  */
 static void 
-__dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct DijkWorkspace * dr)
+__dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct DijkstraResult * dr)
 {
 	// binary heap init
 	struct Heap * Q = heap_init(g->num_vertex);
@@ -91,11 +91,11 @@ __dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct D
 	dr->previous = previous;
 }
 
-static struct DijkWorkspace * 
+static struct DijkstraResult * 
 dijkstra_run(const struct Graph * g, const struct Adjacent * source)
 {
-	struct DijkWorkspace * dr =
-		 (struct DijkWorkspace *)malloc(sizeof(struct DijkWorkspace));
+	struct DijkstraResult * dr =
+		 (struct DijkstraResult *)malloc(sizeof(struct DijkstraResult));
 
 	__dijkstra_init(g, source, dr);
 	struct Heap * Q = dr->Q;

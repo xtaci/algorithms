@@ -42,7 +42,7 @@ int main(void)
 	directed_graph_print(g);
 
 	printf("finding bellman-ford shortest path starting from 3: \n");	
-	struct BFWorkspace * bfw = bellman_ford_run(g, graph_lookup(g,3));
+	struct BFResult * bfw = bellman_ford_run(g, graph_lookup(g,3));
 	
 	struct Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_node) {

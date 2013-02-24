@@ -42,7 +42,7 @@ int main(void)
 
 	printf("finding Dijkstra shortest path starting from 0: \n");	
 	struct Adjacent * source = graph_lookup(g,0);
-	struct DijkWorkspace * dr = dijkstra_run(g, source);
+	struct DijkstraResult * dr = dijkstra_run(g, source);
 
 	struct Adjacent * a;
 
