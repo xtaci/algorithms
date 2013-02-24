@@ -41,6 +41,7 @@ do { \
 } while(0)
 
 #define Max(a, b) ( (a > b) ? a : b )
+#define Min(a, b) ( (a < b) ? a : b )
 
 /**
  * select a random number between i and j

@@ -33,7 +33,7 @@
 #include "stack.h"
 #include "hash_table.h"
 
-#define undefined (uintptr_t)-1
+#define undefined ((uintptr_t)-1)
 
 /**
  * the dijkstra algorithm workspace
@@ -107,7 +107,7 @@ dijkstra_run(const struct Graph * g, const struct Adjacent * source)
 		int dist_u = HEAP_MIN_KEY(Q);
 		heap_delete_min(Q);
 
-		if (dist_u == INT_MAX){
+		if (dist_u == INT_MAX) {
 			break;	
 		}
 	

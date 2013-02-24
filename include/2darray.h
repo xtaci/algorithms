@@ -64,9 +64,23 @@ array2d_get(struct Array2D * array, uint32_t row, uint32_t col)
  * set value to [row, col]
  */
 static inline void 
-array2d_set(struct Array2D * array, uint32_t row, uint32_t col, int value)
+array2d_set(struct Array2D * array, uint32_t row, uint32_t col, uintptr_t value)
 {
 	array->data[array->ncol * row + col] = value;
+}
+
+/**
+ * set all value to a some value
+ */
+static inline void
+array2d_clear(struct Array2D * array, uintptr_t value)
+{
+	int i;
+	int count = array->nrow * array->ncol;
+
+	for(i=0;i<count;i++) {
+		array->data[i] = value;
+	}
 }
 
 #endif //

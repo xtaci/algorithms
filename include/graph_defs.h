@@ -46,4 +46,22 @@ graph_lookup(const struct Graph * g, uint32_t id)
 	return NULL;
 }
 
+/**
+ * get the Vertex from an adjacent list, according to vertex id
+ */
+static struct Vertex *
+graph_get_vertex(const struct Graph * g, uint32_t from, uint32_t to)
+{
+	struct Vertex * v;
+	struct Adjacent * _from = graph_lookup(g, from);
+
+	list_for_each_entry(v, &_from->v_head, v_node){
+		if (v->id == to ) { 
+			return v;	
+		}
+	}
+
+	return NULL;
+}
+
 #endif //

@@ -53,12 +53,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "heap.h"
 #include "directed_graph.h"
 #include "hash_table.h"
 
 // define undefined previous vertex.
-#define undefined (uintptr_t)-1
+#define undefined ((uintptr_t)-1)
 
 /**
  * workspace for bellman ford algorithm.
