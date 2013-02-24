@@ -69,6 +69,7 @@ edmonds_karp(struct Graph * g, uint32_t src, uint32_t sink)
 	int i;
 	for (i=0; i< g->num_vertex;i++) {
 		result->residual[i] = (int*)malloc(sizeof(int)*g->num_vertex);
+		memset(result->residual[i], 0, sizeof(int)*g->num_vertex);
 	}
 
 	result->map = hash_table_create(g->num_vertex);
@@ -172,12 +173,16 @@ __ek_find_path(struct EKResult * result, uint32_t _src, uint32_t _sink)
 				pre[i] = p;
 				visits[i] = true;
 
-				if (i==_sink)		// nice, we've got to sink point.
+				if (i==_sink) {		// nice, we've got to sink point.
+					queue_destroy(Q);
 					return true;
+				}
 				enqueue(Q,i);
 			}
 		}
 	}
+
+	queue_destroy(Q);
 	return false;
 }
 
