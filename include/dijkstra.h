@@ -75,7 +75,6 @@ __dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct D
 	hash_table_set(previous, source->v.id, undefined);
 
 	// other vertices
-	int i=1;
 	list_for_each_entry(a, &g->a_head, a_node){
 		if (a->v.id != source->v.id) {
 			heap_insert(Q, INT_MAX, (uintptr_t)a->v.id);
