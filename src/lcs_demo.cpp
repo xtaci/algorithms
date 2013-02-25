@@ -42,6 +42,8 @@ int main(void)
 		pop(s);
 	}
 
+	delete &A;
+
 	printf("\n");
 	exit(0);		
 }

@@ -41,6 +41,10 @@ public:
 			data[i]	 = value;
 		}
 	}
+	
+	virtual ~Array2D() {
+		delete [] data;
+	}
 };
 
 #endif //
