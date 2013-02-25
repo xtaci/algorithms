@@ -49,6 +49,7 @@ int main(void)
 	}
 
 	printf("\n");
-	
+
+	astar_free(as);	
 	exit(0);
 }

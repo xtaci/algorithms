@@ -97,8 +97,7 @@ astar(int nrow, int ncol, const int grid[nrow][ncol], int x1, int y1, int x2, in
 				as->path[idx++] = tmp/ncol;
 				as->path[idx++] = tmp%ncol;
 			}
-
-			return as;
+			goto final;
 		}
 
 		heap_delete_min(openset);
@@ -134,7 +133,19 @@ astar(int nrow, int ncol, const int grid[nrow][ncol], int x1, int y1, int x2, in
 		}
 	}
 
+final:
+	free(closedset);
+	free(g_score);
+	free(f_score);
+	heap_free(openset);
+	hash_table_destroy(came_from);
 	return as;
+}
+
+static void astar_free(struct AStarResult * as)
+{
+	if (as->path) free(as->path);
+	free(as);
 }
 
 static inline float
