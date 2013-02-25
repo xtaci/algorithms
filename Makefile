@@ -38,6 +38,7 @@ PROGRAMS =  insertion_sort_demo \
 			bellman_ford_demo \
 			graph_search_demo \
 			edmonds_karp_demo \
+			astar_demo	\
 			hash_string_demo \
 			bitset_demo	\
 			bloom_filter_demo \
@@ -137,6 +138,9 @@ graph_search_demo: $(SRCDIR)/graph_search_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 edmonds_karp_demo: $(SRCDIR)/edmonds_karp_demo.c $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
+
+astar_demo: $(SRCDIR)/astar_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 hash_string_demo: $(SRCDIR)/hash_string_demo.c $(DEPS)
