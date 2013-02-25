@@ -116,8 +116,8 @@ dos_tree_demo: $(SRCDIR)/dos_tree_demo.c $(DEPS)
 skip_list_demo: $(SRCDIR)/skip_list_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-lcs_demo: $(SRCDIR)/lcs_demo.c $(DEPS)
-	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
+lcs_demo: $(SRCDIR)/lcs_demo.cpp $(DEPS)
+	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 graph_demo: $(SRCDIR)/graph_demo.c $(DEPS)
 	$(CC) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)

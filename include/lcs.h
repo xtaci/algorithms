@@ -34,47 +34,52 @@
 	6	U	0	1	1	2	3	3	3	4
 	7	Z	0	1	2	2	3	3	3	4
  */
-static struct Array2D * 
-lcs_length(const int32_t X[], uint32_t m, const int32_t Y[], uint32_t n)
+template<typename T>
+static Array2D<uint32_t> &
+lcs_length(const T X[], uint32_t m, const T Y[], uint32_t n)
 {
-	struct Array2D * arr = array2d_create(m+1, n+1);
+	Array2D<uint32_t> & A = *new Array2D<uint32_t>(m+1,n+1);
+
 	uint32_t i,j;
 
+	// set initial state
 	for(i=0; i<=m; i++) {
-		array2d_set(arr, i, 0, 0);
+		A(i,0) = 0; 
 	}
 	
 	for(j=0; j<=n; j++) {
-		array2d_set(arr, 0, j, 0);
+		A(0,j) = 0;
 	}
 
 	for(i=1;i<=m;i++) {
 		for(j=1;j<=n;j++) {
-			if(X[i-1]==Y[j-1]) array2d_set(arr,i,j, array2d_get(arr,i-1,j-1)+1);
-			else array2d_set(arr,i,j, Max(array2d_get(arr,i,j-1),array2d_get(arr,i-1,j)));
+			if(X[i-1]==Y[j-1]) A(i,j) = A(i-1,j-1) + 1;
+			else A(i,j) = Max(A(i,j-1), A(i-1,j));
 		}
 	}
-	return arr;
+
+	return A;
 }
 
 /**
  * pass an empty stack, pop out the result in sequential order. 
  */
+template<typename T>
 static void 
-lcs_backtrack(Stack * s, struct Array2D * C, 
-				const int32_t X[], int32_t Y[], 
+lcs_backtrack(Stack * s, struct Array2D<uint32_t> & A,
+				const T X[], const T Y[], 
 				const uint32_t i, uint32_t j)
 {
 	if (i==0 || j==0) return;
 	else if (X[i-1] == Y[j-1]) { 
 		push(s, (uintptr_t)X[i-1]);
-		lcs_backtrack(s, C, X, Y, i-1, j-1);
+		lcs_backtrack(s, A, X, Y, i-1, j-1);
 	}
 	else {
-		if (array2d_get(C, i, j-1) > array2d_get(C, i-1, j))
-			lcs_backtrack(s, C, X, Y, i, j-1);
+		if (A(i, j-1) > A(i-1, j))
+			lcs_backtrack(s, A, X, Y, i, j-1);
 		else
-			lcs_backtrack(s, C, X, Y, i-1, j);
+			lcs_backtrack(s, A, X, Y, i-1, j);
 	}
 }
 

@@ -29,10 +29,10 @@ int main(void)
 	printf("The list->B is:\n");
 	printlistC(Y,MAXN);
 	
-	struct Array2D * arr = lcs_length(X, MAXN, Y, MAXN);
+	Array2D<uint32_t> & A = lcs_length(X, MAXN, Y, MAXN);
 	
 	Stack * s = create_stack(100);	
-	lcs_backtrack(s, arr, X, Y, MAXN, MAXN);
+	lcs_backtrack(s, A, X, Y, MAXN, MAXN);
 
 	printf("the largest common sequence is : \n");
 	uintptr_t v;
