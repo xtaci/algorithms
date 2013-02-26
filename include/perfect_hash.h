@@ -15,28 +15,41 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <generic.h>
-#include <universal_hash.h>
-#include <stack.h>
+#include <exception>
+#include "generic.h"
+#include "universal_hash.h"
+#include "stack.h"
+
+class PerfHTException: public std::exception
+{
+public:
+	virtual const char * what() const throw()
+	{
+		return "key does not exist";
+	}
+};
 
 template<typename T=uintptr_t>
 class PerfHT {
 private:
-
 	// Level-2 Slot definition
 	class SlotL2 {
 	public:
-		uint32_t cnt; // collison count
+		uint32_t cnt;	// collison count
+		uint32_t key;	//key
 		T value;		// value
 	};
 
 	// Level-1 Slot definition
 	struct SlotL1 {
 	public:
-		uint32_t cnt; // collison count
-		struct UHash params;   // 2nd level 
-		struct SlotL2 * lv2_slots;
-		T value;
+		uint32_t cnt;			 	// collison count
+		struct UHash params;	 	// 2nd level 
+		struct SlotL2 * lv2_slots;	// level 2 slots
+
+		uint32_t key;				// key	
+		T value;					// value
+
 		~SlotL1() {
 			if (cnt>1) delete [] lv2_slots;
 		}
@@ -45,6 +58,7 @@ private:
 	struct SlotL1 * slots;	// level 1 slots
 	struct UHash params;   // 1st level 
 	uint32_t num_slots;
+	PerfHTException error;
 public:
 	PerfHT(uint32_t keys[], uint32_t len) {
 		// remove duplicate keys
@@ -61,6 +75,7 @@ public:
 		for (uint32_t i = 0; i < newlen; i++) {
 			uint32_t hash = uhash_integer(&this->params, keys[i]);
 			slots[hash].cnt++;
+			slots[hash].key = keys[i];
 		}
 
 		// 2-level processing
@@ -72,25 +87,24 @@ public:
 	}
 
 	// return the 
-	T& operator[] (uint32_t key) {
+	T& operator[] (uint32_t key) throw (PerfHTException) {
 		uint32_t hash;
-		hash  = uhash_integer(&this->params, key);
-		if (slots[hash].cnt == 1) {
+		hash  = uhash_integer(&params, key);
+		printf("level1 %d->%d\n", key, slots[hash].key);
+		if (slots[hash].key == key) {
 			return slots[hash].value;
-		}
-
-		if (slots[hash].cnt >  1) {
+		} else if (slots[hash].cnt > 1) {	// maybe in the 2nd level slot
 			SlotL1 & slot = slots[hash];
 			uint32_t hash2 = uhash_integer(&slot.params, key);
 			
 			// 2nd-level available
-			if (slot.lv2_slots[hash2].cnt == 1) {
+			printf("level2 %d->%d\n", key, slot.lv2_slots[hash2].key);
+			if (slot.lv2_slots[hash2].key == key) {
 				return slot.lv2_slots[hash2].value;
 			}
 		}
-		
-		// TODO: throw exception	
-		return slots[hash].value;
+
+		throw error;
 	};
 
 private:
@@ -100,19 +114,19 @@ private:
 	 */
 	void lv2_init(uint32_t keys[], uint32_t len)
 	{
-		for (uint32_t i = 0; i < this->params.prime; i++) {
+		for (uint32_t i = 0; i < params.prime; i++) {
 			if (slots[i].cnt > 1) {	
 				// stacks for temporary storing keys
-				Stack<uint32_t> S1(len);
+				Stack<uint32_t> collides(len);
 				
 				// find collide keys
 				for(uint32_t j=0;j<len;j++) {
-					if(uhash_integer(&this->params, keys[j]) == i) {
-						S1.push(keys[j]);
+					if(uhash_integer(&params, keys[j]) == i) {
+						collides.push(keys[j]);
 					}
 				}
 				
-				lv2_slot_init(&slots[i], S1); 
+				lv2_slot_init(&slots[i], collides); 
 			}
 		}
 	}
@@ -139,8 +153,9 @@ retry:
 		for(uint32_t i=0; i<collides.count();i++) {
 			uint32_t key = collides[i];
 			uint32_t hash = uhash_integer(&lv1_slot->params, key);
+			lv2_slots[hash].key = key;
 			if (++lv2_slots[hash].cnt > 1) { goto retry; }
-		}	
+		}
 	}
 };
 

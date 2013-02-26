@@ -43,5 +43,11 @@ int main(void)
 		printf("get %d <-- %d\n", keys[i], ht[keys[i]]);
 	}
 
+	try {
+		printf("getting illegal key %d->%d\n", 20000, ht[20000]);
+	} catch (std::exception& e) {
+		printf("%s\n", e.what());
+	}
+
 	exit(0);
 }
