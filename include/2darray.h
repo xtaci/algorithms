@@ -36,7 +36,7 @@ public:
 		return this->data[row*ncol + col];
 	}
 
-	inline void operator== (T value) {
+	void operator= (T value) {
 		for(int i=0; i<ncol*nrow;i++){
 			data[i]	 = value;
 		}
