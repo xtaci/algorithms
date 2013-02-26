@@ -15,36 +15,44 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-/**
- * 2D Array definition
- */
-template <typename T=char>
-class Array2D
+namespace alg
 {
-private:
-	uint32_t NR;		// num of rows
-	uint32_t NC;		// num of columns
-	T * data;		// the place where the array resides.
-public:
-	Array2D(uint32_t nrow, uint32_t ncol) {
-		this->NR = nrow;
-		this->NC = ncol;	
-		this->data = new T[nrow*ncol];
-	};
+	/**
+	 * 2D Array definition
+	 */
+	template <typename T=char>
+	class Array2D
+	{
+	private:
+		uint32_t NR;		// num of rows
+		uint32_t NC;		// num of columns
+		T * data;			// the place where the array resides.
+	public:
+		// construct an array of size [nrow,col]
+		Array2D(uint32_t nrow, uint32_t ncol) {
+			this->NR = nrow;
+			this->NC = ncol;	
+			this->data = new T[nrow*ncol];
+		};
 
-	inline T& operator() (int row, int col) {
-		return this->data[row*NC + col];
-	}
-
-	void operator= (T & value) {
-		for(int i=0; i<NR*NC;i++){
-			data[i] = value;
+		inline T& operator() (int row, int col) {
+			return this->data[row*NC + col];
 		}
-	}
-	
-	virtual ~Array2D() {
-		delete [] data;
-	}
-};
+		
+		const inline T& operator() (int row, int col) const {
+			return this->data[row*NC + col];
+		}
+
+		void clear(T & value) {
+			for(int i=0; i<NR*NC;i++){
+				data[i] = value;
+			}
+		}
+		
+		virtual ~Array2D() {
+			delete [] data;
+		}
+	};
+}
 
 #endif //

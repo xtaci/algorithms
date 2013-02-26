@@ -5,6 +5,7 @@
 
 int main()
 {	
+	using namespace alg;
 	int MAXELEMENTS=50;
 	Heap<int> heap(MAXELEMENTS);
 	

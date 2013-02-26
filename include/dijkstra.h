@@ -33,105 +33,98 @@
 #include "stack.h"
 #include "hash_table.h"
 
-#define undefined ((uintptr_t)-1)
+#define UNDEFINED -1
 
-/**
- * the dijkstra algorithm workspace
- */
-struct DijkstraResult {
-	Heap<uint32_t> * Q;		// a binary heap
-	struct HashTable * dist; 	// distance hash table
-	struct HashTable * previous; 	// previous vertex hash table
-};
-
-/**
- * reorder operation i.e. heap decrease key operation.
- */
-static inline void
-__dijkstra_reorder(Heap<uint32_t> * heap, uint32_t id, uint32_t new_weight)
-{	
-	int index;
-	int key = new_weight;
-	if ((index=heap->find_value(id))!=-1) {
-		heap->decrease_key(index, key);
-	}
-}
-
-/**
- * init dijkstra workspace
- */
-static void 
-__dijkstra_init(const struct Graph * g, const struct Adjacent * source, struct DijkstraResult * dr)
+namespace alg 
 {
-	// binary heap init
-	Heap<uint32_t> * Q = new Heap<uint32_t>(g->num_vertex);
-	struct Adjacent * a;
-	struct HashTable * dist = hash_table_create(g->num_vertex);
-	struct HashTable * previous = hash_table_create(g->num_vertex);
-
-	// source 
-	Q->insert(0, source->v.id);	// weight->id binary heap
-	hash_table_set(dist, source->v.id, 0);
-	hash_table_set(previous, source->v.id, undefined);
-
-	// other vertices
-	list_for_each_entry(a, &g->a_head, a_node){
-		if (a->v.id != source->v.id) {
-			Q->insert(INT_MAX, a->v.id);
-			// set inital distance to INT_MAX
-			hash_table_set(dist, a->v.id, (uintptr_t)INT_MAX);
-			// set initial value to undefined
-			hash_table_set(previous, a->v.id, undefined);
-		}
-	}
-	
-	dr->Q = Q;
-	dr->dist = dist;
-	dr->previous = previous;
-}
-
-static struct DijkstraResult * 
-dijkstra_run(const struct Graph * g, const struct Adjacent * source)
-{
-	struct DijkstraResult * dr =
-		 (struct DijkstraResult *)malloc(sizeof(struct DijkstraResult));
-
-	__dijkstra_init(g, source, dr);
-	Heap<uint32_t> * Q = dr->Q;
-	struct HashTable * dist = dr->dist;
-	struct HashTable * previous = dr->previous;
-
-	while(!Q->is_empty()) {    // The main loop
-		struct Adjacent * u = graph_lookup(g, Q->min_value());
-		int dist_u = Q->min_key();
-		Q->delete_min();
-
-		if (dist_u == INT_MAX) {
-			break;	
-		}
-	
-		struct Vertex * v;
-		list_for_each_entry(v, &u->v_head, v_node){
-			uint32_t alt = dist_u + v->weight;
-			uint32_t dist_v = (uint32_t)hash_table_get(dist, v->id);
-			if (alt < dist_v) {
-				hash_table_set(dist, v->id, (uintptr_t)alt);
-				__dijkstra_reorder(Q, v->id, alt);
-				hash_table_set(previous, v->id, (uintptr_t)u->v.id);
+	/**
+	 * the dijkstra algorithm workspace
+	 */
+	class Dijkstra {
+	private:
+		Heap<uint32_t> * Q;		// a binary heap
+		HashTable<uint32_t> * dist; 	// distance hash table
+		HashTable<int32_t> * previous; 	// previous vertex hash table
+		const Graph * graph; 
+	private:
+		/**
+		 * reorder operation i.e. heap decrease key operation.
+	 	*/
+		inline void reorder(uint32_t id, uint32_t new_weight) {	
+			int index;
+			int key = new_weight;
+			if ((index=Q->find_value(id))!=-1) {
+				Q->decrease_key(index, key);
 			}
-		}
-	}
+		};
 
-	return dr;
-}
+	public:
+		/**
+		 * init dijkstra workspace
+		 */
+		Dijkstra(const struct Graph * g, uint32_t src_id) {
+			// binary heap init
+			Q = new Heap<uint32_t>(g->num_vertex);
+			dist = new HashTable<uint32_t>(g->num_vertex);
+			previous = new HashTable<int32_t>(g->num_vertex);
+			graph = g;
 
-static void
-dijkstra_free(struct DijkstraResult * result)
-{
-	hash_table_destroy(result->dist);
-	hash_table_destroy(result->previous);
-	delete result->Q;
-	free(result);
+			// source 
+			struct Adjacent * source = graph_lookup(g, src_id);
+			Q->insert(0, source->v.id);	// weight->id binary heap
+			(*dist)[source->v.id] = 0;
+			(*previous)[source->v.id] = UNDEFINED;
+
+			// other vertices
+			struct Adjacent * a;
+			list_for_each_entry(a, &g->a_head, a_node){
+				if (a->v.id != source->v.id) {
+					Q->insert(INT_MAX, a->v.id);
+					// set inital distance to INT_MAX
+					(*dist)[a->v.id] = INT_MAX;
+					// set initial value to UNDEFINED
+					(*previous)[a->v.id] =  UNDEFINED;
+				}
+			}
+		};
+	
+		/**
+		 * Destructor
+		 */	
+		~Dijkstra() {
+			delete Q;
+			delete dist;
+			delete previous;
+		};
+
+		// run dijkstra algorithm, and return the previous table
+		const HashTable<int32_t> & run() {
+			while(!Q->is_empty()) {    // The main loop
+				struct Adjacent * u = graph_lookup(graph, Q->min_value());
+				int dist_u = Q->min_key();
+				Q->delete_min();
+
+				printf("min value %d\n", Q->min_value());
+				if (dist_u == INT_MAX) {
+					break;	
+				}
+			
+				struct Vertex * v;
+				list_for_each_entry(v, &u->v_head, v_node){
+					printf("id %d\n", v->id);
+					uint32_t alt = dist_u + v->weight;
+					uint32_t dist_v = (*dist)[v->id];
+					if (alt < dist_v) {
+						(*dist)[v->id] = alt;
+						reorder(v->id, alt);
+						(*previous)[v->id] = u->v.id;
+					}
+				}
+			}
+	
+			return *previous;
+		};
+	};
 }
 
 #endif //

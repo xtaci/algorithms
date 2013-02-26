@@ -20,44 +20,47 @@
 
 #include <generic.h> 
 
-/**
- * the quick-sort partition routine
- */
-static int 
-__partition(int list[],int begin, int end)
+namespace alg 
 {
-	int pivot_idx = choose_pivot(begin,end);
-    int pivot = list[pivot_idx];
-	swap(list[begin],list[pivot_idx]);
-
-	int i = begin + 1;
-	int j = end;
-  
-	while(i <= j)
+	/**
+	 * the quick-sort partition routine
+	 */
+	template<typename T>
+	static int __partition(T list[],int begin, int end)
 	{
-		while((i <= end) && (list[i] <= pivot))
-			i++;
-		while((j >= begin) && (list[j] > pivot))
-			j--;
-		if(i < j)
-			swap(list[i],list[j]);
+		int pivot_idx = choose_pivot(begin,end);
+		T pivot = list[pivot_idx];
+		swap(list[begin], list[pivot_idx]);
+
+		int i = begin + 1;
+		int j = end;
+	  
+		while(i <= j)
+		{
+			while((i <= end) && (list[i] <= pivot))
+				i++;
+			while((j >= begin) && (list[j] > pivot))
+				j--;
+			if(i < j)
+				swap(list[i],list[j]);
+		}
+		  
+		swap(list[begin],list[j]);
+		return j; // final pivot position
 	}
-      
-	swap(list[begin],list[j]);
-	return j; // final pivot position
-}
 
-/**
- * quick sort an array of range [begin, end]
- */
-static inline void 
-quicksort(int list[],int begin,int end)
-{
-	if( begin < end)
+	/**
+	 * quick sort an array of range [begin, end]
+	 */
+	template<typename T>
+	static void quicksort(T list[],int begin,int end)
 	{
-        int pivot_idx = __partition(list, begin, end);
-		quicksort(list, begin, pivot_idx-1);
-		quicksort(list, pivot_idx+1, end);
+		if( begin < end)
+		{
+			int pivot_idx = __partition<T>(list, begin, end);
+			quicksort(list, begin, pivot_idx-1);
+			quicksort(list, pivot_idx+1, end);
+		}
 	}
 }
 

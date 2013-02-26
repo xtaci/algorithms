@@ -35,25 +35,24 @@ struct Graph * directed_graph_rand(int nvertex)
 
 int main(void)
 {
+	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 50;
 	struct Graph * g = directed_graph_rand(NVERTEX);
 	directed_graph_print(g);
 
 	printf("finding Dijkstra shortest path starting from 0: \n");	
-	struct Adjacent * source = graph_lookup(g,0);
-	struct DijkstraResult * dr = dijkstra_run(g, source);
-
+	Dijkstra dijkstra(g, 0);
 	struct Adjacent * a;
+	const HashTable<int32_t> & result = dijkstra.run();
 
 	list_for_each_entry(a, &g->a_head, a_node){
 		printf("previous of %u is ", a->v.id);
-		uintptr_t pre = hash_table_get(dr->previous, a->v.id);
-		if (pre ==undefined) { printf("undefined\n"); }
-		else printf("%u\n", (uint32_t)pre);
+		int32_t pre = result[a->v.id];
+		if (pre ==UNDEFINED) { printf("UNDEFINED\n"); }
+		else printf("%d\n", pre);
 	}
-
-	dijkstra_free(dr);
+	
 	graph_free(g);
 	exit(0);	
 }

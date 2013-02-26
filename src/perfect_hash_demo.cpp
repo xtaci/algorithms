@@ -20,6 +20,7 @@
 
 int main(void)
 {
+	using namespace alg;
 	int MAXELEMENT = 100;
 
 	uint32_t keys[MAXELEMENT];

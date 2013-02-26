@@ -33,20 +33,13 @@ private:
 	 */
 	struct HashKV {
 		uint32_t key;	// 32-bit key
-		T value;	// value can be used as a pointer.
+		T value;		// value
 		struct list_head node;	// KV is a list element.
 	};
 
-	/**
-	 * define a Hash slot, a hash slot contains arbitary HashKV (key-value pair),
-	 * depending on hash collision.
-	 * we use a list structure to represent the slot.
-	 */
-	typedef struct list_head HashSlot;
-
 private:
-	uint32_t m_size;		// the size of the hash table.
-	HashSlot * m_slots;	// all of the slots
+	uint32_t m_size;			// the size of the hash table.
+	struct list_head * m_slots;	// all of the slots, each slot is an linked-list
 	struct MultiHash * m_multi;	// the hash function parameter.
 
 public:
@@ -57,7 +50,7 @@ public:
 		// init multiplication hash function
 		m_multi = multi_hash_init(max);
 		m_size = MULTI_HASH_TABLE_SIZE(m_multi);
-		m_slots = new HashSlot[m_size];
+		m_slots = new list_head[m_size];
 
 		for (uint32_t i=0; i<m_size; i++) {
 			INIT_LIST_HEAD(&m_slots[i]);
@@ -100,6 +93,30 @@ public:
 		list_add(&kv->node, &m_slots[hash]);
 		return kv->value;
 	};
+
+	/**
+	 * reference the value by key, const operator
+ 	 */
+	const T& operator[] (uint32_t key) const {
+		// hash the key using a hash function.
+		uint32_t hash = multi_hash(m_multi, key);
+
+		//  we iterate through the list.
+		HashKV * kv;
+		list_for_each_entry(kv, &m_slots[hash], node){
+			if (kv->key == key) {	// ok, found in the list.
+				return kv->value;
+			}
+		}
+
+		// reaching here means a new key is given,
+		// create a new HashKV struct for it.
+		kv = new HashKV;
+		kv->key = key;
+		list_add(&kv->node, &m_slots[hash]);
+		return kv->value;
+	};
+
 };
 
 #endif //

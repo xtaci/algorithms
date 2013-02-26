@@ -14,6 +14,7 @@ do { \
 
 int main(void)
 {
+	using namespace alg;
 	int MAXN = 10;
 	int X[MAXN];
 	int Y[MAXN];

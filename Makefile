@@ -62,13 +62,13 @@ radix_sort_demo: $(SRCDIR)/radix_sort_demo.c $(DEPS)
 shuffle_demo: $(SRCDIR)/shuffle_demo.c $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-quick_sort_demo: $(SRCDIR)/quick_sort_demo.c $(DEPS)
+quick_sort_demo: $(SRCDIR)/quick_sort_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 merge_sort_demo: $(SRCDIR)/merge_sort_demo.c $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-random_select_demo: $(SRCDIR)/random_select_demo.c $(DEPS)
+random_select_demo: $(SRCDIR)/random_select_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 prime_sieve_eratosthenes: $(SRCDIR)/prime_sieve_eratosthenes.c $(DEPS)
@@ -128,7 +128,7 @@ prim_mst_demo: $(SRCDIR)/prim_mst_demo.c $(DEPS)
 directed_graph_demo: $(SRCDIR)/directed_graph_demo.c $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-dijkstra_demo: $(SRCDIR)/dijkstra_demo.c $(DEPS)
+dijkstra_demo: $(SRCDIR)/dijkstra_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 bellman_ford_demo: $(SRCDIR)/bellman_ford_demo.c $(DEPS)
