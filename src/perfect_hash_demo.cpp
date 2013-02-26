@@ -32,19 +32,16 @@ int main(void)
 		values[i] = rand()%10000;
 	}
 
-	struct PerfHT * ht = perfect_hash_init(keys, MAXELEMENT);	
+	PerfHT<uint32_t> ht(keys, MAXELEMENT);
 
 	for (i = 0; i < MAXELEMENT; i++) {
 		printf("set %d --> %d\n", keys[i],values[i]);
-		perfect_hash_set(ht, keys[i], (uintptr_t)values[i]);
+		ht[keys[i]] = values[i];
 	}
 	
 	for (i = 0; i < MAXELEMENT; i++) {
-		uint32_t value = (uint32_t)perfect_hash_get(ht, keys[i]);
-		printf("get %d <-- %d\n", keys[i], value);
+		printf("get %d <-- %d\n", keys[i], ht[keys[i]]);
 	}
-
-	perfect_hash_destroy(ht);
 
 	exit(0);
 }

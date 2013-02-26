@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "lcs.h"
+#include "stack.h"
 
 #define printlistC(list,n) \
 do { \
@@ -29,20 +30,19 @@ int main(void)
 	printf("The list->B is:\n");
 	printlistC(Y,MAXN);
 	
-	Array2D<uint32_t> & A = lcs_length(X, MAXN, Y, MAXN);
+	Array2D<uint32_t> * A = lcs_length(X, MAXN, Y, MAXN);
 	
-	Stack * s = create_stack(100);	
-	lcs_backtrack(s, A, X, Y, MAXN, MAXN);
+	Stack<int> S(100);	
+	lcs_backtrack(S, *A, X, Y, MAXN, MAXN);
 
 	printf("the largest common sequence is : \n");
-	uintptr_t v;
-	while((v=top(s))!=0) {
-		int e = (int)v;
+	while(!S.is_empty()) {
+		int e = S.top();
 		printf("%c->", (char)e);
-		pop(s);
+		S.pop();
 	}
 
-	delete &A;
+	delete A;
 
 	printf("\n");
 	exit(0);		

@@ -80,7 +80,7 @@ uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len)
 	integer tmp = create_integer(1);
 	integer quotient = create_integer(len);
 
-	int i;
+	uint32_t i;
 	for (i=0;i<len;i++) {
 		big_key.c[i] = key[i];
 	}

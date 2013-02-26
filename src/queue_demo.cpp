@@ -7,20 +7,19 @@
 int main()
 {
 	const int MAXELEMENT = 20;
-	Queue *Q = create_queue(MAXELEMENT);
+	Queue<int> Q(MAXELEMENT);
 	int i;
 
 	for (i=0;i<MAXELEMENT;i++) {
 		int value = rand()%1000;
 		printf("queuing %d\n", value);
-		enqueue(Q,(uintptr_t)value);
+		Q.enqueue(value);
 	}
 
 	printf("> DEQUEUE\n");
-	while(!queue_is_empty(Q)) {
-		int rval = (int)queue_front(Q);
-		printf("dequeue %d\n",rval);
-		dequeue(Q);
+	while(!Q.is_empty()) {
+		printf("dequeue %d\n",Q.front());
+		Q.dequeue();
 	}
 
 	exit(0);

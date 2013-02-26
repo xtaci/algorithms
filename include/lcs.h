@@ -35,7 +35,7 @@
 	7	Z	0	1	2	2	3	3	3	4
  */
 template<typename T>
-static Array2D<uint32_t> &
+static Array2D<uint32_t> * 
 lcs_length(const T X[], uint32_t m, const T Y[], uint32_t n)
 {
 	Array2D<uint32_t> & A = *new Array2D<uint32_t>(m+1,n+1);
@@ -58,7 +58,7 @@ lcs_length(const T X[], uint32_t m, const T Y[], uint32_t n)
 		}
 	}
 
-	return A;
+	return &A;
 }
 
 /**
@@ -66,20 +66,20 @@ lcs_length(const T X[], uint32_t m, const T Y[], uint32_t n)
  */
 template<typename T>
 static void 
-lcs_backtrack(Stack * s, struct Array2D<uint32_t> & A,
+lcs_backtrack(Stack<int> & S, struct Array2D<uint32_t> & A,
 				const T X[], const T Y[], 
 				const uint32_t i, uint32_t j)
 {
 	if (i==0 || j==0) return;
 	else if (X[i-1] == Y[j-1]) { 
-		push(s, (uintptr_t)X[i-1]);
-		lcs_backtrack(s, A, X, Y, i-1, j-1);
+		S.push(X[i-1]);
+		lcs_backtrack(S, A, X, Y, i-1, j-1);
 	}
 	else {
 		if (A(i, j-1) > A(i-1, j))
-			lcs_backtrack(s, A, X, Y, i, j-1);
+			lcs_backtrack(S, A, X, Y, i, j-1);
 		else
-			lcs_backtrack(s, A, X, Y, i-1, j);
+			lcs_backtrack(S, A, X, Y, i-1, j);
 	}
 }
 

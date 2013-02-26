@@ -22,23 +22,23 @@ template <typename T=char>
 class Array2D
 {
 private:
-	uint32_t nrow;	// num of rows
-	uint32_t ncol;	// num of columns
+	uint32_t NR;		// num of rows
+	uint32_t NC;		// num of columns
 	T * data;		// the place where the array resides.
 public:
 	Array2D(uint32_t nrow, uint32_t ncol) {
-		this->nrow = nrow;
-		this->ncol = ncol;	
+		this->NR = nrow;
+		this->NC = ncol;	
 		this->data = new T[nrow*ncol];
 	};
 
 	inline T& operator() (int row, int col) {
-		return this->data[row*ncol + col];
+		return this->data[row*NC + col];
 	}
 
-	void operator= (T value) {
-		for(int i=0; i<ncol*nrow;i++){
-			data[i]	 = value;
+	void operator= (T & value) {
+		for(int i=0; i<NR*NC;i++){
+			data[i] = value;
 		}
 	}
 	

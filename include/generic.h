@@ -56,25 +56,29 @@ choose_pivot(int i,int j)
 
 /**
  * pass in array with *len
- * set newlen
+ * return new length
  */
-#define remove_dup(a,len, newlen) 	\
-do {								\
-	int i;							\
-	newlen = len;					\
-	for (i=0; i<newlen; i++) {		\
-		int key = a[i];				\
-		int j;						\
-		for (j=i+1;j<newlen;j++) {	\
-			if(key == a[j]) {		\
-				/* found dup, move left one position. */ \
-				int k;				\
-				for (k=j;k<newlen-1;k++) {	\
-					a[k] = a[k+1];			\
-				}							\
-				newlen--;					\
-			}						\
-		}							\
-	}								\
-} while (0)
+template<typename T>
+static uint32_t remove_dup(T a[], uint32_t len) 
+{
+	uint32_t i;
+	uint32_t newlen = len;
+	for (i=0; i<newlen; i++) {
+		T key = a[i];
+		uint32_t j;
+		for (j=i+1;j<newlen;j++) {
+			if(key == a[j]) {
+				/* found dup, move left one position. */ 
+				uint32_t k;
+				for (k=j;k<newlen-1;k++) {
+					a[k] = a[k+1];
+				}
+				newlen--;
+			}
+		}
+	}
+
+	return newlen;
+}
+
 #endif //

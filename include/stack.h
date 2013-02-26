@@ -17,8 +17,6 @@
 #ifndef __STACK_H__
 #define __STACK_H__
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -27,97 +25,68 @@
  * elements stack can hold. Size stands for the current size of the stack and elements 
  * is the array of elements 
  */
-typedef struct Stack
+template<typename T=uintptr_t>
+class Stack
 {
-	int capacity;
-	int size;
-	uintptr_t * elements;
-} Stack;
+private:
+	uint32_t m_capacity;		// the total capacity
+	uint32_t m_size;			// current stack size
+	T * m_elements;		// the elements
+public:
+	/**
+	 * capcity is the maximum elements the stack can hold.
+	 */
+	Stack(uint32_t capacity) {
+		this->m_capacity = capacity;
+		this->m_size = 0;
+		this->m_elements = new T[capacity];
+	};
 
-/*
- * createStack function takes argument the maximum number of elements the stack 
- * can hold, creates a stack according to it and returns a pointer to 
- * the stack. 
- */
-static inline Stack * 
-create_stack(int maxElements)
-{
-	/* Create a Stack */
-	Stack *S;
-	S = (Stack *)malloc(sizeof(Stack));
-	/* Initialise its properties */
-	S->elements = (uintptr_t *)malloc(sizeof(uintptr_t)*maxElements);
-	S->size = 0;
-	S->capacity = maxElements;
-	/* Return the pointer */
-	return S;
-}
+	~Stack() {
+		delete [] m_elements;
+	};
 
-static inline void 
-destroyStack(Stack * S)
-{
-	free(S->elements);
-	free(S);
-}
+	/**
+	 * test whether the stack is empty
+	 */
+	inline bool is_empty() {
+		return m_size==0?true:false;
+	};
 
-static inline bool 
-stack_is_empty(Stack * S)
-{
-	return (S->size==0)?true:false;
-}
+	inline void pop() {
+		if(m_size!=0) m_size--;
+		return;
+	};
 
-/**
- * pop an element and store in *rval
- */
-static inline void 
-pop(Stack *S)
-{
-	/* If stack size is zero then it is empty. So we cannot pop */
-	if(S->size==0)
-	{
-			return;
-	}
-	/* Removing an element is equivalent to reducing its size by one */
-	else
-	{
-			S->size--;
-	}
-	return;
-}
+	/**
+	 * get the top element, test is_empty() before top()
+	*/
+	inline const T& top() {
+		return m_elements[m_size-1]; 
+	};
 
-/**
- * get top element
- * returns 0 when the stack is empty.
- */
-static inline uintptr_t 
-top(const Stack *S)
-{
-	if(S->size==0)
-	{
-		return 0;
-	}
-	/* Return the topmost element */
-	return S->elements[S->size-1];
-}
+	/**
+	 * push an element into the stack
+	 * returns false when stack is full.
+	 */
+	inline bool push(const T & value) {
+		if(m_size==m_capacity) { return false; }
+		else {
+			m_elements[m_size++] = value;
+			return true;
+		}
+	};
 
-/**
- * push an element into the stack
- * returns false when stack is full.
- */
-static inline bool 
-push(Stack *S, uintptr_t element)
-{
-	/* If the stack is full, we cannot push an element into it as there is no space for it.*/
-	if(S->size == S->capacity)
-	{
-		return false;
-	}
-	else
-	{
-		/* Push an element on the top of it and increase its size by one*/ 
-		S->elements[S->size++] = element;
-		return true;
-	}
-}
+	/**
+	 * return the stack size count.
+	 */
+	inline uint32_t count() {
+		return m_size;
+	};
+
+	inline const T& operator[] (int idx) {
+		return m_elements[m_size-1-idx];	
+	};
+};
 
 #endif //

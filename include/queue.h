@@ -20,120 +20,100 @@
 #include <stdint.h>
 
 /**
- * Queue has five properties. capacity stands for the maximum number of 
- * elements Queue can hold. Size stands for the current size of the Queue
- * and elements is the array of elements. front is the index of first element
- * (the index at which we remove the element) and rear is the index of last
- * element (the index at which we insert the element) 
+ * Queue Definition
  */
-typedef struct Queue
+template<typename T>
+class Queue
 {
-	uint32_t capacity;
-	uint32_t size;
-	uint32_t front;
-	int32_t rear;
-	uintptr_t * elements;
-}Queue;
+private:
+	uint32_t m_capacity;		// queue capacity
+	uint32_t m_size;			// current queue size
+	uint32_t m_front;			// index of the first element
+	uint32_t m_rear;			// index of the last element
+	T * m_elements;	// the elements
+public:
+	/**
+	 * constructor takes argument the maximum number of elements the Queue
+	 * can hold, creates a Queue according to it and returns a pointer to the
+	 * Queue. 
+	 */
+	Queue(uint32_t max) {
+		this->m_elements = new T[max];
+		this->m_size = 0;
+		this->m_capacity = max;
+		this->m_front =0;
+		this->m_rear = -1;
+	};
 
-/**
- * create_queue function takes argument the maximum number of elements the Queue
- * can hold, creates a Queue according to it and returns a pointer to the
- * Queue. 
- */
-static inline Queue * 
-create_queue(uint32_t maxElements)
-{
-	/* Create a Queue */
-	Queue *Q;
-	Q = (Queue *)malloc(sizeof(Queue));
-	/* Initialise its properties */
-	Q->elements = (uintptr_t *)malloc(sizeof(uintptr_t)*maxElements);
-	Q->size = 0;
-	Q->capacity = maxElements;
-	Q->front = 0;
-	Q->rear = -1;
-	/* Return the pointer */
-	return Q;
-}
+	~Queue() {
+		delete [] m_elements;	
+	};
 
-/**
- * Dequeue
- */
-static inline void 
-dequeue(Queue *Q)
-{
-	/* If Queue size is zero then it is empty. So we cannot pop */
-	if(Q->size==0)
-	{
+	/**
+	 * Dequeue
+	 */
+	inline void dequeue() {
+		/* If Queue size is zero then it is empty. So we cannot pop */
+		if(m_size==0) {
+			return;
+		}
+		/* Removing an element is equivalent to incrementing index of front by one */
+		else {
+			m_size--;
+			m_front++;
+			/* As we fill elements in circular fashion */
+			if(m_front==m_capacity) {
+				m_front=0;
+			}
+		}
 		return;
-	}
-	/* Removing an element is equivalent to incrementing index of front by one */
-	else
-	{
-		Q->size--;
-		Q->front++;
-		/* As we fill elements in circular fashion */
-		if(Q->front==Q->capacity)
-		{
-			Q->front=0;
-		}
-	}
-	return;
-}
+	};
 
-/**
- * return the front element.
- */
-static inline uintptr_t 
-queue_front(const Queue *Q)
-{
-	/* Return the element which is at the front*/
-	return Q->elements[Q->front];
-}
+	/**
+	 * return the front element.
+	 */
+	inline const T& front() {
+		return m_elements[m_front];	
+	};
 
-static inline bool 
-queue_is_empty(const Queue * Q)
-{
-	if (Q->size ==0) return true;
-	return false;
-}
-
-/**
- * Enqueue
- * returns false when queue is full
- */
-static inline bool 
-enqueue(Queue *Q, uintptr_t element)
-{
-	/* If the Queue is full, we cannot push an element into it as there is no space for it.*/
-	if(Q->size == Q->capacity)
-	{
+	/**
+	 * test weather the queue is empty
+	 */
+	bool is_empty() {
+		if (m_size ==0) return true;
 		return false;
-	}
-	else
-	{
-		Q->size++;
-		Q->rear = Q->rear + 1;
-		/* As we fill the queue in circular fashion */
-		if(Q->rear == Q->capacity)
-		{
-			Q->rear = 0;
-		}
-		/* Insert the element in its rear side */ 
-		Q->elements[Q->rear] = element;
-	
-		return true;
-	}
-}
+	};
 
-/**
- * queue destroy 
- */
-static inline void 
-queue_destroy(Queue * Q)
-{
-	free(Q->elements);
-	free(Q);
-}
+	/**
+	 * enqueue an element
+	 * returns false when queue is full
+	 */
+	bool enqueue(const T & element) {
+		// If the Queue is full, we cannot push an element into it
+		// as there is no space for it.*/
+		if(m_size == m_capacity) {
+			return false;
+		}
+		else {
+			m_size++;
+			m_rear++;
+			/* As we fill the queue in circular fashion */
+			if(m_rear == m_capacity) {
+				m_rear = 0;
+			}
+			/* Insert the element in its rear side */ 
+			m_elements[m_rear] = element;
+		
+			return true;
+		}
+	};
+
+	/**
+	 * return the queue count.
+	 */
+	inline int count() {
+		return m_size;
+	};
+};
 
 #endif //
