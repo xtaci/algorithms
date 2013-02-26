@@ -50,7 +50,7 @@ PROGRAMS =  insertion_sort_demo \
 
 all: $(PROGRAMS)
 
-heap_demo: $(SRCDIR)/heap_demo.c $(DEPS)
+heap_demo: $(SRCDIR)/heap_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 insertion_sort_demo: $(SRCDIR)/insertion_sort_demo.c $(DEPS)
@@ -77,7 +77,7 @@ prime_sieve_eratosthenes: $(SRCDIR)/prime_sieve_eratosthenes.c $(DEPS)
 hash_multi_demo: $(SRCDIR)/hash_multi_demo.c $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-hash_table_demo: $(SRCDIR)/hash_table_demo.c $(DEPS)
+hash_table_demo: $(SRCDIR)/hash_table_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 double_linked_list_demo: $(SRCDIR)/double_linked_list_demo.c $(DEPS)

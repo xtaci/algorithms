@@ -105,7 +105,7 @@ static void __ivltree_fixup_m(rbtree_node n)
 static inline rbtree 
 ivltree_create() 
 {
-    rbtree t = malloc(sizeof(struct rbtree_t));
+    rbtree t = (rbtree)malloc(sizeof(struct rbtree_t));
     t->root = NULL;
 	t->cb_left = t->cb_right = __ivltree_fix_rotation;
     return t;
@@ -118,7 +118,7 @@ static ivltree_node
 __ivltree_new_node(int low, int high, 
 		color rbtree_node_color, rbtree_node left, rbtree_node right) 
 {
-	ivltree_node result = malloc(sizeof(struct ivltree_node_t));
+	ivltree_node result = (ivltree_node)malloc(sizeof(struct ivltree_node_t));
 	result->low = low;
 	result->high = high;
 	result->m = high;

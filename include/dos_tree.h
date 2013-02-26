@@ -82,7 +82,7 @@ __dos_fixup_size(rbtree_node n)
 static inline rbtree 
 dostree_create() 
 {
-	rbtree t = malloc(sizeof(struct rbtree_t));
+	rbtree t =(rbtree)malloc(sizeof(struct rbtree_t));
 	t->root = NULL;
 	t->cb_left = t->cb_right =  __dos_fix_rotation;
 	return t;
@@ -91,7 +91,7 @@ dostree_create()
 static inline dostree_node 
 __dostree_new_node(int key, color rbtree_node_color, rbtree_node left, rbtree_node right) 
 {
-	dostree_node result = malloc(sizeof(struct dostree_node_t));
+	dostree_node result = (dostree_node)malloc(sizeof(struct dostree_node_t));
 	result->key = key;
 	result->size = 1;
 	result->node.color = rbtree_node_color;

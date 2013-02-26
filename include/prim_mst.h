@@ -35,8 +35,8 @@
  * Adjacent Lists optimized for Prim's Algorithm
  */
 struct PrimAdjacent {
-	struct Heap * heap; 	// binary heap representation of weight->node
- 							// the top of the heap is always the minimal element
+	Heap<struct Vertex*> * heap; 		// binary heap representation of weight->node
+ 						// the top of the heap is always the minimal element
 	struct Vertex * v;
 	struct list_head pa_node; 
 };
@@ -58,11 +58,11 @@ __prim_mst_add_adjacent(struct PrimGraph * pg, struct Adjacent * a)
 	list_add_tail(&pa->pa_node, &pg->pa_head);
 
 	pa->v = &a->v;	
-	pa->heap = heap_init(a->num_neigh);
+	pa->heap = new Heap<struct Vertex *>(a->num_neigh);
 
 	struct Vertex * v;
 	list_for_each_entry(v, &a->v_head, v_node){
-		heap_insert(pa->heap, v->weight, (uintptr_t)v);  // weight->vertex
+		pa->heap->insert(v->weight, v);  // weight->vertex
 	}
 }
 
@@ -134,17 +134,17 @@ prim_mst_run(struct PrimGraph * pg)
 		struct Adjacent * a; 
 		list_for_each_entry(a, &mst->a_head, a_node){
 			pa = __prim_mst_lookup(pg, a->v.id);
-			while (!heap_is_empty(pa->heap)) { 	// find one neighbour
-				v = (struct Vertex *)HEAP_MIN_VALUE(pa->heap); 
+			while (!pa->heap->is_empty()) { 	// find one neighbour
+				v = pa->heap->min_value(); 
 				if (graph_lookup(mst,v->id)==NULL) {  // if new V appears 
-					if (HEAP_MIN_KEY(pa->heap) < weight) {
-						weight = HEAP_MIN_KEY(pa->heap);
+					if (pa->heap->min_key() < weight) {
+						weight = pa->heap->min_key();
 						best_to = v->id;
 						best_from = pa; 
 					}
 					break;
 				} else {
-					heap_delete_min(pa->heap);
+					pa->heap->delete_min();
 				}
 			}
 		}
@@ -153,7 +153,7 @@ prim_mst_run(struct PrimGraph * pg)
 			// congrats , new V & E
 			undirected_graph_add_vertex(mst, best_to);
 			undirected_graph_add_edge(mst, best_from->v->id, best_to, weight);
-			heap_delete_min(best_from->heap);
+			best_from->heap->delete_min();
 		} else break;
 	};
 
@@ -170,9 +170,8 @@ prim_mst_print(const struct PrimGraph * pg)
 	printf("Prim Graph: \n");
 	list_for_each_entry(pa, &pg->pa_head, pa_node){
 		printf("%d->{", pa->v->id);
-		int i;
-		struct Vertex * v;
-		HEAP_FOR_EACH(i, v, pa->heap) {
+		for(uint32_t i=0;i<pa->heap->count();i++) {
+			struct Vertex * v = (*pa->heap)[i];
 			printf("id:%d->w:%d \t", v->id, v->weight);
 		}
 		printf("}\n");

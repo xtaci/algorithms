@@ -10,23 +10,19 @@ int main()
 	const int MAX_ELEMENTS = 50;
 	srand(time(NULL));
 	
-	struct HashTable * ht = hash_table_create(MAX_ELEMENTS);
+	HashTable<int32_t> ht(MAX_ELEMENTS);
 
 	printf("Hash Table Demo: \n");
 	int i;
 	for(i = 0; i < MAX_ELEMENTS; i++ ){
 		int32_t value = rand()%1000;
-		hash_table_set(ht, i, (uintptr_t)value);
-
+		ht[i] = value;
 		printf("setting %d->%d\n", i, value);
 	}
 	
 	for(i = 0; i < MAX_ELEMENTS; i++ ){
-		int32_t value = (int32_t)hash_table_get(ht, i);
-		printf("getting %d->%d\n", i, value);
+		printf("getting %d->%d\n", i, ht[i]);
 	}
-
-	hash_table_destroy(ht);
 
 	exit(0);
 }
