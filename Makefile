@@ -122,7 +122,7 @@ lcs_demo: $(SRCDIR)/lcs_demo.cpp $(DEPS)
 graph_demo: $(SRCDIR)/graph_demo.c $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-prim_mst_demo: $(SRCDIR)/prim_mst_demo.c $(DEPS)
+prim_mst_demo: $(SRCDIR)/prim_mst_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 directed_graph_demo: $(SRCDIR)/directed_graph_demo.c $(DEPS)
@@ -131,16 +131,16 @@ directed_graph_demo: $(SRCDIR)/directed_graph_demo.c $(DEPS)
 dijkstra_demo: $(SRCDIR)/dijkstra_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-bellman_ford_demo: $(SRCDIR)/bellman_ford_demo.c $(DEPS)
+bellman_ford_demo: $(SRCDIR)/bellman_ford_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-graph_search_demo: $(SRCDIR)/graph_search_demo.c $(DEPS)
+graph_search_demo: $(SRCDIR)/graph_search_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-edmonds_karp_demo: $(SRCDIR)/edmonds_karp_demo.c $(DEPS)
+edmonds_karp_demo: $(SRCDIR)/edmonds_karp_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-astar_demo: $(SRCDIR)/astar_demo.c $(DEPS)
+astar_demo: $(SRCDIR)/astar_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 hash_string_demo: $(SRCDIR)/hash_string_demo.c $(DEPS)

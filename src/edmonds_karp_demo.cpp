@@ -33,6 +33,7 @@ struct Graph * directed_graph_rand(int nvertex)
 
 int main(void)
 {
+	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 6;
 	struct Graph * g = directed_graph_rand(NVERTEX);
@@ -43,16 +44,15 @@ int main(void)
 
 	printf("Max Flow is %d\n", result->maxflow);
 	printf("the residual network\n");
-	int i,j;
 	printf("\t");
-	for(i=0;i<result->num_vertex;i++) {
-		printf("%d\t", (int)hash_table_get(result->rmap, i));
+	for(uint32_t i=0;i<result->num_vertex;i++) {
+		printf("%d\t", (*result->rmap)[i]);
 	}
 	printf("\n");
 
-	for(i=0;i<result->num_vertex;i++) {
-		printf("%d\t", (int)hash_table_get(result->rmap, i));
-		for(j=0;j<result->num_vertex;j++) {
+	for(uint32_t i=0;i<result->num_vertex;i++) {
+		printf("%d\t",(*result->rmap)[i]);
+		for(uint32_t j=0;j<result->num_vertex;j++) {
 			printf("%d\t", result->residual[i][j]);
 		}
 		printf("\n");

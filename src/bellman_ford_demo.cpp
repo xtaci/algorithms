@@ -36,6 +36,7 @@ struct Graph * directed_graph_rand(int nvertex)
 
 int main(void)
 {
+	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 50;
 	struct Graph * g = directed_graph_rand(NVERTEX);
@@ -47,9 +48,8 @@ int main(void)
 	struct Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_node) {
 		printf("previous of %u is ", a->v.id);
-		uintptr_t pre = hash_table_get(bfw->previous, a->v.id);
-		if (pre ==undefined) { printf("undefined\n"); }
-		else printf("%u\n", (uint32_t)pre);
+		if ((*bfw->previous)[a->v.id]==UNDEFINED) { printf("UNDEFINED\n"); }
+		else printf("%u\n", (*bfw->previous)[a->v.id]);
 	}
 	printf("\nwe %s have negative weighted cycle.\n", bfw->has_neg_cycle?"DO":"DON'T");
 	bellman_ford_free(bfw);

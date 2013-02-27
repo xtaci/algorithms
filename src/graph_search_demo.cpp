@@ -35,6 +35,7 @@ struct Graph * directed_graph_rand(int nvertex)
 
 int main()
 {
+	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 10;
 	struct Graph * g = directed_graph_rand(NVERTEX);

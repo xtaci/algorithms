@@ -56,105 +56,108 @@
 #include "directed_graph.h"
 #include "hash_table.h"
 
-// define undefined previous vertex.
-#define undefined ((uintptr_t)-1)
+// define UNDEFINED previous vertex.
+#define UNDEFINED -1
 
-/**
- * workspace for bellman ford algorithm.
- */
-struct BFResult {
-	struct HashTable * dist; 	// hash table for distance.
-	struct HashTable * previous; 	// hash table for previous vertex
-	bool has_neg_cycle;		// negative weighted cycle mark.
-};
-
-/**
- * internal workspace init procedure. hash table and vertex_ids is initialized.
- */
-static void 
-__bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFResult * bfw)
+namespace alg 
 {
-	struct HashTable * dist = hash_table_create(g->num_vertex);
-	struct HashTable * previous = hash_table_create(g->num_vertex);
-	struct Adjacent * a;
 
-	// source vertex
-	hash_table_set(dist, source->v.id, 0);
+	/**
+	 * workspace for bellman ford algorithm.
+	 */
+	struct BFResult {
+		HashTable<int32_t> * dist; 	// hash table for distance.
+		HashTable<int32_t> * previous; 	// hash table for previous vertex
+		bool has_neg_cycle;		// negative weighted cycle mark.
+	};
 
-	// other vertices
-	list_for_each_entry(a, &g->a_head, a_node){
-		if (source->v.id != a->v.id) {
-			hash_table_set(dist, a->v.id, (uintptr_t)INT_MAX);
+	/**
+	 * internal workspace init procedure. hash table and vertex_ids is initialized.
+	 */
+	static void 
+	__bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFResult * bfw)
+	{
+		HashTable<int32_t> * dist = new HashTable<int32_t>(g->num_vertex);
+		HashTable<int32_t> * previous = new HashTable<int32_t>(g->num_vertex);
+		struct Adjacent * a;
+
+		// source vertex
+		(*dist)[source->v.id] = 0;
+
+		// other vertices
+		list_for_each_entry(a, &g->a_head, a_node){
+			if (source->v.id != a->v.id) {
+				(*dist)[a->v.id] = INT_MAX;
+			}
+			(*previous)[a->v.id] = UNDEFINED;
 		}
-		hash_table_set(previous, a->v.id, (uintptr_t)undefined);
+
+		bfw->dist = dist;
+		bfw->previous = previous;
+		bfw->has_neg_cycle = false;	// negative cycle mark set to 'false'.
 	}
 
-	bfw->dist = dist;
-	bfw->previous = previous;
-	bfw->has_neg_cycle = false;	// negative cycle mark set to 'false'.
-}
+	/**
+	 * do the real work
+	 */
+	static struct BFResult * 
+	bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
+	{
+		// init the workspace.
+		struct BFResult * bfw =
+			 (struct BFResult *)malloc(sizeof(struct BFResult));
 
-/**
- * do the real work
- */
-static struct BFResult * 
-bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
-{
-	// init the workspace.
-	struct BFResult * bfw =
-		 (struct BFResult *)malloc(sizeof(struct BFResult));
+		__bellman_ford_init(g, source, bfw);
 
-	__bellman_ford_init(g, source, bfw);
+		HashTable<int32_t> * dist = bfw->dist;
+		HashTable<int32_t> * previous = bfw->previous;
 
-	struct HashTable * dist = bfw->dist;
-	struct HashTable * previous = bfw->previous;
+		//  relax edges repeatedly	
+		for (uint32_t i=0;i<g->num_vertex-1;i++) {    // loop |V| -1 times
+			struct Adjacent * u;
+			list_for_each_entry(u, &g->a_head, a_node){ // for each eage(u,v) in edges
+				int32_t dist_u = (*dist)[u->v.id];
 
-	//  relax edges repeatedly	
-	int i;
-	for (i=0;i<g->num_vertex-1;i++) {    // loop |V| -1 times
-		struct Adjacent * u;
-		list_for_each_entry(u, &g->a_head, a_node){ // for each eage(u,v) in edges
-			int32_t dist_u = (int32_t)hash_table_get(dist, u->v.id);
+				struct Vertex * v;
+				list_for_each_entry(v, &u->v_head, v_node){ 
+					int32_t dist_v = (*dist)[v->id];
 
-			struct Vertex * v;
-			list_for_each_entry(v, &u->v_head, v_node){ 
-				int32_t dist_v = (int32_t)hash_table_get(dist, v->id);
-
-				if (dist_u + v->weight < dist_v) {
-					hash_table_set(dist, v->id, (uintptr_t)(dist_u + v->weight));
-					hash_table_set(previous, v->id, (uintptr_t)u->v.id);
+					if (dist_u + v->weight < dist_v) {
+						(*dist)[v->id] = dist_u + v->weight;
+						(*previous)[v->id] = u->v.id;
+					}
 				}
 			}
 		}
+
+		//  check for negative-weight cycles
+		struct Adjacent * u;
+		list_for_each_entry(u, &g->a_head, a_node) {
+			int32_t dist_u = (*dist)[u->v.id];
+
+			struct Vertex * v;
+			list_for_each_entry(v, &u->v_head, v_node){
+				int32_t dist_v = (*dist)[v->id];
+
+				if (dist_u + v->weight < dist_v) {
+					bfw->has_neg_cycle = true;	// graph contains a negative-weight cycle
+					goto neg_cycle_found;
+				}
+			}	
+		}
+
+	neg_cycle_found:
+
+		return bfw;
 	}
 
-	//  check for negative-weight cycles
-	struct Adjacent * u;
-	list_for_each_entry(u, &g->a_head, a_node) {
-		int32_t dist_u = (int32_t)hash_table_get(dist, u->v.id);
-
-		struct Vertex * v;
-		list_for_each_entry(v, &u->v_head, v_node){
-			int32_t dist_v = (int32_t)hash_table_get(dist, v->id);
-
-			if (dist_u + v->weight < dist_v) {
-				bfw->has_neg_cycle = true;	// graph contains a negative-weight cycle
-				goto neg_cycle_found;
-			}
-		}	
+	static void 
+	bellman_ford_free(struct BFResult * result)
+	{
+		delete result->previous;	
+		delete result->dist;	
+		free(result);
 	}
-
-neg_cycle_found:
-
-	return bfw;
-}
-
-static void 
-bellman_ford_free(struct BFResult * result)
-{
-	hash_table_destroy(result->previous);	
-	hash_table_destroy(result->dist);	
-	free(result);
 }
 
 #endif //

@@ -34,66 +34,65 @@
 
 #define MARK 0xDEADU
 
-static void 
-breadth_first_search(const struct Graph * g, uint32_t source)
+namespace alg 
 {
-	struct Adjacent * root = graph_lookup(g, source);
-	struct HashTable * ht = hash_table_create(g->num_vertex);		
+	static void breadth_first_search(const struct Graph * g, uint32_t source)
+	{
+		struct Adjacent * root = graph_lookup(g, source);
+		HashTable<uint32_t> ht(g->num_vertex);		
 
-	if (root==NULL) return;
+		if (root==NULL) return;
 
-	// init
-	Queue<uint32_t> Q(g->num_vertex);
-	Q.enqueue(root->v.id);
-	hash_table_set(ht, root->v.id, (uintptr_t)MARK);
-	
-	while(!Q.is_empty()) {
-		uint32_t t = Q.front();
-		printf("%d->", t);
-		Q.dequeue();	
-		struct Vertex * v;
-		struct Adjacent * a = graph_lookup(g, t);
-		list_for_each_entry(v, &a->v_head, v_node) {
-			if ((uint32_t)hash_table_get(ht, v->id)!=MARK) {
-				hash_table_set(ht, v->id, (uintptr_t)MARK);
-				Q.enqueue(v->id); 
+		// init
+		Queue<uint32_t> Q(g->num_vertex);
+		Q.enqueue(root->v.id);
+		ht[root->v.id] = MARK;
+		
+		while(!Q.is_empty()) {
+			uint32_t t = Q.front();
+			printf("%d->", t);
+			Q.dequeue();	
+			struct Vertex * v;
+			struct Adjacent * a = graph_lookup(g, t);
+			list_for_each_entry(v, &a->v_head, v_node) {
+				if (ht[v->id]!=MARK) {
+					ht[v->id] = MARK;
+					Q.enqueue(v->id); 
+				}
 			}
 		}
+
+		printf("\n");
 	}
 
-	hash_table_destroy(ht);	
-	printf("\n");
-}
+	static void depth_first_search(const struct Graph *g, uint32_t source)
+	{
+		struct Adjacent * root = graph_lookup(g, source);
+		HashTable<uint32_t> ht(g->num_vertex);		
 
-static void 
-depth_first_search(const struct Graph *g, uint32_t source)
-{
-	struct Adjacent * root = graph_lookup(g, source);
-	struct HashTable * ht = hash_table_create(g->num_vertex);		
+		if (root==NULL) return;
 
-	if (root==NULL) return;
-
-	// init
-	Stack<uint32_t> S(g->num_vertex);
-	S.push(root->v.id);
-	hash_table_set(ht, root->v.id, (uintptr_t)MARK);
-	
-	while(!S.is_empty()) {
-		uint32_t t = S.top();	
-		printf("%d->", t);
-		S.pop();	
-		struct Vertex * v;
-		struct Adjacent * a = graph_lookup(g, t);
-		list_for_each_entry(v, &a->v_head, v_node) {
-			if ((uint32_t)hash_table_get(ht, v->id)!=MARK) {
-				hash_table_set(ht, v->id, (uintptr_t)MARK);
-				S.push(v->id);
+		// init
+		Stack<uint32_t> S(g->num_vertex);
+		S.push(root->v.id);
+		ht[root->v.id] = MARK;
+		
+		while(!S.is_empty()) {
+			uint32_t t = S.top();	
+			printf("%d->", t);
+			S.pop();	
+			struct Vertex * v;
+			struct Adjacent * a = graph_lookup(g, t);
+			list_for_each_entry(v, &a->v_head, v_node) {
+				if (ht[v->id] !=MARK) {
+					ht[v->id] = MARK;
+					S.push(v->id);
+				}
 			}
 		}
+		
+		printf("\n");
 	}
-	
-	hash_table_destroy(ht);	
-	printf("\n");
 }
 
 #endif //

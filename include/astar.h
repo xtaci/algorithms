@@ -28,130 +28,134 @@
 #include <math.h>
 #include "heap.h"
 #include "hash_table.h"
+#include "2darray.h"
 
-/**
- * A-Star algorithm result;
- */
-struct AStarResult {
-	int * path; // the path format:
- 				// [X1Y1X2Y2X3Y3.....XnYnX1Y1] 
- 				// interleaving X,Y coordinate, the last one is soure coordinate
-	int num_nodes;
-};
-
-#define WALL 0xFFFF
-
-static inline float __astar_estimate(int x1, int y1, int x2, int y2);
-/**
- * the A* algorithm
- * search a path from (x1,y1) to (x2,y2)
- * a integer representing path is returned, you should free it after. 
- * 
- * 
- */
-static struct AStarResult *
-astar(int nrow, int ncol, const int grid[nrow][ncol], int x1, int y1, int x2, int y2)
+namespace alg
 {
-	// The set of nodes already evaluated.
-	bool * closedset= (bool*)malloc(sizeof(bool)*nrow*ncol);
-	memset(closedset, false, sizeof(closedset));
+	/**
+	 * A-Star algorithm result;
+	 */
+	struct AStarResult {
+		int * path; // the path format:
+					// [X1Y1X2Y2X3Y3.....XnYnX1Y1] 
+					// interleaving X,Y coordinate, the last one is soure coordinate
+		int num_nodes;
+	};
 
-	// the set of tentavie nodes to be evaluated,
-	// initialy containing the start node	
-	// [x,y] encoded in x*ncol+y	
-	struct Heap * openset = heap_init(nrow*ncol);
-	heap_insert(openset, 0, (uintptr_t)(x1*ncol + y1));
+	struct Coord {
+		uint32_t x;
+		uint32_t y;
+	};
 
-	// The map of navigated nodes.	
-	struct HashTable * came_from = hash_table_create(nrow*ncol);
+	#define WALL 0xFFFF
 
-	// Cost from start along best known path.	
-	float * g_score = (float *)malloc(sizeof(float)*nrow*ncol);
-	g_score[x1*ncol+y1] = 0.0f;
+	static inline float __astar_estimate(int x1, int y1, int x2, int y2);
+	/**
+	 * the A* algorithm
+	 * search a path from (x1,y1) to (x2,y2)
+	 * a integer representing path is returned, you should free it after. 
+	 * 
+	 * 
+	 */
+	static struct AStarResult *
+	astar(const Array2D<int> & grid, uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2)
+	{
+		uint32_t nrow = grid.row();
+		uint32_t ncol = grid.col();
+		// The set of nodes already evaluated.
+		Array2D<bool> closedset(nrow, ncol);
+		closedset.clear(false);
 
-	// Estimated total cost from start to goal through y.
-	float * f_score = (float *)malloc(sizeof(float)*nrow*ncol);
-	f_score[x1*ncol+y1] = g_score[x1*ncol+y1] + __astar_estimate(x1,y1,x2,y2);
+		// the set of tentavie nodes to be evaluated,
+		// initialy containing the start node	
+		// encoding [x,y] to [x*ncol + y]
+		// using binary heap ...
+		Heap<uint32_t> openset(nrow*ncol);
+		openset.insert(0, x1*ncol+y1);
 
-	struct AStarResult * as = (struct AStarResult*)malloc(sizeof(struct AStarResult));
-	as->path = NULL;
-	as->num_nodes = 0;
+		// The map of navigated nodes.	
+		HashTable<uint32_t> came_from(nrow*ncol);
 
-	while(!heap_is_empty(openset)) {
-		int value = (int)HEAP_MIN_VALUE(openset);
-		int cx = value/ncol;
-		int cy = value%ncol;
+		// Cost from start along best known path.	
+		Array2D<float> g_score(nrow, ncol);
+		g_score(x1,y1) = 0.0f;
 
-		if(cx == x2 && cy==y2) {	// we reached (x2,y2)
-			// reconstruct path & return
-			int tmp = x2*ncol+y2;
-			while((tmp=(int)hash_table_get(came_from, tmp)) != x1*ncol+y1) {
-				as->num_nodes++;
+		// Estimated total cost from start to goal through y.
+		Array2D<float> f_score(nrow,ncol);
+		f_score(x1,y1) = g_score(x1,y1) + __astar_estimate(x1,y1,x2,y2);
+
+		struct AStarResult * as = (struct AStarResult*)malloc(sizeof(struct AStarResult));
+		as->path = NULL;
+		as->num_nodes = 0;
+
+		while(!openset.is_empty()) {
+			uint32_t value = openset.min_value();
+			int	cx = value/ncol;
+			int	cy = value%ncol;
+
+			if(cx == (int)x2 && cy==(int)y2) {	// we reached (x2,y2)
+				// reconstruct path & return
+				uint32_t tmp = x2*ncol+y2;
+				while((tmp=came_from[tmp]) != x1*ncol+y1) {
+					as->num_nodes++;
+				}
+
+				as->path = (int*)malloc(sizeof(int)*2*as->num_nodes);
+
+				tmp = x2*ncol+y2;
+				int idx=0;
+				while((tmp=came_from[tmp]) != x1*ncol+y1) {
+					as->path[idx++] = tmp/ncol;
+					as->path[idx++] = tmp%ncol;
+				}
+				return as;
 			}
 
-			as->path = (int*)malloc(sizeof(int)*2*as->num_nodes);
+			openset.delete_min();
+			closedset(cx, cy) = true;
 
-			tmp = x2*ncol+y2;
-			int idx=0;
-			while((tmp=(int)hash_table_get(came_from, tmp)) != x1*ncol+y1) {
-				as->path[idx++] = tmp/ncol;
-				as->path[idx++] = tmp%ncol;
-			}
-			goto final;
-		}
+			// for each neighbor
+			int nx, ny;
+			for(nx=cx-1;nx<=cx+1;nx++) {
+				if (nx<0 || nx>=(int)ncol) continue;
+				for(ny=cy-1;ny<=cy+1;ny++) {
+					if (ny<0 || ny>=(int)nrow) continue;
 
-		heap_delete_min(openset);
-		closedset[cx*ncol + cy] = true;
-
-		// for each neighbor
-		int nx, ny;
-		for(nx=cx-1;nx<=cx+1;nx++) {
-			if (nx<0 || nx>=ncol) continue;
-			for(ny=cy-1;ny<=cy+1;ny++) {
-				if (ny<0 || ny>=nrow) continue;
-
-				// except the wall;
-				if(grid[nx][ny] == WALL) continue;
-				// except the cur itself
-				if(nx == cx && ny==cy) continue;
-				// if neighbour in the closed set	
-				if(closedset[nx*ncol+ny]) continue;	
-		
-				float tentative = g_score[cx*ncol+cy] + 1.41421f; //sqrt(2)
+					// except the wall;
+					if(grid(nx,ny) == WALL) continue;
+					// except the cur itself
+					if(nx == cx && ny==cy) continue;
+					// if neighbour in the closed set	
+					if(closedset(nx,ny)) continue;	
 			
-				// if neighbour not in the openset or dist < g_score[neighbour]	
-				if (heap_find_value(openset, nx*ncol+ny) < 0 ||
-					tentative < g_score[nx*ncol+ny]) {
-					hash_table_set(came_from, nx*ncol+ny, cx*ncol+cy); // record path
-					g_score[nx*ncol+ny] = tentative;
-					f_score[nx*ncol+ny] = tentative + __astar_estimate(nx,ny,x2,y2);
-					if (heap_find_value(openset, nx*ncol+ny) < 0) {
-						heap_insert(openset, f_score[nx*ncol+ny], nx*ncol+ny);
+					float tentative = g_score(cx,cy) + 1.41421f; //sqrt(2)
+				
+					// if neighbour not in the openset or dist < g_score[neighbour]	
+					if (openset.find_value(nx*ncol+ny) < 0 || tentative < g_score(nx,ny)) {
+						came_from[nx*ncol+ny] = cx*ncol+cy; // record path
+						g_score(nx,ny) = tentative;
+						f_score(nx,ny) = tentative + __astar_estimate(nx,ny,x2,y2);
+						if (openset.find_value(nx*ncol+ny) < 0) {
+							openset.insert(f_score(nx,ny), nx*ncol+ny);
+						}
 					}
 				}
 			}
 		}
+		return as;
 	}
 
-final:
-	free(closedset);
-	free(g_score);
-	free(f_score);
-	heap_free(openset);
-	hash_table_destroy(came_from);
-	return as;
-}
+	static void astar_free(struct AStarResult * as)
+	{
+		if (as->path) free(as->path);
+		free(as);
+	}
 
-static void astar_free(struct AStarResult * as)
-{
-	if (as->path) free(as->path);
-	free(as);
-}
-
-static inline float
-__astar_estimate(int x1, int y1, int x2, int y2)
-{
-	return sqrtf((x2-x1) * (x2-x1) + (y2-y1)*(y2-y1));
+	static inline float
+	__astar_estimate(int x1, int y1, int x2, int y2)
+	{
+		return sqrtf((x2-x1) * (x2-x1) + (y2-y1)*(y2-y1));
+	}
 }
 
 #endif //

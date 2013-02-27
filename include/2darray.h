@@ -35,6 +35,9 @@ namespace alg
 			this->data = new T[nrow*ncol];
 		};
 
+		const uint32_t row() const { return NR; }
+		const uint32_t col() const { return NC; }
+
 		inline T& operator() (int row, int col) {
 			return this->data[row*NC + col];
 		}
@@ -43,8 +46,8 @@ namespace alg
 			return this->data[row*NC + col];
 		}
 
-		void clear(T & value) {
-			for(int i=0; i<NR*NC;i++){
+		void clear(const T & value) {
+			for(uint32_t i=0; i<NR*NC;i++){
 				data[i] = value;
 			}
 		}
