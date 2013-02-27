@@ -9,8 +9,7 @@
    Order is from low-order byte to high-order byte of digest.
    Each byte is printed with high-order hexadecimal digit first.
  */
-static void MDPrint (mdContext)
-MD5_CTX *mdContext;
+static void MDPrint (MD5_CTX *mdContext)
 {
   int i;
 
@@ -67,8 +66,7 @@ static void MDTimeTrial ()
    Prints out message digest, a space, the string (in quotes) and a
    carriage return.
  */
-static void MDString (inString)
-char *inString;
+static void MDString(const char *inString)
 {
   MD5_CTX mdContext;
   unsigned int len = strlen (inString);
@@ -84,8 +82,7 @@ char *inString;
    Prints out message digest, a space, the file name, and a carriage
    return.
  */
-static void MDFile (filename)
-char *filename;
+static void MDFile (const char *filename)
 {
   FILE *inFile = fopen (filename, "rb");
   MD5_CTX mdContext;
@@ -142,9 +139,7 @@ static void MDTestSuite ()
   MDFile ("foo");
 }
 
-int main (argc, argv)
-int argc;
-char *argv[];
+int main (int argc, char *argv[])
 {
   int i;
 

@@ -98,7 +98,7 @@ namespace alg
 		};
 
 		// run dijkstra algorithm, and return the previous table
-		const HashTable<int32_t> & run() {
+		HashTable<int32_t> & run() {
 			while(!Q->is_empty()) {    // The main loop
 				struct Adjacent * u = graph_lookup(graph, Q->min_value());
 				int dist_u = Q->min_key();

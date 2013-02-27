@@ -18,18 +18,18 @@ int main(void)
 			"xtaci@163.com"
 			};
 
-	int len = sizeof(strs)/sizeof(char*);
+	uint32_t len = sizeof(strs)/sizeof(char*);
 	struct BloomFilter * bf = bloom_filter_create(8, len*10, len);
-	int i;
-	for (i=0;i<len;i++) {
+
+	for (uint32_t i=0;i<len;i++) {
 		bloom_filter_set(bf, strs[i], strlen(strs[i]));
 	}
 
-	for (i=0;i<len;i++) {
+	for (uint32_t i=0;i<len;i++) {
 		printf("checking %s->%s\n", strs[i], bloom_filter_test(bf, strs[i], strlen(strs[i]))?"true":"false");
 	}
 
-	for (i=0;i<sizeof(strs2)/sizeof(char*);i++) {
+	for (uint32_t i=0;i<sizeof(strs2)/sizeof(char*);i++) {
 		printf("checking %s->%s\n", strs2[i], bloom_filter_test(bf, strs2[i], strlen(strs2[i]))?"true":"false");
 	}
 

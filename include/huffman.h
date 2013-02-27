@@ -31,225 +31,203 @@
 #include "hash_table.h"
 #include "stack.h"
 
-/**
- * The Huffman tree node definition
- */
-struct HuffNode{
-	unsigned char symbol;
-	struct HuffNode *left, *right;
-};
-
-/**
- * The Huffman tree definition
- */
-struct HuffTree {
-	struct HuffNode *root;	// the root node.
-	struct HashTable * ht;	// hash table for encoding lookup
-	uint32_t freqs[256];		// frequency array, you can pass this array 
-								// to the peer for constructing huffman
-								// tree.
-};
-
-/**
- * The code for huffman
- */
-typedef struct {
-	char * code;
-	uint32_t length;	// the length of the code;
-}HuffCode;
-
-
-/**
- * for building symbol lookup table
- */
-static void 
-__huffman_traverse(struct HuffNode * node, struct HashTable * ht, int k, char code[256])
+namespace alg
 {
-	//If we reach the end we introduce the code in the table
-	if(node->left == NULL && node->right == NULL)
-	{
-		code[k] = '\0';
-		HuffCode * hcode = (HuffCode *)malloc(sizeof(HuffCode));
-		hcode->code = (char *)malloc(sizeof(char) * (k+1));
-		strcpy(hcode->code, code);
-		hcode->length = k;
 
-		hash_table_set(ht, node->symbol, (uintptr_t)hcode);
-	//	printf("k %d, code :%s symbol %d-> %c\n",k, hcode->code, node->symbol, node->symbol);
-	}
+	/**
+	 * The Huffman tree definition
+	 */
+	class HuffTree {
+	private:
+		/**
+		 * The Huffman tree node definition
+		 */
+		struct HuffNode{
+			unsigned char symbol;
+			struct HuffNode *left, *right;
+		};
+
+		/**
+		 * The code for a symbol of huffman
+		 */
+		struct HuffCode {
+			char code[256];		// max length is 256
+			uint32_t length;	// the length of the code;
+		};
+
+	private:
+		HashTable<HuffCode> m_symbol;	// hash table for encoding lookup
+		HuffNode * m_root;					// the root node.	
+		uint32_t m_freqs[256];				// frequency array, you can pass this array 
+											// to the peer for constructing huffman
+											// tree.
+	public:
+		/**
+	 	 * Construct a Huffman Tree with a sample string, the string must contain 
+	 	 * every characters passing to encode function.
+		 */
+		HuffTree(const char * sample) : m_symbol(256) {	
+			// count frequency for each char(8-bit).
+			memset(m_freqs, 0, sizeof(m_freqs));
+			
+			int i;	
+			for(i=0; sample[i]!='\0'; i++)
+				m_freqs[(unsigned char) sample[i]]++;
+
+			recreate_from_freqs();	
+		};
 	
-	//We concatenate a 0 for each step to the left
-	if(node->left!=NULL)
-	{
-		code[k] = '0';
-		__huffman_traverse(node->left,ht, k+1,code);
-	}
+		~HuffTree() {
+			// TODO: free HuffNodes	
+		};
 
-	//We concatenate a 1 for each step to the right
-	if(node->right!=NULL)
-	{
-		code[k] = '1';
-		__huffman_traverse(node->right,ht, k+1,code);
-	}
-}  
-
-/**
- * Symbol Table Initialization for encoding proc.
- */
-static inline void 
-__huffman_sym_init(struct HuffTree *tree)
-{
-	// init
-	tree->ht = hash_table_create(256);	
-	char code[256];
-	__huffman_traverse(tree->root, tree->ht, 0, code); 
-}
-
-/**
- * recreate the huff tree from an array[256] i.e. 8bit 
- * useful for peer reconstructing decoding tree.
- */
-static struct HuffTree * 
-huffman_recreate(uint32_t freqs[])
-{
-	// we create the tree
-	struct HuffTree * tree = (struct HuffTree *)malloc(sizeof(struct HuffTree));
-	memcpy(tree->freqs, freqs, sizeof(tree->freqs));
-
-	// construct a priority queue for huffman tree building
-	struct PQ * pq =  pq_create();
-
-	int i;
-	for(i=0; i<256; i++)
-		if(tree->freqs[i] !=0)
+		/**
+		 * Encoding 
+		 * encode a message into codes, codes should be large enough to hold the output
+		 * ie. the length of string
+		 * the length in BITS will be returned.
+		 */
+		uint32_t encode(const char * msg, char * codes)
 		{
-			struct HuffNode * n = 
-					(struct HuffNode *)malloc(sizeof(struct HuffNode));
-			n->left = NULL;
-			n->right = NULL;
-			n->symbol = (unsigned char) i;
-			
-			pq_queue(pq,(uintptr_t)n, tree->freqs[i]); // freq. as priority
-		}
-
-	// tree building subroutine 
-	while(pq_count(pq)>1)
-	{
-		uint32_t prio1, prio2, newprio;
-		struct HuffNode * node1, *node2, *new_node;	
-
-		node1 = (struct HuffNode *)pq_dequeue(pq, &prio1);
-		node2 = (struct HuffNode *)pq_dequeue(pq, &prio2);
-
-		newprio = prio1+prio2;
-
-		new_node = (struct HuffNode*)malloc(sizeof(struct HuffNode));
-		new_node->left = node1;
-		new_node->right = node2;
-
-		pq_queue(pq, (uintptr_t)new_node, newprio);
-	}
-
-	// set root & destory prio queue.
-	uint32_t prio;
-	tree->root = (struct HuffNode *)pq_dequeue(pq, &prio);
-	pq_destroy(pq);
-
-	// construct symbol lookup table
-	__huffman_sym_init(tree);
-			
-	return tree;
-
-}
-
-/**
- * Construct a Huffman Tree with a sample string, the string must contain 
- * every characters passing to encode function.
- */
-static inline struct HuffTree * 
-huffman_create(char * sample)
-{
-	// count frequency for each char(8-bit).
-	uint32_t freqs[256];
-	memset(freqs, 0, sizeof(freqs));
-	
-	int i;	
-	for(i=0; sample[i]!='\0'; i++)
-		freqs[(unsigned char) sample[i]]++;
-
-	return huffman_recreate(freqs);	
-}
-
-/**
- * Encoding 
- * encode a message into codes, codes should be large enough to hold the output
- * ie. the length of string
- * the length in BITS will be returned.
- */
-static uint32_t
-huffman_encode(struct HashTable * ht, char * msg, char * codes)
-{
-	int i;
-	uint32_t cursor = 0;
-	for(i=0; msg[i]!='\0'; i++)
-	{
-		HuffCode * hcode = (HuffCode *)hash_table_get(ht, msg[i]);
-		
-		int j;
-		for (j=0;j<hcode->length;j++) {
-			uint32_t off = cursor%8;
-			uint32_t base= cursor/8;
-					
-			if (hcode->code[j] =='0') {
-				codes[base] &= ~(1<<(7-off));
-			} else {
-				codes[base] |= 1<<(7-off);
+			uint32_t cursor = 0;
+			for(uint32_t i=0; msg[i]!='\0'; i++)
+			{
+				HuffCode & hcode = m_symbol[(uint32_t)msg[i]];
+				
+				for (uint32_t j=0;j<hcode.length;j++) {
+					uint32_t off = cursor%8;
+					uint32_t base= cursor/8;
+							
+					if (hcode.code[j] =='0') {
+						codes[base] &= ~(1<<(7-off));
+					} else {
+						codes[base] |= 1<<(7-off);
+					}
+					cursor++;
+				}
 			}
-			cursor++;
-		}
-	}
 
-	return cursor;
+			return cursor;
+		};
+
+		/**
+		 * Decoding
+		 * decoding is based on tree traversal
+		 * pass length of Bits
+		 */
+		void decode(const char * codes, uint32_t length)
+		{
+			HuffNode * node = m_root;
+
+			//For each "bit" of the string to decode
+			//we take a step to the left for 0
+			//or ont to the right for 1
+			uint32_t cursor;
+
+			for(cursor=0;cursor<length;cursor++) {
+				if(node->left == NULL && node->right == NULL) {
+					printf("%c",node->symbol);
+					node = m_root; //reset tree
+				}
+				
+				uint32_t off = cursor%8;
+				uint32_t base= cursor/8;
+
+				char bit = codes[base] & (1<<(7-off));
+
+				if (bit == 0) {
+					node = node->left;
+				} else {
+					node = node->right;
+				}
+			}
+
+			if(node->left == NULL && node->right == NULL) {
+				printf("%c",node->symbol);
+			}
+
+			printf("\n");
+		};
+	
+	private:
+		/**
+		 * recreate the huff tree from an array[256] i.e. 8bit 
+		 * useful for peer reconstructing decoding tree.
+		 */
+		void recreate_from_freqs() {
+			// construct a priority queue for huffman tree building
+			struct PQ * pq =  pq_create();
+
+			int i;
+			for(i=0; i<256; i++)
+				if(m_freqs[i] !=0)
+				{
+					HuffNode * n = new HuffNode();
+					n->left = NULL;
+					n->right = NULL;
+					n->symbol = (unsigned char) i;
+					
+					pq_queue(pq,(uintptr_t)n, m_freqs[i]); // freq. as priority
+				}
+
+			// tree building subroutine 
+			while(pq_count(pq)>1)
+			{
+				uint32_t prio1, prio2, newprio;
+				struct HuffNode * node1, *node2, *new_node;	
+
+				node1 = (struct HuffNode *)pq_dequeue(pq, &prio1);
+				node2 = (struct HuffNode *)pq_dequeue(pq, &prio2);
+
+				newprio = prio1+prio2;
+
+				new_node =  new HuffNode;
+				new_node->left = node1;
+				new_node->right = node2;
+
+				pq_queue(pq, (uintptr_t)new_node, newprio);
+			}
+
+			// set root & destory prio queue.
+			uint32_t prio;
+			m_root = (struct HuffNode *)pq_dequeue(pq, &prio);
+			pq_destroy(pq);
+
+			// construct symbol lookup table
+			char code[256];
+			build_symbol(m_root, 0, code); 
+		};
+
+		/**
+		 * building symbol lookup table
+		 */
+		void build_symbol(struct HuffNode * node, int k, char code[256]) {
+			//If we reach the leaf node we introduce the code in the table
+			if(node->left == NULL && node->right == NULL)
+			{
+				code[k] = '\0';
+				HuffCode * hcode = new HuffCode();
+				strcpy(hcode->code, code);
+				hcode->length = k;
+				m_symbol[(uint32_t)node->symbol] = *hcode;
+			//	printf("k %d, code :%s symbol %d-> %c\n",k, hcode->code, node->symbol, node->symbol);
+			}
+			
+			//We concatenate a 0 for each step to the left
+			if(node->left!=NULL)
+			{
+				code[k] = '0';
+				build_symbol(node->left, k+1,code);
+			}
+
+			//We concatenate a 1 for each step to the right
+			if(node->right!=NULL)
+			{
+				code[k] = '1';
+				build_symbol(node->right, k+1,code);
+			}
+		};
+	};
 }
-
-/**
- * Decoding
- * decoding is based on tree traversal
- * pass length of Bits
- */
-static void 
-huffman_decode(struct HuffTree * tree, char * codes, uint32_t length)
-{
-	struct HuffNode * node = tree->root;
-
-	//For each "bit" of the string to decode
-	//we take a step to the left for 0
-	//or ont to the right for 1
-	uint32_t cursor;
-
-	for(cursor=0;cursor<length;cursor++) {
-		if(node->left == NULL && node->right == NULL) {
-			printf("%c",node->symbol);
-			node = tree->root; //reset tree
-		}
-		
-		uint32_t off = cursor%8;
-		uint32_t base= cursor/8;
-
-		char bit = codes[base] & (1<<(7-off));
-
-		if (bit == 0) {
-			node = node->left;
-		} else {
-			node = node->right;
-		}
-	}
-
-	if(node->left == NULL && node->right == NULL) {
-		printf("%c",node->symbol);
-	}
-
-	printf("\n");
-} 
 
 #endif //

@@ -90,33 +90,10 @@ public:
 		// create a new HashKV struct for it.
 		kv = new HashKV;
 		kv->key = key;
+		memset((void*)&kv->value, 0, sizeof(T));
 		list_add(&kv->node, &m_slots[hash]);
 		return kv->value;
 	};
-
-	/**
-	 * reference the value by key, const operator
- 	 */
-	const T& operator[] (uint32_t key) const {
-		// hash the key using a hash function.
-		uint32_t hash = multi_hash(m_multi, key);
-
-		//  we iterate through the list.
-		HashKV * kv;
-		list_for_each_entry(kv, &m_slots[hash], node){
-			if (kv->key == key) {	// ok, found in the list.
-				return kv->value;
-			}
-		}
-
-		// reaching here means a new key is given,
-		// create a new HashKV struct for it.
-		kv = new HashKV;
-		kv->key = key;
-		list_add(&kv->node, &m_slots[hash]);
-		return kv->value;
-	};
-
 };
 
 #endif //

@@ -89,8 +89,7 @@ bloom_filter_create(uint32_t k, uint32_t m, uint32_t n)
 	bf->n=n;
 	bf->bitset = bitset_create(m);
 
-	int i;
-	for(i=0;i<k;i++) {
+	for(uint32_t i=0;i<k;i++) {
 		uhash_init(&bf->hash[i], m);
 	}
 
@@ -108,8 +107,7 @@ bloom_filter_set(struct BloomFilter * bf, const char * str, uint32_t len)
 	sha1_input(&sha, (const unsigned char *)str, len);
 	sha1_final(&sha);
 
-	int i;
-	for(i=0;i<bf->k;i++) {
+	for(uint32_t i=0;i<bf->k;i++) {
 		uint32_t hash = uhash_bigint(&bf->hash[i], sha.digest, 5);
 		bitset_set(bf->bitset, hash);
 	}
@@ -126,9 +124,7 @@ bloom_filter_test(struct BloomFilter *bf, const char * str, uint32_t len)
 	sha1_input(&sha, (const unsigned char *)str, len);
 	sha1_final(&sha);
 
-	int i;
-
-	for(i=0;i<bf->k;i++) {
+	for(uint32_t i=0;i<bf->k;i++) {
 		uint32_t hash = uhash_bigint(&bf->hash[i], sha.digest, 5);
 		if (!bitset_test(bf->bitset, hash))	return false;
 	}

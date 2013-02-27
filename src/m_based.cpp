@@ -1,6 +1,9 @@
 #include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 
-#include "m_based.h"
+#include "imath.h"
 #include "prime.h"
 
 int main()

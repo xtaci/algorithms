@@ -6,7 +6,8 @@
 
 int main(void)
 {
-	struct HuffTree * tree =  huffman_create(STR);
+	using namespace alg;
+	HuffTree tree(STR);
 
 	char codes[strlen(STR)];
 	uint32_t length;
@@ -15,11 +16,11 @@ int main(void)
 
 	printf("<<< before huffman coding : length:%ld bytes\n", strlen(STR));
 	memset(codes, 0, sizeof(codes));
-	length = huffman_encode(tree->ht, STR, codes); 
+	length = tree.encode(STR, codes); 
 
 	printf(">>> after huffman coding : length:%d bytes\n", length/8);
 	printf("decoding messsage:\n");
-	huffman_decode(tree, codes, length);
+	tree.decode(codes, length);
 
 	exit(0);
 }
