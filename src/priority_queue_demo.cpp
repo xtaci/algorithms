@@ -6,7 +6,8 @@
 
 int main(void)
 {
-	struct PQ * pq = pq_create();
+	using namespace alg;
+	PQ<int> pq;
 
 	srand(time(NULL));
 
@@ -14,18 +15,17 @@ int main(void)
 	int i;
 
 	for (i=0;i<MAXELEMENT;i++) {
-		uint32_t pri = rand()%1000;
-		pq_queue(pq, (uintptr_t)i, pri);
+		int pri = rand()%1000;
+		pq.queue(i, pri);
 		printf("queueing: value:%u-> pri: %d\n", i, pri);
 	}
 
-	printf("count# %d\n", pq_count(pq));
-	while(!pq_is_empty(pq)){
-		uint32_t pri;
-		int value = (int)pq_dequeue(pq, &pri);
+	printf("count# %d\n", pq.count());
+	while(!pq.is_empty()){
+		int pri;
+		int value = pq.dequeue(&pri);
 		printf("dequeue: %d --> pri: %d\n", value, pri);
 	}
-	printf("count# %d\n", pq_count(pq));
-	pq_destroy(pq);
+	printf("count# %d\n", pq.count());
 	exit(0);
 }

@@ -156,7 +156,7 @@ namespace alg
 		 */
 		void recreate_from_freqs() {
 			// construct a priority queue for huffman tree building
-			struct PQ * pq =  pq_create();
+			PQ<HuffNode *> pq;
 
 			int i;
 			for(i=0; i<256; i++)
@@ -167,17 +167,17 @@ namespace alg
 					n->right = NULL;
 					n->symbol = (unsigned char) i;
 					
-					pq_queue(pq,(uintptr_t)n, m_freqs[i]); // freq. as priority
+					pq.queue(n, m_freqs[i]); // freq. as priority
 				}
 
 			// tree building subroutine 
-			while(pq_count(pq)>1)
+			while(pq.count()>1)
 			{
-				uint32_t prio1, prio2, newprio;
-				struct HuffNode * node1, *node2, *new_node;	
+				int prio1, prio2, newprio;
+				HuffNode * node1, *node2, *new_node;	
 
-				node1 = (struct HuffNode *)pq_dequeue(pq, &prio1);
-				node2 = (struct HuffNode *)pq_dequeue(pq, &prio2);
+				node1 = pq.dequeue(&prio1);
+				node2 = pq.dequeue(&prio2);
 
 				newprio = prio1+prio2;
 
@@ -185,13 +185,12 @@ namespace alg
 				new_node->left = node1;
 				new_node->right = node2;
 
-				pq_queue(pq, (uintptr_t)new_node, newprio);
+				pq.queue(new_node, newprio);
 			}
 
 			// set root & destory prio queue.
-			uint32_t prio;
-			m_root = (struct HuffNode *)pq_dequeue(pq, &prio);
-			pq_destroy(pq);
+			int prio;
+			m_root = pq.dequeue(&prio);
 
 			// construct symbol lookup table
 			char code[256];

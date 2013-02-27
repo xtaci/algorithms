@@ -88,6 +88,10 @@ namespace alg
 		struct WordEP {
 			float 		EP[4];	// the emission probability in each state
 			uint64_t	SC[4];	// the count of appearence in each state
+			WordEP() {
+				EP[0]  = EP[1] = EP[2] = EP[3] = 0.0f;
+				SC[0]  = SC[1] = SC[2] = SC[3] = 0;
+			}
 		};
 
 		#define GB18030_NR	70244

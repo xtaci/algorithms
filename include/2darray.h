@@ -38,13 +38,8 @@ namespace alg
 		const uint32_t row() const { return NR; }
 		const uint32_t col() const { return NC; }
 
-		inline T& operator() (int row, int col) {
-			return this->data[row*NC + col];
-		}
-		
-		const inline T& operator() (int row, int col) const {
-			return this->data[row*NC + col];
-		}
+		inline T& operator() (int row, int col) { return this->data[row*NC + col]; }
+		const inline T& operator() (int row, int col) const { return this->data[row*NC + col]; }
 
 		void clear(const T & value) {
 			for(uint32_t i=0; i<NR*NC;i++){

@@ -42,11 +42,6 @@ namespace alg
 		int num_nodes;
 	};
 
-	struct Coord {
-		uint32_t x;
-		uint32_t y;
-	};
-
 	#define WALL 0xFFFF
 
 	static inline float __astar_estimate(int x1, int y1, int x2, int y2);
