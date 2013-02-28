@@ -34,7 +34,8 @@ int main(void)
 	}
 
 	printf("path:\n");
-	struct AStarResult * as = astar(grid, 0,0, N-1,N-1);
+	AStar astar(grid);
+	AStar::AStarResult * as = astar.run(0,0, N-1,N-1);
 
 	for(i=0;i<as->num_nodes;i++){
 		printf("(%d,%d)\t",as->path[i*2], as->path[i*2+1]);
