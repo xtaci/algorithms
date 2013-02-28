@@ -22,98 +22,119 @@
 #include "double_linked_list.h"
 #include "hash_multi.h"
 
-/**
- * definition of a hash table.
- */
-template<typename T>
-class HashTable {
-private:
+namespace alg
+{
 	/**
-	 * definiton of Key-Value pair.
+	 * definition of a hash table.
 	 */
-	struct HashKV {
-		uint32_t key;	// 32-bit key
-		T value;		// value
-		struct list_head node;	// KV is a list element.
-	};
+	template<typename T>
+	class HashTable {
+	private:
+		/**
+		 * definiton of Key-Value pair.
+		 */
+		struct HashKV {
+			uint32_t key;	// 32-bit key
+			T value;		// value
+			struct list_head node;	// KV is a list element.
+		};
 
-private:
-	uint32_t m_size;			// the size of the hash table.
-	struct list_head * m_slots;	// all of the slots, each slot is an linked-list
-	struct MultiHash * m_multi;	// the hash function parameter.
+	private:
+		uint32_t m_size;			// the size of the hash table.
+		struct list_head * m_slots;	// all of the slots, each slot is an linked-list
+		struct MultiHash * m_multi;	// the hash function parameter.
 
-public:
-	/**
-	 * create a hash table with max size .
-	 */
-	HashTable(uint32_t max) {
-		// init multiplication hash function
-		m_multi = multi_hash_init(max);
-		m_size = MULTI_HASH_TABLE_SIZE(m_multi);
-		m_slots = new list_head[m_size];
+	public:
+		/**
+		 * create a hash table with max size .
+		 */
+		HashTable(uint32_t max) {
+			// init multiplication hash function
+			m_multi = multi_hash_init(max);
+			m_size = MULTI_HASH_TABLE_SIZE(m_multi);
+			m_slots = new list_head[m_size];
 
-		for (uint32_t i=0; i<m_size; i++) {
-			INIT_LIST_HEAD(&m_slots[i]);
-		}
-	};
-
-	~HashTable() {
-		delete m_multi;
-
-		struct HashKV * kv, *nkv;
-		for (uint32_t i=0;i<m_size;i++) {
-			list_for_each_entry_safe(kv,nkv,&m_slots[i], node){
-				list_del(&kv->node);
-				delete kv;
+			for (uint32_t i=0; i<m_size; i++) {
+				INIT_LIST_HEAD(&m_slots[i]);
 			}
 		}
 
-		delete [] m_slots;
-	};
+		~HashTable() {
+			delete m_multi;
 
-	/**
-	 * operator []
- 	 */
-	T& operator[] (uint32_t key) {
-		// hash the key using a hash function.
-		uint32_t hash = multi_hash(m_multi, key);
-
-		//  we iterate through the list.
-		HashKV * kv;
-		list_for_each_entry(kv, &m_slots[hash], node){
-			if (kv->key == key) {	// ok, found in the list.
-				return kv->value;
+			struct HashKV * kv, *nkv;
+			for (uint32_t i=0;i<m_size;i++) {
+				list_for_each_entry_safe(kv,nkv,&m_slots[i], node){
+					list_del(&kv->node);
+					delete kv;
+				}
 			}
+
+			delete [] m_slots;
 		}
 
-		// reaching here means a new key is given,
-		// create a new HashKV struct for it.
-		kv = new HashKV;
-		kv->key = key;
-		list_add(&kv->node, &m_slots[hash]);
-		return kv->value;
-	};
+		/**
+		 * test if the hash table has the key
+		 */
+		bool key(uint32_t key)
+		{
+			// hash the key using a hash function.
+			uint32_t hash = multi_hash(m_multi, key);
 
-	// const version of operator []
-	const T& operator[] (uint32_t key) const {
-		// hash the key using a hash function.
-		uint32_t hash = multi_hash(m_multi, key);
-
-		//  we iterate through the list.
-		HashKV * kv;
-		list_for_each_entry(kv, &m_slots[hash], node){
-			if (kv->key == key) {	// ok, found in the list.
-				return kv->value;
+			//  we iterate through the list.
+			HashKV * kv;
+			list_for_each_entry(kv, &m_slots[hash], node){
+				if (kv->key == key) {	// ok, found in the list.
+					return true;
+				}
 			}
+			return false;
 		}
 
-		// reaching here means a new key is given,
-		// create a new HashKV struct for it.
-		kv = new HashKV;
-		kv->key = key;
-		list_add(&kv->node, &m_slots[hash]);
-		return kv->value;
+		/**
+		 * operator []
+		 */
+		T& operator[] (uint32_t key) {
+			// hash the key using a hash function.
+			uint32_t hash = multi_hash(m_multi, key);
+
+			//  we iterate through the list.
+			HashKV * kv;
+			list_for_each_entry(kv, &m_slots[hash], node){
+				if (kv->key == key) {	// ok, found in the list.
+					return kv->value;
+				}
+			}
+
+			// reaching here means a new key is given,
+			// create a new HashKV struct for it.
+			kv = new HashKV;
+			kv->key = key;
+			list_add(&kv->node, &m_slots[hash]);
+			return kv->value;
+		}
+
+		// const version of operator []
+		const T& operator[] (uint32_t key) const {
+			// hash the key using a hash function.
+			uint32_t hash = multi_hash(m_multi, key);
+
+			//  we iterate through the list.
+			HashKV * kv;
+			list_for_each_entry(kv, &m_slots[hash], node){
+				if (kv->key == key) {	// ok, found in the list.
+					return kv->value;
+				}
+			}
+
+			// reaching here means a new key is given,
+			// create a new HashKV struct for it.
+			kv = new HashKV;
+			kv->key = key;
+			list_add(&kv->node, &m_slots[hash]);
+			return kv->value;
+		}
 	};
-};
+}
 
 #endif //

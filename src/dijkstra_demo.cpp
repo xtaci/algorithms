@@ -6,16 +6,17 @@
 #include "directed_graph.h"
 #include "dijkstra.h"
 
+using namespace alg;
 /**
  * randomly generate a graph, for test purpose
  */
-struct Graph * directed_graph_rand(int nvertex) 
+DirectedGraph * randgraph(int nvertex) 
 {
-	struct Graph * g = directed_graph_create();
+	DirectedGraph * g = new DirectedGraph;
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
-		directed_graph_add_vertex(g, i);
+		g->add_vertex(i);
 	}
 
 	// random connect
@@ -25,10 +26,11 @@ struct Graph * directed_graph_rand(int nvertex)
 			int dice = rand()%5;
 			if (dice == 0) {  // chance 20%
 				int w = rand()%100;
-				directed_graph_add_edge(g, i, j, w);
+				g->add_edge(i, j, w);
 			}
 		}
 	}
+
 	
 	return g;
 }
@@ -38,12 +40,12 @@ int main(void)
 	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 50;
-	struct Graph * g = directed_graph_rand(NVERTEX);
-	directed_graph_print(g);
+	DirectedGraph * g = randgraph(NVERTEX);
+	g->print();
 
 	printf("finding Dijkstra shortest path starting from 0: \n");	
-	Dijkstra dijkstra(g, 0);
-	struct Adjacent * a;
+	Dijkstra dijkstra(*g, 0);
+	Graph::Adjacent * a;
 	HashTable<int32_t> & result = dijkstra.run();
 
 	list_for_each_entry(a, &g->a_head, a_node){
@@ -52,7 +54,7 @@ int main(void)
 		if (pre ==UNDEFINED) { printf("UNDEFINED\n"); }
 		else printf("%d\n", pre);
 	}
-	
-	graph_free(g);
+
+	delete g;	
 	exit(0);	
 }

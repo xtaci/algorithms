@@ -32,9 +32,9 @@ PROGRAMS =  m_based \
 			dos_tree_demo \
 			skip_list_demo \
 			lcs_demo	\
-			graph_demo \
 			prim_mst_demo \
 			directed_graph_demo \
+			undirected_graph_demo \
 			dijkstra_demo 	\
 			bellman_ford_demo \
 			graph_search_demo \
@@ -123,13 +123,13 @@ skip_list_demo: $(SRCDIR)/skip_list_demo.cpp $(DEPS)
 lcs_demo: $(SRCDIR)/lcs_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
-graph_demo: $(SRCDIR)/graph_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
 prim_mst_demo: $(SRCDIR)/prim_mst_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 directed_graph_demo: $(SRCDIR)/directed_graph_demo.cpp $(DEPS)
+	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
+
+undirected_graph_demo: $(SRCDIR)/undirected_graph_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 dijkstra_demo: $(SRCDIR)/dijkstra_demo.cpp $(DEPS)

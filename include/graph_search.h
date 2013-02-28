@@ -36,15 +36,15 @@
 
 namespace alg 
 {
-	static void breadth_first_search(const struct Graph * g, uint32_t source)
+	static void breadth_first_search(const Graph & g, uint32_t source)
 	{
-		struct Adjacent * root = graph_lookup(g, source);
-		HashTable<uint32_t> ht(g->num_vertex);		
+		Graph::Adjacent * root = g[source];
+		HashTable<uint32_t> ht(g.vertex_count());		
 
 		if (root==NULL) return;
 
 		// init
-		Queue<uint32_t> Q(g->num_vertex);
+		Queue<uint32_t> Q(g.vertex_count());
 		Q.enqueue(root->v.id);
 		ht[root->v.id] = MARK;
 		
@@ -52,10 +52,10 @@ namespace alg
 			uint32_t t = Q.front();
 			printf("%d->", t);
 			Q.dequeue();	
-			struct Vertex * v;
-			struct Adjacent * a = graph_lookup(g, t);
+			Graph::Vertex * v;
+			Graph::Adjacent * a = g[t];
 			list_for_each_entry(v, &a->v_head, v_node) {
-				if (ht[v->id]!=MARK) {
+				if (!ht.key(v->id) || ht[v->id]!=MARK) {
 					ht[v->id] = MARK;
 					Q.enqueue(v->id); 
 				}
@@ -65,15 +65,15 @@ namespace alg
 		printf("\n");
 	}
 
-	static void depth_first_search(const struct Graph *g, uint32_t source)
+	static void depth_first_search(const Graph & g, uint32_t source)
 	{
-		struct Adjacent * root = graph_lookup(g, source);
-		HashTable<uint32_t> ht(g->num_vertex);		
+		Graph::Adjacent * root = g[source];
+		HashTable<uint32_t> ht(g.vertex_count());		
 
 		if (root==NULL) return;
 
 		// init
-		Stack<uint32_t> S(g->num_vertex);
+		Stack<uint32_t> S(g.vertex_count());
 		S.push(root->v.id);
 		ht[root->v.id] = MARK;
 		
@@ -81,10 +81,10 @@ namespace alg
 			uint32_t t = S.top();	
 			printf("%d->", t);
 			S.pop();	
-			struct Vertex * v;
-			struct Adjacent * a = graph_lookup(g, t);
+			Graph::Vertex * v;
+			Graph::Adjacent * a = g[t];
 			list_for_each_entry(v, &a->v_head, v_node) {
-				if (ht[v->id] !=MARK) {
+				if (!ht.key(v->id) || ht[v->id] !=MARK) {
 					ht[v->id] = MARK;
 					S.push(v->id);
 				}

@@ -6,16 +6,17 @@
 #include "directed_graph.h"
 #include "bellman_ford.h"
 
+using namespace alg;
 /**
  * randomly generate a graph, for test purpose
  */
-struct Graph * directed_graph_rand(int nvertex) 
+DirectedGraph * randgraph(int nvertex) 
 {
-	struct Graph * g = directed_graph_create();
+	DirectedGraph * g = new DirectedGraph;
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
-		directed_graph_add_vertex(g, i);
+		g->add_vertex(i);
 	}
 
 	// random connect
@@ -25,45 +26,46 @@ struct Graph * directed_graph_rand(int nvertex)
 			int dice = rand()%5;
 			if (dice == 0) {  // chance 20%
 				int w = rand()%100;
-				directed_graph_add_edge(g, i, j, w);
+				g->add_edge(i, j, w);
 			}
 		}
 	}
 
+	
 	return g;
 }
 
-
 int main(void)
 {
-	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 50;
-	struct Graph * g = directed_graph_rand(NVERTEX);
-	directed_graph_print(g);
+	DirectedGraph * g = randgraph(NVERTEX);
 
 	printf("finding bellman-ford shortest path starting from 3: \n");	
-	struct BFResult * bfw = bellman_ford_run(g, graph_lookup(g,3));
-	
-	struct Adjacent * a;
+	BellmanFord bf(*g, 3);
+
+	g->print();
+	const HashTable<int32_t> & previous = bf.run();	
+	Graph::Adjacent * a;
 	list_for_each_entry(a, &g->a_head, a_node) {
 		printf("previous of %u is ", a->v.id);
-		if ((*bfw->previous)[a->v.id]==UNDEFINED) { printf("UNDEFINED\n"); }
-		else printf("%u\n", (*bfw->previous)[a->v.id]);
+		if (previous[a->v.id]==UNDEFINED) { printf("UNDEFINED\n"); }
+		else printf("%u\n", previous[a->v.id]);
 	}
-	printf("\nwe %s have negative weighted cycle.\n", bfw->has_neg_cycle?"DO":"DON'T");
-	bellman_ford_free(bfw);
+	printf("\nwe %s have negative weighted cycle.\n", bf.has_negative_cycle()?"DO":"DON'T");
 
 	printf("\nconstructing a negative cycle and run again\n");	
+
 	// construct a negative cycle;
-	directed_graph_add_edge(g,0,1, -1);
-	directed_graph_add_edge(g,1,2, -1);
-	directed_graph_add_edge(g,2,0, -1);
-	bfw = bellman_ford_run(g, graph_lookup(g,3));
+	g->add_edge(0,1, -1);
+	g->add_edge(1,2, -1);
+	g->add_edge(2,0, -1);
 
-	printf("\nwe %s have negative weighted cycle.\n", bfw->has_neg_cycle?"DO":"DON'T");
+	BellmanFord bf2(*g, 0);
+	bf2.run();
 
-	bellman_ford_free(bfw);
-	graph_free(g);
+	printf("\nwe %s have negative weighted cycle.\n", bf2.has_negative_cycle()?"DO":"DON'T");
+
+	delete g;
 	exit(0);	
 }

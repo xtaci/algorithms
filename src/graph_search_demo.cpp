@@ -5,16 +5,17 @@
 #include "graph_search.h"
 #include "directed_graph.h"
 
+using namespace alg;
 /**
  * randomly generate a graph, for test purpose
  */
-struct Graph * directed_graph_rand(int nvertex) 
+DirectedGraph * randgraph(int nvertex) 
 {
-	struct Graph * g = directed_graph_create();
+	DirectedGraph * g = new DirectedGraph;
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
-		directed_graph_add_vertex(g, i);
+		g->add_vertex(i);
 	}
 
 	// random connect
@@ -24,7 +25,7 @@ struct Graph * directed_graph_rand(int nvertex)
 			int dice = rand()%5;
 			if (dice == 0) {  // chance 20%
 				int w = rand()%100;
-				directed_graph_add_edge(g, i, j, w);
+				g->add_edge(i, j, w);
 			}
 		}
 	}
@@ -38,14 +39,14 @@ int main()
 	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 10;
-	struct Graph * g = directed_graph_rand(NVERTEX);
-	directed_graph_print(g);
+	Graph * g = randgraph(NVERTEX);
+	g->print();
 
 	printf("breadth first search: \n");
-	breadth_first_search(g, 0);
+	breadth_first_search(*g, 0);
 	printf("depth first search: \n");
-	depth_first_search(g, 0);
+	depth_first_search(*g, 0);
 
-	graph_free(g);
+	delete g;
 	exit(0);
 }

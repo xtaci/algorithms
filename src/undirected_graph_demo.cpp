@@ -1,10 +1,9 @@
 #include <stdio.h>
-#include <stdio.h>
 #include <stdlib.h> 
 #include <time.h>
 
 #include "undirected_graph.h"
-#include "prim_mst.h"
+
 using namespace alg;
 /**
  * randomly generate a graph, for test purpose
@@ -34,21 +33,32 @@ UndirectedGraph * randgraph(int nvertex)
 	return g;
 }
 
-int main(void)
+int main()
 {
-	using namespace alg;
 	srand(time(NULL));
-	int NVERTEX = 10;
+	int NVERTEX = 20;
 	UndirectedGraph * g = randgraph(NVERTEX);
 	g->print();
 
-	printf("Generating Prim's Graph: \n");	
-	Prim pg(g);
-	pg.print();
+	printf("Random Delete Vertex:\n");
+	// random delete vertex 
+	int i;
+	for(i=0;i<NVERTEX;i++) {
+		int n = rand()%NVERTEX;	
+		printf("delete: %d\n", n);
+		g->delete_vertex(n);
+	}
 
-	printf("Generating Minimal spanning tree: \n");	
-	Graph * mst = pg.run();
-	mst->print();
+	g->print();
+	printf("Delete All Edges: \n");
+	
+	for(i=0;i<NVERTEX;i++) {
+		int j;
+		for(j=i+1;j<NVERTEX;j++) {
+			g->delete_edge(i, j);
+		}
+	}
 
-	exit(0);	
+	g->print();
+	exit(0);
 }

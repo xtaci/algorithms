@@ -3,16 +3,17 @@
 #include <time.h>
 
 #include "edmonds_karp.h"
+using namespace alg;
 /**
  * randomly generate a graph, for test purpose
  */
-struct Graph * directed_graph_rand(int nvertex) 
+DirectedGraph * randgraph(int nvertex) 
 {
-	struct Graph * g = directed_graph_create();
+	DirectedGraph * g = new DirectedGraph;
 	int i;	
 	
 	for(i=0;i<nvertex;i++) {
-		directed_graph_add_vertex(g, i);
+		g->add_vertex(i);
 	}
 
 	// random connect
@@ -20,24 +21,24 @@ struct Graph * directed_graph_rand(int nvertex)
 		int j;
 		for(j=i+1;j<nvertex;j++) {
 			int dice = rand()%2;
-			if (dice == 0) {  
+			if (dice == 0) { 
 				int w = rand()%100;
-				directed_graph_add_edge(g, i, j, w);
+				g->add_edge(i, j, w);
 			}
 		}
 	}
+
 	
 	return g;
 }
-
 
 int main(void)
 {
 	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 6;
-	struct Graph * g = directed_graph_rand(NVERTEX);
-	directed_graph_print(g);
+	DirectedGraph * g = randgraph(NVERTEX);
+	g->print();
 
 	printf("finding Maximal Flow from 0 to 5: \n");	
 	struct EKResult * result =  edmonds_karp(g, 0, 5);
@@ -59,7 +60,7 @@ int main(void)
 	}
 
 	edmonds_karp_free(result);
-	graph_free(g);
+	delete g;
 
 	exit(0);
 }

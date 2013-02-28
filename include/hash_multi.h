@@ -23,48 +23,48 @@
 #include "generic.h"
 #include "prime.h"
 
-struct MultiHash {
-	uint64_t A;
-	uint32_t r; // prime, init your hash table with size -> r
-};
+namespace alg
+{
+	struct MultiHash {
+		uint64_t A;
+		uint32_t r; // prime, init your hash table with size -> r
+	};
 
 #define BITWIDTH 32
 
 #define MULTI_HASH_TABLE_SIZE(ht) 1<<(ht->r)
 
-/**
- * multi_hash.
- */
-static inline uint32_t 
-multi_hash(const struct MultiHash * ht, uint32_t key)
-{
-	uint32_t hash;
-	hash = ((ht->A * key)&0xFFFFFFFF)>>(BITWIDTH-ht->r); //mod 2^w equals logic bitmask ops
-	return hash;
-}
-
-/**
- * init a hash table with size specified.
- */
-static inline struct MultiHash * 
-multi_hash_init(uint32_t size)
-{
-	// find prime larger than log2(size)
-	uint32_t r = ceil(log2(size));
-	int i;
-	for (i = r; ;i++) {
-		if (is_prime(i)) {
-			r = i;
-			break;
-		}
+	/**
+	 * multi_hash.
+	 */
+	static inline uint32_t multi_hash(const struct MultiHash * ht, uint32_t key)
+	{
+		uint32_t hash;
+		hash = ((ht->A * key)&0xFFFFFFFF)>>(BITWIDTH-ht->r); //mod 2^w equals logic bitmask ops
+		return hash;
 	}
 
-	struct MultiHash * ht = (struct MultiHash *) malloc(sizeof(struct MultiHash));
-	uint32_t a = 1 << (BITWIDTH-r);
-	ht->A = a+1;
-	ht->r = r;
+	/**
+	 * init a hash table with size specified.
+	 */
+	static inline MultiHash * multi_hash_init(uint32_t size)
+	{
+		// find prime larger than log2(size)
+		uint32_t r = ceil(log2(size));
+		int i;
+		for (i = r; ;i++) {
+			if (is_prime(i)) {
+				r = i;
+				break;
+			}
+		}
 
-	return ht;
+		MultiHash * ht = new MultiHash;
+		uint32_t a = 1 << (BITWIDTH-r);
+		ht->A = a+1;
+		ht->r = r;
+
+		return ht;
+	}
 }
-
 #endif //

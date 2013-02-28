@@ -62,102 +62,75 @@
 namespace alg 
 {
 
-	/**
-	 * workspace for bellman ford algorithm.
-	 */
-	struct BFResult {
-		HashTable<int32_t> * dist; 	// hash table for distance.
-		HashTable<int32_t> * previous; 	// hash table for previous vertex
-		bool has_neg_cycle;		// negative weighted cycle mark.
-	};
-
-	/**
-	 * internal workspace init procedure. hash table and vertex_ids is initialized.
-	 */
-	static void 
-	__bellman_ford_init(const struct Graph * g, const struct Adjacent * source, struct BFResult * bfw)
+	class BellmanFord 
 	{
-		HashTable<int32_t> * dist = new HashTable<int32_t>(g->num_vertex);
-		HashTable<int32_t> * previous = new HashTable<int32_t>(g->num_vertex);
-		struct Adjacent * a;
+	private:		
+		HashTable<int32_t> dist; 	// hash table for distance.
+		HashTable<int32_t> previous; 	// hash table for previous vertex
+		bool has_neg_cycle;		// negative weighted cycle mark.
+		const Graph & g;	
+	public:
+		BellmanFord(const Graph & graph, uint32_t source):
+			dist(graph.vertex_count()),previous(graph.vertex_count()),g(graph)
+		{
+			// source vertex
+			dist[source] = 0;
 
-		// source vertex
-		(*dist)[source->v.id] = 0;
-
-		// other vertices
-		list_for_each_entry(a, &g->a_head, a_node){
-			if (source->v.id != a->v.id) {
-				(*dist)[a->v.id] = INT_MAX;
+			// other vertices
+			Graph::Adjacent * a;
+			list_for_each_entry(a, &g.a_head, a_node){
+				if (source != a->v.id) {
+					dist[a->v.id] = INT_MAX;
+				}
+				previous[a->v.id] = UNDEFINED;
 			}
-			(*previous)[a->v.id] = UNDEFINED;
+
+			has_neg_cycle = false;	// negative cycle mark set to 'false'.
 		}
 
-		bfw->dist = dist;
-		bfw->previous = previous;
-		bfw->has_neg_cycle = false;	// negative cycle mark set to 'false'.
-	}
+		/**
+ 		 * Bellman-Ford algorithm
+		 */
+		const HashTable<int32_t> & run()
+		{
+			//  relax edges repeatedly	
+			Graph::Adjacent * u;
+			for (uint32_t i=0;i<g.vertex_count()-1;i++) {    // loop |V| -1 times
+				list_for_each_entry(u, &g.a_head, a_node){ // for each eage(u,v) in edges
+					int32_t dist_u = dist[u->v.id];
 
-	/**
-	 * do the real work
-	 */
-	static struct BFResult * 
-	bellman_ford_run(const struct Graph * g, const struct Adjacent * source)
-	{
-		// init the workspace.
-		struct BFResult * bfw =
-			 (struct BFResult *)malloc(sizeof(struct BFResult));
+					Graph::Vertex * v;
+					list_for_each_entry(v, &u->v_head, v_node){ 
+						int32_t dist_v = dist[v->id];
 
-		__bellman_ford_init(g, source, bfw);
-
-		HashTable<int32_t> * dist = bfw->dist;
-		HashTable<int32_t> * previous = bfw->previous;
-
-		//  relax edges repeatedly	
-		for (uint32_t i=0;i<g->num_vertex-1;i++) {    // loop |V| -1 times
-			struct Adjacent * u;
-			list_for_each_entry(u, &g->a_head, a_node){ // for each eage(u,v) in edges
-				int32_t dist_u = (*dist)[u->v.id];
-
-				struct Vertex * v;
-				list_for_each_entry(v, &u->v_head, v_node){ 
-					int32_t dist_v = (*dist)[v->id];
-
-					if (dist_u + v->weight < dist_v) {
-						(*dist)[v->id] = dist_u + v->weight;
-						(*previous)[v->id] = u->v.id;
+						if (dist_u + v->weight < dist_v) {
+							dist[v->id] = dist_u + v->weight;
+							previous[v->id] = u->v.id;
+						}
 					}
 				}
 			}
+
+			//  check for negative-weight cycles
+			list_for_each_entry(u, &g.a_head, a_node) {
+				int32_t dist_u = dist[u->v.id];
+
+				Graph::Vertex * v;
+				list_for_each_entry(v, &u->v_head, v_node){
+					int32_t dist_v = dist[v->id];
+
+					if (dist_u + v->weight < dist_v) {
+						has_neg_cycle = true;	// graph contains a negative-weight cycle
+						return previous;
+					}
+				}	
+			}
+			
+			return previous;	
 		}
-
-		//  check for negative-weight cycles
-		struct Adjacent * u;
-		list_for_each_entry(u, &g->a_head, a_node) {
-			int32_t dist_u = (*dist)[u->v.id];
-
-			struct Vertex * v;
-			list_for_each_entry(v, &u->v_head, v_node){
-				int32_t dist_v = (*dist)[v->id];
-
-				if (dist_u + v->weight < dist_v) {
-					bfw->has_neg_cycle = true;	// graph contains a negative-weight cycle
-					goto neg_cycle_found;
-				}
-			}	
-		}
-
-	neg_cycle_found:
-
-		return bfw;
-	}
-
-	static void 
-	bellman_ford_free(struct BFResult * result)
-	{
-		delete result->previous;	
-		delete result->dist;	
-		free(result);
-	}
+		
+		inline bool has_negative_cycle() { return has_neg_cycle; }
+	};
 }
 
 #endif //

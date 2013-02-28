@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "hash_table.h"
-
+using namespace alg;
 int main()
 {
 	const int MAX_ELEMENTS = 50;

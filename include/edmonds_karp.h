@@ -58,29 +58,29 @@ namespace alg
 	 * a 2d flow array is returned.
 	 */
 	static struct EKResult *
-	edmonds_karp(struct Graph * g, uint32_t src, uint32_t sink)
+	edmonds_karp(Graph * g, uint32_t src, uint32_t sink)
 	{
 		struct EKResult * result = 
 			(struct EKResult*)malloc(sizeof(struct EKResult));
 
 		result->maxflow = 0;
-		result->pre = (int *)malloc(sizeof(int)*g->num_vertex);
-		result->visits = (bool *)malloc(sizeof(bool)*g->num_vertex);
+		result->pre = (int *)malloc(sizeof(int)*g->vertex_count());
+		result->visits = (bool *)malloc(sizeof(bool)*g->vertex_count());
 
 		// residual network 2d array allocating
-		result->residual = (int **)malloc(sizeof(int*)*g->num_vertex);
-		for (uint32_t i=0; i< g->num_vertex;i++) {
-			result->residual[i] = (int*)malloc(sizeof(int)*g->num_vertex);
-			memset(result->residual[i], 0, sizeof(int)*g->num_vertex);
+		result->residual = (int **)malloc(sizeof(int*)*g->vertex_count());
+		for (uint32_t i=0; i< g->vertex_count();i++) {
+			result->residual[i] = (int*)malloc(sizeof(int)*g->vertex_count());
+			memset(result->residual[i], 0, sizeof(int)*g->vertex_count());
 		}
 
-		result->map = new HashTable<uint32_t>(g->num_vertex);
-		result->rmap = new HashTable<uint32_t>(g->num_vertex);
-		result->num_vertex = g->num_vertex;
+		result->map = new HashTable<uint32_t>(g->vertex_count());
+		result->rmap = new HashTable<uint32_t>(g->vertex_count());
+		result->num_vertex = g->vertex_count();
 
 		// step 1.
 		// map vertex ids to ordinal row/col number, and reverse mapping.
-		struct Adjacent * a;
+		Graph::Adjacent * a;
 		int id=0;
 		list_for_each_entry(a, &g->a_head, a_node){
 			(*result->map)[a->v.id] = id;
@@ -90,7 +90,7 @@ namespace alg
 
 		// step 2. define residual network
 		list_for_each_entry(a, &g->a_head, a_node){
-			struct Vertex * v;
+			Graph::Vertex * v;
 			list_for_each_entry(v, &a->v_head, v_node){
 				int from = (*result->map)[a->v.id];
 				int to = (*result->map)[v->id];
