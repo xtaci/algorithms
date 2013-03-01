@@ -31,6 +31,7 @@
 #include "2darray.h"
 
 #define WALL 0xFFFF
+#define SQRT2	1.414213562373095
 
 namespace alg
 {
@@ -134,7 +135,7 @@ namespace alg
 						// if neighbour in the closed set	
 						if(m_closedset(nx,ny)) continue;	
 				
-						float tentative = g_score(cx,cy) + 1.41421f; //sqrt(2)
+						float tentative = g_score(cx,cy) + SQRT2;
 					
 						// if neighbour not in the openset or dist < g_score[neighbour]	
 						if (openset.find_value(nx*ncol+ny) < 0 || tentative < g_score(nx,ny)) {
