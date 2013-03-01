@@ -26,29 +26,46 @@ namespace alg
 	private:
 		uint32_t NR;		// num of rows
 		uint32_t NC;		// num of columns
-		T * data;			// the place where the array resides.
+		T * m_data;			// the place where the array resides.
 	public:
-		// construct an array of size [nrow,col]
+		/**
+		 * construct an array of size [nrow,col]
+		 */
 		Array2D(uint32_t nrow, uint32_t ncol) {
-			this->NR = nrow;
-			this->NC = ncol;	
-			this->data = new T[nrow*ncol];
+			NR = nrow;
+			NC = ncol;	
+			m_data = new T[nrow*ncol];
 		};
 
+		/**
+		 * return number of rows of this array
+		 */
 		const uint32_t row() const { return NR; }
+		/**
+		 * return number of columns of this array
+		 */
 		const uint32_t col() const { return NC; }
 
-		inline T& operator() (int row, int col) { return this->data[row*NC + col]; }
-		const inline T& operator() (int row, int col) const { return this->data[row*NC + col]; }
+		/**
+		 * return the value by the given (row, col);
+		 */
+		inline T& operator() (int row, int col) { return this->m_data[row*NC + col]; }
+		const inline T& operator() (int row, int col) const { return this->m_data[row*NC + col]; }
 
+		/**
+		 * clear the array by a given value
+		 */
 		void clear(const T & value) {
 			for(uint32_t i=0; i<NR*NC;i++){
-				data[i] = value;
+				m_data[i] = value;
 			}
 		}
-		
-		virtual ~Array2D() {
-			delete [] data;
+	
+		/**
+		 * destructor
+		 */	
+		~Array2D() {
+			delete [] m_data;
 		}
 	};
 }
