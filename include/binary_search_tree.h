@@ -23,76 +23,81 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-
-/**
- * binary search tree definiton.
- */
-typedef struct treeNode
+namespace alg
 {
-	int32_t data;	// data
-	struct treeNode *left;	// left child
-	struct treeNode *right;	// right child
-} treeNode;
+	template<typename KeyT, typename ValueT>
+	class BST
+	{
+	private:
+		/**
+		 * binary search tree definiton.
+		 */
+		struct treeNode
+		{
+			KeyT 	key;			// key
+			ValueT 	value;			// data
+			treeNode *left;	// left child
+			treeNode *right;	// right child
+		};
+	
+	private:
+		treeNode * m_root;
+	
+	public:
+		BST():m_root(NULL){};
 
-/**
- * search he minimal element in the binary search tree.
- */
-static inline treeNode * 
-bst_find_min(treeNode *node)
-{
-	if(node==NULL)
-	{
-		/* There is no element in the tree */
-		return NULL;
-	}
-	if(node->left) /* Go to the left sub tree to find the min element */
-		return bst_find_min(node->left);
-	else 
-		return node;
-}
+		ValueT operator[] (const KeyT & key)
+		{
+			if (m_root == NULL) return NULL;
+			treeNode * tmp = m_root;
+	
+			while(true) {
+				if (key == tmp->key) return tmp->value;
+				else if(key < tmp->key) {
+					if (tmp->left == NULL) return NULL;
+					tmp = tmp->left;
+				} else {
+					if (tmp->right == NULL) return NULL;
+					tmp = tmp->right;
+				}
+			}
+		}
 
-/**
- * search the maximal element in the binary search tree.
- */
-static inline treeNode * 
-bst_find_max(treeNode *node)
-{
-	if(node==NULL)
-	{
-		/* There is no element in the tree */
-		return NULL;
-	}
-	if(node->right) /* Go to the left sub tree to find the min element */
-		bst_find_max(node->right);
-	else 
-		return node;
-}
+		/**
+		 * insert a new data into the binary search tree.
+		 */
+		bool insert(const KeyT & key, const ValueT & value)
+		{
+			treeNode *n = new treeNode;
+			n->key = key;
+			n->value = value;
+			n->left = n->right = NULL;
 
-/**
- * insert a new data into the binary search tree.
- */
-static treeNode * 
-bst_insert(treeNode *node,int data)
-{
-	if (node==NULL)
-	{
-		treeNode *temp;
-		temp = (treeNode *)malloc(sizeof(treeNode));
-		temp -> data = data;
-		temp -> left = temp -> right = NULL;
-		return temp;
-	}
-
-	if(data >(node->data))
-	{
-		node->right = bst_insert(node->right,data);
-	}
-	else if(data < (node->data))
-	{
-		node->left = bst_insert(node->left,data);
-	}
-	/* Else there is nothing to do as the data is already in the tree. */
-	return node;
+			if (m_root == NULL){
+				m_root = n;
+				return true;
+			}
+			treeNode * tmp = m_root;
+				
+			while(true) {
+				if (key == tmp->key) {	// already inserted
+					delete n;
+					return false;
+				}
+				else if(key < tmp->key) {
+					if (tmp->left == NULL) {
+						tmp->left = n;
+						return true;
+					} else tmp = tmp->left;
+				} else {
+					if (tmp->right == NULL) {
+						tmp->right = n;
+						return true;
+					} else tmp = tmp->right;
+				}
+			}
+		}
+	};
 }
 
 #endif //
