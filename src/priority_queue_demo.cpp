@@ -23,8 +23,9 @@ int main(void)
 	printf("count# %d\n", pq.count());
 	while(!pq.is_empty()){
 		int pri;
-		int value = pq.dequeue(&pri);
+		int value = pq.top(&pri);
 		printf("dequeue: %d --> pri: %d\n", value, pri);
+		pq.dequeue();
 	}
 	printf("count# %d\n", pq.count());
 	exit(0);

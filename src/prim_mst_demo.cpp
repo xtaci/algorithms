@@ -43,7 +43,7 @@ int main(void)
 	g->print();
 
 	printf("Generating Prim's Graph: \n");	
-	Prim pg(g);
+	Prim pg(*g);
 	pg.print();
 
 	printf("Generating Minimal spanning tree: \n");	

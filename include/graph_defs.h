@@ -49,6 +49,8 @@ namespace alg
 				}
 			}
 
+			const Vertex & vertex() const { return v;}
+
 			void delete_vertex(uint32_t id)
 			{
 				Vertex * v, *vn;
@@ -129,6 +131,8 @@ namespace alg
 				printf("}\n");
 			}	
 		}
+
+		const list_head & list() const {return a_head; }
 	protected:
 		/**
 		 * test if an edge exists

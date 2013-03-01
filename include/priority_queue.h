@@ -98,24 +98,29 @@ namespace alg
 		}
 		
 		/**
-		 * dequeue the most priority element, i.e. the first element.
-		 * return 0 when the list is empty.
-		 * check is_empty() before dequeue().
+		 * return top element
+		 * check is_empty() before top().
 		 */
-		const T & dequeue(int * prio)
+		const T & top(int * prio) const
 		{
-			if (list_empty(&m_head)) return 0;
-
+			PQNode * n;
+			n = list_entry(m_head.next, PQNode, node);
+			*prio = n->priority;
+			return n->value;
+		}
+	
+		/**
+		 * dequeue the most priority element, i.e. the first element.
+		 */
+		void dequeue()
+		{
+			if (list_empty(&m_head)) return;
+		
 			PQNode * n;
 			n = list_entry(m_head.next, PQNode, node);
 			list_del(&n->node);
 			m_count--;
-
-			T ret = n->value;
-			*prio = n->priority;
 			delete n;
-
-			return ret;
 		}
 
 		/**

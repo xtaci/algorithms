@@ -48,8 +48,7 @@ namespace alg
 	/**
 	 * select a random number between i and j
 	 */
-	static inline int 
-	choose_pivot(int i,int j)
+	static inline int choose_pivot(int i,int j)
 	{
 		assert(j>=i);
 		typeof(i) length = j - i;

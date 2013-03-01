@@ -42,9 +42,9 @@ namespace alg
 		struct PrimAdjacent {
 			Heap<Graph::Vertex*> heap; 		// binary heap representation of weight->node
 								// the top of the heap is always the minimal element
-			Graph::Vertex * v;
+			const Graph::Vertex & v;
 
-			PrimAdjacent(Graph::Vertex * vertex, uint32_t num_neigh):heap(num_neigh),v(vertex) { }
+			PrimAdjacent(const Graph::Vertex & vertex, uint32_t num_neigh):heap(num_neigh),v(vertex) { }
 
 			struct list_head pa_node; 
 		};
@@ -59,26 +59,26 @@ namespace alg
 		/**
 		 * construct Prim's DataStrcuture by a given graph
 		 */	
-		Prim(Graph * g)
+		Prim(const Graph & g)
 		{
 			INIT_LIST_HEAD(&m_pg);
 
 			Graph::Adjacent * a;
-			list_for_each_entry(a, &g->a_head, a_node){
-				add_adjacent(a);
+			list_for_each_entry(a, &g.a_head, a_node){
+				add_adjacent(*a);
 			}
 		}
 	private:
 		/**
 		 * add an adjacent list to prim's graph
 		 */
-		void add_adjacent(Graph::Adjacent * a)
+		void add_adjacent(const Graph::Adjacent & a)
 		{
-			PrimAdjacent * pa = new PrimAdjacent(&a->v, a->num_neigh);
+			PrimAdjacent * pa = new PrimAdjacent(a.vertex(), a.num_neigh);
 			list_add_tail(&pa->pa_node, &m_pg);
 
 			Graph::Vertex * v;
-			list_for_each_entry(v, &a->v_head, v_node){
+			list_for_each_entry(v, &a.v_head, v_node){
 				pa->heap.insert(v->weight, v);  // weight->vertex
 			}
 		}
@@ -87,11 +87,11 @@ namespace alg
 		 * lookup up a given id
 		 * the related adjacent list is returned.
 		 */ 
-		PrimAdjacent * lookup(uint32_t id)
+		PrimAdjacent * lookup(uint32_t id) const
 		{
 			PrimAdjacent * pa;
 			list_for_each_entry(pa, &m_pg, pa_node){
-				if (pa->v->id == id) { return pa;}
+				if (pa->v.id == id) { return pa;}
 			}
 			
 			return NULL;
@@ -119,7 +119,7 @@ namespace alg
 			// choose the first vertex as the starting point
 			PrimAdjacent * pa;
 			list_for_each_entry(pa, &m_pg, pa_node){ break; }
-			Graph::Vertex * v = pa->v;
+			const Graph::Vertex * v = &pa->v;
 			mst->add_vertex(v->id);
 
 			// Prim's Algorithm
@@ -150,7 +150,7 @@ namespace alg
 				if (weight != INT_MAX) {
 					// congrats , new V & E
 					mst->add_vertex(best_to);
-					mst->add_edge(best_from->v->id, best_to, weight);
+					mst->add_edge(best_from->v.id, best_to, weight);
 					best_from->heap.delete_min();
 				} else break;
 			};
@@ -166,7 +166,7 @@ namespace alg
 			struct PrimAdjacent * pa;
 			printf("Prim Graph: \n");
 			list_for_each_entry(pa, &m_pg, pa_node){
-				printf("%d->{", pa->v->id);
+				printf("%d->{", pa->v.id);
 				for(uint32_t i=0;i<pa->heap.count();i++) {
 					Graph::Vertex * v = pa->heap[i];
 					printf("id:%d->w:%d \t", v->id, v->weight);

@@ -177,8 +177,8 @@ namespace alg
 				int prio1, prio2, newprio;
 				HuffNode * node1, *node2, *new_node;	
 
-				node1 = pq.dequeue(&prio1);
-				node2 = pq.dequeue(&prio2);
+				node1 = pq.top(&prio1); pq.dequeue();
+				node2 = pq.top(&prio2); pq.dequeue();
 
 				newprio = prio1+prio2;
 
@@ -189,9 +189,10 @@ namespace alg
 				pq.queue(new_node, newprio);
 			}
 
-			// set root & destory prio queue.
+			// set root
 			int prio;
-			m_root = pq.dequeue(&prio);
+			m_root = pq.top(&prio);
+			pq.dequeue();
 
 			// construct symbol lookup table
 			char code[256];
