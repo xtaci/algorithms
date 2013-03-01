@@ -198,7 +198,7 @@ static inline void list_splice_init(struct list_head *list,
  * @member:	the name of the list_struct within the struct.
  */
 #define list_entry(ptr, type, member) \
-	(reinterpret_cast<type *>((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
+	(reinterpret_cast<type *>((char *)(ptr)-(char *)(&(reinterpret_cast<type *>(1)->member))+1))
 
 /**
  * list_for_each	-	iterate over a list
