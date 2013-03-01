@@ -15,7 +15,6 @@ PROGRAMS =  m_based \
 			quick_sort_demo \
 			merge_sort_demo \
 			random_select_demo \
-			prime_sieve_eratosthenes \
 			hash_multi_demo \
 			hash_table_demo \
 			double_linked_list_demo \
@@ -73,9 +72,6 @@ merge_sort_demo: $(SRCDIR)/merge_sort_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 random_select_demo: $(SRCDIR)/random_select_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-prime_sieve_eratosthenes: $(SRCDIR)/prime_sieve_eratosthenes.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 hash_multi_demo: $(SRCDIR)/hash_multi_demo.cpp $(DEPS)
