@@ -17,6 +17,7 @@
 #include "universal_hash.h"
 #define TEST "this is a string"
 
+using namespace alg;
 int main(void)
 {
 	int MAXELEMENT = 1000;

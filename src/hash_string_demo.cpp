@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "hash_string.h"
-
+using namespace alg;
 int main(void)
 {
 	const char * strs[] = {

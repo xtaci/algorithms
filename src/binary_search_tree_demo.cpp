@@ -5,32 +5,30 @@
 #include "shuffle.h"
 #include "binary_search_tree.h"
 
+using namespace alg;
 int main()
 {
 	const int MAX_ELEMENTS = 10;
-	int list[MAX_ELEMENTS];
+	int key[MAX_ELEMENTS];
+	int value[MAX_ELEMENTS];
 
-	treeNode * root = NULL;
+	BST<int, int> t;
 
 	int i = 0;
 	srand(time(NULL));
 	// generate random numbers and fill them to the list
 	for(i = 0; i < MAX_ELEMENTS; i++ ){
-		list[i] = rand()%100; 
+		key[i] = rand()%100; 
+		value[i] = rand()%1000; 
 	}
 
-	shuffle(list, MAX_ELEMENTS);
-	printlist(list,MAX_ELEMENTS);
-
-	root = bst_insert(NULL, list[0]);
-	for(i = 1; i < MAX_ELEMENTS; i++ ){
-		bst_insert(root, list[i]);
+	for(i = 0; i < MAX_ELEMENTS; i++){
+		printf("insert %d->%d\n",key[i], value[i]);
+		t.insert(key[i], value[i]);
 	}
 
-	int min =  bst_find_min(root)->data;
-	int max =  bst_find_max(root)->data;
-	printf("min: %d, max %d\n", min,max);
-
+	for(i = 0; i < MAX_ELEMENTS; i++){
+		printf("getting %d->%d\n",key[i], t[key[i]]);
+	}
 	exit(0);
 }
-

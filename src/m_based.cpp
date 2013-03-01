@@ -6,6 +6,7 @@
 #include "imath.h"
 #include "prime.h"
 
+using namespace alg;
 int main()
 {
 	uint32_t k[KLEN];

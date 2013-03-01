@@ -16,23 +16,26 @@
 #ifndef __INSERTION_SORT_H__
 #define __INSERTION_SORT_H__
 
-/**
- * insertion sort an array
- */
-static void 
-insertion_sort(int *array , int number_of_elements)
+namespace alg
 {
-	int iter,jter;
-	for(iter=1;iter<number_of_elements;iter++)
+	/**
+	 * insertion sort an array
+	 */
+	template<typename T>
+	static void insertion_sort(T *array , int number_of_elements)
 	{
-		int current_element = array[iter];
-		jter = iter-1;
-		while(jter>=0 && array[jter] > current_element)
+		int iter,jter;
+		for(iter=1;iter<number_of_elements;iter++)
 		{
-			array[jter+1] = array[jter];
-			jter--;
+			T current_element = array[iter];
+			jter = iter-1;
+			while(jter>=0 && array[jter] > current_element)
+			{
+				array[jter+1] = array[jter];
+				jter--;
+			}
+			array[jter+1] = current_element;
 		}
-		array[jter+1] = current_element;
 	}
 }
 

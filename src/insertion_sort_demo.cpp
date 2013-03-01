@@ -5,6 +5,8 @@
 #include "generic.h"
 #include "insertion_sort.h"
 
+using namespace alg;
+
 int main()
 {
 	const int MAX_ELEMENTS = 10;
@@ -21,7 +23,7 @@ int main()
 	printlist(list,MAX_ELEMENTS);
 
 	// sort the list using insertion sort
-	insertion_sort(&list[0],MAX_ELEMENTS);  
+	insertion_sort<int>(&list[0],MAX_ELEMENTS);  
 
 	// print the result
 	printf("The list after sorting using insertion sort algorithm:\n");
