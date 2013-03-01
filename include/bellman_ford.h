@@ -78,7 +78,7 @@ namespace alg
 
 			// other vertices
 			Graph::Adjacent * a;
-			list_for_each_entry(a, &g.a_head, a_node){
+			list_for_each_entry(a, &g.list(), a_node){
 				if (source != a->v.id) {
 					dist[a->v.id] = INT_MAX;
 				}
@@ -96,7 +96,7 @@ namespace alg
 			//  relax edges repeatedly	
 			Graph::Adjacent * u;
 			for (uint32_t i=0;i<g.vertex_count()-1;i++) {    // loop |V| -1 times
-				list_for_each_entry(u, &g.a_head, a_node){ // for each eage(u,v) in edges
+				list_for_each_entry(u, &g.list(), a_node){ // for each eage(u,v) in edges
 					int32_t dist_u = dist[u->v.id];
 
 					Graph::Vertex * v;
@@ -112,7 +112,7 @@ namespace alg
 			}
 
 			//  check for negative-weight cycles
-			list_for_each_entry(u, &g.a_head, a_node) {
+			list_for_each_entry(u, &g.list(), a_node) {
 				int32_t dist_u = dist[u->v.id];
 
 				Graph::Vertex * v;

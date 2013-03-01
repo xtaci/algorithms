@@ -64,7 +64,7 @@ namespace alg
 			INIT_LIST_HEAD(&m_pg);
 
 			Graph::Adjacent * a;
-			list_for_each_entry(a, &g.a_head, a_node){
+			list_for_each_entry(a, &g.list(), a_node){
 				add_adjacent(*a);
 			}
 		}
@@ -130,7 +130,7 @@ namespace alg
 
 				// for each Vnew, find a new vertex in V that has minimal weight.
 				Graph::Adjacent * a; 
-				list_for_each_entry(a, &mst->a_head, a_node){
+				list_for_each_entry(a, &mst->list(), a_node){
 					pa = lookup(a->v.id);
 					while (!pa->heap.is_empty()) { 	// find one neighbour
 						v = pa->heap.min_value(); 

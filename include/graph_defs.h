@@ -82,8 +82,8 @@ namespace alg
 	protected:
 		uint32_t num_vertex;
 		uint32_t num_edges;
-	public:
 		struct list_head a_head; // list header
+	public:
 		Graph()
 		{
 			num_vertex = 0;

@@ -82,14 +82,14 @@ namespace alg
 		// map vertex ids to ordinal row/col number, and reverse mapping.
 		Graph::Adjacent * a;
 		int id=0;
-		list_for_each_entry(a, &g->a_head, a_node){
+		list_for_each_entry(a, &g->list(), a_node){
 			(*result->map)[a->v.id] = id;
 			(*result->rmap)[id] = a->v.id;
 			id++;
 		}
 
 		// step 2. define residual network
-		list_for_each_entry(a, &g->a_head, a_node){
+		list_for_each_entry(a, &g->list(), a_node){
 			Graph::Vertex * v;
 			list_for_each_entry(v, &a->v_head, v_node){
 				int from = (*result->map)[a->v.id];

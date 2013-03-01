@@ -14,8 +14,7 @@ int main(void)
 			"and finally this is the fifth string"
 			};
 
-	int i;
-	for (i=0;i<sizeof(strs)/sizeof(char*);i++) {
+	for (uint32_t i=0;i<sizeof(strs)/sizeof(char*);i++) {
 		printf("hash string: %s --> %u\n", strs[i], hash_string(strs[i], strlen(strs[i])));
 	}
 	exit(0);

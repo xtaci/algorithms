@@ -48,7 +48,7 @@ int main(void)
 	Graph::Adjacent * a;
 	HashTable<int32_t> & result = dijkstra.run();
 
-	list_for_each_entry(a, &g->a_head, a_node){
+	list_for_each_entry(a, &g->list(), a_node){
 		printf("previous of %u is ", a->v.id);
 		int32_t pre = result[a->v.id];
 		if (pre ==UNDEFINED) { printf("UNDEFINED\n"); }

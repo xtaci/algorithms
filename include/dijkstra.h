@@ -75,7 +75,7 @@ namespace alg
 
 			// other vertices
 			Graph::Adjacent * a;
-			list_for_each_entry(a, &g.a_head, a_node){
+			list_for_each_entry(a, &g.list(), a_node){
 				if (a->v.id != source->v.id) {
 					Q->insert(INT_MAX, a->v.id);
 					// set inital distance to INT_MAX

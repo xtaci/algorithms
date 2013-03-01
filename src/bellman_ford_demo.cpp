@@ -47,7 +47,7 @@ int main(void)
 	g->print();
 	const HashTable<int32_t> & previous = bf.run();	
 	Graph::Adjacent * a;
-	list_for_each_entry(a, &g->a_head, a_node) {
+	list_for_each_entry(a, &g->list(), a_node) {
 		printf("previous of %u is ", a->v.id);
 		if (previous[a->v.id]==UNDEFINED) { printf("UNDEFINED\n"); }
 		else printf("%u\n", previous[a->v.id]);
