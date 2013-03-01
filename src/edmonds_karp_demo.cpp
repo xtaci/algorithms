@@ -41,25 +41,25 @@ int main(void)
 	g->print();
 
 	printf("finding Maximal Flow from 0 to 5: \n");	
-	struct EKResult * result =  edmonds_karp(g, 0, 5);
+	EdmondsKarp ek(*g);
+	uint32_t maxflow = ek.run(0,5);
 
-	printf("Max Flow is %d\n", result->maxflow);
+	printf("Max Flow is %d\n", maxflow);
 	printf("the residual network\n");
 	printf("\t");
-	for(uint32_t i=0;i<result->num_vertex;i++) {
-		printf("%d\t", (*result->rmap)[i]);
+	for(uint32_t i=0;i<g->vertex_count();i++) {
+		printf("%d\t", ek.rmap()[i]);
 	}
 	printf("\n");
 
-	for(uint32_t i=0;i<result->num_vertex;i++) {
-		printf("%d\t",(*result->rmap)[i]);
-		for(uint32_t j=0;j<result->num_vertex;j++) {
-			printf("%d\t", result->residual[i][j]);
+	for(uint32_t i=0;i<g->vertex_count();i++) {
+		printf("%d\t",ek.rmap()[i]);
+		for(uint32_t j=0;j<g->vertex_count();j++) {
+			printf("%d\t", ek.residual()(i,j));
 		}
 		printf("\n");
 	}
 
-	edmonds_karp_free(result);
 	delete g;
 
 	exit(0);

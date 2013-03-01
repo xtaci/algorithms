@@ -36,153 +36,128 @@
 namespace alg 
 {
 	/**
-	 * maximal flow result structure
+	 * Edmonds Karp maximal flow class 
 	 */
-	struct EKResult {
-		uint32_t maxflow;	// max flow from src.
-		int ** residual;	// residual network , 2d array
-		int * pre; 			// pre node of current node 
-		bool * visits; 		// mark whether current node is visited
-
-		HashTable<uint32_t> * map;		// vertex id to ordinary row/col number mapping
-		HashTable<uint32_t> * rmap;	// reverse mapping of map.
-		uint32_t num_vertex;
-	};
-
-	// return the ordinary number of a vertex id
-	#define MAP(map, id) hash_table_get(map, id)
-
-	static bool __ek_find_path(struct EKResult * result, uint32_t _src, uint32_t _sink);
-	/**
-	 * edmonds karp algorithm for maximal flow 
-	 * a 2d flow array is returned.
-	 */
-	static struct EKResult *
-	edmonds_karp(Graph * g, uint32_t src, uint32_t sink)
+	class EdmondsKarp
 	{
-		struct EKResult * result = 
-			(struct EKResult*)malloc(sizeof(struct EKResult));
+	private:
+		const Graph & g;
+		Array2D<int> m_residual;	// residual network , 2d array
+		HashTable<int> m_pre; 				// pre node of current node 
+		bool * m_visits; 			// mark whether current node is visited
 
-		result->maxflow = 0;
-		result->pre = (int *)malloc(sizeof(int)*g->vertex_count());
-		result->visits = (bool *)malloc(sizeof(bool)*g->vertex_count());
+		HashTable<uint32_t> m_map;		// vertex id to ordinary row/col number mapping
+		HashTable<uint32_t> m_rmap;	// reverse mapping of map.
 
-		// residual network 2d array allocating
-		result->residual = (int **)malloc(sizeof(int*)*g->vertex_count());
-		for (uint32_t i=0; i< g->vertex_count();i++) {
-			result->residual[i] = (int*)malloc(sizeof(int)*g->vertex_count());
-			memset(result->residual[i], 0, sizeof(int)*g->vertex_count());
-		}
-
-		result->map = new HashTable<uint32_t>(g->vertex_count());
-		result->rmap = new HashTable<uint32_t>(g->vertex_count());
-		result->num_vertex = g->vertex_count();
-
-		// step 1.
-		// map vertex ids to ordinal row/col number, and reverse mapping.
-		Graph::Adjacent * a;
-		int id=0;
-		list_for_each_entry(a, &g->list(), a_node){
-			(*result->map)[a->v.id] = id;
-			(*result->rmap)[id] = a->v.id;
-			id++;
-		}
-
-		// step 2. define residual network
-		list_for_each_entry(a, &g->list(), a_node){
-			Graph::Vertex * v;
-			list_for_each_entry(v, &a->v_head, v_node){
-				int from = (*result->map)[a->v.id];
-				int to = (*result->map)[v->id];
-				result->residual[from][to] = v->weight;
+	public:
+		EdmondsKarp(const Graph & graph): 
+			g(graph),
+			m_residual(g.vertex_count(), g.vertex_count()), 
+			m_pre(g.vertex_count()),
+			m_map(g.vertex_count()), m_rmap(g.vertex_count())
+		{
+			m_visits = new bool[g.vertex_count()];
+			// map vertex ids to ordinal row/col number, and reverse mapping.
+			// for residual network, using sequential order
+			Graph::Adjacent * a;
+			int id=0;
+			list_for_each_entry(a, &g.list(), a_node){
+				m_map[a->v.id] = id;
+				m_rmap[id] = a->v.id;
+				id++;
 			}
-		}
+			
+			// init residual network
+			m_residual.clear(0);
 
-		// step 3. find augument path repeatedly.
-		int _src = (*result->map)[src];
-		int _sink = (*result->map)[sink];
-		int * pre = result->pre;
-		int ** residual = result->residual;
-		while(__ek_find_path(result, _src, _sink)) {
-			int delta = INT_MAX;	
-
-			// find minimal delta
-			int i;	
-			for (i=_sink;i!=_src;i= pre[i]) {
-				delta = Min(delta, residual[pre[i]][i]);
-			}
-
-			// for each edge, change residual network
-			for (i=_sink; i!=_src;i= pre[i]) {
-				residual[pre[i]][i] -= delta;
-				residual[i][pre[i]] += delta;
-			}
-
-			result->maxflow += delta;
-		}
-
-		return result;
-	}
-
-	/**
-	 * free the result
-	 */ 
-	static void edmonds_karp_free(struct EKResult * result)
-	{
-		for (uint32_t i=0; i< result->num_vertex;i++) {
-			free(result->residual[i]);
-		}
-
-		delete result->residual;
-		delete result->pre;
-		delete result->visits;
-
-		delete result->map;
-		delete result->rmap;
-		
-		free(result);
-	}
-
-	/**
-	 * find a augument path. using breadth first search
-	 */
-	static bool 
-	__ek_find_path(struct EKResult * result, uint32_t _src, uint32_t _sink)
-	{
-		Queue<int32_t> Q(result->num_vertex); 
-
-		// clear visit flag & path
-		int * pre = result->pre;
-		bool * visits = result->visits;
-		int ** residual = result->residual;
-
-		memset(pre, -1, sizeof(int)*result->num_vertex);
-		memset(visits, false, sizeof(bool)*result->num_vertex);
-
-		// src setting
-		pre[_src] = _src;	
-		visits[_src] = true;
-		Q.enqueue(_src);
-
-		while(!Q.is_empty()) {
-			int p = Q.front();
-			Q.dequeue();
-
-			for (uint32_t i=0;i< result->num_vertex;i++) {
-				if (residual[p][i] >0 && !visits[i]) {
-					pre[i] = p;
-					visits[i] = true;
-
-					if (i==_sink) {		// nice, we've got to sink point.
-						return true;
-					}
-					Q.enqueue(i);
+			list_for_each_entry(a, &g.list(), a_node){
+				Graph::Vertex * v;
+				list_for_each_entry(v, &a->v_head, v_node){
+					int from = m_map[a->v.id];
+					int to = m_map[v->id];
+					m_residual(from, to) = v->weight;
 				}
 			}
 		}
 
-		return false;
-	}
+		~EdmondsKarp()
+		{
+			delete [] m_visits;
+		}
+
+		/**
+		 * edmonds karp algorithm for maximal flow 
+		 * returns the maxflow from src to sink
+		 */
+		uint32_t run(uint32_t src, uint32_t sink)
+		{
+			// find augument path repeatedly.
+			int _src = m_map[src];
+			int _sink = m_map[sink];
+
+			uint32_t maxflow = 0;
+
+			while(find_path(_src, _sink)) {
+				int delta = INT_MAX;	
+
+				// find minimal delta
+				int i;	
+				for (i=_sink;i!=_src;i= m_pre[i]) {
+					delta = Min(delta, m_residual(m_pre[i],i));
+				}
+
+				// for each edge, change residual network
+				for (i=_sink; i!=_src;i= m_pre[i]) {
+					m_residual(m_pre[i],i) -= delta;
+					m_residual(i,m_pre[i]) += delta;
+				}
+
+				maxflow += delta;
+			}
+
+			return maxflow;
+		}
+
+		const Array2D<int> & residual() const { return m_residual;}
+		const HashTable<uint32_t> & map() const { return m_map;}
+		const HashTable<uint32_t> & rmap() const { return m_rmap;}
+
+	private:
+		/**
+		 * find a augument path. using breadth first search
+		 */
+		bool find_path(uint32_t _src, uint32_t _sink)
+		{
+			Queue<int32_t> Q(g.vertex_count()); 
+
+			// clear visit flag & path
+			memset(m_visits, false, sizeof(bool) * g.vertex_count());
+
+			// src setting
+			m_pre[_src] = _src;	
+			m_visits[_src] = true;
+			Q.enqueue(_src);
+
+			while(!Q.is_empty()) {
+				int p = Q.front();
+				Q.dequeue();
+
+				for (uint32_t i=0;i< g.vertex_count();i++) {
+					if (m_residual(p,i) >0 && !m_visits[i]) {
+						m_pre[i] = p;
+						m_visits[i] = true;
+
+						if (i==_sink) {		// nice, we've got to sink point.
+							return true;
+						}
+						Q.enqueue(i);
+					}
+				}
+			}
+
+			return false;
+		}
+	};
 }
 
 #endif //
