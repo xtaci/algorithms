@@ -10,7 +10,7 @@
 
 #include "generic.h"
 #include "shuffle.h"
-
+using namespace alg;
 int main()
 {
 	const int MAX_ELEMENTS = 10;
@@ -26,7 +26,7 @@ int main()
 	printlist(list,MAX_ELEMENTS);
 
 	// shuffle the list
-	shuffle(list,MAX_ELEMENTS);
+	shuffle<int>(list,MAX_ELEMENTS);
 
 	// print the result
 	printf("The list after using Yates' shuffle algorithm:\n");

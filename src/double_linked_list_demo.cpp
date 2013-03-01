@@ -4,6 +4,8 @@
 #include "double_linked_list.h"
 #include "sol.h"
 
+using namespace alg;
+
 struct DemoNode{
 	int key;
 	struct list_head list;
