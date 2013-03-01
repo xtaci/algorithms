@@ -32,57 +32,14 @@ Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=18555
 
 #include "rbtree.h"
 
-static int compare_int(uintptr_t left, uintptr_t right);
-static void print_tree(rbtree t);
-static void print_tree_helper(rbtree_node n, int indent);
-
-int compare_int(uintptr_t leftp, uintptr_t rightp) {
-    int left = (int)leftp;
-    int right = (int)rightp;
-    if (left < right) 
-        return -1;
-    else if (left > right)
-        return 1;
-    else {
-        assert (left == right);
-        return 0;
-    }
-}
+using namespace alg;
 
 #define INDENT_STEP  4
 
-void print_tree_helper(rbtree_node n, int indent);
-
-void print_tree(rbtree t) {
-    print_tree_helper(t->root, 0);
-    puts("");
-}
-
-void print_tree_helper(rbtree_node n, int indent) {
-    int i;
-    if (n == NULL) {
-        fputs("<empty tree>", stdout);
-        return;
-    }
-    if (n->right != NULL) {
-        print_tree_helper(n->right, indent + INDENT_STEP);
-    }
-    for(i=0; i<indent; i++)
-        fputs(" ", stdout);
-    if (n->color == BLACK)
-        printf("%d\n", (int)n->key);
-    else
-        printf("<%d>\n", (int)n->key);
-    if (n->left != NULL) {
-        print_tree_helper(n->left, indent + INDENT_STEP);
-    }
-}
-
-
 int main() {
     int i;
-    rbtree t = rbtree_create();
-    print_tree(t);
+	RBTree<int,int> t;
+	t.print();
 
 	srand(time(NULL));
 
@@ -92,22 +49,22 @@ int main() {
         int key  = rand() % 100;
         int value = rand() % 10000;
         printf("[%d, %d]\t", key, value);
-        rbtree_insert(t, (uintptr_t)key, (uintptr_t)value, compare_int);
-        assert(rbtree_lookup(t, (uintptr_t)key, compare_int) == (uintptr_t)value);
+		t.insert(key, value);
+        assert(t.lookup(key) == value);
     }
 
 	printf("\n");
-    print_tree(t);
+	t.print();
 
     printf("\nDeleting: \t");
     for(i=0; i<MAXELEMENT; i++) {
         int key = rand() % 100;
         printf("[%d]\t", key);
-        rbtree_delete(t, (uintptr_t)key, compare_int);
+        t.delete_key(key);
     }
 
 	printf("\n");
-    print_tree(t);
+	t.print();
     return 0;
 }
 

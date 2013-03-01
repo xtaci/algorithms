@@ -5,9 +5,28 @@
 #include "generic.h"
 #include "word_seg.h"
 
+using namespace alg;
+
+/**
+ * the state transition probability matrix. 
+ * the 2-d array is in the format of :
+ * SINGLE	-> S B M E
+ * ... 		-> S B M E
+ */
+const float WordSeg::TP[4][4] = {
+		{0.5f, 0.5f, 0.0f, 0.0f}, // S
+		{0.0f, 0.0f, 0.5f, 0.5f}, // B
+		{0.0f, 0.0f, 0.5f, 0.5f}, // M
+		{0.5f, 0.5f, 0.0f, 0.0f}  // E
+};
+
+/**
+ * the start probability of state
+ */
+const float WordSeg::SP[4] = {0.5f, 0.5f, 0.0f, 0.0f};
+
 int main(void)
 {
-	using namespace alg;
 	WordSeg ws("./src/dict.txt.sogou");
 	
 	char buf[1024];
