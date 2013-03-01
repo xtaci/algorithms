@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <prime.h>
 
+using namespace alg;
 int main()
 {
 	int i;
