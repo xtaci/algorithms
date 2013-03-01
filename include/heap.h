@@ -59,22 +59,14 @@ namespace alg
 			delete [] m_kvs;
 		};
 
-		inline int min_key() {
-			return m_kvs[1].key;
-		};
+		inline int min_key() const { return m_kvs[1].key; };
 
-		inline const T & min_value() {
-			return m_kvs[1].value;
-		};
+		inline const T & min_value() const { return m_kvs[1].value; };
 
 		// for loop through the kvs
-		inline uint32_t count() {
-			return m_size;
-		};
+		inline uint32_t count() const { return m_size; };
 
-		inline const T & operator[] (uint32_t idx) {
-			return m_kvs[idx+1].value;
-		};
+		inline const T & operator[] (uint32_t idx) const { return m_kvs[idx+1].value; };
 
 		/**
 		 * insert a 'key'->'value' pair into the heap.
@@ -102,9 +94,7 @@ namespace alg
 		/**
 		 * emptiness test
 		 */
-		inline bool is_empty() {
-			return (m_size==0)?true:false;
-		}
+		inline bool is_empty() const { return (m_size==0)?true:false; }
 
 		/**
 		 * delete the min element --> heap top.
@@ -176,7 +166,7 @@ namespace alg
 		/**
 		 * return the index where value resides
 		 */
-		inline int find_value(const T & value)
+		inline int find_value(const T & value) const
 		{
 			for (uint32_t i=1;i<=m_size;i++) {
 				if (m_kvs[i].value == value) return i;

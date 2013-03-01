@@ -72,14 +72,14 @@ public:
 	/**
 	 * return the front element.
 	 */
-	inline const T& front() {
+	inline const T& front() const {
 		return m_elements[m_front];	
 	};
 
 	/**
 	 * test weather the queue is empty
 	 */
-	bool is_empty() {
+	bool is_empty() const {
 		if (m_size ==0) return true;
 		return false;
 	};
@@ -111,9 +111,7 @@ public:
 	/**
 	 * return the queue count.
 	 */
-	inline int count() {
-		return m_size;
-	};
+	inline int count() const { return m_size; };
 };
 
 #endif //

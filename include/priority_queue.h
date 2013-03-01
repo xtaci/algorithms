@@ -102,7 +102,7 @@ namespace alg
 		 * return 0 when the list is empty.
 		 * check is_empty() before dequeue().
 		 */
-		inline T dequeue(int * prio)
+		const T & dequeue(int * prio)
 		{
 			if (list_empty(&m_head)) return 0;
 
@@ -121,8 +121,7 @@ namespace alg
 		/**
 		 * test whether the priority queue is empty
 		 */
-		inline bool is_empty()
-		{
+		inline bool is_empty() const {
 			if (list_empty(&m_head)) return true;
 			return false;
 		}
@@ -130,7 +129,7 @@ namespace alg
 		/**
 		 * get the exact number of data
 		 */
-		inline uint32_t count() { return m_count; }
+		inline uint32_t count() const { return m_count; }
 	};
 }
 

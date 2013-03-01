@@ -158,7 +158,7 @@ list_move_tail(struct list_head *list, struct list_head *head)
  * @head: the list to test.
  */
 static inline int 
-list_empty(struct list_head *head)
+list_empty(const struct list_head *head)
 {
 	return head->next == head;
 }

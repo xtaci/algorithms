@@ -49,7 +49,7 @@ public:
 	/**
 	 * test whether the stack is empty
 	 */
-	inline bool is_empty() {
+	inline bool is_empty() const {
 		return m_size==0?true:false;
 	};
 
@@ -80,13 +80,9 @@ public:
 	/**
 	 * return the stack size count.
 	 */
-	inline uint32_t count() {
-		return m_size;
-	};
+	inline uint32_t count() const { return m_size; };
 
-	inline const T& operator[] (int idx) {
-		return m_elements[m_size-1-idx];	
-	};
+	inline const T& operator[] (int idx) const { return m_elements[m_size-1-idx]; };
 };
 
 #endif //
