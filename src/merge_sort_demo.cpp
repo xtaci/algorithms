@@ -5,6 +5,8 @@
 #include "generic.h"
 #include "merge_sort.h"
 
+using namespace alg;
+
 int main()
 {
 	const int MAX_ELEMENTS = 20;
@@ -20,7 +22,7 @@ int main()
 	printlist(list,MAX_ELEMENTS);
 
 	// sort the list using quicksort
-	merge_sort(list,0,MAX_ELEMENTS-1);
+	merge_sort<int>(list,0,MAX_ELEMENTS-1);
 
 	// print the result
 	printf("The list after sorting using merge sort algorithm:\n");
