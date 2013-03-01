@@ -7,6 +7,7 @@
 
 int main()
 {
+	using namespace alg;
 	const int MAX_ELEMENTS = 10;
 	uint32_t list[MAX_ELEMENTS];
 

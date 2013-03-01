@@ -2,18 +2,19 @@
 #include <stdlib.h>
 #include "bitset.h"
 
+using namespace alg;
 int main(void)
 {
 	int MAXELEMENT = 100;	
 
-	struct BitSet * bs = bitset_create(MAXELEMENT);	
+	BitSet bs(MAXELEMENT);	
 
 	int i;
 	printf("\nsetting bits: \n");
 	for (i=0;i < MAXELEMENT;i++) {
 		int v = rand()%2;
 		if (v==0) {
-			bitset_set(bs, i);
+			bs.set(i);
 			printf("1");
 		}
 		else printf("0");
@@ -21,13 +22,13 @@ int main(void)
 
 	printf("\ntesting bits: \n");
 	for (i=0;i< MAXELEMENT;i++) {
-		printf("%d", bitset_test(bs,i)?1:0);
+		printf("%d", bs.test(i)?1:0);
 	}
 	printf("\nunsetting bits: \n");
 	for (i=0;i< MAXELEMENT;i++) {
 		int v = rand()%5;
 		if (v==0) {
-			bitset_unset(bs, i);
+			bs.unset(i);
 			printf("0");
 		}
 		else printf("1");
@@ -35,11 +36,9 @@ int main(void)
 	
 	printf("\ntesting bits: \n");
 	for (i=0;i< MAXELEMENT;i++) {
-		printf("%d", bitset_test(bs,i)?1:0);
+		printf("%d", bs.test(i)?1:0);
 	}
 	printf("\n");
-
-	bitset_destroy(bs);
 
 	exit(0);
 }

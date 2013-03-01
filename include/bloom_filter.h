@@ -39,7 +39,7 @@ namespace alg
 	private:
 		uint32_t m_bits;	// num of bits
 		uint32_t m_probset;	// total elements
-		struct BitSet * m_bitset;	// the bit set structure.
+		BitSet m_bitset;	// the bit set structure.
 		struct UHash m_hash[K];	// universal hash parameters
 	public:
 		/**
@@ -77,12 +77,11 @@ namespace alg
 		 * m--> bit set size
 		 * n--> problem set size
 		*/
-		BloomFilter(uint32_t m, uint32_t n)
+		BloomFilter(uint32_t m, uint32_t n):m_bitset(m)
 		{
 			assert(m>n);
 			m_bits=m;
 			m_probset=n;
-			m_bitset = bitset_create(m);
 
 			for(uint32_t i=0;i<K;i++) {
 				uhash_init(&m_hash[i], m_bits);
@@ -102,7 +101,7 @@ namespace alg
 
 			for(uint32_t i=0;i<K;i++) {
 				uint32_t hash = uhash_bigint(&m_hash[i], sha.digest, 5);
-				bitset_set(m_bitset, hash);
+				m_bitset.set(hash);
 			}
 		}
 
@@ -119,7 +118,7 @@ namespace alg
 
 			for(uint32_t i=0;i<K;i++) {
 				uint32_t hash = uhash_bigint(&m_hash[i], sha.digest, 5);
-				if (!bitset_test(m_bitset, hash))	return false;
+				if (!m_bitset.test(hash))	return false;
 			}
 
 			return true;

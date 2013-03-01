@@ -55,7 +55,7 @@ namespace alg
 			Graph::Vertex * v;
 			Graph::Adjacent * a = g[t];
 			list_for_each_entry(v, &a->v_head, v_node) {
-				if (!ht.key(v->id) || ht[v->id]!=MARK) {
+				if (!ht.contains(v->id) || ht[v->id]!=MARK) {
 					ht[v->id] = MARK;
 					Q.enqueue(v->id); 
 				}
@@ -84,7 +84,7 @@ namespace alg
 			Graph::Vertex * v;
 			Graph::Adjacent * a = g[t];
 			list_for_each_entry(v, &a->v_head, v_node) {
-				if (!ht.key(v->id) || ht[v->id] !=MARK) {
+				if (!ht.contains(v->id) || ht[v->id] !=MARK) {
 					ht[v->id] = MARK;
 					S.push(v->id);
 				}

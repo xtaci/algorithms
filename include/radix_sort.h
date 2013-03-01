@@ -24,50 +24,50 @@
 #include <assert.h>
 #include <generic.h>
 
-/**
- * couting sort
- */
-static void 
-__radix(int byte, const unsigned N, const uint32_t *source, uint32_t *dest)
+namespace alg
 {
-	unsigned count[256];
-	unsigned index[256];
-	memset(count, 0, sizeof (count));
+	/**
+	 * couting sort
+	 */
+	static void __radix(int byte, const unsigned N, const uint32_t *source, uint32_t *dest)
+	{
+		unsigned count[256];
+		unsigned index[256];
+		memset(count, 0, sizeof (count));
 
-	unsigned i;
-	for(i=0; i<N; ++i)
-		count[((source[i])>>(byte*8))&0xff]++;
+		unsigned i;
+		for(i=0; i<N; ++i)
+			count[((source[i])>>(byte*8))&0xff]++;
 
-	index[0]=0;
-	for(i=1; i<256; ++i)
-		index[i] = index[i-1] + count[i-1];
+		index[0]=0;
+		for(i=1; i<256; ++i)
+			index[i] = index[i-1] + count[i-1];
 
-	for(i=0; i<N; ++i)
-		dest[index[((source[i])>>(byte*8))&0xff]++] = source[i];
-}
+		for(i=0; i<N; ++i)
+			dest[index[((source[i])>>(byte*8))&0xff]++] = source[i];
+	}
 
-/**
- * radix sort a given unsigned 32-bit integer array of size N
- */
-static void 
-radix_sort(uint32_t *source, const unsigned N)
-{
-	uint32_t *temp = (uint32_t *)malloc(sizeof(uint32_t)*N);
-	__radix(0, N, source, temp);
-	__radix(1, N, temp, source);
-	__radix(2, N, source, temp);
-	__radix(3, N, temp, source);
-	free(temp);
-}
+	/**
+	 * radix sort a given unsigned 32-bit integer array of size N
+	 */
+	static void radix_sort(uint32_t *source, const unsigned N)
+	{
+		uint32_t *temp = new uint32_t[N];
+		__radix(0, N, source, temp);
+		__radix(1, N, temp, source);
+		__radix(2, N, source, temp);
+		__radix(3, N, temp, source);
+		delete [] temp;
+	}
 
-/**
- * check whether the array is in order
- */
-static void 
-check_order(const uint32_t *data, unsigned N)
-{
-	for(--N ; N > 0; --N, ++data)
-		assert(data[0] <= data[1]);
+	/**
+	 * check whether the array is in order
+	 */
+	static void check_order(const uint32_t *data, unsigned N)
+	{
+		for(--N ; N > 0; --N, ++data)
+			assert(data[0] <= data[1]);
+	}
 }
 
 #endif //

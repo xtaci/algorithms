@@ -31,12 +31,13 @@
 #include "double_linked_list.h"
 #include "heap.h"
 
-namespace alg {
+namespace alg 
+{
 	class Prim 
 	{
 	private:
 		/**
-		 * Graph::Adjacent Lists optimized for Prim's Algorithm
+		 * Prim's Adjacent Lists, for Prim's Algorithm caculation
 		 */
 		struct PrimAdjacent {
 			Heap<Graph::Vertex*> heap; 		// binary heap representation of weight->node
@@ -49,7 +50,7 @@ namespace alg {
 		};
 
 		/**
-		 * Prim's Graph
+		 * Prim's Graph, simplified to list.
 		 */
 		typedef struct list_head PrimGraph;
 	private:

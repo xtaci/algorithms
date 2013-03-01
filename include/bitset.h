@@ -19,83 +19,80 @@
 #include <stdbool.h>
 #include <string.h>
 
-/**
- * definition of bitset structure
- */
-struct BitSet {
-	uint32_t size;	//size in bits
-	uint32_t bytes; // size in bytes
-	unsigned char * bits; // the bits
-};
-
-/**
- * size -- in bits
- */
-static inline struct BitSet * 
-bitset_create(uint32_t size)
+namespace alg
 {
-	struct BitSet * bs = (struct BitSet *)malloc(sizeof(struct BitSet));
+	/**
+	 * definition of bitset class
+	 */
+	class BitSet
+	{
+	private:
+		uint32_t m_size;	//size in bits
+		uint32_t m_bytes; // size in bytes
+		unsigned char * m_bits; // the bits
 
-	// round up
-	bs->bytes = size/8+1;
-	bs->size = bs->bytes * 8;
-	bs->bits = (unsigned char *)malloc(bs->bytes);
-	memset(bs->bits, 0, bs->bytes);
-	
-	return bs;
-}
+	public:
+		/**
+		 * construct BitSet by a give number of bits 
+		 */
+		BitSet(uint32_t num_bits)
+		{
+			// round up
+			m_bytes = num_bits/8+1;
+			m_size = m_bytes * 8;
+			m_bits = new unsigned char[m_bytes];
+			memset(m_bits, 0, m_bytes);
+		}
 
-/**
- * set 1 to position [bit]
- */
-static inline void 
-bitset_set(struct BitSet * bs, uint32_t bit)
-{
-	if (bit>=bs->size) return;
+		/**
+		 * safely free
+		 */
+		~BitSet()
+		{
+			delete m_bits;
+		}
 
-	uint32_t n = bit/8;
-	uint32_t off = bit%8;
+		/**
+		 * set 1 to position [bit]
+		 */
+		inline void set(uint32_t bit)
+		{
+			if (bit>=m_size) return;
 
-	bs->bits[n] |= 128U>>off;
-}
+			uint32_t n = bit/8;
+			uint32_t off = bit%8;
 
-/**
- * set 0 to position [bit]
- */
-static inline void 
-bitset_unset(struct BitSet * bs, uint32_t bit)
-{
-	if (bit>=bs->size) return;
+			m_bits[n] |= 128U>>off;
+		}
 
-	uint32_t n = bit/8;
-	uint32_t off = bit%8;
+		/**
+		 * set 0 to position [bit]
+		 */
+		inline void unset(uint32_t bit)
+		{
+			if (bit>=m_size) return;
 
-	bs->bits[n] &= ~(128U>>off);
-}
+			uint32_t n = bit/8;
+			uint32_t off = bit%8;
 
-/**
- * test a bit , true if set, false if not.
- */
-static inline bool 
-bitset_test(struct BitSet * bs, uint32_t bit)
-{
-	if (bit>=bs->size) return false;
+			m_bits[n] &= ~(128U>>off);
+		}
 
-	uint32_t n = bit/8;
-	uint32_t off = bit%8;
+		/**
+		 * test a bit , true if set, false if not.
+		 */
+		inline bool test(uint32_t bit)
+		{
+			if (bit>=m_size) return false;
 
-	if (bs->bits[n] & (128U>>off))return true;
-	return false;
-}
+			uint32_t n = bit/8;
+			uint32_t off = bit%8;
 
-/**
- * safely free
- */
-static inline void 
-bitset_destroy(struct BitSet *bs)
-{
-	if(bs->bits)free(bs->bits);
-	free(bs);
+			if (m_bits[n] & (128U>>off))return true;
+			return false;
+		}
+
+			};
 }
 
 #endif //

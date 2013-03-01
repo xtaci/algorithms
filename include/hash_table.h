@@ -76,7 +76,7 @@ namespace alg
 		/**
 		 * test if the hash table has the key
 		 */
-		bool key(uint32_t key)
+		bool contains(uint32_t key)
 		{
 			// hash the key using a hash function.
 			uint32_t hash = multi_hash(m_multi, key);

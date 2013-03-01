@@ -56,15 +56,16 @@ namespace alg
 		};
 
 	private:
-		HashTable<HuffCode> m_symbol;	// hash table for encoding lookup
-		HuffNode * m_root;					// the root node.	
+		HashTable<HuffCode> m_symbol;		// hash table for encoding 
+		HuffNode * m_root;					// the root node for decoding
 		uint32_t m_freqs[256];				// frequency array, you can pass this array 
 											// to the peer for constructing huffman
 											// tree.
 	public:
 		/**
-	 	 * Construct a Huffman Tree with a sample string, the string must contain 
-	 	 * every characters passing to encode function.
+	 	 * Construct a Huffman Tree with a sample string.
+		 * the string is either the characteristic of the text
+		 * or simply the original text to compress.
 		 */
 		HuffTree(const char * sample) : m_symbol(256) {	
 			// count frequency for each char(8-bit).
@@ -84,7 +85,7 @@ namespace alg
 		/**
 		 * Encoding 
 		 * encode a message into codes, codes should be large enough to hold the output
-		 * ie. the length of string
+		 * eg:. the length of string
 		 * the length in BITS will be returned.
 		 */
 		uint32_t encode(const char * msg, char * codes)
