@@ -51,7 +51,7 @@ namespace alg
 		HashTable(uint32_t max) {
 			// init multiplication hash function
 			m_multi = multi_hash_init(max);
-			m_size = MULTI_HASH_TABLE_SIZE(m_multi);
+			m_size = multi_hash_table_size(m_multi);
 			m_slots = new list_head[m_size];
 
 			for (uint32_t i=0; i<m_size; i++) {

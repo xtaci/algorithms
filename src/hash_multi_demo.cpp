@@ -12,7 +12,7 @@ int main()
 	
 	struct MultiHash * ht =  multi_hash_init(MAX_ELEMENTS);
 
-	printf("required space for storage is %d\n", MULTI_HASH_TABLE_SIZE(ht));
+	printf("required space for storage is %d\n", multi_hash_table_size(ht));
 
 	int i;
 	for(i = 0; i < MAX_ELEMENTS; i++ ){

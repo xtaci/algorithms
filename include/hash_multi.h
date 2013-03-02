@@ -30,9 +30,8 @@ namespace alg
 		uint32_t r; // prime, init your hash table with size -> r
 	};
 
-#define BITWIDTH 32
-
-#define MULTI_HASH_TABLE_SIZE(ht) 1<<(ht->r)
+	static const short BITWIDTH=32;
+	static inline uint32_t multi_hash_table_size(const struct MultiHash * ht) { return 1<<(ht->r); } 
 
 	/**
 	 * multi_hash.
