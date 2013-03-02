@@ -74,7 +74,7 @@ namespace alg
 		 * SINGLE	-> S B M E
 		 * ... 		-> S B M E
 		 */
-		const float (&TP())[4][4]
+		inline const float (&TP()const)[4][4] 
 		{
 			/**
 			 * the state transition probability matrix. 
@@ -94,7 +94,7 @@ namespace alg
 		/**
 		 * the start probability of state
 		 */
-		const float (&SP())[4]
+		inline const float (&SP()const)[4]
 		{
 			/**
 			 * the start probability of state
