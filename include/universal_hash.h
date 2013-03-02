@@ -72,7 +72,7 @@ namespace alg
 	static uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len)
 	{
 		// TODO : need a better algorithm, or NOT?
-		return key[0];
+		return key[0]%params->prime;
 	}
 }
 #endif //
