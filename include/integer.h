@@ -121,7 +121,7 @@ namespace alg
 		}
 
 		// Integer Assignment
-		void operator= (const Integer & source)
+		Integer & operator= (const Integer & source)
 		{
 			memmove(c, source.components(), sizeof(component_t)*MIN(source.size(), size()));
 

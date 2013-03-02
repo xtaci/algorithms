@@ -52,12 +52,11 @@ namespace alg
 	 */
 	static void radix_sort(uint32_t *source, const unsigned N)
 	{
-		uint32_t *temp = new uint32_t[N];
+		std::auto_ptr<uint32_t> temp(new uint32_t[N]);
 		__radix(0, N, source, temp);
 		__radix(1, N, temp, source);
 		__radix(2, N, source, temp);
 		__radix(3, N, temp, source);
-		delete [] temp;
 	}
 
 	/**
