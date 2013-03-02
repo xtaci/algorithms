@@ -43,7 +43,7 @@ public:
 		this->m_elements = new T[capacity];
 	}
 
-	virtual ~Stack() {
+	~Stack() {
 		delete [] m_elements;
 	}
 

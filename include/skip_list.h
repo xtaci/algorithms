@@ -46,7 +46,7 @@ namespace alg
 			m_level = 0;
 		}
 
-		virtual ~SkipList()
+		~SkipList()
 		{	
 			// TODO: free nodes
 		}

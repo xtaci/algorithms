@@ -53,7 +53,7 @@ namespace alg
 			INIT_LIST_HEAD(&m_head);
 		}
 	
-		virtual ~PQ()
+		~PQ()
 		{
 			PQNode * pos, * n;
 			list_for_each_entry_safe(pos,n, &m_head, node) {

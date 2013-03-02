@@ -56,7 +56,7 @@ namespace alg
 			m_kvs[0].key = INT_MIN;
 		};
 
-		virtual ~Heap() {
+		~Heap() {
 			delete [] m_kvs;
 		};
 

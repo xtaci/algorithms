@@ -136,6 +136,13 @@ namespace alg
 		}
 
 		const list_head & list() const {return a_head; }
+
+		// Interface
+		virtual bool add_vertex(uint32_t id) = 0;
+		virtual void delete_vertex(uint32_t id) = 0;
+		virtual bool add_edge(uint32_t x, uint32_t y, int32_t weight) = 0;
+		virtual void delete_edge(uint32_t x, uint32_t y) = 0;
+
 	protected:
 		/**
 		 * test if an edge exists

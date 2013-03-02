@@ -86,7 +86,7 @@ namespace alg
 			lv2_init(keys, newlen);
 		};
 
-		virtual ~PerfHT() {
+		~PerfHT() {
 			delete [] slots;
 		}
 	private:

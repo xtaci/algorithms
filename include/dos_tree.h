@@ -53,7 +53,7 @@ namespace alg
 			cb_left = cb_right =  fix_rotation;
 		}
 
-		virtual ~DosTree()
+		~DosTree()
 		{
 			// TODO: delete nodes..
 		}

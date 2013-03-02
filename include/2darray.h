@@ -41,7 +41,7 @@ namespace alg
 		/**
 		 * destructor
 		 */	
-		virtual ~Array2D() {
+		~Array2D() {
 			delete [] m_data;
 		}
 

@@ -59,7 +59,7 @@ namespace alg
 			}
 		}
 
-		virtual ~HashTable() {
+		~HashTable() {
 			delete m_multi;
 
 			struct HashKV * kv, *nkv;

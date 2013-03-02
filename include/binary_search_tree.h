@@ -46,7 +46,7 @@ namespace alg
 	public:
 		BST():m_root(NULL){};
 
-		virtual ~BST()
+		~BST()
 		{
 			//TODO: delete nodes
 		}

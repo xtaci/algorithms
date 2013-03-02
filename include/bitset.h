@@ -47,7 +47,7 @@ namespace alg
 		/**
 		 * safely free
 		 */
-		virtual ~BitSet()
+		~BitSet()
 		{
 			delete m_bits;
 		}
