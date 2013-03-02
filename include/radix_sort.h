@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <generic.h>
+#include <memory>
 
 namespace alg
 {
@@ -52,11 +53,11 @@ namespace alg
 	 */
 	static void radix_sort(uint32_t *source, const unsigned N)
 	{
-		std::auto_ptr<uint32_t> temp(new uint32_t[N]);
-		__radix(0, N, source, temp);
-		__radix(1, N, temp, source);
-		__radix(2, N, source, temp);
-		__radix(3, N, temp, source);
+		std::auto_ptr<uint32_t> temp (new uint32_t[N]);
+		__radix(0, N, source, temp.get());
+		__radix(1, N, temp.get(), source);
+		__radix(2, N, source, temp.get());
+		__radix(3, N, temp.get(), source);
 	}
 
 	/**

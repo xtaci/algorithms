@@ -69,7 +69,8 @@ namespace alg
 		/**
 		 * clear the array by a given value
 		 */
-		void clear(const T & value) {
+		void clear(const T & value) 
+		{
 			for(uint32_t i=0; i<NR*NC;i++){
 				m_data[i] = value;
 			}

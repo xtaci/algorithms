@@ -61,7 +61,7 @@ namespace alg
 		uint32_t sum;
 
 		m_based(key, params->prime, k);
-		dot_product(k,params->a,KLEN,sum);
+		sum = dot_product(k,params->a,KLEN);
 		return sum%params->prime;
 	}
 

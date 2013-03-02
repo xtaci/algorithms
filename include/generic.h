@@ -19,32 +19,35 @@
 #include "utils/gb18030.h"
 #include "utils/byteorder.h"
 
-/**
- * print all of the elements in `list` with size `n`
- */
-#define printlist(list,n) \
-do { \
-	int __list_counter; \
-	for(__list_counter=0;__list_counter<n;__list_counter++) \
-		printf("%d\t ",list[__list_counter]); \
-	printf("\n"); \
-} while(0)
-
-/**
- * swap 2-element, orignal value 
- */
-#define swap(x,y) \
-do { \
-	typeof(x) _t = x; \
-	x = y;	\
-	y = _t; 	\
-} while(0)
 
 #define Max(a, b) ( (a > b) ? a : b )
 #define Min(a, b) ( (a < b) ? a : b )
 
 namespace alg 
 {
+	/**
+	 * swap 2-element, orignal value 
+	 */
+	template<typename T>
+	static void swap(T &x, T &y)
+	{
+		T _t = x;
+		x = y;
+		y = _t;
+	}
+
+	/**
+	 * print all of the elements in `list` with size `n`
+	 */
+	template<typename T>
+	static void printlist(T & list,int count)
+	{
+		int i;
+		for(i=0;i<count;i++)
+			printf("%d\t ",list[i]);
+		printf("\n");
+	}
+
 	/**
 	 * select a random number between i and j
 	 */

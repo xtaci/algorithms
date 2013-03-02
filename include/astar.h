@@ -30,9 +30,6 @@
 #include "hash_table.h"
 #include "2darray.h"
 
-#define WALL 0xFFFF
-#define SQRT2	1.414213562373095
-
 namespace alg
 {
 	class AStar 
@@ -52,6 +49,10 @@ namespace alg
 				path = NULL;
 			}
 		};
+
+		static const int WALL = 0xFFFF;
+		static const float SQRT2 = 1.414213562373095;
+
 	private:
 		const Array2D<int> & m_grid;	
 		// The set of nodes already evaluated.
