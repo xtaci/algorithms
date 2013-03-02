@@ -53,7 +53,7 @@ namespace alg
 			INIT_LIST_HEAD(&m_head);
 		}
 	
-		~PQ()
+		virtual ~PQ()
 		{
 			PQNode * pos, * n;
 			list_for_each_entry_safe(pos,n, &m_head, node) {
@@ -61,6 +61,10 @@ namespace alg
 				delete pos;
 			}
 		}
+	private:
+		PQ(const PQ&);
+		PQ& operator=(const PQ&);
+	public:
 
 		/**
 		 * queue a value with priority into the priority queue.

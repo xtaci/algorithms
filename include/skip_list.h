@@ -45,7 +45,17 @@ namespace alg
 			m_header = make_node(SL_MAX_LEVEL, 0, 0);
 			m_level = 0;
 		}
+
+		virtual ~SkipList()
+		{	
+			// TODO: free nodes
+		}
+
+	private:
+		SkipList(const SkipList &);
+		SkipList& operator=(const SkipList &);
 		
+	public:
 		/**
 		 * search the given key from the skip list
 		 * if the key is not exist, return NULL 
