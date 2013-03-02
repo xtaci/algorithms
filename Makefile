@@ -9,6 +9,7 @@ INCLUDEDIR = -I./include -I.
 DEPS = 
 LIBS = -lm
 PROGRAMS =  m_based \
+			integer \
 			insertion_sort_demo \
 			radix_sort_demo \
 			shuffle_demo \
@@ -51,6 +52,9 @@ PROGRAMS =  m_based \
 all: $(PROGRAMS)
 
 m_based: $(SRCDIR)/m_based.cpp $(DEPS)
+	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
+
+integer: $(SRCDIR)/integer_demo.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
 
 heap_demo: $(SRCDIR)/heap_demo.cpp $(DEPS)

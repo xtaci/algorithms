@@ -20,254 +20,310 @@
 #include <stdbool.h>
 #include <string.h>  
 #include <limits.h>
+#include <math.h>
 
-typedef uint32_t component_t;
-typedef uint64_t double_component_t;
+namespace alg
+{
+	class Integer
+	{
+	private:
+		typedef unsigned short component_t;
+		typedef unsigned long double_component_t;
 
-#define MAX_COMPONENT  ((component_t)(-1))
-#define COMPONENT_BITS  (sizeof(component_t)*CHAR_BIT)
+		#define MAX_COMPONENT  ((component_t)(-1))
+		#define COMPONENT_BITS  (sizeof(component_t)*CHAR_BIT)
 
-#define LOG_2_10    3.3219280948873623478703194294894
+		#define LOG_2_10    3.3219280948873623478703194294894
 
-#define MIN(x,y)  ((x)<(y) ? (x) : (y))
-#define MAX(x,y)  ((x)>(y) ? (x) : (y))
+		#define MIN(x,y)  ((x)<(y) ? (x) : (y))
+		#define MAX(x,y)  ((x)>(y) ? (x) : (y))
 
-typedef struct {
-    component_t* c;    /* least-significant word first */
-    int num_components;
-} integer;
+		component_t* c;    /* least-significant word first */
+		int num_components;
 
-static integer create_integer(int components);
-static void free_integer(integer i);
-static void set_zero_integer(integer i);
-static void copy_integer(integer source, integer target);
-static void add_integer(integer left, integer right, integer result);
-static void subtract_integer(integer left, integer right, integer result);
-static void multiply_small_integer(integer left, component_t right, integer result);
-static void multiply_integer(integer left, integer right, integer result);
-static int compare_integers(integer left, integer right);
-static void shift_left_one_integer(integer arg);
-static void shift_right_one_integer(integer arg);
-static component_t mod_small_integer(integer left, component_t right);
-static void mod_integer(integer left, integer right, integer result);
-static void divide_small_integer(integer left, component_t right, integer result);
-static bool is_zero_integer(integer x);
+	public:
+		Integer(int components) 
+		{
+			num_components = components;
+			c = new component_t[components];
+			memset(c, 0, sizeof(component_t)*num_components);
+		}
 
+		Integer(const Integer & rhs)
+		{
+			num_components = rhs.size();
+			c = new component_t[num_components];
+			memcpy(c, rhs.components(), num_components*sizeof(component_t));
+		}
 
-static integer 
-create_integer(int components) {
-    integer result;
-    result.num_components = components;
-    result.c = (component_t*)malloc(sizeof(component_t)*components);
-    return result;
-}
+		~Integer() 
+		{
+			delete c;
+		}
 
+		inline const component_t & operator[] (int i) const { return c[i]; }
+		inline component_t & operator[] (int i) { return c[i]; }
 
-static void 
-free_integer(integer i) {
-    free(i.c);
-}
+		inline const component_t * components() const { return c; } 
+		inline int size() const { return num_components; }
+		
+		static const Integer from_string(char* s) 
+		{
+			Integer result((int)ceil(LOG_2_10*strlen(s)/COMPONENT_BITS));
+			Integer digit(1);
 
+			int i;
+			for (i = 0; s[i] != '\0'; i++) {
+				result = result*10;
+				digit[0] = s[i] - '0';
+				result = result + digit;
+			}
 
-static void 
-set_zero_integer(integer i) {
-    memset(i.c, 0, sizeof(component_t)*i.num_components);
-}
+			return result;
+		}
 
+		char * to_string() const
+		{
+			Integer x = (*this);
+			int i, result_len;
+			char* result = new char[(int)ceil(COMPONENT_BITS*size()/LOG_2_10) + 2];
 
-static bool 
-is_zero_integer(integer x) {
-    int i;
-    for(i=0; i < x.num_components; i++) {
-        if (x.c[i] != 0) return false;
-    }
-    return true;
-}
+			Integer ten(1);
+			ten[0] = 10;
 
-static void 
-copy_integer(integer source, integer target) {
-    memmove(target.c, source.c,
-            sizeof(component_t)*MIN(source.num_components, target.num_components));
-    if (target.num_components > source.num_components) {
-        memset(target.c + source.num_components, 0,
-               sizeof(component_t)*(target.num_components - source.num_components));
-    }
-}
+			if (x.is_zero()) {
+				strcpy(result, "0");
+			} else {
+				for (i = 0; !x.is_zero(); i++) {
+					result[i] = (char)(x%10) + '0';
+					x=x/10;
+				}
+				result[i] = '\0';
+			}
 
-static void 
-add_integer(integer left, integer right, integer result) {
-    double_component_t carry = 0;
-    int i;
-    for(i=0; i<left.num_components || i<right.num_components || carry != 0; i++) {
-        double_component_t partial_sum = carry;
-        carry = 0;
-        if (i < left.num_components)  partial_sum += left.c[i];
-        if (i < right.num_components) partial_sum += right.c[i];
-        if (partial_sum > MAX_COMPONENT) {
-            partial_sum &= MAX_COMPONENT;
-            carry = 1;
-        }
-        result.c[i] = (component_t)partial_sum;
-    }
-    for ( ; i < result.num_components; i++) { result.c[i] = 0; }
-}
+			result_len = strlen(result);
+			for(i=0; i < result_len/2; i++) {
+				char temp = result[i];
+				result[i] = result[result_len - i - 1];
+				result[result_len - i - 1] = temp;
+			}
 
-static void 
-subtract_integer(integer left, integer right, integer result) {
-    int borrow = 0;
-    int i;
-    for(i=0; i<left.num_components; i++) {
-        double_component_t lhs = left.c[i];
-        double_component_t rhs = (i < right.num_components) ? right.c[i] : 0;
-        if (borrow) {
-	    if (lhs <= rhs) {
-	        /* leave borrow set to 1 */
-	        lhs += (MAX_COMPONENT + 1) - 1;
-	    } else {
-	        borrow = 0;
-	        lhs--;
-	    }
-	}
-        if (lhs < rhs) {
-            borrow = 1;
-            lhs += MAX_COMPONENT + 1;
-        }
-        result.c[i] = lhs - rhs;
-    }
-    for ( ; i < result.num_components; i++) { result.c[i] = 0; }
-}
+			return result;
+		}
 
-static void 
-multiply_small_integer(integer left, component_t right, integer result) {
-    double_component_t carry = 0;
-    int i;
-    for(i=0; i<left.num_components || carry != 0; i++) {
-        double_component_t partial_sum = carry;
-        carry = 0;
-        if (i < left.num_components)  partial_sum += left.c[i]*right;
-        carry = partial_sum >> COMPONENT_BITS;
-        result.c[i] = (component_t)(partial_sum & MAX_COMPONENT);
-    }
-    for ( ; i < result.num_components; i++) { result.c[i] = 0; }
-}
+		bool is_zero() 
+		{
+			int i;
+			for(i=0; i < size(); i++) {
+				if ((*this)[i] != 0) return false;
+			}
+			return true;
+		}
 
-static void 
-multiply_integer(integer left, integer right, integer result) {
-    int i, lidx, ridx;
-    double_component_t carry = 0;
-    int max_size_no_carry;
-    int left_max_component  = left.num_components - 1;
-    int right_max_component = right.num_components - 1;
-    while(left.c[left_max_component]   == 0) left_max_component--;
-    while(right.c[right_max_component] == 0) right_max_component--;
-    max_size_no_carry = left_max_component + right_max_component;
-    for(i=0; i <= max_size_no_carry || carry != 0; i++) {
-        double_component_t partial_sum = carry;
-        carry = 0;
-        lidx = MIN(i, left_max_component);
-        ridx = i - lidx;
-        while(lidx >= 0 && ridx <= right_max_component) {
-            partial_sum += ((double_component_t)left.c[lidx])*right.c[ridx];
-            carry += partial_sum >> COMPONENT_BITS;
-            partial_sum &= MAX_COMPONENT;
-            lidx--; ridx++;
-        }
-        result.c[i] = partial_sum;
-    }
-    for ( ; i < result.num_components; i++) { result.c[i] = 0; }
-}
+		// Integer Assignment
+		void operator= (const Integer & source)
+		{
+			memmove(c, source.components(), sizeof(component_t)*MIN(source.size(), size()));
 
-static int 
-compare_integers(integer left, integer right) {
-    int i = MAX(left.num_components - 1, right.num_components - 1);
-    for ( ; i >= 0; i--) {
-        component_t left_comp =
-            (i < left.num_components) ? left.c[i] : 0;
-        component_t right_comp =
-            (i < right.num_components) ? right.c[i] : 0;
-        if (left_comp < right_comp)
-            return -1;
-        else if (left_comp > right_comp)
-            return  1;
-    }
-    return 0;
-}
+			if (size() > source.size()) {
+				memset(c + source.size(), 0, sizeof(component_t)*(size() - source.size()));
+			}
+		}
 
-static void 
-shift_left_one_integer(integer arg) {
-    int i;
-    arg.c[arg.num_components - 1] <<= 1;
-    for (i = arg.num_components - 2; i >= 0; i--) {
-        arg.c[i + 1] |= arg.c[i] >> (COMPONENT_BITS - 1);
-        arg.c[i] <<= 1;
-    }
-}
+		const Integer operator+ (const Integer & rhs)
+		{
+			Integer result(MAX(size(), rhs.size())+1);
 
-static void 
-shift_right_one_integer(integer arg) {
-    int i;
-    arg.c[0] >>= 1;
-    for (i = 1; i < arg.num_components; i++) {
-        arg.c[i - 1] |= (arg.c[i] & 1) << (COMPONENT_BITS - 1);
-        arg.c[i] >>= 1;
-    }
-}
+			double_component_t carry = 0;
+			int i;
+			for(i=0; i<size() || i<rhs.size() || carry != 0; i++) {
+				double_component_t partial_sum = carry;
+				carry = 0;
+				if (i < size())  partial_sum += (*this)[i];
+				if (i < rhs.size()) partial_sum += rhs[i];
+				if (partial_sum > MAX_COMPONENT) {
+					partial_sum &= MAX_COMPONENT;
+					carry = 1;
+				}
+				result[i] = (component_t)partial_sum;
+			}
+			for ( ; i < result.size(); i++) { result[i] = 0; }
 
-static component_t 
-mod_small_integer(integer left, component_t right) {
-    double_component_t mod_two_power = 1;
-    double_component_t result = 0;
-    int i, bit;
-    for(i=0; i<left.num_components; i++) {
-        for(bit=0; bit<COMPONENT_BITS; bit++) {
-            if ((left.c[i] & (1 << bit)) != 0) {
-                result += mod_two_power;
-                if (result >= right) {
-                    result -= right;
-                }
-            }
-            mod_two_power <<= 1;
-            if (mod_two_power >= right) {
-                mod_two_power -= right;
-            }
-        }
-    }
-    return (component_t)result;
-}
+			return result;
+		}
 
-static void 
-mod_integer(integer left, integer right, integer result) {
-    integer mod_two_power = create_integer(right.num_components + 1);
-    int i, bit;
-    set_zero_integer(result);
-    set_zero_integer(mod_two_power);
-    mod_two_power.c[0] = 1;
-    for(i=0; i<left.num_components; i++) {
-        for(bit=0; bit<COMPONENT_BITS; bit++) {
-            if ((left.c[i] & (1 << bit)) != 0) {
-                add_integer(result, mod_two_power, result);
-                if (compare_integers(result, right) >= 0) {
-                    subtract_integer(result, right, result);
-                }
-            }
-            shift_left_one_integer(mod_two_power);
-            if (compare_integers(mod_two_power, right) >= 0) {
-                subtract_integer(mod_two_power, right, mod_two_power);
-            }
-        }
-    }
-    free_integer(mod_two_power);
-}
+		const Integer operator- (const Integer & right)
+		{
+			Integer result(MAX(size(), right.size()));
 
-static void 
-divide_small_integer(integer left, component_t right, integer result) {
-    double_component_t dividend = 0;
-    int i;
-    for (i = left.num_components - 1; i >= 0; i--) {
-        dividend |= left.c[i];
-        result.c[i] = dividend/right;
-        dividend = (dividend % right) << COMPONENT_BITS;
-    }
+			int borrow = 0;
+			int i;
+			for(i=0; i<size(); i++) {
+				double_component_t lhs = (*this)[i];
+				double_component_t rhs = (i < right.size()) ? right[i] : 0;
+				if (borrow) {
+				if (lhs <= rhs) {
+					/* leave borrow set to 1 */
+					lhs += (MAX_COMPONENT + 1) - 1;
+				} else {
+					borrow = 0;
+					lhs--;
+				}
+			}
+				if (lhs < rhs) {
+					borrow = 1;
+					lhs += MAX_COMPONENT + 1;
+				}
+				result[i] = lhs - rhs;
+			}
+			for ( ; i < result.size(); i++) { result[i] = 0; }
+
+			return result;
+		}
+
+		const Integer operator* (const component_t & rhs)
+		{
+			Integer result(size()+1);
+
+			double_component_t carry = 0;
+			int i;
+			for(i=0; i<size() || carry != 0; i++) {
+				double_component_t partial_sum = carry;
+				carry = 0;
+				if (i < size())  partial_sum += (*this)[i]*rhs;
+				carry = partial_sum >> COMPONENT_BITS;
+				result[i] = (component_t)(partial_sum & MAX_COMPONENT);
+			}
+			return result;
+		}
+
+		const Integer operator* (const Integer & rhs)
+		{
+			Integer result(MAX(size(), rhs.size())*2);
+
+			int i, lidx, ridx;
+			double_component_t carry = 0;
+			int max_size_no_carry;
+			int left_max_component  = size() - 1;
+			int right_max_component = rhs.size() - 1;
+			while((*this)[left_max_component] == 0) left_max_component--;
+			while(rhs[right_max_component] == 0) right_max_component--;
+			max_size_no_carry = left_max_component + right_max_component;
+			for(i=0; i <= max_size_no_carry || carry != 0; i++) {
+				double_component_t partial_sum = carry;
+				carry = 0;
+				lidx = MIN(i, left_max_component);
+				ridx = i - lidx;
+				while(lidx >= 0 && ridx <= right_max_component) {
+					partial_sum += ((double_component_t)(*this)[lidx])*rhs[ridx];
+					carry += partial_sum >> COMPONENT_BITS;
+					partial_sum &= MAX_COMPONENT;
+					lidx--; ridx++;
+				}
+				result[i] = partial_sum;
+			}
+			for ( ; i < result.size(); i++) { result[i] = 0; }
+			return result;
+		}
+
+		const Integer operator/ (component_t rhs) 
+		{
+			Integer result(size());
+			double_component_t dividend = 0;
+			int i;
+			for (i = size() - 1; i >= 0; i--) {
+				dividend |= (*this)[i];
+				result[i] = dividend/rhs;
+				dividend = (dividend % rhs) << COMPONENT_BITS;
+			}
+
+			return result;
+		}
+
+		component_t operator% (component_t right) 
+		{
+			double_component_t mod_two_power = 1;
+			double_component_t result = 0;
+			int i, bit;
+			for(i=0; i<size(); i++) {
+				for(bit=0; bit<COMPONENT_BITS; bit++) {
+					if (((*this)[i] & (1 << bit)) != 0) {
+						result += mod_two_power;
+						if (result >= right) {
+							result -= right;
+						}
+					}
+					mod_two_power <<= 1;
+					if (mod_two_power >= right) {
+						mod_two_power -= right;
+					}
+				}
+			}
+			return (component_t)result;
+		}
+
+		const Integer operator% (const Integer & rhs) 
+		{
+			Integer result = rhs;
+			Integer mod_two_power(rhs.size() + 1);
+
+			int i, bit;
+			mod_two_power[0] = 1;
+			for(i=0; i<size(); i++) {
+				for(bit=0; bit<COMPONENT_BITS; bit++) {
+					if (((*this)[i] & (1 << bit)) != 0) {
+						result = mod_two_power+result;
+						if (result.compare(rhs) >= 0) {
+							result = result - rhs;
+						}
+					}
+					mod_two_power.shift_left_one_integer();
+					if (mod_two_power.compare(rhs) >= 0) {
+						mod_two_power = mod_two_power - rhs;
+					}
+				}
+			}
+
+			return result;
+		}
+
+		int compare(const Integer & rhs)
+		{
+			int i = MAX(size() - 1, rhs.size() - 1);
+			for ( ; i >= 0; i--) {
+				component_t left_comp =
+					(i < size()) ? (*this)[i] : 0;
+				component_t right_comp =
+					(i < rhs.size()) ? rhs[i] : 0;
+				if (left_comp < right_comp)
+					return -1;
+				else if (left_comp > right_comp)
+					return  1;
+			}
+			return 0;
+		}
+
+private:
+		void shift_left_one_integer() 
+		{
+			int i;
+			(*this)[size() - 1] <<= 1;
+			for (i = size() - 2; i >= 0; i--) {
+				(*this)[i + 1] |= (*this)[i] >> (COMPONENT_BITS - 1);
+				(*this)[i] <<= 1;
+			}
+		}
+
+		void shift_right_one_integer() 
+		{
+			int i;
+			(*this)[0] >>= 1;
+			for (i = 1; i < size(); i++) {
+				(*this)[i - 1] |= ((*this)[i] & 1) << (COMPONENT_BITS - 1);
+				(*this)[i] >>= 1;
+			}
+		}
+	};
 }
 
 #endif //
