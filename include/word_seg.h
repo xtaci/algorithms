@@ -74,11 +74,34 @@ namespace alg
 		 * SINGLE	-> S B M E
 		 * ... 		-> S B M E
 		 */
-		static const float TP[4][4]; 
+		const float (&TP())[4][4]
+		{
+			/**
+			 * the state transition probability matrix. 
+			 * the 2-d array is in the format of :
+			 * SINGLE	-> S B M E
+			 * ... 		-> S B M E
+			 */
+			static const float _TP[4][4] = {
+					{0.5f, 0.5f, 0.0f, 0.0f}, // S
+					{0.0f, 0.0f, 0.5f, 0.5f}, // B
+					{0.0f, 0.0f, 0.5f, 0.5f}, // M
+					{0.5f, 0.5f, 0.0f, 0.0f}  // E
+			};
+
+			return _TP;
+		}
 		/**
 		 * the start probability of state
 		 */
-		static const float SP[4];
+		const float (&SP())[4]
+		{
+			/**
+			 * the start probability of state
+			 */
+			static const float _SP[4] = {0.5f, 0.5f, 0.0f, 0.0f};
+			return _SP;
+		}
 		/**
 		 * word state definition
 		 * record a single word emission probability in each state
@@ -190,7 +213,7 @@ namespace alg
 			pos = gb18030_read(str, pos, &CH);
 				
 			for(i=0; i<4;i++) {	
-				V[0][i] = SP[i] * wordht[CH].EP[i];
+				V[0][i] = SP()[i] * wordht[CH].EP[i];
 				path[i][0] = i+'0';
 			}
 
@@ -205,7 +228,7 @@ namespace alg
 					int state_max = 0;
 					int k;
 					for(k=0;k<4;k++) { // like relaxation step in Dijkstra.
-						double prob = V[wc-1][k] * TP[k][j] * wordht[CH].EP[j];
+						double prob = V[wc-1][k] * TP()[k][j] * wordht[CH].EP[j];
 						if (prob > prob_max) {
 							prob_max = prob;
 							state_max = k;
