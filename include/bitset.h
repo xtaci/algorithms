@@ -47,10 +47,16 @@ namespace alg
 		/**
 		 * safely free
 		 */
-		~BitSet()
+		virtual ~BitSet()
 		{
 			delete m_bits;
 		}
+
+	private:
+		BitSet(const BitSet&);
+		BitSet& operator=(const BitSet&);
+
+	public:
 
 		/**
 		 * set 1 to position [bit]
@@ -92,7 +98,7 @@ namespace alg
 			return false;
 		}
 
-			};
+	};
 }
 
 #endif //

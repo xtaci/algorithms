@@ -82,6 +82,11 @@ namespace alg
 			// TODO: free HuffNodes	
 		};
 
+	private:
+		HuffTree(const HuffTree&);
+		HuffTree& operator=(const HuffTree&);
+	public:
+
 		/**
 		 * Encoding 
 		 * encode a message into codes, codes should be large enough to hold the output

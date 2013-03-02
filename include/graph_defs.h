@@ -99,7 +99,10 @@ namespace alg
 				delete a;
 			}
 		}
-
+	private:
+		Graph(const Graph &);
+		Graph& operator=(const Graph &);
+	public:
 		uint32_t vertex_count() const {	return num_vertex; }
 		uint32_t edge_count() const { return num_edges; }
 		/**

@@ -63,6 +63,11 @@ namespace alg
 		{
 			// TODO: delete the nodes
 		}
+
+	private:
+		RBTree(const RBTree &);
+		RBTree& operator=(const RBTree &);
+	public:
 		
 		/**
 		 * rbtree_insert

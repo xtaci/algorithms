@@ -61,8 +61,10 @@ namespace alg
 		struct UHash params;   // 1st level 
 		uint32_t num_slots;
 		PerfHTException error;
+
 	public:
-		PerfHT(uint32_t keys[], uint32_t len) {
+		PerfHT(uint32_t keys[], uint32_t len) 
+		{
 			// remove duplicate keys
 			uint32_t newlen = remove_dup<uint32_t>(keys, len);
 
@@ -84,12 +86,16 @@ namespace alg
 			lv2_init(keys, newlen);
 		};
 
-		~PerfHT() {
+		virtual ~PerfHT() {
 			delete [] slots;
 		}
+	private:
+		PerfHT(const PerfHT&);
+		PerfHT& operator=(const PerfHT&);
 
-		// return the 
-		T& operator[] (uint32_t key) throw (PerfHTException) {
+	public:
+		const T& operator[] (uint32_t key) const throw (PerfHTException) 
+		{
 			uint32_t hash;
 			hash  = uhash_integer(&params, key);
 			if (slots[hash].key == key) {
@@ -105,7 +111,15 @@ namespace alg
 			}
 
 			throw error;
-		};
+		}
+
+		/**
+		 * operator []
+		 */
+		T& operator[] (uint32_t key) throw (PerfHTException) 
+		{
+			return const_cast<T&>(static_cast<const PerfHT&>(*this)[key]);
+		}
 
 	private:
 		/**
@@ -135,13 +149,14 @@ namespace alg
 		 * init level-2 slots with known collides 
 		 * the routine will find another hash function never collides again!!
 		 */
-		void lv2_slot_init(struct SlotL1 * lv1_slot, Stack<uint32_t> & collides) {
+		void lv2_slot_init(struct SlotL1 * lv1_slot, Stack<uint32_t> & collides) 
+		{
 			// init another hash function & 2nd level 
 			uhash_init(&lv1_slot->params, lv1_slot->cnt * lv1_slot->cnt);
 			SlotL2 * lv2_slots = new SlotL2[lv1_slot->params.prime];
 			lv1_slot->lv2_slots = lv2_slots;
 			
-	retry:
+		retry:
 			for(uint32_t i=0;i<lv1_slot->params.prime;i++) {
 				lv2_slots[i].cnt = 0;
 			}

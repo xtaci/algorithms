@@ -27,6 +27,7 @@ namespace alg
 		uint32_t NR;		// num of rows
 		uint32_t NC;		// num of columns
 		T * m_data;			// the place where the array resides.
+
 	public:
 		/**
 		 * construct an array of size [nrow,col]
@@ -35,7 +36,20 @@ namespace alg
 			NR = nrow;
 			NC = ncol;	
 			m_data = new T[nrow*ncol];
-		};
+		}
+		
+		/**
+		 * destructor
+		 */	
+		virtual ~Array2D() {
+			delete [] m_data;
+		}
+
+	private:
+		Array2D(const Array2D&);	
+		Array2D& operator=(const Array2D&);	
+
+	public:
 
 		/**
 		 * return number of rows of this array
@@ -61,12 +75,6 @@ namespace alg
 			}
 		}
 	
-		/**
-		 * destructor
-		 */	
-		~Array2D() {
-			delete [] m_data;
-		}
 	};
 }
 

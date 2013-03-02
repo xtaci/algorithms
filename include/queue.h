@@ -48,7 +48,10 @@ public:
 	~Queue() {
 		delete [] m_elements;	
 	};
-
+private:
+	Queue(const Queue &);
+	Queue& operator=(const Queue &);
+public:
 	/**
 	 * Dequeue
 	 */

@@ -53,6 +53,15 @@ namespace alg
 			cb_left = cb_right =  fix_rotation;
 		}
 
+		virtual ~DosTree()
+		{
+			// TODO: delete nodes..
+		}
+	private:
+		DosTree(const DosTree&);
+		DosTree& operator=(const DosTree&);
+	public:
+
 		dostree_node index(int index)
 		{
 			return lookup_node(root,index);

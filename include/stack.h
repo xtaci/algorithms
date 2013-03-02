@@ -32,6 +32,7 @@ private:
 	uint32_t m_capacity;		// the total capacity
 	uint32_t m_size;			// current stack size
 	T * m_elements;		// the elements
+
 public:
 	/**
 	 * capcity is the maximum elements the stack can hold.
@@ -40,49 +41,54 @@ public:
 		this->m_capacity = capacity;
 		this->m_size = 0;
 		this->m_elements = new T[capacity];
-	};
+	}
 
-	~Stack() {
+	virtual ~Stack() {
 		delete [] m_elements;
-	};
+	}
 
+private:
+	Stack(const Stack&);
+	Stack& operator=(const Stack&);
+
+public:
 	/**
 	 * test whether the stack is empty
 	 */
-	inline bool is_empty() const {
-		return m_size==0?true:false;
-	};
+	inline bool is_empty() const { return m_size==0?true:false; } 
 
+	/**
+	 * pop stack
+	 */
 	inline void pop() {
 		if(m_size!=0) m_size--;
 		return;
-	};
+	}
 
 	/**
 	 * get the top element, test is_empty() before top()
 	*/
-	inline const T& top() {
-		return m_elements[m_size-1]; 
-	};
+	inline const T& top() const { return m_elements[m_size-1]; };
 
 	/**
 	 * push an element into the stack
 	 * returns false when stack is full.
 	 */
-	inline bool push(const T & value) {
+	inline bool push(const T & value) 
+	{
 		if(m_size==m_capacity) { return false; }
 		else {
 			m_elements[m_size++] = value;
 			return true;
 		}
-	};
+	}
 
 	/**
 	 * return the stack size count.
 	 */
-	inline uint32_t count() const { return m_size; };
+	inline uint32_t count() const { return m_size; }
 
-	inline const T& operator[] (int idx) const { return m_elements[m_size-1-idx]; };
+	inline const T& operator[] (int idx) const { return m_elements[m_size-1-idx]; }
 };
 
 #endif //

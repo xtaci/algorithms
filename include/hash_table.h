@@ -59,7 +59,7 @@ namespace alg
 			}
 		}
 
-		~HashTable() {
+		virtual ~HashTable() {
 			delete m_multi;
 
 			struct HashKV * kv, *nkv;
@@ -72,6 +72,10 @@ namespace alg
 
 			delete [] m_slots;
 		}
+	private:
+		HashTable(const HashTable &);
+		HashTable& operator=(const HashTable &);
+	public:
 
 		/**
 		 * test if the hash table has the key

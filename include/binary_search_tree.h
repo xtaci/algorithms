@@ -46,6 +46,14 @@ namespace alg
 	public:
 		BST():m_root(NULL){};
 
+		virtual ~BST()
+		{
+			//TODO: delete nodes
+		}
+	private:
+		BST(const BST&);
+		BST& operator=(const BST&);
+	public:
 		ValueT operator[] (const KeyT & key)
 		{
 			if (m_root == NULL) return NULL;

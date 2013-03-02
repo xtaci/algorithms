@@ -39,7 +39,7 @@ namespace alg
 		/**
 		 * define key-value pair of heap struct.
 		 */
-		class KV {
+		struct KV {
 		public:
 			int key;
 			T value;
@@ -47,6 +47,7 @@ namespace alg
 		uint32_t m_size;	// current heap size.
 		uint32_t m_max;		// max heap size.
 		KV * m_kvs;			// key value pairs.
+
 	public:
 		Heap(int max) {
 			m_size = 0;
@@ -55,23 +56,28 @@ namespace alg
 			m_kvs[0].key = INT_MIN;
 		};
 
-		~Heap() {
+		virtual ~Heap() {
 			delete [] m_kvs;
 		};
 
-		inline int min_key() const { return m_kvs[1].key; };
+	private:
+		Heap(const Heap &);
+		Heap& operator=(const Heap&);
 
+	public:
+
+		inline int min_key() const { return m_kvs[1].key; };
 		inline const T & min_value() const { return m_kvs[1].value; };
 
 		// for loop through the kvs
 		inline uint32_t count() const { return m_size; };
-
 		inline const T & operator[] (uint32_t idx) const { return m_kvs[idx+1].value; };
 
 		/**
 		 * insert a 'key'->'value' pair into the heap.
 		 */
-		void insert(int key, const T & value) {
+		void insert(int key, const T & value) 
+		{
 			// heap full, just return;
 			if(m_size == m_max) return; 
 
@@ -99,7 +105,8 @@ namespace alg
 		/**
 		 * delete the min element --> heap top.
 		 */
-		void delete_min() {
+		void delete_min() 
+		{
 			// heap[1] is the minimum key. So we remove heap[1].
 			// Size of the heap is decreased.  Now heap[1] has to be filled.
 			// We put the last key in its place and see if it fits.  If it
@@ -141,7 +148,7 @@ namespace alg
 
 			m_kvs[now].key 	= lastKey;
 			m_kvs[now].value= lastValue;
-		};
+		}
 
 		/**
 		 * so called DECREASE KEY operation.
@@ -161,7 +168,7 @@ namespace alg
 
 			m_kvs[now].key 	= key;
 			m_kvs[now].value= value;
-		};
+		}
 
 		/**
 		 * return the index where value resides
@@ -172,7 +179,7 @@ namespace alg
 				if (m_kvs[i].value == value) return i;
 			}
 			return -1;
-		};
+		}
 
 	};
 }
