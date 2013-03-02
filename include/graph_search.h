@@ -32,12 +32,12 @@
 #include "directed_graph.h"
 #include "hash_table.h"
 
-#define MARK 0xDEADU
-
 namespace alg 
 {
 	static void breadth_first_search(const Graph & g, uint32_t source)
 	{
+		static const uint32_t MARK = 0xDEAD;
+
 		Graph::Adjacent * root = g[source];
 		HashTable<uint32_t> ht(g.vertex_count());		
 
@@ -67,6 +67,8 @@ namespace alg
 
 	static void depth_first_search(const Graph & g, uint32_t source)
 	{
+		static const uint32_t MARK = 0xDEAD;
+
 		Graph::Adjacent * root = g[source];
 		HashTable<uint32_t> ht(g.vertex_count());		
 

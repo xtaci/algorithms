@@ -33,12 +33,9 @@ namespace alg
 
 		struct SkipNode * m_header;	// the header node, empty
 		int m_level;				// the max level of skip list
-#define SL_MAX_LEVEL 6
 
-/**
- * normalize to [0.0 1.0]
- */
-#define RAND_NORM() ((float) rand() / RAND_MAX)
+		static const int SL_MAX_LEVEL = 6;
+
 	public:
 		SkipList() 
 		{
@@ -165,13 +162,18 @@ namespace alg
 		}
 	private:
 		/**
+		 * normalize to [0.0 1.0]
+		 */
+		inline float rand_norm() { return (float) rand() / RAND_MAX; }
+	
+		/**
 		 * get the random promote level 
 		 */
 		int random_level() 
 		{
 			int lvl = 0;
 			// the possibility is 1/2 for each level	
-			while(RAND_NORM() < 0.5f && lvl < SL_MAX_LEVEL)
+			while(rand_norm() < 0.5f && lvl < SL_MAX_LEVEL)
 			lvl++;
 
 			return lvl;

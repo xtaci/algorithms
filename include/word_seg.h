@@ -115,7 +115,7 @@ namespace alg
 			}
 		};
 
-		#define GB18030_NR	70244
+		static const int GB18030_NR	= 70244;
 
 		/**
 		 * The word segmentation structure.

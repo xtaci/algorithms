@@ -51,7 +51,7 @@ int main(void)
 	list_for_each_entry(a, &g->list(), a_node){
 		printf("previous of %u is ", a->v.id);
 		int32_t pre = result[a->v.id];
-		if (pre ==UNDEFINED) { printf("UNDEFINED\n"); }
+		if (pre == Dijkstra::UNDEFINED) { printf("UNDEFINED\n"); }
 		else printf("%d\n", pre);
 	}
 

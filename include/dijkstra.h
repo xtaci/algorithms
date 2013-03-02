@@ -33,8 +33,6 @@
 #include "stack.h"
 #include "hash_table.h"
 
-#define UNDEFINED -1
-
 namespace alg 
 {
 	/**
@@ -59,6 +57,7 @@ namespace alg
 		};
 
 	public:
+		static const int UNDEFINED = -1;
 		/**
 		 * init dijkstra workspace
 		 */
