@@ -212,10 +212,10 @@ namespace alg
 			if(node->left == NULL && node->right == NULL)
 			{
 				code[k] = '\0';
-				HuffCode * hcode = new HuffCode();
-				strcpy(hcode->code, code);
-				hcode->length = k;
-				m_symbol[(uint32_t)node->symbol] = *hcode;
+				HuffCode hcode;
+				strcpy(hcode.code, code);
+				hcode.length = k;
+				m_symbol[(uint32_t)node->symbol] = hcode;
 			//	printf("k %d, code :%s symbol %d-> %c\n",k, hcode->code, node->symbol, node->symbol);
 			}
 			
