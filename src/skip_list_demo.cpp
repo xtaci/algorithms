@@ -38,5 +38,5 @@ int main()
 	printf("The skip list after deletion:\n");
 
 	ss.print();
-	exit(0);
+	return 0;
 }

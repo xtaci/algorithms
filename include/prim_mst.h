@@ -68,6 +68,18 @@ namespace alg
 				add_adjacent(*a);
 			}
 		}
+
+		~Prim()
+		{
+			PrimAdjacent * pa, *pan;
+			list_for_each_entry_safe(pa, pan, &m_pg, pa_node){
+				list_del(&pa->pa_node);
+				delete pa;
+			}
+		}
+	private:
+		Prim(const Prim&);
+		Prim& operator= (const Prim&);
 	private:
 		/**
 		 * add an adjacent list to prim's graph

@@ -27,6 +27,6 @@ int main()
 	// print the result
 	printf("The list after sorting using merge sort algorithm:\n");
 	printlist(list,MAX_ELEMENTS);
-	exit(0);
+	return 0;
 }
 

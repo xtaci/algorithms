@@ -213,7 +213,7 @@ namespace alg
 			{
 				code[k] = '\0';
 				HuffCode hcode;
-				strcpy(hcode.code, code);
+				strncpy(hcode.code, code, k);
 				hcode.length = k;
 				m_symbol[(uint32_t)node->symbol] = hcode;
 			//	printf("k %d, code :%s symbol %d-> %c\n",k, hcode->code, node->symbol, node->symbol);

@@ -62,5 +62,5 @@ int main(void)
 
 	delete g;
 
-	exit(0);
+	return 0;
 }

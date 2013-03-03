@@ -29,5 +29,5 @@ int main()
 	// print the result
 	printf("the %dth smallest number is %d:\n", k, list[result]);
 
-	exit(0);
+	return 0;
 }

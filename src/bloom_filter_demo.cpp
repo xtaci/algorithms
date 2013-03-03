@@ -34,5 +34,5 @@ int main(void)
 		printf("checking %s->%s\n", strs2[i], bf.test(strs2[i])?"true":"false");
 	}
 
-	exit(0);
+	return 0;
 }

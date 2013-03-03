@@ -22,5 +22,5 @@ int main()
 		Q.dequeue();
 	}
 
-	exit(0);
+	return 0;
 }

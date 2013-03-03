@@ -61,16 +61,15 @@ namespace alg
 
 		~HashTable() 
 		{
-			delete m_multi;
-
-			struct HashKV * kv, *nkv;
 			for (uint32_t i=0;i<m_size;i++) {
+				HashKV * kv, *nkv;
 				list_for_each_entry_safe(kv,nkv,&m_slots[i], node){
 					list_del(&kv->node);
 					delete kv;
 				}
 			}
 
+			delete m_multi;
 			delete [] m_slots;
 		}
 	private:
@@ -97,7 +96,7 @@ namespace alg
 		}
 
 		// const version of operator []
-		const T& operator[] (uint32_t key) const 
+		const T& operator[] (uint32_t key) const
 		{
 			// hash the key using a hash function.
 			uint32_t hash = multi_hash(m_multi, key);

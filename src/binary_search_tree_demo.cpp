@@ -30,5 +30,5 @@ int main()
 	for(i = 0; i < MAX_ELEMENTS; i++){
 		printf("getting %d->%d\n",key[i], t[key[i]]);
 	}
-	exit(0);
+	return 0;
 }

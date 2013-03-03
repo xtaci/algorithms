@@ -41,7 +41,6 @@ int main(void)
 	int NVERTEX = 10;
 	UndirectedGraph * g = randgraph(NVERTEX);
 	g->print();
-
 	printf("Generating Prim's Graph: \n");	
 	Prim pg(*g);
 	pg.print();
@@ -49,6 +48,7 @@ int main(void)
 	printf("Generating Minimal spanning tree: \n");	
 	Graph * mst = pg.run();
 	mst->print();
-
-	exit(0);	
+	delete mst;
+	delete g;
+	return 0;	
 }

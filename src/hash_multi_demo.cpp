@@ -20,5 +20,5 @@ int main()
 		printf("hash %d --> %d\n", key, multi_hash(ht, key) );
 	}
 	
-	exit(0);
+	return 0;
 }

@@ -28,5 +28,5 @@ int main(void)
 		pq.dequeue();
 	}
 	printf("count# %d\n", pq.count());
-	exit(0);
+	return 0;
 }

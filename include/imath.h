@@ -22,7 +22,7 @@ namespace alg
 	 */
 	static uint32_t dot_product(const uint32_t * K, const uint32_t * A, uint32_t len)
 	{ 
-		int32_t i; 
+		uint32_t i; 
 		uint32_t sum = 0; 
 		for (i=0; i<len;i++) {
 			sum += K[i]*A[i];

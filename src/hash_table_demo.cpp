@@ -24,5 +24,5 @@ int main()
 		printf("getting %d->%d\n", i, ht[i]);
 	}
 
-	exit(0);
+	return 0;
 }

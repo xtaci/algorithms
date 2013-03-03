@@ -19,5 +19,5 @@ int main(void)
 	printf("%s * 50 = %s\n", a.to_string(), (a*50).to_string());
 	printf("%s * %s = %s\n", a.to_string(), b.to_string(), (a*b).to_string());
 
-	exit(0);
+	return 0;
 }

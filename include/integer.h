@@ -21,6 +21,7 @@
 #include <string.h>  
 #include <limits.h>
 #include <math.h>
+#include "generic.h"
 
 namespace alg
 {
@@ -30,13 +31,10 @@ namespace alg
 		typedef unsigned short component_t;
 		typedef unsigned long double_component_t;
 
-		#define MAX_COMPONENT  ((component_t)(-1))
+		#define Max_COMPONENT  ((component_t)(-1))
 		#define COMPONENT_BITS  (sizeof(component_t)*CHAR_BIT)
 
 		#define LOG_2_10    3.3219280948873623478703194294894
-
-		#define MIN(x,y)  ((x)<(y) ? (x) : (y))
-		#define MAX(x,y)  ((x)>(y) ? (x) : (y))
 
 		component_t* c;    /* least-significant word first */
 		int num_components;
@@ -58,16 +56,16 @@ namespace alg
 
 		~Integer() 
 		{
-			delete c;
+			delete [] c;
 		}
 
 		inline const component_t & operator[] (int i) const { return c[i]; }
 		inline component_t & operator[] (int i) { return c[i]; }
 
 		inline const component_t * components() const { return c; } 
-		inline int size() const { return num_components; }
+		inline uint32_t size() const { return num_components; }
 		
-		static const Integer from_string(char* s) 
+		static const Integer from_string(const char* s) 
 		{
 			Integer result((int)ceil(LOG_2_10*strlen(s)/COMPONENT_BITS));
 			Integer digit(1);
@@ -113,7 +111,7 @@ namespace alg
 
 		bool is_zero() 
 		{
-			int i;
+			uint32_t i;
 			for(i=0; i < size(); i++) {
 				if ((*this)[i] != 0) return false;
 			}
@@ -123,26 +121,28 @@ namespace alg
 		// Integer Assignment
 		Integer & operator= (const Integer & source)
 		{
-			memmove(c, source.components(), sizeof(component_t)*MIN(source.size(), size()));
+			memmove(c, source.components(), sizeof(component_t)*Min(source.size(), size()));
 
 			if (size() > source.size()) {
 				memset(c + source.size(), 0, sizeof(component_t)*(size() - source.size()));
 			}
+
+			return (*this);
 		}
 
 		const Integer operator+ (const Integer & rhs)
 		{
-			Integer result(MAX(size(), rhs.size())+1);
+			Integer result(Max(size(), rhs.size())+1);
 
 			double_component_t carry = 0;
-			int i;
+			uint32_t i;
 			for(i=0; i<size() || i<rhs.size() || carry != 0; i++) {
 				double_component_t partial_sum = carry;
 				carry = 0;
 				if (i < size())  partial_sum += (*this)[i];
 				if (i < rhs.size()) partial_sum += rhs[i];
-				if (partial_sum > MAX_COMPONENT) {
-					partial_sum &= MAX_COMPONENT;
+				if (partial_sum > Max_COMPONENT) {
+					partial_sum &= Max_COMPONENT;
 					carry = 1;
 				}
 				result[i] = (component_t)partial_sum;
@@ -154,17 +154,17 @@ namespace alg
 
 		const Integer operator- (const Integer & right)
 		{
-			Integer result(MAX(size(), right.size()));
+			Integer result(Max(size(), right.size()));
 
 			int borrow = 0;
-			int i;
+			uint32_t i;
 			for(i=0; i<size(); i++) {
 				double_component_t lhs = (*this)[i];
 				double_component_t rhs = (i < right.size()) ? right[i] : 0;
 				if (borrow) {
 				if (lhs <= rhs) {
 					/* leave borrow set to 1 */
-					lhs += (MAX_COMPONENT + 1) - 1;
+					lhs += (Max_COMPONENT + 1) - 1;
 				} else {
 					borrow = 0;
 					lhs--;
@@ -172,7 +172,7 @@ namespace alg
 			}
 				if (lhs < rhs) {
 					borrow = 1;
-					lhs += MAX_COMPONENT + 1;
+					lhs += Max_COMPONENT + 1;
 				}
 				result[i] = lhs - rhs;
 			}
@@ -186,38 +186,38 @@ namespace alg
 			Integer result(size()+1);
 
 			double_component_t carry = 0;
-			int i;
+			uint32_t i;
 			for(i=0; i<size() || carry != 0; i++) {
 				double_component_t partial_sum = carry;
 				carry = 0;
 				if (i < size())  partial_sum += (*this)[i]*rhs;
 				carry = partial_sum >> COMPONENT_BITS;
-				result[i] = (component_t)(partial_sum & MAX_COMPONENT);
+				result[i] = (component_t)(partial_sum & Max_COMPONENT);
 			}
 			return result;
 		}
 
 		const Integer operator* (const Integer & rhs)
 		{
-			Integer result(MAX(size(), rhs.size())*2);
+			Integer result(Max(size(), rhs.size())*2);
 
-			int i, lidx, ridx;
+			uint32_t i, lidx, ridx;
 			double_component_t carry = 0;
-			int max_size_no_carry;
-			int left_max_component  = size() - 1;
-			int right_max_component = rhs.size() - 1;
+			uint32_t max_size_no_carry;
+			uint32_t left_max_component  = size() - 1;
+			uint32_t right_max_component = rhs.size() - 1;
 			while((*this)[left_max_component] == 0) left_max_component--;
 			while(rhs[right_max_component] == 0) right_max_component--;
 			max_size_no_carry = left_max_component + right_max_component;
 			for(i=0; i <= max_size_no_carry || carry != 0; i++) {
 				double_component_t partial_sum = carry;
 				carry = 0;
-				lidx = MIN(i, left_max_component);
+				lidx = Min(i, left_max_component);
 				ridx = i - lidx;
 				while(lidx >= 0 && ridx <= right_max_component) {
 					partial_sum += ((double_component_t)(*this)[lidx])*rhs[ridx];
 					carry += partial_sum >> COMPONENT_BITS;
-					partial_sum &= MAX_COMPONENT;
+					partial_sum &= Max_COMPONENT;
 					lidx--; ridx++;
 				}
 				result[i] = partial_sum;
@@ -244,7 +244,7 @@ namespace alg
 		{
 			double_component_t mod_two_power = 1;
 			double_component_t result = 0;
-			int i, bit;
+			uint32_t i, bit;
 			for(i=0; i<size(); i++) {
 				for(bit=0; bit<COMPONENT_BITS; bit++) {
 					if (((*this)[i] & (1 << bit)) != 0) {
@@ -267,7 +267,7 @@ namespace alg
 			Integer result = rhs;
 			Integer mod_two_power(rhs.size() + 1);
 
-			int i, bit;
+			uint32_t i, bit;
 			mod_two_power[0] = 1;
 			for(i=0; i<size(); i++) {
 				for(bit=0; bit<COMPONENT_BITS; bit++) {
@@ -289,7 +289,7 @@ namespace alg
 
 		int compare(const Integer & rhs)
 		{
-			int i = MAX(size() - 1, rhs.size() - 1);
+			uint32_t i = Max(size() - 1, rhs.size() - 1);
 			for ( ; i >= 0; i--) {
 				component_t left_comp =
 					(i < size()) ? (*this)[i] : 0;
@@ -306,7 +306,7 @@ namespace alg
 private:
 		void shift_left_one_integer() 
 		{
-			int i;
+			uint32_t i;
 			(*this)[size() - 1] <<= 1;
 			for (i = size() - 2; i >= 0; i--) {
 				(*this)[i + 1] |= (*this)[i] >> (COMPONENT_BITS - 1);
@@ -316,7 +316,7 @@ private:
 
 		void shift_right_one_integer() 
 		{
-			int i;
+			uint32_t i;
 			(*this)[0] >>= 1;
 			for (i = 1; i < size(); i++) {
 				(*this)[i - 1] |= ((*this)[i] & 1) << (COMPONENT_BITS - 1);

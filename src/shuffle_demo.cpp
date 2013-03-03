@@ -31,6 +31,6 @@ int main()
 	// print the result
 	printf("The list after using Yates' shuffle algorithm:\n");
 	printlist(list,MAX_ELEMENTS);
-	exit(0);
+	return 0;
 }
 

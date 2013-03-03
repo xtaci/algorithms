@@ -50,5 +50,5 @@ int main(void)
 	
 	printf("\n -- hashing big int into %d\n", uhash_bigint(&params, sha.digest,5)); 
 
-	exit(0);
+	return 0;
 }

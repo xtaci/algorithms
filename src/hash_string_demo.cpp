@@ -17,5 +17,5 @@ int main(void)
 	for (uint32_t i=0;i<sizeof(strs)/sizeof(char*);i++) {
 		printf("hash string: %s --> %u\n", strs[i], hash_string(strs[i], strlen(strs[i])));
 	}
-	exit(0);
+	return 0;
 }

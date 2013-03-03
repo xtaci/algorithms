@@ -29,5 +29,5 @@ int main()
 	printf("The list after sorting using radix sort algorithm:\n");
 	printlist(list,MAX_ELEMENTS);
 
-	exit(0);
+	return 0;
 }

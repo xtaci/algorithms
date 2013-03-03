@@ -48,5 +48,5 @@ int main()
 	depth_first_search(*g, 0);
 
 	delete g;
-	exit(0);
+	return 0;
 }

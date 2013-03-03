@@ -49,7 +49,7 @@ namespace alg
 		 */
 		~BitSet()
 		{
-			delete m_bits;
+			delete [] m_bits;
 		}
 
 	private:

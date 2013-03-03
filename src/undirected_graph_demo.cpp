@@ -60,5 +60,5 @@ int main()
 	}
 
 	g->print();
-	exit(0);
+	return 0;
 }

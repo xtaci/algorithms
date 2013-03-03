@@ -68,5 +68,5 @@ int main(void)
 	}
 	delete result;
 
-	exit(0);	
+	return 0;	
 }

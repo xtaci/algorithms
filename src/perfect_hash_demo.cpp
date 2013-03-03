@@ -50,5 +50,5 @@ int main(void)
 		printf("%s\n", e.what());
 	}
 
-	exit(0);
+	return 0;
 }

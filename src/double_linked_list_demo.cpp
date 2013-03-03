@@ -103,5 +103,5 @@ int main()
 		printf("freeing %d\n", node->key);
 		free(node);
 	}
-	exit(0);
+	return 0;
 }

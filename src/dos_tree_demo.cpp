@@ -43,5 +43,5 @@ int main(void)
     }
 
 	t.print();
-	exit(0);
+	return 0;
 }
