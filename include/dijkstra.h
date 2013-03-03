@@ -43,30 +43,26 @@ namespace alg
 		const Graph & g; 
 		Heap<uint32_t> Q;		// a binary heap
 		HashTable<uint32_t> dist; 	// distance hash table
-		HashTable<int32_t> previous; 	// previous vertex hash table
-	private:
-		/**
-		 * reorder operation i.e. heap decrease key operation.
-	 	*/
-		inline void reorder(uint32_t id, uint32_t new_weight) 
-		{
-			int index;
-			int key = new_weight;
-			Q.decrease_key(id, new_weight);
-		};
-
 	public:
 		static const int UNDEFINED = -1;
 		/**
 		 * init dijkstra workspace
 		 */
-		Dijkstra(const struct Graph & graph, uint32_t src_id):g(graph),
+		Dijkstra(const struct Graph & graph):g(graph),
 			Q(g.vertex_count()),
-			dist(g.vertex_count()),
-			previous(g.vertex_count())
+			dist(g.vertex_count()) {}
+	
+		// run dijkstra algorithm, and return the previous table
+		HashTable<int32_t> * run(uint32_t src_id) 
 		{
+			// previous vertex hash table
+			HashTable<int32_t> * previous = new HashTable<int32_t>(g.vertex_count()); 	
+
+			Q.clear();
+			dist.clear();
+
 			// source 
-			Graph::Adjacent * source = graph[src_id];
+			Graph::Adjacent * source = g[src_id];
 			Q.insert(0, source->v.id);	// weight->id binary heap
 			dist[source->v.id] = 0;
 
@@ -79,18 +75,9 @@ namespace alg
 					dist[a->v.id] = INT_MAX;
 					// set initial value to UNDEFINED
 				}
-				previous[a->v.id] =  UNDEFINED;
+				(*previous)[a->v.id] =  UNDEFINED;
 			}
-		};
-	
-		/**
-		 * Destructor
-		 */	
-		~Dijkstra() { };
 
-		// run dijkstra algorithm, and return the previous table
-		HashTable<int32_t> & run() 
-		{
 			while(!Q.is_empty()) {    // The main loop
 				Graph::Adjacent * u = g[Q.min_value()];
 				int dist_u = Q.min_key();
@@ -106,8 +93,8 @@ namespace alg
 					uint32_t dist_v = dist[v->id];
 					if (alt < dist_v) {
 						dist[v->id] = alt;
-						reorder(v->id, alt);
-						previous[v->id] = u->v.id;
+						Q.decrease_key(v->id, alt);
+						(*previous)[v->id] = u->v.id;
 					}
 				}
 			}

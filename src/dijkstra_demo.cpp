@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <time.h>
+#include <memory>
 
 #include "directed_graph.h"
 #include "dijkstra.h"
@@ -40,21 +41,32 @@ int main(void)
 	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 50;
-	DirectedGraph * g = randgraph(NVERTEX);
+	std::auto_ptr<DirectedGraph> g(randgraph(NVERTEX));
 	g->print();
 
-	printf("finding Dijkstra shortest path starting from 0: \n");	
-	Dijkstra dijkstra(*g, 0);
+	Dijkstra dijkstra(*g);
 	Graph::Adjacent * a;
-	HashTable<int32_t> & result = dijkstra.run();
+	printf("finding Dijkstra shortest path starting from 0: \n");
+	HashTable<int32_t> * result = dijkstra.run(0);
 
 	list_for_each_entry(a, &g->list(), a_node){
 		printf("previous of %u is ", a->v.id);
-		int32_t pre = result[a->v.id];
+		int32_t pre = (*result)[a->v.id];
 		if (pre == Dijkstra::UNDEFINED) { printf("UNDEFINED\n"); }
 		else printf("%d\n", pre);
 	}
+	delete result;
 
-	delete g;	
+	printf("finding Dijkstra shortest path starting from 10: \n");	
+
+	result = dijkstra.run(10);
+	list_for_each_entry(a, &g->list(), a_node){
+		printf("previous of %u is ", a->v.id);
+		int32_t pre = (*result)[a->v.id];
+		if (pre == Dijkstra::UNDEFINED) { printf("UNDEFINED\n"); }
+		else printf("%d\n", pre);
+	}
+	delete result;
+
 	exit(0);	
 }
