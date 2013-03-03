@@ -103,6 +103,23 @@ namespace alg
 		inline bool is_empty() const { return (m_size==0)?true:false; }
 
 		/**
+		 * clear the heap
+		 */
+		inline void clear() { m_size = 0; }
+
+		/**
+		 * contains test
+		 */
+		bool contains(const T & value)
+		{
+			for(uint32_t i=1;i<=m_size;i++) {
+				if(m_kvs[i].value == value) return true;
+			}
+
+			return false;
+		}
+
+		/**
 		 * delete the min element --> heap top.
 		 */
 		void delete_min() 
@@ -152,35 +169,33 @@ namespace alg
 
 		/**
 		 * so called DECREASE KEY operation.
+		 * step 1. find the value
+		 * step 2. decrease the key to the newkey
 		 */
-		inline void decrease_key(int index, int key)
+		inline void decrease_key(const T & value, int newkey)
 		{
-			if (key >= m_kvs[index].key) return; 	// violate DECREASE meanning.
+			uint32_t index = m_size+1;
+			for (uint32_t i=1;i<=m_size;i++) {
+				if (m_kvs[i].value == value) {
+					index = i;
+					break;
+				}
+			}
+
+			if (index > m_size) return; 				// value not found 
+
+			if (newkey >= m_kvs[index].key) return; 	// violate DECREASE meanning.
 			
 			int now = index;
-			uintptr_t value = m_kvs[index].value;
-
-			while(m_kvs[now/2].key > key) 
+			while(m_kvs[now/2].key > newkey) 
 			{
 				m_kvs[now] = m_kvs[now/2];
 				now /= 2;
 			}
 
-			m_kvs[now].key 	= key;
+			m_kvs[now].key 	= newkey;
 			m_kvs[now].value= value;
 		}
-
-		/**
-		 * return the index where value resides
-		 */
-		inline int find_value(const T & value) const
-		{
-			for (uint32_t i=1;i<=m_size;i++) {
-				if (m_kvs[i].value == value) return i;
-			}
-			return -1;
-		}
-
 	};
 }
 

@@ -139,11 +139,11 @@ namespace alg
 						float tentative = g_score(cx,cy) + SQRT2;
 					
 						// if neighbour not in the openset or dist < g_score[neighbour]	
-						if (openset.find_value(nx*ncol+ny) < 0 || tentative < g_score(nx,ny)) {
+						if (!openset.contains(nx*ncol+ny) || tentative < g_score(nx,ny)) {
 							came_from[nx*ncol+ny] = cx*ncol+cy; // record path
 							g_score(nx,ny) = tentative;
 							f_score(nx,ny) = tentative + estimate(nx,ny,x2,y2);
-							if (openset.find_value(nx*ncol+ny) < 0) {
+							if (!openset.contains(nx*ncol+ny)) {
 								openset.insert(f_score(nx,ny), nx*ncol+ny);
 							}
 						}

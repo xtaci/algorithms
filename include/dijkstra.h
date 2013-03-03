@@ -40,20 +40,19 @@ namespace alg
 	 */
 	class Dijkstra {
 	private:
-		Heap<uint32_t> * Q;		// a binary heap
-		HashTable<uint32_t> * dist; 	// distance hash table
-		HashTable<int32_t> * previous; 	// previous vertex hash table
-		const Graph & graph; 
+		const Graph & g; 
+		Heap<uint32_t> Q;		// a binary heap
+		HashTable<uint32_t> dist; 	// distance hash table
+		HashTable<int32_t> previous; 	// previous vertex hash table
 	private:
 		/**
 		 * reorder operation i.e. heap decrease key operation.
 	 	*/
-		inline void reorder(uint32_t id, uint32_t new_weight) {	
+		inline void reorder(uint32_t id, uint32_t new_weight) 
+		{
 			int index;
 			int key = new_weight;
-			if ((index=Q->find_value(id))!=-1) {
-				Q->decrease_key(index, key);
-			}
+			Q.decrease_key(id, new_weight);
 		};
 
 	public:
@@ -61,45 +60,41 @@ namespace alg
 		/**
 		 * init dijkstra workspace
 		 */
-		Dijkstra(const struct Graph & g, uint32_t src_id):graph(g) {
-			// binary heap init
-			Q = new Heap<uint32_t>(g.vertex_count());
-			dist = new HashTable<uint32_t>(g.vertex_count());
-			previous = new HashTable<int32_t>(g.vertex_count());
-
+		Dijkstra(const struct Graph & graph, uint32_t src_id):g(graph),
+			Q(g.vertex_count()),
+			dist(g.vertex_count()),
+			previous(g.vertex_count())
+		{
 			// source 
 			Graph::Adjacent * source = graph[src_id];
-			Q->insert(0, source->v.id);	// weight->id binary heap
-			(*dist)[source->v.id] = 0;
+			Q.insert(0, source->v.id);	// weight->id binary heap
+			dist[source->v.id] = 0;
 
 			// other vertices
 			Graph::Adjacent * a;
 			list_for_each_entry(a, &g.list(), a_node){
 				if (a->v.id != source->v.id) {
-					Q->insert(INT_MAX, a->v.id);
+					Q.insert(INT_MAX, a->v.id);
 					// set inital distance to INT_MAX
-					(*dist)[a->v.id] = INT_MAX;
+					dist[a->v.id] = INT_MAX;
 					// set initial value to UNDEFINED
 				}
-				(*previous)[a->v.id] =  UNDEFINED;
+				previous[a->v.id] =  UNDEFINED;
 			}
 		};
 	
 		/**
 		 * Destructor
 		 */	
-		~Dijkstra() {
-			delete Q;
-			delete dist;
-			delete previous;
-		};
+		~Dijkstra() { };
 
 		// run dijkstra algorithm, and return the previous table
-		HashTable<int32_t> & run() {
-			while(!Q->is_empty()) {    // The main loop
-				Graph::Adjacent * u = graph[Q->min_value()];
-				int dist_u = Q->min_key();
-				Q->delete_min();
+		HashTable<int32_t> & run() 
+		{
+			while(!Q.is_empty()) {    // The main loop
+				Graph::Adjacent * u = g[Q.min_value()];
+				int dist_u = Q.min_key();
+				Q.delete_min();
 
 				if (dist_u == INT_MAX) {
 					break;	
@@ -108,16 +103,16 @@ namespace alg
 				Graph::Vertex * v;
 				list_for_each_entry(v, &u->v_head, v_node){
 					uint32_t alt = dist_u + v->weight;
-					uint32_t dist_v = (*dist)[v->id];
+					uint32_t dist_v = dist[v->id];
 					if (alt < dist_v) {
-						(*dist)[v->id] = alt;
+						dist[v->id] = alt;
 						reorder(v->id, alt);
-						(*previous)[v->id] = u->v.id;
+						previous[v->id] = u->v.id;
 					}
 				}
 			}
 	
-			return *previous;
+			return previous;
 		};
 	};
 }
