@@ -35,28 +35,16 @@ namespace alg
 		/**
 		 * dynamic order stat node structure definition
 		 */
-		typedef struct dostree_node_t {
+		typedef struct dostree_node_t : public rbtree_node_t {
 			int key;	// the key	
 			int size;	// the size of this subtree
-			struct rbtree_node_t node;	// also, it's a red-black tree node.
 		} *dostree_node;
 
-#define DOSNODE(rbnode) \
-	((dostree_node)((char *)rbnode - (unsigned long)(&((dostree_node)0)->node)))
-
-#define DOSNODE_SIZE(rbnode) \
-	(rbnode?DOSNODE(rbnode)->size:0)
+#define DOSNODE(rbnode) static_cast<dostree_node>(rbnode)
+#define DOSNODE_SIZE(rbnode) (rbnode?DOSNODE(rbnode)->size:0)
 
 	public:
-		DosTree() 
-		{
-			cb_left = cb_right =  fix_rotation;
-		}
-
-		~DosTree()
-		{
-			// TODO: delete nodes..
-		}
+		DosTree() { }
 	private:
 		DosTree(const DosTree&);
 		DosTree& operator=(const DosTree&);
@@ -77,7 +65,7 @@ namespace alg
 			rbtree_node n = root;
 
 			if (root == NULL) {
-				root = &inserted_node->node;
+				root = inserted_node;
 			}
 			else {
 				while (1) {
@@ -85,35 +73,33 @@ namespace alg
 					DOSNODE(n)->size+=1;
 					if (key < DOSNODE(n)->key) {
 						if (n->left == NULL) {
-							n->left = &inserted_node->node;
+							n->left = inserted_node;
 							break;
 						} else {
 							n = n->left;
 						}
 					} else {
 						if (n->right == NULL) {
-							n->right = &inserted_node->node;
+							n->right = inserted_node;
 							break;
 						} else {
 							n = n->right;
 						}
 					}
 				}
-				inserted_node->node.parent = n;	
+				inserted_node->parent = n;	
 			}
 
 			// fix red-black properties
-			insert_case1(&inserted_node->node);
+			insert_case1(inserted_node);
 		}
 
 		/**
 		 * delete the key in the red-black tree
 		 */
-		void delete_key(dostree_node x)
+		void delete_key(dostree_node n)
 		{
 			rbtree_node child;
-			if (x == NULL) return;
-			rbtree_node n = &x->node;
 			
 			// phase 1. fix up size
 			fixup_size(n);
@@ -121,7 +107,7 @@ namespace alg
 			// phase 2. handle red-black properties, and deletion work.
 			if (n->left != NULL && n->right != NULL) {
 				/* Copy key/value from predecessor and then delete it instead */
-				rbtree_node pred = maximum_node(n->left);
+				dostree_node pred = DOSNODE(maximum_node(n->left));
 				DOSNODE(n)->key = DOSNODE(pred)->key;
 				DOSNODE(n)->size = DOSNODE(pred)->size;
 				n = pred;
@@ -182,10 +168,15 @@ namespace alg
 		/**
 		 * left/right rotation call back function
 		 */
-		static void fix_rotation(rbtree_node n, rbtree_node parent)
+		void rotate_left_callback(rbtree_node n, rbtree_node parent)
 		{
 			DOSNODE(parent)->size = DOSNODE_SIZE(n);
 			DOSNODE(n)->size = DOSNODE_SIZE(n->left) + DOSNODE_SIZE(n->right) + 1;
+		}
+		
+		void rotate_right_callback(rbtree_node n, rbtree_node parent)
+		{
+			rotate_left_callback(n,parent);
 		}
 
 		/**
@@ -207,12 +198,12 @@ namespace alg
 			dostree_node result =new dostree_node_t;
 			result->key = key;
 			result->size = 1;
-			result->node.color = rbtree_node_color;
-			result->node.left = NULL;
-			result->node.right = NULL;
-			if(left !=NULL) left->parent = &result->node;
-			if(right!=NULL) right->parent = &result->node;
-			result->node.parent = NULL;
+			result->color = rbtree_node_color;
+			result->left = NULL;
+			result->right = NULL;
+			if(left !=NULL) left->parent = result;
+			if(right!=NULL) right->parent = result;
+			result->parent = NULL;
 			return result;
 		}
 

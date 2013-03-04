@@ -35,18 +35,14 @@ namespace alg
 		/**
 		 * Interval-Tree node definition
 		 */
-		typedef struct ivltree_node_t{
+		typedef struct ivltree_node_t : public rbtree_node_t {
 			int low;	// lower-bound
 			int high;	// higher-bound
 			int m;		// max subtree upper bound value
-			rbtree_node_t node;	// red-black tree structure
 		} * ivltree_node;
 
-#define IVLNODE(rbnode) \
-	((ivltree_node)((char *)rbnode - (unsigned long)(&((ivltree_node)0)->node)))
-
-#define IVLNODE_M(rbnode) \
-	(rbnode?IVLNODE(rbnode)->m:INT_MIN)
+#define IVLNODE(rbnode) static_cast<ivltree_node>(rbnode)
+#define IVLNODE_M(rbnode) (rbnode?IVLNODE(rbnode)->m:INT_MIN)
 
 	public:
 		/**
@@ -54,10 +50,7 @@ namespace alg
 		 * initialized an interval tree
 		 * same as init an red-black tree
 		 */
-		IntervalTree() 
-		{
-			cb_left = cb_right = fix_rotation;
-		}
+		IntervalTree() { }
 
 		/**
 		 * ivltree_lookup
@@ -69,13 +62,13 @@ namespace alg
 		 */
 		ivltree_node lookup(int low, int high) 
 		{
-			rbtree_node n = root;
-			while (n != NULL && (low > IVLNODE(n)->high || IVLNODE(n)->low > high)) { // should search in childs
-				if (n->left !=NULL && low <=IVLNODE(n->left)->m) n = n->left; // path choice on m.
-				else n = n->right;
+			ivltree_node n = IVLNODE(root);
+			while (n != NULL && (low > n->high || n->low > high)) { // should search in childs
+				if (n->left !=NULL && low <=IVLNODE(n->left)->m) n = IVLNODE(n->left); // path choice on m.
+				else n = IVLNODE(n->right);
 			}
 
-			return n==NULL?NULL:IVLNODE(n); // beware of the NULL pointer
+			return n;
 		}
 
 		/**
@@ -86,45 +79,44 @@ namespace alg
 		{
 			ivltree_node inserted_node = new_node(low, high, RED, NULL, NULL);
 			if (root == NULL) {
-				root = &inserted_node->node;
+				root = inserted_node;
 			} else {
-				rbtree_node n = root;
+				ivltree_node n = IVLNODE(root);
 				while (1) {
 					// update 'm' for each node traversed from root
-					if (inserted_node->m > IVLNODE(n)->m) {
-						IVLNODE(n)->m = inserted_node->m;
+					if (inserted_node->m > n->m) {
+						n->m = inserted_node->m;
 					}
 
 					// find a proper position
-					if (low < IVLNODE(n)->low) {
+					if (low < n->low) {
 						if (n->left == NULL) {
-							n->left = &inserted_node->node;
+							n->left = inserted_node;
 							break;
 						} else {
-							n = n->left;
+							n = IVLNODE(n->left);
 						}
 					} else {
 						if (n->right == NULL) {
-							n->right = &inserted_node->node;
+							n->right = inserted_node;
 							break;
 						} else {
-							n = n->right;
+							n = IVLNODE(n->right);
 						}
 					}
 				}
-				inserted_node->node.parent = n;
+				inserted_node->parent = n;
 			}
-			insert_case1(&inserted_node->node);
+			insert_case1(inserted_node);
 		}
 
 		/**
 		 * delete the key in the red-black tree
 		 */
-		void delete_key(ivltree_node x) 
+		void delete_key(ivltree_node n) 
 		{
 			rbtree_node child;
-			if (x == NULL) return;
-			rbtree_node n = &x->node;
+			if (n == NULL) return;
 
 			// phase 1. fixup the 'm' value until m is not the max value of the path.
 			fixup_m(n);
@@ -132,9 +124,9 @@ namespace alg
 			// phase 2. red black tree deletion
 			if (n->left != NULL && n->right != NULL) {
 				/* Copy key/value from predecessor and then delete it instead */
-				rbtree_node pred = maximum_node(n->left);
-				IVLNODE(n)->low = IVLNODE(pred)->low;
-				IVLNODE(n)->high= IVLNODE(pred)->high;
+				ivltree_node pred = IVLNODE(maximum_node(n->left));
+				n->low = pred->low;
+				n->high= pred->high;
 				n = pred;
 			}
 
@@ -148,15 +140,15 @@ namespace alg
 			if (n->parent == NULL && child != NULL)
 				child->color = BLACK;
 
-			delete(IVLNODE(n));
+			delete(n);
 		}
 
 		void print() {
-			print_helper(root, 0);
+			print_helper(IVLNODE(root), 0);
 			puts("");
 		}
 
-		void print_helper(rbtree_node n, int indent) {
+		void print_helper(ivltree_node n, int indent) {
 			int i;
 
 			if (n == NULL) {
@@ -165,16 +157,16 @@ namespace alg
 			}
 
 			if (n->right != NULL) {
-				print_helper(n->right, indent + INDENT_STEP);
+				print_helper(IVLNODE(n->right), indent + INDENT_STEP);
 			}
 			for(i=0; i<indent; i++)
 				fputs(" ", stdout);
 			if (n->color == BLACK)
-				printf("[%d %d, m->%d]\n", IVLNODE(n)->low,IVLNODE(n)->high,IVLNODE(n)->m);
+				printf("[%d %d, m->%d]\n", n->low,n->high,n->m);
 			else
-				printf("*[%d %d, m->%d]\n", IVLNODE(n)->low, IVLNODE(n)->high,IVLNODE(n)->m);
+				printf("*[%d %d, m->%d]\n", n->low, n->high,n->m);
 			if (n->left != NULL) {
-				print_helper(n->left, indent + INDENT_STEP);
+				print_helper(IVLNODE(n->left), indent + INDENT_STEP);
 			}
 		}
 
@@ -183,14 +175,17 @@ namespace alg
 		/**
 		 * fix 'm' value caused by rotation
 		 */
-		static void fix_rotation(rbtree_node n, rbtree_node parent)
+		void rotate_left_callback(rbtree_node n, rbtree_node parent)
 		{
 			// parent inherit max m value
 			IVLNODE(parent)->m = IVLNODE(n)->m;
-
 			// update node 'm' value by it's children.
-			IVLNODE(n)->m = 
-				Max(IVLNODE(n)->high, Max(IVLNODE_M(n->left), IVLNODE_M(n->right)));
+			IVLNODE(n)->m = Max(IVLNODE(n)->high, Max(IVLNODE_M(n->left), IVLNODE_M(n->right)));
+		}
+
+		void rotate_right_callback(rbtree_node n, rbtree_node parent)
+		{
+			rotate_left_callback(n, parent);
 		}
 
 		/**
@@ -229,12 +224,12 @@ namespace alg
 			result->low = low;
 			result->high = high;
 			result->m = high;
-			result->node.color = rbtree_node_color;
-			result->node.left = left;
-			result->node.right = right;
-			if(left !=NULL) left->parent = &result->node;
-			if(right!=NULL) right->parent = &result->node;
-			result->node.parent = NULL;
+			result->color = rbtree_node_color;
+			result->left = left;
+			result->right = right;
+			if(left !=NULL) left->parent = result;
+			if(right!=NULL) right->parent = result;
+			result->parent = NULL;
 			return result;
 		}
 	};

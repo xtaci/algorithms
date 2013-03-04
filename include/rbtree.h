@@ -22,46 +22,41 @@
 
 namespace alg
 {
-	const int INDENT_STEP=4;
-
 	template<typename KeyT, typename ValueT>
 	class RBTree 
 	{
 	protected:
+		static const int INDENT_STEP=4;
+
 		enum rbtree_node_color { RED, BLACK };
 		typedef enum rbtree_node_color color;
+
 		typedef struct rbtree_node_t {
-			KeyT key;
-			ValueT value;
 			rbtree_node_t* left;
 			rbtree_node_t* right;
 			rbtree_node_t* parent;
 			enum rbtree_node_color color;
 		} *rbtree_node;
 
-		/**
-		 * According to rotation operation, n1 is the node, n2 is parent node affected by rotation
-		 */
-		typedef void (*rotate_callback)(rbtree_node n1, rbtree_node n2);
+		// a default Key-Value node.
+		struct KVNode: public rbtree_node_t {
+			KeyT key;
+			ValueT value;
+		};
+
+#define KVNODE(node) static_cast<KVNode *>(node)
 
 		rbtree_node root;
-		rotate_callback cb_left;
-		rotate_callback cb_right;	
 
 	public:
 		/**
 		 * init a red-black tree 
 		 */
-		RBTree() 
-		{
-			root = NULL;
-			cb_left = NULL;
-			cb_right = NULL;
-		}
+		RBTree() : root(NULL) {}
 
 		virtual ~RBTree()
 		{
-			// TODO: delete the nodes
+			destruct(root);
 		}
 
 	private:
@@ -72,15 +67,14 @@ namespace alg
 		/**
 		 * rbtree_insert
 		 * insert a key-value pair into red-black tree
-		 * you must specify your own compare function
 		 */
 		virtual void insert(const KeyT & key, const ValueT & value) 
 		{
-			rbtree_node inserted_node = new_node(key, value, RED, NULL, NULL);
+			KVNode * inserted_node = new_node(key, value, RED, NULL, NULL);
 			if (root == NULL) {
 				root = inserted_node;
 			} else {
-				rbtree_node n = root;
+				KVNode * n = KVNODE(root);
 				while (1) {
 					if (key == n->key) {
 						n->value = value;
@@ -92,7 +86,7 @@ namespace alg
 							n->left = inserted_node;
 							break;
 						} else {
-							n = n->left;
+							n = static_cast<KVNode*>(n->left);
 						}
 					} else {
 						assert (key > n->key);
@@ -100,7 +94,7 @@ namespace alg
 							n->right = inserted_node;
 							break;
 						} else {
-							n = n->right;
+							n = static_cast<KVNode*>(n->right);
 						}
 					}
 				}
@@ -115,7 +109,7 @@ namespace alg
 		 */
 		virtual ValueT lookup(KeyT key) 
 		{
-			rbtree_node n = lookup_node(key);
+			KVNode * n = lookup_node(key);
 			return n == NULL ? NULL : n->value;
 		}
 
@@ -125,11 +119,11 @@ namespace alg
 		virtual void delete_key(KeyT key) 
 		{
 			rbtree_node child;
-			rbtree_node n = lookup_node(key);
+			KVNode * n = lookup_node(key);
 			if (n == NULL) return;  /* Key not found, do nothing */
 			if (n->left != NULL && n->right != NULL) {
 				/* Copy key/value from predecessor and then delete it instead */
-				rbtree_node pred = maximum_node(n->left);
+				KVNode * pred = static_cast<KVNode*>(maximum_node(n->left));
 				n->key   = pred->key;
 				n->value = pred->value;
 				n = pred;
@@ -148,18 +142,18 @@ namespace alg
 		}
 
 		virtual void print() {
-			print_helper(root, 0);
+			print_helper(KVNODE(root), 0);
 			puts("");
 		}
 	protected:
-		virtual void print_helper(rbtree_node n, int indent) {
+		virtual void print_helper(KVNode * n, int indent) {
 			int i;
 			if (n == NULL) {
 				fputs("<empty tree>", stdout);
 				return;
 			}
 			if (n->right != NULL) {
-				print_helper(n->right, indent + INDENT_STEP);
+				print_helper(KVNODE(n->right), indent + INDENT_STEP);
 			}
 			for(i=0; i<indent; i++)
 				fputs(" ", stdout);
@@ -168,10 +162,50 @@ namespace alg
 			else
 				printf("<%d>\n", (int)n->key);
 			if (n->left != NULL) {
-				print_helper(n->left, indent + INDENT_STEP);
+				print_helper(KVNODE(n->left), indent + INDENT_STEP);
 			}
 		}
 
+		// 
+		void destruct(rbtree_node n)
+		{
+			if (n==NULL) return;
+			destruct(n->left);
+			destruct(n->right);
+			delete n;
+		}
+
+		KVNode * new_node(KeyT key, ValueT value, color rbtree_node_color, rbtree_node left, rbtree_node right) {
+			KVNode * result =new KVNode;
+			result->key = key;
+			result->value = value;
+			result->color = rbtree_node_color;
+			result->left = left;
+			result->right = right;
+			if (left  != NULL)  left->parent = result;
+			if (right != NULL) right->parent = result;
+			result->parent = NULL;
+			return result;
+		}
+
+		KVNode * lookup_node(KeyT key) {
+			KVNode * n = KVNODE(root);
+			while (n != NULL) {
+				if (key == n->key) {
+					return n;
+				} else if (key < n->key) {
+					n = KVNODE(n->left);
+				} else {
+					n = KVNODE(n->right);
+				}
+			}
+			return n;
+		}
+
+	protected:
+		///
+		/// THE RED-BLACK TREE CORE
+		///
 		rbtree_node grandparent(rbtree_node n) 
 		{
 			assert (n != NULL);
@@ -203,33 +237,13 @@ namespace alg
 			return n == NULL ? BLACK : n->color;
 		}
 
-		
-		rbtree_node new_node(KeyT key, ValueT value, color rbtree_node_color, rbtree_node left, rbtree_node right) {
-			rbtree_node result =new rbtree_node_t;
-			result->key = key;
-			result->value = value;
-			result->color = rbtree_node_color;
-			result->left = left;
-			result->right = right;
-			if (left  != NULL)  left->parent = result;
-			if (right != NULL) right->parent = result;
-			result->parent = NULL;
-			return result;
-		}
+		/**
+		 * According to rotation operation, n1 is the node, n2 is parent node affected by rotation
+		 */
+		virtual void rotate_left_callback(rbtree_node n1, rbtree_node n2) { }
 
-		rbtree_node lookup_node(KeyT key) {
-			rbtree_node n = root;
-			while (n != NULL) {
-				if (key == n->key) {
-					return n;
-				} else if (key < n->key) {
-					n = n->left;
-				} else {
-					n = n->right;
-				}
-			}
-			return n;
-		}
+		virtual void rotate_right_callback(rbtree_node n1, rbtree_node n2) { }
+
 
 		void rotate_left(rbtree_node n) 
 		{
@@ -242,7 +256,7 @@ namespace alg
 			r->left = n;
 			n->parent = r;
 
-			if (cb_left!=NULL) (*cb_left)(n, r);		// rotation call back 
+			rotate_left_callback(n, r);
 		}
 
 		void rotate_right(rbtree_node n) 
@@ -256,7 +270,7 @@ namespace alg
 			L->right = n;
 			n->parent = L;
 
-			if (cb_right!=NULL) (*cb_right)(n, L);		// rotation call back 
+			rotate_right_callback(n, L);
 		}
 
 		void replace_node(rbtree_node oldn, rbtree_node newn) 
