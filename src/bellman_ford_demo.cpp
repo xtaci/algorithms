@@ -64,7 +64,7 @@ int main(void)
 	g->add_edge(2,0, -1);
 
 	BellmanFord bf2(*g);
-	bf2.run(0);
+	std::auto_ptr<HashTable<int32_t> > previous2(bf2.run(0));
 
 	printf("\nwe %s have negative weighted cycle.\n", bf2.has_negative_cycle()?"DO":"DON'T");
 
