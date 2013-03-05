@@ -48,12 +48,9 @@ namespace alg
 
 		~BST()
 		{
-			//TODO: delete nodes
+			destruct(m_root);
 		}
-	private:
-		BST(const BST&);
-		BST& operator=(const BST&);
-	public:
+
 		ValueT operator[] (const KeyT & key)
 		{
 			if (m_root == NULL) return NULL;
@@ -105,6 +102,18 @@ namespace alg
 				}
 			}
 		}
+	private:
+		void destruct(treeNode *n)
+		{
+			if (n==NULL) return;
+			destruct(n->left);
+			destruct(n->right);
+			delete n;
+		}
+
+	private:
+		BST(const BST&);
+		BST& operator=(const BST&);
 	};
 }
 
