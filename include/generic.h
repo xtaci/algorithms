@@ -29,7 +29,7 @@ namespace alg
 	 * swap 2-element, orignal value 
 	 */
 	template<typename T>
-	static void swap(T &x, T &y)
+	static inline void swap(T &x, T &y)
 	{
 		T _t = x;
 		x = y;

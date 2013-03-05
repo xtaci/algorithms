@@ -118,9 +118,9 @@ namespace alg
 			return maxflow;
 		}
 
-		const Array2D<int> & residual() const { return m_residual;}
-		const HashTable<uint32_t> & map() const { return m_map;}
-		const HashTable<uint32_t> & rmap() const { return m_rmap;}
+		inline const Array2D<int> & residual() const { return m_residual;}
+		inline const HashTable<uint32_t> & map() const { return m_map;}
+		inline const HashTable<uint32_t> & rmap() const { return m_rmap;}
 
 	private:
 		/**

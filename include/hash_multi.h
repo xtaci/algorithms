@@ -46,7 +46,7 @@ namespace alg
 	/**
 	 * init a hash table with size specified.
 	 */
-	static inline MultiHash * multi_hash_init(uint32_t size)
+	static MultiHash * multi_hash_init(uint32_t size)
 	{
 		// find prime larger than log2(size)
 		uint32_t r = ceil(log2(size));

@@ -23,7 +23,7 @@ namespace alg
 	 * hash a string into integer
 	 * using java's hashCode() implementation
 	 */
-	static inline uint32_t hash_string(const char * str, uint32_t len)
+	static uint32_t hash_string(const char * str, uint32_t len)
 	{
 		uint32_t hash=0;	
 		uint32_t i;	

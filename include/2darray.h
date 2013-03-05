@@ -54,11 +54,11 @@ namespace alg
 		/**
 		 * return number of rows of this array
 		 */
-		const uint32_t row() const { return NR; }
+		inline const uint32_t row() const { return NR; }
 		/**
 		 * return number of columns of this array
 		 */
-		const uint32_t col() const { return NC; }
+		inline const uint32_t col() const { return NC; }
 
 		/**
 		 * return the value by the given (row, col);

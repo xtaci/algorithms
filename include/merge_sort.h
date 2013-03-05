@@ -72,7 +72,7 @@ namespace alg
 	 * sort an array from left->right 
 	 */
 	template<typename T>
-	static inline void merge_sort(T *array, int left, int right)
+	static void merge_sort(T *array, int left, int right)
 	{
 			int mid = (left+right)/2;
 			/* We have to sort only when left<right because when left=right it is anyhow sorted*/

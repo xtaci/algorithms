@@ -66,7 +66,7 @@ namespace alg
 		/**
 		 * create a new vertex and add to the graph, with specified id.
 		 */
-		inline bool add_vertex(uint32_t id)
+		bool add_vertex(uint32_t id)
 		{
 			if ((*this)[id]!=NULL) return false;
 
