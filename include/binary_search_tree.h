@@ -23,6 +23,8 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <exception>
+
 namespace alg
 {
 	template<typename KeyT, typename ValueT>
@@ -39,9 +41,19 @@ namespace alg
 			treeNode *left;	// left child
 			treeNode *right;	// right child
 		};
+
+		class BSTException: public std::exception
+		{
+			public:
+			virtual const char * what() const throw()
+			{
+				return "key does not exist";
+			}
+		};
 	
 	private:
 		treeNode * m_root;
+		BSTException error;
 	
 	public:
 		BST():m_root(NULL){};
@@ -53,16 +65,36 @@ namespace alg
 
 		ValueT operator[] (const KeyT & key)
 		{
-			if (m_root == NULL) return NULL;
+			if (m_root == NULL) throw error;
 			treeNode * tmp = m_root;
 	
 			while(true) {
 				if (key == tmp->key) return tmp->value;
 				else if(key < tmp->key) {
-					if (tmp->left == NULL) return NULL;
+					if (tmp->left == NULL) throw error;
 					tmp = tmp->left;
 				} else {
-					if (tmp->right == NULL) return NULL;
+					if (tmp->right == NULL) throw error;
+					tmp = tmp->right;
+				}
+			}
+		}
+
+		/**
+		 * test whether the key is in the tree
+		 */
+		bool contains(const KeyT & key)
+		{
+			if (m_root == NULL) return false;
+			treeNode * tmp = m_root;
+	
+			while(true) {
+				if (key == tmp->key) return true;
+				else if(key < tmp->key) {
+					if (tmp->left == NULL) return false;
+					tmp = tmp->left;
+				} else {
+					if (tmp->right == NULL) return false;
 					tmp = tmp->right;
 				}
 			}

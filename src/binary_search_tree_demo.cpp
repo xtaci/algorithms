@@ -30,5 +30,11 @@ int main()
 	for(i = 0; i < MAX_ELEMENTS; i++){
 		printf("getting %d->%d\n",key[i], t[key[i]]);
 	}
+
+	for(i = 0; i < MAX_ELEMENTS; i++){
+		int k = rand()%100;
+		printf("testing %d-> %s\n",k,t.contains(k)?"YES":"NO");
+	}
+
 	return 0;
 }
