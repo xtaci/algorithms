@@ -5,13 +5,13 @@
 
 #define N 40
 
-#define MARK 0xDEAD
+#define MARK 0xEE
 
 int main(void)
 {
 	using namespace alg;
 
-	Array2D<int> grid(N,N);
+	Array2D<unsigned char> grid(N,N);
 	grid.clear(0);
 	srand(time(NULL));
 	int i,j;

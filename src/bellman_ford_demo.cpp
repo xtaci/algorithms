@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <time.h>
+#include <memory>
 
 #include "directed_graph.h"
 #include "bellman_ford.h"
@@ -40,17 +41,18 @@ int main(void)
 	srand(time(NULL));
 	int NVERTEX = 50;
 	DirectedGraph * g = randgraph(NVERTEX);
+	g->print();
+
+	BellmanFord bf(*g);
 
 	printf("finding bellman-ford shortest path starting from 3: \n");	
-	BellmanFord bf(*g, 3);
+	std::auto_ptr<HashTable<int32_t> > previous(bf.run(3));	
 
-	g->print();
-	const HashTable<int32_t> & previous = bf.run();	
 	Graph::Adjacent * a;
 	list_for_each_entry(a, &g->list(), a_node) {
 		printf("previous of %u is ", a->v.id);
-		if (previous[a->v.id]==UNDEFINED) { printf("UNDEFINED\n"); }
-		else printf("%u\n", previous[a->v.id]);
+		if ((*previous)[a->v.id]==UNDEFINED) { printf("UNDEFINED\n"); }
+		else printf("%u\n", (*previous)[a->v.id]);
 	}
 	printf("\nwe %s have negative weighted cycle.\n", bf.has_negative_cycle()?"DO":"DON'T");
 
@@ -61,8 +63,8 @@ int main(void)
 	g->add_edge(1,2, -1);
 	g->add_edge(2,0, -1);
 
-	BellmanFord bf2(*g, 0);
-	bf2.run();
+	BellmanFord bf2(*g);
+	bf2.run(0);
 
 	printf("\nwe %s have negative weighted cycle.\n", bf2.has_negative_cycle()?"DO":"DON'T");
 

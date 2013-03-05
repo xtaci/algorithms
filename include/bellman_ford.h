@@ -65,14 +65,21 @@ namespace alg
 	class BellmanFord 
 	{
 	private:		
-		HashTable<int32_t> dist; 	// hash table for distance.
-		HashTable<int32_t> previous; 	// hash table for previous vertex
-		bool has_neg_cycle;		// negative weighted cycle mark.
+		HashTable<int32_t> dist; 		// hash table for distance.
+		bool has_neg_cycle;				// negative weighted cycle mark.
 		const Graph & g;	
 	public:
-		BellmanFord(const Graph & graph, uint32_t source):
-			dist(graph.vertex_count()),previous(graph.vertex_count()),g(graph)
+		BellmanFord(const Graph & graph):
+			dist(graph.vertex_count()),g(graph)
+		{ }
+
+		/**
+ 		 * Bellman-Ford algorithm
+		 */
+		HashTable<int32_t> * run(uint32_t source)
 		{
+			// hash table for previous vertex
+			HashTable<int32_t> *  previous = new HashTable<int32_t>(g.vertex_count()); 
 			// source vertex
 			dist[source] = 0;
 
@@ -82,17 +89,11 @@ namespace alg
 				if (source != a->v.id) {
 					dist[a->v.id] = INT_MAX;
 				}
-				previous[a->v.id] = UNDEFINED;
+				(*previous)[a->v.id] = UNDEFINED;
 			}
 
 			has_neg_cycle = false;	// negative cycle mark set to 'false'.
-		}
 
-		/**
- 		 * Bellman-Ford algorithm
-		 */
-		const HashTable<int32_t> & run()
-		{
 			//  relax edges repeatedly	
 			Graph::Adjacent * u;
 			for (uint32_t i=0;i<g.vertex_count()-1;i++) {    // loop |V| -1 times
@@ -105,7 +106,7 @@ namespace alg
 
 						if (dist_u + v->weight < dist_v) {
 							dist[v->id] = dist_u + v->weight;
-							previous[v->id] = u->v.id;
+							(*previous)[v->id] = u->v.id;
 						}
 					}
 				}

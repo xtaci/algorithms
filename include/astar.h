@@ -50,11 +50,11 @@ namespace alg
 			}
 		};
 
-		static const int WALL = 0xFFFF;
+		static const unsigned char WALL = 0xFF;
 		static const float SQRT2 = 1.414213562373095;
 
 	private:
-		const Array2D<int> & m_grid;	
+		const Array2D<unsigned char> & m_grid;	
 		// The set of nodes already evaluated.
 		Array2D<bool> m_closedset;
 		// Cost from start along best known path.	
@@ -62,7 +62,7 @@ namespace alg
 		// Estimated total cost from start to goal through y.
 		Array2D<float> f_score;
 	public:
-		AStar(const Array2D<int> & grid) :
+		AStar(const Array2D<unsigned char> & grid) :
 				m_grid(grid), 
 				m_closedset(grid.row(),grid.col()),
 				g_score(grid.row(),grid.col()),
