@@ -29,7 +29,7 @@
 
 namespace alg
 {
-	class DosTree:public RBTree<int, int>
+	class DosTree:public RBTreeAbstract
 	{
 	public:
 		/**
@@ -52,7 +52,7 @@ namespace alg
 
 		dostree_node index(int index)
 		{
-			return lookup_node(root,index);
+			return lookup_node(get_root(),index);
 		}
 
 		/**
@@ -62,12 +62,12 @@ namespace alg
 		void insert(int key) 
 		{
 			dostree_node inserted_node = new_node(key, RED, NULL, NULL);
-			rbtree_node n = root;
 
-			if (root == NULL) {
-				root = inserted_node;
+			if (get_root() == NULL) {
+				set_root(inserted_node);
 			}
 			else {
+				rbtree_node n = DOSNODE(get_root());
 				while (1) {
 					// incr 1 for each node on the path traversed from the root
 					DOSNODE(n)->size+=1;
@@ -127,7 +127,7 @@ namespace alg
 		}
 
 		void print() {
-			print_helper(root, 0);
+			print_helper(get_root(), 0);
 			puts("");
 		}
 

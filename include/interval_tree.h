@@ -29,7 +29,7 @@
 
 namespace alg
 {
-	class IntervalTree:public RBTree<int,int>
+	class IntervalTree:public RBTreeAbstract
 	{
 	public:
 		/**
@@ -62,7 +62,7 @@ namespace alg
 		 */
 		ivltree_node lookup(int low, int high) 
 		{
-			ivltree_node n = IVLNODE(root);
+			ivltree_node n = IVLNODE(get_root());
 			while (n != NULL && (low > n->high || n->low > high)) { // should search in childs
 				if (n->left !=NULL && low <=IVLNODE(n->left)->m) n = IVLNODE(n->left); // path choice on m.
 				else n = IVLNODE(n->right);
@@ -78,10 +78,10 @@ namespace alg
 		void insert(int low, int high) 
 		{
 			ivltree_node inserted_node = new_node(low, high, RED, NULL, NULL);
-			if (root == NULL) {
-				root = inserted_node;
+			if (get_root() == NULL) {
+				set_root(inserted_node);
 			} else {
-				ivltree_node n = IVLNODE(root);
+				ivltree_node n = IVLNODE(get_root());
 				while (1) {
 					// update 'm' for each node traversed from root
 					if (inserted_node->m > n->m) {
@@ -144,7 +144,7 @@ namespace alg
 		}
 
 		void print() {
-			print_helper(IVLNODE(root), 0);
+			print_helper(IVLNODE(get_root()), 0);
 			puts("");
 		}
 
