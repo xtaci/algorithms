@@ -31,11 +31,11 @@ namespace alg
 	private:
 		class QueueEmptyException: public std::exception
 		{
-				public:
-				virtual const char * what() const throw()
-				{
-					return "Queue is empty.";
-				}
+			public:
+			virtual const char * what() const throw()
+			{
+				return "Queue is empty.";
+			}
 		};
 
 	private:

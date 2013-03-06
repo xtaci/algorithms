@@ -6,7 +6,7 @@
 
 int main()
 {
-	using namespace alg;
+	using alg::Queue;
 	const int MAXELEMENT = 20;
 	Queue<int> Q(MAXELEMENT);
 	int i;

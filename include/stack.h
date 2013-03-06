@@ -32,20 +32,20 @@ class Stack
 private:
 	class StackEmptyException: public std::exception
 	{
-			public:
-			virtual const char * what() const throw()
-			{
-				return "stack is empty";
-			}
+		public:
+		virtual const char * what() const throw()
+		{
+			return "stack is empty";
+		}
 	};
 
 	class StackIndexOutOfBoundException: public std::exception
 	{
-			public:
-			virtual const char * what() const throw()
-			{
-				return "Index out of bound.";
-			}
+		public:
+		virtual const char * what() const throw()
+		{
+			return "Index out of bound.";
+		}
 	};
 
 	uint32_t m_capacity;		// the total capacity
