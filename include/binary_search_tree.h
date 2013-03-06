@@ -53,7 +53,7 @@ namespace alg
 	
 	private:
 		treeNode * m_root;
-		BSTException error;
+		const BSTException error;
 	
 	public:
 		BST():m_root(NULL){};

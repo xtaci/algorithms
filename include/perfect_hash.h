@@ -22,18 +22,19 @@
 
 namespace alg
 {
-	class PerfHTException: public std::exception
-	{
-	public:
-		virtual const char * what() const throw()
-		{
-			return "key does not exist";
-		}
-	};
-
 	template<typename T=uintptr_t>
-	class PerfHT {
+	class PerfHT 
+	{
 	private:
+		class PerfHTException: public std::exception
+		{
+		public:
+			virtual const char * what() const throw()
+			{
+				return "key does not exist";
+			}
+		};
+
 		// Level-2 Slot definition
 		class SlotL2 {
 		public:
@@ -60,7 +61,7 @@ namespace alg
 		struct SlotL1 * slots;	// level 1 slots
 		struct UHash params;   // 1st level 
 		uint32_t num_slots;
-		PerfHTException error;
+		const PerfHTException error;
 
 	public:
 		PerfHT(uint32_t keys[], uint32_t len) 

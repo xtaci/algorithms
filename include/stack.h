@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <exception>
 
 /** 
  * Stack has three properties. capacity stands for the maximum number of
@@ -29,9 +30,29 @@ template<typename T=uintptr_t>
 class Stack
 {
 private:
+	class StackEmptyException: public std::exception
+	{
+			public:
+			virtual const char * what() const throw()
+			{
+				return "stack is empty";
+			}
+	};
+
+	class StackIndexOutOfBoundException: public std::exception
+	{
+			public:
+			virtual const char * what() const throw()
+			{
+				return "Index out of bound.";
+			}
+	};
+
 	uint32_t m_capacity;		// the total capacity
 	uint32_t m_size;			// current stack size
 	T * m_elements;		// the elements
+	const StackEmptyException 			exp_empty;
+	const StackIndexOutOfBoundException exp_ioob;
 
 public:
 	/**
@@ -47,9 +68,11 @@ public:
 		delete [] m_elements;
 	}
 
+
 private:
 	Stack(const Stack&);
 	Stack& operator=(const Stack&);
+
 
 public:
 	/**
@@ -66,9 +89,12 @@ public:
 	}
 
 	/**
-	 * get the top element, test is_empty() before top()
+	 * get the top element
 	*/
-	inline const T& top() const { return m_elements[m_size-1]; };
+	inline const T& top() const { 
+		if (m_size==0) throw exp_empty;
+		return m_elements[m_size-1]; 
+	};
 
 	/**
 	 * push an element into the stack
@@ -88,7 +114,13 @@ public:
 	 */
 	inline uint32_t count() const { return m_size; }
 
-	inline const T& operator[] (int idx) const { return m_elements[m_size-1-idx]; }
+	/**
+	 * return value by index
+	 */
+	inline const T& operator[] (int idx) const { 
+		if (idx<0 || idx >= m_capacity) throw exp_ioob;
+		return m_elements[m_size-1-idx]; 
+	}
 };
 
 #endif //
