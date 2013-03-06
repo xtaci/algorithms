@@ -103,7 +103,7 @@ namespace alg
 		/**
 		 * test weather the queue is empty
 		 */
-		bool is_empty() const 
+		inline bool is_empty() const 
 		{
 			if (m_size ==0) return true;
 			return false;

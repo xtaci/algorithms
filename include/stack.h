@@ -83,7 +83,8 @@ public:
 	/**
 	 * pop stack
 	 */
-	inline void pop() {
+	inline void pop() 
+	{
 		if(m_size!=0) m_size--;
 		return;
 	}
@@ -91,10 +92,11 @@ public:
 	/**
 	 * get the top element
 	*/
-	inline const T& top() const { 
+	inline const T& top() const 
+	{
 		if (m_size==0) throw exp_empty;
 		return m_elements[m_size-1]; 
-	};
+	}
 
 	/**
 	 * push an element into the stack
@@ -117,7 +119,8 @@ public:
 	/**
 	 * return value by index
 	 */
-	inline const T& operator[] (int idx) const { 
+	inline const T& operator[] (int idx) const 
+	{
 		if (idx<0 || idx >= m_capacity) throw exp_ioob;
 		return m_elements[m_size-1-idx]; 
 	}

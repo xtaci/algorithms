@@ -49,14 +49,16 @@ namespace alg
 		KV * m_kvs;			// key value pairs.
 
 	public:
-		Heap(int max) {
+		Heap(int max) 
+		{
 			m_size = 0;
 			m_max = max+1;
 			m_kvs = new KV[m_max];
 			m_kvs[0].key = INT_MIN;
 		};
 
-		~Heap() {
+		~Heap() 
+		{
 			delete [] m_kvs;
 		};
 
@@ -172,7 +174,7 @@ namespace alg
 		 * step 1. find the value
 		 * step 2. decrease the key to the newkey
 		 */
-		inline void decrease_key(const T & value, int newkey)
+		void decrease_key(const T & value, int newkey)
 		{
 			uint32_t index = m_size+1;
 			for (uint32_t i=1;i<=m_size;i++) {

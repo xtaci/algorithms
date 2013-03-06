@@ -105,7 +105,7 @@ namespace alg
 		 * return top element
 		 * check is_empty() before top().
 		 */
-		const T & top(int * prio) const
+		inline const T & top(int * prio) const
 		{
 			PQNode * n;
 			n = list_entry(m_head.next, PQNode, node);
@@ -116,7 +116,7 @@ namespace alg
 		/**
 		 * dequeue the most priority element, i.e. the first element.
 		 */
-		void dequeue()
+		inline void dequeue()
 		{
 			if (list_empty(&m_head)) return;
 		
@@ -130,7 +130,8 @@ namespace alg
 		/**
 		 * test whether the priority queue is empty
 		 */
-		inline bool is_empty() const {
+		inline bool is_empty() const 
+		{
 			if (list_empty(&m_head)) return true;
 			return false;
 		}

@@ -37,8 +37,7 @@ namespace alg
 		7	Z	0	1	2	2	3	3	3	4
 	 */
 	template<typename T>
-	static Array2D<uint32_t> * 
-	lcs_length(const T X[], uint32_t m, const T Y[], uint32_t n)
+	static Array2D<uint32_t> * lcs_length(const T X[], uint32_t m, const T Y[], uint32_t n)
 	{
 		Array2D<uint32_t> & A = *new Array2D<uint32_t>(m+1,n+1);
 
@@ -67,8 +66,7 @@ namespace alg
 	 * pass an empty stack, pop out the result in sequential order. 
 	 */
 	template<typename T>
-	static void 
-	lcs_backtrack(Stack<int> & S, struct Array2D<uint32_t> & A,
+	static void lcs_backtrack(Stack<int> & S, struct Array2D<uint32_t> & A,
 					const T X[], const T Y[], 
 					const uint32_t i, uint32_t j)
 	{
