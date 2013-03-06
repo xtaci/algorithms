@@ -31,7 +31,7 @@ namespace alg
 	template<typename T>
 	static inline void swap(T &x, T &y)
 	{
-		T _t = x;
+		T _t(x);
 		x = y;
 		y = _t;
 	}
