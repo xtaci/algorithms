@@ -41,7 +41,7 @@ namespace alg
 		 * rbtree_insert
 		 * insert a key-value pair into red-black tree
 		 */
-		virtual void insert(const KeyT & key, const ValueT & value) 
+		void insert(const KeyT & key, const ValueT & value) 
 		{
 			KVNode * inserted_node = new_node(key, value, RED, NULL, NULL);
 			if (get_root() == NULL) {
@@ -80,7 +80,7 @@ namespace alg
 		 * rbtree_lookup
 		 * search in red-black tree
 		 */
-		virtual ValueT lookup(KeyT key) 
+		ValueT lookup(KeyT key) 
 		{
 			KVNode * n = lookup_node(key);
 			return n == NULL ? NULL : n->value;
@@ -89,7 +89,7 @@ namespace alg
 		/**
 		 * delete the key in the red-black tree
 		 */
-		virtual void delete_key(KeyT key) 
+		void delete_key(KeyT key) 
 		{
 			rbtree_node child;
 			KVNode * n = lookup_node(key);
@@ -114,12 +114,12 @@ namespace alg
 			delete(n);
 		}
 
-		virtual void print() {
+		void print() {
 			print_helper(KVNODE(get_root()), 0);
 			puts("");
 		}
 	protected:
-		virtual void print_helper(KVNode * n, int indent) {
+		void print_helper(KVNode * n, int indent) {
 			int i;
 			if (n == NULL) {
 				fputs("<empty tree>", stdout);
