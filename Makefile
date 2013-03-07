@@ -9,7 +9,7 @@ INCLUDEDIR = -I./include -I.
 DEPS = 
 LIBS = -lm
 PROGRAMS =  m_based \
-			integer \
+			integer_demo \
 			insertion_sort_demo \
 			radix_sort_demo \
 			shuffle_demo \
@@ -51,122 +51,8 @@ PROGRAMS =  m_based \
 
 all: $(PROGRAMS)
 
-m_based: $(SRCDIR)/m_based.cpp $(DEPS)
+%: $(SRCDIR)/%.cpp $(DEPS)
 	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-integer: $(SRCDIR)/integer_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-heap_demo: $(SRCDIR)/heap_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-insertion_sort_demo: $(SRCDIR)/insertion_sort_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-radix_sort_demo: $(SRCDIR)/radix_sort_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-shuffle_demo: $(SRCDIR)/shuffle_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-quick_sort_demo: $(SRCDIR)/quick_sort_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-merge_sort_demo: $(SRCDIR)/merge_sort_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-random_select_demo: $(SRCDIR)/random_select_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-hash_multi_demo: $(SRCDIR)/hash_multi_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-hash_table_demo: $(SRCDIR)/hash_table_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-double_linked_list_demo: $(SRCDIR)/double_linked_list_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-stack_demo: $(SRCDIR)/stack_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-queue_demo: $(SRCDIR)/queue_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-priority_queue_demo: $(SRCDIR)/priority_queue_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-prime_test: $(SRCDIR)/prime_test.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-universal_hash_demo: $(SRCDIR)/universal_hash_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-perfect_hash_demo: $(SRCDIR)/perfect_hash_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-binary_search_tree_demo: $(SRCDIR)/binary_search_tree_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-rbtree_demo: $(SRCDIR)/rbtree_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-interval_tree_demo: $(SRCDIR)/interval_tree_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-dos_tree_demo: $(SRCDIR)/dos_tree_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-skip_list_demo: $(SRCDIR)/skip_list_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-lcs_demo: $(SRCDIR)/lcs_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-prim_mst_demo: $(SRCDIR)/prim_mst_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-directed_graph_demo: $(SRCDIR)/directed_graph_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-undirected_graph_demo: $(SRCDIR)/undirected_graph_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-dijkstra_demo: $(SRCDIR)/dijkstra_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-bellman_ford_demo: $(SRCDIR)/bellman_ford_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-graph_search_demo: $(SRCDIR)/graph_search_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-edmonds_karp_demo: $(SRCDIR)/edmonds_karp_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-astar_demo: $(SRCDIR)/astar_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-hash_string_demo: $(SRCDIR)/hash_string_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-bitset_demo: $(SRCDIR)/bitset_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-bloom_filter_demo: $(SRCDIR)/bloom_filter_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-sha1_demo: $(SRCDIR)/sha1_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-huffman_demo: $(SRCDIR)/huffman_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS)
-
-word_seg_demo: $(SRCDIR)/word_seg_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS) 
-
-md5_demo: $(SRCDIR)/md5_demo.cpp $(DEPS)
-	$(CPP) $(CFLAGS) -o $@ $< $(INCLUDEDIR) $(LIBS) 
 
 clean:
 	rm -rf $(PROGRAMS) *.dSYM
