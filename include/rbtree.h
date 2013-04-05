@@ -19,6 +19,7 @@
 #define __RBTREE_H__
 #include <stdio.h>
 #include <stdint.h>
+#include <stdexcept>
 #include "rbtree_defs.h"
 
 namespace alg
@@ -75,15 +76,26 @@ namespace alg
 			}
 			insert_case1(inserted_node);
 		}
+
+		/**
+		 * contain test
+		 */
+        bool contains(KeyT key)
+        {
+            if (lookup_node(key))
+                return true;
+            return false;
+        }
 	
 		/**
 		 * rbtree_lookup
 		 * search in red-black tree
 		 */
-		ValueT lookup(KeyT key) 
+		ValueT operator [] (KeyT key) 
 		{
 			KVNode * n = lookup_node(key);
-			return n == NULL ? NULL : n->value;
+			if (n==NULL) throw std::out_of_range ("no such key");
+			return n->value;
 		}
 
 		/**

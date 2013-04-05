@@ -50,7 +50,7 @@ int main() {
         int value = rand() % 10000;
         printf("[%d, %d]\t", key, value);
 		t.insert(key, value);
-        assert(t.lookup(key) == value);
+        assert(t[key] == value);
     }
 
 	printf("\n");
