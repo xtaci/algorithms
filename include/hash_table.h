@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 #include <limits.h>
+#include <stdexcept>
 #include "double_linked_list.h"
 #include "hash_multi.h"
 
@@ -94,6 +95,26 @@ namespace alg
 			}
 			return false;
 		}
+		
+		/**
+		 * delete by key
+		 */
+		bool delete_key(uint32_t key)
+		{
+			// hash the key using a hash function.
+			uint32_t hash = multi_hash(m_multi, key);
+		
+			HashKV * kv, *nkv;
+			list_for_each_entry_safe(kv,nkv,&m_slots[hash], node) {
+				if (kv->key == key) {
+					list_del(&kv->node);
+					delete kv;
+					return true;
+				}
+			}
+
+			return false;
+		}
 
 		// const version of operator []
 		const T& operator[] (uint32_t key) const
@@ -127,7 +148,7 @@ namespace alg
 
 		void clear()
 		{
-			struct HashKV * kv, *nkv;
+			HashKV * kv, *nkv;
 			for (uint32_t i=0;i<m_size;i++) {
 				list_for_each_entry_safe(kv,nkv,&m_slots[i], node){
 					list_del(&kv->node);

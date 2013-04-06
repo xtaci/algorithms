@@ -24,5 +24,13 @@ int main()
 		printf("getting %d->%d\n", i, ht[i]);
 	}
 
+	for(i = 0; i < MAX_ELEMENTS; i++ ){
+		printf("deleting %d\n", ht.delete_key(i));
+	}
+
+	for(i = 0; i < MAX_ELEMENTS; i++ ){
+		printf("testing %d->%s\n", i, ht.contains(i)?"true":"false");
+	}
+
 	return 0;
 }
