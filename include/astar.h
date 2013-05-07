@@ -135,8 +135,13 @@ namespace alg
 						if(nx == cx && ny==cy) continue;
 						// if neighbour in the closed set	
 						if(m_closedset(nx,ny)) continue;	
-				
-						float tentative = g_score(cx,cy) + SQRT2;
+
+						float tentative = g_score(cx,cy);
+						if (nx == cx || ny == cy) {
+							tentative += 1;
+						} else {
+							tentative += SQRT2;
+						}
 					
 						// if neighbour not in the openset or dist < g_score[neighbour]	
 						if (!openset.contains(nx*ncol+ny) || tentative < g_score(nx,ny)) {
