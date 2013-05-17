@@ -35,6 +35,8 @@ namespace alg
 			rbtree_node_t* right;
 			rbtree_node_t* parent;
 			enum rbtree_node_color color;
+			virtual ~rbtree_node_t() {
+			}
 		} *rbtree_node;
 
 	private:
