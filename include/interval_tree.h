@@ -170,8 +170,21 @@ namespace alg
 			}
 		}
 
+		~IntervalTree() 
+		{
+			destruct(IVLNODE(get_root()));
+		}
 
 	private:
+
+		void destruct(ivltree_node n)
+		{
+			if (n==NULL) return;
+			destruct(IVLNODE(n->left));
+			destruct(IVLNODE(n->right));
+			delete n;
+		}
+
 		/**
 		 * fix 'm' value caused by rotation
 		 */

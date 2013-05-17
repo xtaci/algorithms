@@ -35,8 +35,6 @@ namespace alg
 			rbtree_node_t* right;
 			rbtree_node_t* parent;
 			enum rbtree_node_color color;
-			virtual ~rbtree_node_t() {
-			}
 		} *rbtree_node;
 
 	private:
@@ -47,21 +45,11 @@ namespace alg
 		 * init a red-black tree 
 		 */
 		RBTreeAbstract() : m_root(NULL) {}
-
-		virtual ~RBTreeAbstract() { destruct(m_root); }
+		virtual ~RBTreeAbstract() {}
 
 	private:
 		RBTreeAbstract(const RBTreeAbstract &);
 		RBTreeAbstract& operator=(const RBTreeAbstract &);
-		// 
-		void destruct(rbtree_node n)
-		{
-			if (n==NULL) return;
-			destruct(n->left);
-			destruct(n->right);
-			delete n;
-		}
-
 	protected:
 		// 
 		inline rbtree_node get_root( ) { return m_root; }

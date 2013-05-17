@@ -33,10 +33,21 @@ namespace alg
 			KeyT key;
 			ValueT value;
 		};
-
+		
 #define KVNODE(node) static_cast<KVNode *>(node)
+		void destruct(KVNode * n)
+		{
+			if (n==NULL) return;
+			destruct(KVNODE(n->left));
+			destruct(KVNODE(n->right));
+			delete n;
+		}
 
 	public:
+		~RBTree() 
+		{
+			destruct(KVNODE(get_root()));
+		}
 		
 		/**
 		 * rbtree_insert

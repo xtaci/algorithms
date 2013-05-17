@@ -45,9 +45,21 @@ namespace alg
 
 	public:
 		DosTree() { }
+		~DosTree() {
+			destruct(DOSNODE(get_root()));
+		}
 	private:
 		DosTree(const DosTree&);
 		DosTree& operator=(const DosTree&);
+
+		void destruct(dostree_node n)
+		{
+			if (n==NULL) return;
+			destruct(DOSNODE(n->left));
+			destruct(DOSNODE(n->right));
+			delete n;
+		}
+
 	public:
 
 		dostree_node index(int index)
