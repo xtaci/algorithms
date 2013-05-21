@@ -197,11 +197,10 @@ namespace alg
 		void fixup_size(rbtree_node n)
 		{	
 			// fix up to the root
-			n = n->parent;
-			while(n != NULL) {
+			do {
 				DOSNODE(n)->size -= 1;
 				n = n->parent;
-			}
+			} while(n != NULL); 
 		}
 
 		static inline dostree_node 
