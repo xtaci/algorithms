@@ -46,7 +46,8 @@ PROGRAMS =  m_based \
 			sha1_demo	\
 			huffman_demo \
 			word_seg_demo \
-			md5_demo
+			md5_demo \
+			trie_demo
 			
 
 all: $(PROGRAMS)
