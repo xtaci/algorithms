@@ -35,6 +35,7 @@ Algorithms & Data Structures in C++
     Dynamic order statistics
     Red-black tree
     Interval tree 
+    Prefix Tree(Trie)
 
     Hash by multiplication
     Hash table
