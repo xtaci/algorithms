@@ -5,10 +5,10 @@
  * /--\ | (_| (_) |  |  |_ | | | | | _> 
  *         _|                      
  *
- * STRING HASH FUNCTION
+ * STRING HASH FUNCTIONS
  *
- * code taken from: 
- * http://en.wikipedia.org/wiki/Java_hashCode()
+ * 1. http://en.wikipedia.org/wiki/Java_hashCode()
+ * 2. http://www.isthe.com/chongo/tech/comp/fnv/
  *
  ******************************************************************************/
 
@@ -29,6 +29,19 @@ namespace alg
 		uint32_t i;	
 		for (i=0;i<len;i++) {
 			hash = 31*hash + (unsigned char)str[i];
+		}
+
+		return hash;
+	}
+
+	static uint32_t hash_fnv1a(const char * str, uint32_t len)
+	{
+		uint32_t prime = 16777619U;
+		uint32_t hash = 2166136261U;
+
+		for (int i=0;i<len;i++) {
+			hash = hash ^ str[i];
+			hash = hash * prime;
 		}
 
 		return hash;

@@ -7,6 +7,9 @@ using namespace alg;
 int main(void)
 {
 	const char * strs[] = {
+			"",
+			"a",
+			"foobar",
 			"first string",
 			"second string",
 			"third string",
@@ -14,8 +17,15 @@ int main(void)
 			"and finally this is the fifth string"
 			};
 
+	printf("using java hash\n");
 	for (uint32_t i=0;i<sizeof(strs)/sizeof(char*);i++) {
-		printf("hash string: %s --> %u\n", strs[i], hash_string(strs[i], strlen(strs[i])));
+		printf("java hash: %s --> %x\n", strs[i], hash_string(strs[i], strlen(strs[i])));
 	}
+	
+	printf("using FNV hash\n");
+	for (uint32_t i=0;i<sizeof(strs)/sizeof(char*);i++) {
+		printf("fnv hash: %s --> %x\n", strs[i], hash_fnv1a(strs[i], strlen(strs[i])));
+	}
+
 	return 0;
 }
