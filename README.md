@@ -41,7 +41,8 @@ Algorithms & Data Structures in C++
     Hash table
     Universal hash function
     Perfect hash
-    String hashing
+    Java's string hash
+    FNV-1a string hash
     Bloom Filter
     SHA-1 Message Digest Algorithm
     MD5 
