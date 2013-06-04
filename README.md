@@ -35,6 +35,7 @@ Algorithms & Data Structures in C++
     Red-black tree
     Interval tree 
     Prefix Tree(Trie)
+    Suffix Tree(未实现)
 
     Hash by multiplication
     Hash table
