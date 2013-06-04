@@ -12,7 +12,7 @@ Algorithms & Data Structures in C++
 
     1.  一个算法用一个.h文件表示放到include下.
     2.  算法演示的demo程序放到src下.
-    3.  程序正确后，merge到master分支，并正确添加Makefile
+    3.  程序正确后，merge到master分支，并正确修改Makefile
     
 已实现(Implemented)
 
