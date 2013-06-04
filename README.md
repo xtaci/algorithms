@@ -7,8 +7,7 @@ Algorithms & Data Structures in C++
     服务器端
     高性能
     基础/经典算法
-    不引入STL(允许极个别的，如auto_ptr) 
-
+    
 已实现(Implemented)
 
     Array shuffle
