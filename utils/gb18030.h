@@ -29,12 +29,23 @@ gb18030_read(const char * str, int start, uint32_t * WORD)
  * print a gb18030 char
  */
 inline void 
-gb18030_putchar(const uint32_t WORD)
+gb18030_putchar(const uint32_t w)
 {
-	unsigned char w0 = (WORD&0xFF000000)>>24;
-	unsigned char w1 = (WORD&0xFF0000)>>16;
-	unsigned char w2 = (WORD&0xFF00)>>8;
-	unsigned char w3 = WORD&0xFF;
+	union _decomposer{
+		struct{
+			unsigned char w3;
+			unsigned char w2;
+			unsigned char w1;
+			unsigned char w0;
+		} dtls;
+		uint32_t word;
+	};
+	_decomposer t;
+	t.word = w;
+	unsigned char w0 = t.dtls.w0;
+	unsigned char w1 = t.dtls.w1;
+	unsigned char w2 = t.dtls.w2;
+	unsigned char w3 = t.dtls.w3;
 	
 	if (w0) {
 		putchar(w0);putchar(w1);putchar(w2);putchar(w3);		
