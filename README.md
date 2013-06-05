@@ -10,7 +10,7 @@
 
     1.  一个算法用一个.h文件表示放到include下.
     2.  算法演示的demo程序放到src下.
-    3.  程序正确后，merge到master分支，并正确修改Makefile
+    3.  程序正确通过后，请发起Pull Requests，代码被验证后入库，并在README中发布新算法实现。
     
 已实现(Implemented)
 
