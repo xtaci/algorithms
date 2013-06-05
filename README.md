@@ -1,5 +1,4 @@
-Algorithms & Data Structures in C++
-=========================================
+###Algorithms & Data Structures in C++
 
 征C++高手加入此项目， 目标:
 
