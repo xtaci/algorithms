@@ -11,7 +11,9 @@ int main(void)
 			"hollister.susan @gmail.com",
 			"alexptre@gmail.com",
 			"cfo@sjtu-edp.cn",
-			"abms@n23h22.rev.sprintdatacenter.pl"
+			"abms@n23h22.rev.sprintdatacenter.pl",
+			"admin@facebook.com",
+			"xtaci@163.com"
 			};
 
 	const char * strs2[] = {
@@ -24,10 +26,7 @@ int main(void)
 
 	for (uint32_t i=0;i<len;i++) {
 		bf.set(strs[i]);
-	}
-
-	for (uint32_t i=0;i<len;i++) {
-		printf("checking %s->%s\n", strs[i], bf.test(strs[i])?"true":"false");
+		printf("adding %s\n", strs[i]);
 	}
 
 	for (uint32_t i=0;i<sizeof(strs2)/sizeof(char*);i++) {
