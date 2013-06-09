@@ -22,6 +22,11 @@ int main(void) {
 	printf("%u\n", h1.Hash());
 	printf("%u\n", h2.Hash());
 	printf("%u\n", h3.Hash());
+
+	printf("hamming distance:\n");
+	printf("h1, h2 : %d\n", SimHash::Distance(h1.Hash(), h2.Hash()));
+	printf("h1, h3 : %d\n", SimHash::Distance(h1.Hash(), h3.Hash()));
+	printf("h2, h3 : %d\n", SimHash::Distance(h2.Hash(), h3.Hash()));
 }
 
 void addsentence(char * str, SimHash &h) {

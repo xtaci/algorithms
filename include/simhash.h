@@ -49,6 +49,18 @@ namespace alg {
 
 			return hash;
 		}
+
+		static int Distance(uint32_t hash1, uint32_t hash2) {
+			uint32_t diff = hash1^hash2;
+			int dist = 0;
+			for (int i=0;i<32;i++) {
+				if (diff &(1<<i)) {
+					dist++;
+				}
+			}
+
+			return dist;
+		}
 	};
 }
 
