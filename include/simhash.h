@@ -33,6 +33,8 @@ namespace alg {
 			for(int i=0;i<32;i++) {
 				if (hash&(1<<i)) {
 					V[i]++;
+				} else {
+					V[i]--;
 				}
 			}
 		}
