@@ -8,6 +8,7 @@
  * SIMHASH FUNCTIONS
  *
  * http://matpalm.com/resemblance/simhash/
+ * http://en.wikipedia.org/wiki/Hamming_distance
  *
  ******************************************************************************/
 
@@ -52,10 +53,10 @@ namespace alg {
 		static int Distance(uint32_t hash1, uint32_t hash2) {
 			uint32_t diff = hash1^hash2;
 			int dist = 0;
-			for (int i=0;i<32;i++) {
-				if (diff &(1<<i)) {
-					dist++;
-				}
+
+			while(diff) {
+				dist++;
+				diff &=diff-1;
 			}
 
 			return dist;
