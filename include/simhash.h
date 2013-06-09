@@ -8,7 +8,6 @@
  * SIMHASH FUNCTIONS
  *
  * http://matpalm.com/resemblance/simhash/
- * 2. http://www.isthe.com/chongo/tech/comp/fnv/
  *
  ******************************************************************************/
 
