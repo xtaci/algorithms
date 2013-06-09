@@ -47,6 +47,7 @@
     Perfect hash
     Java's string hash
     FNV-1a string hash
+    SimHash
     Bloom Filter
     SHA-1 Message Digest Algorithm
     MD5 
