@@ -51,6 +51,22 @@ namespace alg
 		}
 		k[i] = key;
 	}
+
+	/**
+	 * based on Applied Cryptography by Bruce Schneier.[1] 
+	 * http://en.wikipedia.org/wiki/Modular_exponentiation
+	 */
+	static int Exp(int base, int exponent, int modulus) {
+		int result = 1;
+		while (exponent >0) {
+			if (exponent%2 == 1) {
+				result = (result*base)%modulus;
+			}
+			exponent = exponent >> 1 ;
+			base = (base*base) % modulus;
+		}
+		return result;
+	}
 }
 
 #endif //
