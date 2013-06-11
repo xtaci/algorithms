@@ -48,8 +48,8 @@ PROGRAMS =  m_based \
 			word_seg_demo \
 			md5_demo \
 			trie_demo \
+			simhash_demo \
 			imath_demo 
-			
 
 all: $(PROGRAMS)
 

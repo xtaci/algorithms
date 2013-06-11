@@ -39,7 +39,7 @@ namespace alg
 		uint32_t prime = 16777619U;
 		uint32_t hash = 2166136261U;
 
-		for (int i=0;i<len;i++) {
+		for (uint32_t  i=0;i<len;i++) {
 			hash = hash ^ str[i];
 			hash = hash * prime;
 		}

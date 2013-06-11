@@ -24,10 +24,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "universal_hash.h"
 #include "hash_string.h"
 #include "bitset.h"
-#include "sha1.h"
+#include "universal_hash.h"
 
 namespace alg
 {
@@ -82,10 +81,10 @@ namespace alg
 			assert(m>n);
 			m_bits=m;
 			m_probset=n;
-
+			
 			for(uint32_t i=0;i<K;i++) {
 				uhash_init(&m_hash[i], m_bits);
-			}
+			} 
 		}
 
 		/**
@@ -94,13 +93,10 @@ namespace alg
 		void set(const char * str) 
 		{
 			uint32_t len = strlen(str);
-			SHA1Context sha;
-			sha1_reset(&sha);
-			sha1_input(&sha, (const unsigned char *)str, len);
-			sha1_final(&sha);
-
+			uint32_t strhash = hash_fnv1a(str, len);
+	
 			for(uint32_t i=0;i<K;i++) {
-				uint32_t hash = uhash_bigint(&m_hash[i], sha.digest, 5);
+				uint32_t hash = uhash_integer(&m_hash[i], strhash);
 				m_bitset.set(hash);
 			}
 		}
@@ -111,14 +107,11 @@ namespace alg
 		bool test(const char * str)
 		{
 			uint32_t len = strlen(str);
-			SHA1Context sha;
-			sha1_reset(&sha);
-			sha1_input(&sha, (const unsigned char *)str, len);
-			sha1_final(&sha);
-
+			uint32_t strhash = hash_fnv1a(str, len);
+			
 			for(uint32_t i=0;i<K;i++) {
-				uint32_t hash = uhash_bigint(&m_hash[i], sha.digest, 5);
-				if (!m_bitset.test(hash))	return false;
+				uint32_t hash = uhash_integer(&m_hash[i], strhash);
+				if (!m_bitset.test(hash)) return false;
 			}
 
 			return true;
