@@ -26,13 +26,15 @@ namespace alg
 	 */
 	static bool test_prime(unsigned int n)
 	{
-		if (n <=1) {
+		switch (n) {
+		case 0:
+		case 1:
 			return false;
-		}
-
-		if (n==2) {
+		case 2:
 			return true;
 		}
+
+		if (n%2	== 0) return false;
 
 		unsigned sqrtn = sqrt(n);
  		for (unsigned int i = 2; i <= sqrtn; ++i) {
@@ -46,13 +48,17 @@ namespace alg
 	/**
 	 * http://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test 
 	 */
-	static bool miller_rabin_test(unsigned int n) {
+	static inline bool miller_rabin_test(unsigned int n) {
 		switch (n) {
 		case 0:
 		case 1:
 			return false;
+		case 2:
+			return true;
 		}
-	
+
+		if (n%2	== 0) return false;
+
 		unsigned s = ZerosR(n-1);
 		unsigned d = (n-1) >> s;
 
@@ -78,7 +84,7 @@ namespace alg
 	/**
 	 * mixed implementation
 	 */
-	static bool is_prime(unsigned int n) {
+	static inline bool is_prime(unsigned int n) {
 		if (miller_rabin_test(n)) {
 			return test_prime(n);
 		}

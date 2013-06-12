@@ -72,7 +72,7 @@ namespace alg
 	/**
 	 * Count the consecutive zero bits (trailing) on the right linearly
 	 */
-	static int ZerosR(unsigned int v) {
+	static inline int ZerosR(unsigned int v) {
 		int c;  // output: c will count v's trailing zero bits,
 				// so if v is 1101000 (base 2), then c will be 3
 		if (v)
