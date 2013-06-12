@@ -1,18 +1,25 @@
 ###Algorithms & Data Structures in C++
 
-征C++高手加入此项目， 目标:
+征C++高手加入此项目， 目标:        
+(Need volunteers for code review, bugfix. goal: )
 
-    基础/经典算法
-    服务器端 (linux/c++)
-    正确，易于使用和改造（一个头文件一个算法，并附带一个demo）
+    经典的算法实现  
+        (classical algorithms implementations)
+    服务器端 
+        (based on linux/gcc)
+    正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.
+       (corret! and ease of use, one .header file per algorithm)
     
 约定：
-
-    1.  一个算法用一个.h文件表示放到include下.
-    2.  算法演示的demo程序放到src下.
+( Convention :  )           
+ 
+    1.  一个算法用一个.h文件表示放到include下. ( one .header file per algorithm. )              
+    2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )            
     3.  程序正确通过后，请发起Pull Requests，代码被验证后入库，并在README中发布新算法实现。
+        (Please Use Fork+Push Requests !!! Correctness is the most important!)               
     
-已实现(Implemented)
+已实现  :    
+(Implemented)  :     
 
     Array shuffle
     Prime test(trial division)
