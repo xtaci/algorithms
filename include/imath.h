@@ -57,14 +57,14 @@ namespace alg
 	 * based on Applied Cryptography by Bruce Schneier.[1] 
 	 * http://en.wikipedia.org/wiki/Modular_exponentiation
 	 */
-	static int Exp(int base, int exponent, int modulus) {
-		int result = 1;
+	static unsigned Exp(unsigned base, unsigned exponent, unsigned modulus) {
+		unsigned result = 1;
 		while (exponent >0) {
 			if (exponent%2 == 1) {
-				result = (result*base)%modulus;
+				result = (uint64_t(result)*base)%modulus;
 			}
 			exponent = exponent >> 1 ;
-			base = (base*base) % modulus;
+			base = (uint64_t(base)*base) % modulus;
 		}
 		return result;
 	}

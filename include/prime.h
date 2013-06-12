@@ -54,6 +54,7 @@ namespace alg
 		case 1:
 			return false;
 		case 2:
+		case 3:
 			return true;
 		}
 
@@ -64,18 +65,21 @@ namespace alg
 
 		// test 3-times
 		for (int k=0;k<3;k++){
-			unsigned a = rand()%(n-1) + 1;
+			unsigned a = rand()%(n-4) + 2;
 		
 			unsigned x = Exp(a, d, n);
+			//printf("%u %u %u %u\n", a,d, n,x);
 			if (x == 1 || x == n - 1) {
 				continue;
 			}
 
-			for (unsigned i=0;i<s;i++) {
+			for (unsigned i=1;i<=s-1;i++) {
 				x = Exp(x, 2, n);
 				if (x == 1) return false;
-				if (x == n-1) break;
+				if (x == n-1) continue;
 			}
+			
+			return false;
 		}
 
 		return true;
