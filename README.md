@@ -15,7 +15,8 @@
 已实现(Implemented)
 
     Array shuffle
-    Prime test
+    Prime test(trial division)
+    Prime test(Miller-Rabin's method)
     2D Array
     Arbitary Integer 
 
