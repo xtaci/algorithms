@@ -43,7 +43,7 @@ namespace alg {
 		}
 
 		/**
-	     * get the hash of the document
+		 * get the hash of the document
 		 */
 		uint32_t Hash() {
 			uint32_t hash=0;
