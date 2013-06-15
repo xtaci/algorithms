@@ -5,7 +5,7 @@
  * Read from the string encoded in GB18030 into WORD
  * return the length of the WORD
  */
-inline short 
+static inline short 
 gb18030_read(const char * str, int start, uint32_t * WORD)
 {
 	unsigned char * w = (unsigned char *)&str[start];
@@ -28,7 +28,7 @@ gb18030_read(const char * str, int start, uint32_t * WORD)
 /**
  * print a gb18030 char
  */
-inline void 
+static inline void 
 gb18030_putchar(const uint32_t w)
 {
 	union _decomposer{

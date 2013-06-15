@@ -9,7 +9,7 @@
  * mem: 0A 0B 0C 0D //little endian 
  * V=0x0D0C0B0A
  */
-inline bool 
+static inline bool 
 is_big_endian()
 {
 	int v=0x0D0C0B0A;
@@ -28,7 +28,7 @@ is_big_endian()
 /**
  *  byte swap 2-byte
  */
-inline uint16_t 
+static inline uint16_t 
 byte_swap2(uint16_t original)
 {
 	uint16_t swapped;
@@ -51,7 +51,7 @@ byte_swap2(uint16_t original)
 /**
  *  byte swap 4-byte
  */
-inline uint32_t 
+static inline uint32_t 
 byte_swap4(uint32_t original)
 {
 	uint32_t swapped;
@@ -82,7 +82,7 @@ byte_swap4(uint32_t original)
 /**
  * byte swap 8-byte
  */
-inline uint64_t 
+static inline uint64_t 
 byte_swap8( uint64_t original )
 {
 	uint64_t swapped;
