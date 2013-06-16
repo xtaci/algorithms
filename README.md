@@ -23,6 +23,7 @@
     Prime test(Miller-Rabin's method)
     2D Array
     Arbitary Integer 
+    Linear congruential generator
 
     Bit-Set data structure
     Queue data structure
