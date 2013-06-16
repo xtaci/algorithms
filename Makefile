@@ -49,7 +49,8 @@ PROGRAMS =  m_based \
 			md5_demo \
 			trie_demo \
 			simhash_demo \
-			imath_demo 
+			imath_demo \
+			random_demo
 
 all: $(PROGRAMS)
 
