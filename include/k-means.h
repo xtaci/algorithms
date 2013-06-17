@@ -102,7 +102,8 @@ namespace alg
 				int unchanged = 0;
 				bool loop = true;
 				int* counts = new int[m_clusterNum];
-				double** next_means = new double*[m_clusterNum];	// New model for reestimation
+				double** next_means = new double*[m_clusterNum];	
+				// New model for reestimation
 				for(int i = 0; i < m_clusterNum; i++)
 				{
 					next_means[i] = new double[m_dimNum];
@@ -295,7 +296,8 @@ namespace alg
 				int unchanged = 0;
 				bool loop = true;
 				int* counts = new int[m_clusterNum];
-				double** next_means = new double*[m_clusterNum];	// New model for reestimation
+				double** next_means = new double*[m_clusterNum];	
+				// New model for reestimation
 				for(int i = 0; i < m_clusterNum; i++)
 				{
 					next_means[i] = new double[m_dimNum];
