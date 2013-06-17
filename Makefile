@@ -47,7 +47,8 @@ PROGRAMS =  m_based \
 			huffman_demo \
 			word_seg_demo \
 			md5_demo \
-			trie_demo
+			trie_demo \
+			k-means_demo
 			
 
 all: $(PROGRAMS)
