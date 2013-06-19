@@ -425,5 +425,5 @@ namespace alg
 				return sqrt(temp);
 			}			
 		}
-	}
+	} 
 #endif
