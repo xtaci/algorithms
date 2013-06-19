@@ -1,10 +1,12 @@
-#ifndef __K-MEANS_H__
-#define __K-MEANS_H__
+
+#ifndef __KMEANS_H__
+#define __KMEANS_H__
 #include <fstream>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
 #include <iostream>
+#include <assert.h> 
 using namespace std;
 
 namespace alg
@@ -18,7 +20,7 @@ namespace alg
 				InitManual,
 				InitUniform,
 			};
-			                 
+			
 			KMeans(int dimNum = 1, int clusterNum = 1)
 			{
 				m_dimNum = dimNum;
@@ -277,7 +279,7 @@ namespace alg
 					// Do nothing
 				}
 			}
-			void Cluster(double *data, int N, int *Label);
+			void Cluster(double *data, int N, int *Label)
 			{
 				int size = 0;
 				size = N;
@@ -400,7 +402,7 @@ namespace alg
 			int m_initMode;
 			int m_maxIterNum;
 			double m_endError;
-			double GetLabel(const double* x, int* label)
+			double GetLabel(const double* sample, int* label)
 			{
 				double dist = -1;
 				for(int i = 0; i < m_clusterNum; i++)
@@ -424,6 +426,6 @@ namespace alg
 				}
 				return sqrt(temp);
 			}			
-		}
-	} 
+		};
+	}
 #endif
