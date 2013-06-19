@@ -71,4 +71,5 @@
     Word segementation(CHN/GB18030) using HMM and viterbi algorithm.
     A* algorithm 
     K-Means
+    Knuth–Morris–Pratt algorithm
     
