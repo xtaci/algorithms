@@ -18,7 +18,7 @@ namespace alg
 				InitManual,
 				InitUniform,
 			};
-			
+			                 
 			KMeans(int dimNum = 1, int clusterNum = 1)
 			{
 				m_dimNum = dimNum;
