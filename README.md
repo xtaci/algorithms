@@ -70,3 +70,5 @@
     Huffman Coding
     Word segementation(CHN/GB18030) using HMM and viterbi algorithm.
     A* algorithm 
+    K-Means
+    
