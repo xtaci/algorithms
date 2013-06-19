@@ -50,7 +50,8 @@ PROGRAMS =  m_based \
 			trie_demo \
 			simhash_demo \
 			imath_demo \
-			random_demo
+			random_demo \
+			k-means_demo
 
 all: $(PROGRAMS)
 
