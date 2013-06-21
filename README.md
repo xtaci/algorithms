@@ -1,6 +1,6 @@
 ###Algorithms & Data Structures in C++
 
-征C++高手加入此项目， 目标:   ( Need volunteers for code review, bugfix. goal:  )            
+征C++高手加入此项目，巭孬嫑, 目标:   ( Need volunteers for code review, bugfix. goal:  )            
 
     经典的算法实现  
         (classical algorithms implementations)
