@@ -1,35 +1,35 @@
 ###Algorithms & Data Structures in C++
 
-征C++高手加入此项目，巭孬嫑, 目标:   ( Need volunteers for code review, bugfix. goal:  )            
+征C++高手加入此项目，巭孬嫑, 目标:   ( Need volunteers for code review, bugfix. goal:  )
 
-    经典的算法实现  
+    经典的算法实现
         (classical algorithms implementations)
-    服务器端 
+    服务器端
         (based on linux/gcc)
     正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.
        (corret! and ease of use, one .header file per algorithm)
-    
-约定：( Convention :  )           
- 
-    1.  一个算法用一个.h文件表示放到include下. ( one .header file per algorithm. )              
-    2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )            
+
+约定：( Convention :  )
+
+    1.  一个算法用一个.h文件表示放到include下. ( one .header file per algorithm. )
+    2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )
     3.  程序正确通过后，请发起Pull Requests，代码被验证后入库，并在README中发布新算法实现。
-        (Please Use Fork+Push Requests !!! Correctness is the most important!)               
-    
-已实现: ( Implemented : )     
+        (Please Use Fork+Pull Requests !!! Correctness is the most important!)
+
+已实现: ( Implemented : )
 
     Array shuffle
     Prime test(trial division)
     Prime test(Miller-Rabin's method)
     2D Array
-    Arbitary Integer 
+    Arbitary Integer
     Linear congruential generator
 
     Bit-Set data structure
     Queue data structure
     Stack data structure
     Binary heap data structure
-    Priority queue 
+    Priority queue
 
     Insertion sort
     Radix sort
@@ -38,12 +38,12 @@
     Double linked list
     Skip list
     Self-organized linked-list ops (move-to-front, move-ahead-one)
-    Largest common sequence 
+    Largest common sequence
 
     Binary search tree
     Dynamic order statistics
     Red-black tree
-    Interval tree 
+    Interval tree
     Prefix Tree(Trie)
     *Suffix Tree(未实现)*
 
@@ -56,7 +56,7 @@
     SimHash
     Bloom Filter
     SHA-1 Message Digest Algorithm
-    MD5 
+    MD5
 
     Graph data structure
     Prim's minimum spanning tree
@@ -65,11 +65,11 @@
     Depth First Search
     Dijkstra's algorithm
     Bellman-Ford algorithm
-    Edmonds-Karp Maximal Flow 
+    Edmonds-Karp Maximal Flow
 
     Huffman Coding
     Word segementation(CHN/GB18030) using HMM and viterbi algorithm.
-    A* algorithm 
+    A* algorithm
     K-Means
     Knuth–Morris–Pratt algorithm
-    
+
