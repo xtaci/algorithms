@@ -66,6 +66,9 @@ namespace alg
 		inline T& operator() (int row, int col) { return this->m_data[row*NC + col]; }
 		const inline T& operator() (int row, int col) const { return this->m_data[row*NC + col]; }
 
+		inline T* operator[] (int row) { return &(m_data[row * NC]); }
+		inline const T* operator[] (int row) const { return &(m_data[row * NC]); }
+
 		/**
 		 * clear the array by a given value
 		 */
