@@ -54,7 +54,7 @@ namespace alg
 	static inline int choose_pivot(int i,int j)
 	{
 		assert(j>=i);
-		typeof(i) length = j - i;
+		int length = j - i;
 		return i+(rand()%length);
 	}
 
