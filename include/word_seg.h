@@ -28,6 +28,10 @@
 #include "hash_table.h"
 #include "queue.h"
 
+#ifdef ALG_VLA_NOT_SUPPORTED
+#include "2darray.h"
+#endif//ALG_VLA_NOT_SUPPORTED
+
 namespace alg 
 {
 	/**
@@ -199,14 +203,27 @@ namespace alg
 			int pos = 0;
 			int len = strlen(str);
 			
+#ifdef ALG_VLA_NOT_SUPPORTED
+			alg::Array2D<double> V(len, 4);
+			uint32_t CH;
+
+			// record the path
+			alg::Array2D<> path(4, len+1);
+			alg::Array2D<> newpath(4, len+1);
+
+			path.clear(0);
+			newpath.clear(0);
+#else
 			double V[len][4];
 			uint32_t CH;
 			
 			// record the path
 			char path[4][len+1];
 			char newpath[4][len+1];
+
 			memset(path,0, sizeof(path));
 			memset(newpath,0, sizeof(newpath));
+#endif
 
 			// Initialize base case. the first observation.
 			int i;

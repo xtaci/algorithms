@@ -43,6 +43,10 @@ namespace alg
 		return hash;
 	}
 
+#ifdef _MSC_VER
+#define log2(x) (log(x) / log(2))
+#endif
+
 	/**
 	 * init a hash table with size specified.
 	 */
