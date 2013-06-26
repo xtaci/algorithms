@@ -197,8 +197,14 @@ static inline void list_splice_init(struct list_head *list,
  * @type:	the type of the struct this is embedded in.
  * @member:	the name of the list_struct within the struct.
  */
+#ifndef _MSC_VER
 #define list_entry(ptr, type, member) \
 	(reinterpret_cast<type *>((char *)(ptr)-(char *)(&(reinterpret_cast<type *>(1)->member))+1))
+#else
+#define list_entry(ptr, ptrtype, member) \
+	(reinterpret_cast<ptrtype>((char *)(ptr)-(char *)(&(reinterpret_cast<ptrtype>(1)->member))+1))
+#endif
+
 
 /**
  * list_for_each	-	iterate over a list
@@ -233,11 +239,17 @@ static inline void list_splice_init(struct list_head *list,
  * @head:	the head for your list.
  * @member:	the name of the list_struct within the struct.
  */
+#ifndef _MSC_VER
 #define list_for_each_entry(pos, head, member)				\
 	for (pos = list_entry((head)->next, typeof(*pos), member);	\
 	     &pos->member != (head); 					\
 	     pos = list_entry(pos->member.next, typeof(*pos), member))
-
+#else
+#define list_for_each_entry(pos, head, member)				\
+	for (pos = list_entry((head)->next, typeof(pos), member);	\
+	     &pos->member != (head); 					\
+	     pos = list_entry(pos->member.next, typeof(pos), member))
+#endif
 /**
  * list_for_each_entry_safe - iterate over list of given type safe against removal of list entry
  * @pos:	the type * to use as a loop counter.
@@ -245,11 +257,26 @@ static inline void list_splice_init(struct list_head *list,
  * @head:	the head for your list.
  * @member:	the name of the list_struct within the struct.
  */
+#ifndef _MSC_VER
 #define list_for_each_entry_safe(pos, n, head, member)			\
 	for (pos = list_entry((head)->next, typeof(*pos), member),	\
 		n = list_entry(pos->member.next, typeof(*pos), member);	\
 	     &pos->member != (head); 					\
 	     pos = n, n = list_entry(n->member.next, typeof(*n), member))
 
+#else
+
+template<class T>
+struct TypeofHelper
+{
+	typedef T Type;
+};
+
+#define list_for_each_entry_safe(pos, n, head, member)			\
+	for (pos = list_entry((head)->next, TypeofHelper<typeof(pos)>::Type, member),	\
+		n = list_entry(pos->member.next, TypeofHelper<typeof(pos)>::Type, member);	\
+	     &(pos->member) != (head); 					\
+	     pos = n, n = list_entry(n->member.next, TypeofHelper<typeof(n)>::Type, member))
+#endif
 
 #endif
