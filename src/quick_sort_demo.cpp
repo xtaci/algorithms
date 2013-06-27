@@ -7,6 +7,7 @@
 
 int main()
 {
+	RANDOM_INIT();
 	using namespace alg;
 	const int MAX_ELEMENTS = 10;
 	int list[MAX_ELEMENTS];

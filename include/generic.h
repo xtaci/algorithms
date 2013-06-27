@@ -23,6 +23,9 @@
 #define Max(a, b) ( (a > b) ? a : b )
 #define Min(a, b) ( (a < b) ? a : b )
 
+#define RANDOM_INIT()	srand(time(NULL))
+#define RANDOM(L, R)	(L + rand() % ((R) - (L))) // gen a random integer in [L, R]
+
 namespace alg 
 {
 	/**
@@ -46,16 +49,6 @@ namespace alg
 		for(i=0;i<count;i++)
 			printf("%d\t ",list[i]);
 		printf("\n");
-	}
-
-	/**
-	 * select a random number between i and j
-	 */
-	static inline int choose_pivot(int i,int j)
-	{
-		assert(j>=i);
-		int length = j - i;
-		return i+(rand()%length);
 	}
 
 	/**

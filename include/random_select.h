@@ -18,6 +18,8 @@
 #ifndef __RANDOM_SELECT_H__
 #define __RANDOM_SELECT_H__
 
+#include <generic.h> 
+
 namespace alg
 {
 	/**
@@ -26,7 +28,7 @@ namespace alg
 	template<typename T>
 	static int __partition(T list[],int begin, int end)
 	{
-		int pivot_idx = choose_pivot(begin,end);
+		int pivot_idx = RANDOM(begin,end);
 		T pivot = list[pivot_idx];
 		swap(list[begin],list[pivot_idx]);
 

@@ -7,6 +7,7 @@
 
 int main()
 {
+	RANDOM_INIT();
 	using namespace alg;
 	const int MAX_ELEMENTS = 10;
 	int list[MAX_ELEMENTS];
@@ -18,7 +19,7 @@ int main()
 		list[i] = rand()%100; 
 	}
 	
-	printf("The list before sorting is:\n");
+	printf("The list is:\n");
 	printlist(list,MAX_ELEMENTS);
    
 	// random-select k-th element
@@ -27,7 +28,7 @@ int main()
 	int result = random_select(list,0,MAX_ELEMENTS-1,k);
 
 	// print the result
-	printf("the %dth smallest number is %d:\n", k, list[result]);
+	printf("random select the %dth smallest number %d:\n", k, list[result]);
 
 	return 0;
 }
