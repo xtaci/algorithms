@@ -118,17 +118,16 @@ namespace alg
 			rbtree_node child;
 			if (n == NULL) return;
 
-			// phase 1. fixup the 'm' value until m is not the max value of the path.
-			fixup_m(n);
-
-			// phase 2. red black tree deletion
+			/* Copy key/value from predecessor and then delete it instead */
 			if (n->left != NULL && n->right != NULL) {
-				/* Copy key/value from predecessor and then delete it instead */
 				ivltree_node pred = IVLNODE(maximum_node(n->left));
 				n->low = pred->low;
 				n->high= pred->high;
 				n = pred;
 			}
+			
+			// fixup the 'm' value until m is not the max value of the path.
+			fixup_m(n);
 
 			assert(n->left == NULL || n->right == NULL);
 			child = n->right == NULL ? n->left : n->right;
