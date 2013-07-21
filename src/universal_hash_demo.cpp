@@ -12,10 +12,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "sha1.h"
-
 #include "universal_hash.h"
-#define TEST "this is a string"
 
 using namespace alg;
 int main(void)
@@ -29,26 +26,8 @@ int main(void)
 	int i;
 	for (i = 0; i < MAXELEMENT; i++)
 	{
-		int key = rand()%100;
-		
-		printf("hashing %d --> %d\n", key, uhash_integer(&params, key));
+		printf("hashing %d --> %d\n", i, uhash_integer(&params, i));
 	}
 
-	SHA1Context sha;
-
-	sha1_reset(&sha);
-	sha1_input(&sha, (const unsigned char *) TEST, strlen(TEST));
-
-	if (sha1_final(&sha))
-    {
-		int i;
-        for(i = 0; i < 5 ; i++)
-        {
-            printf("%x", sha.digest[i]);
-        }
-	}
-	
-	printf("\n -- hashing big int into %d\n", uhash_bigint(&params, sha.digest,5)); 
-
-	return 0;
+	printf("prime %d\n", params.prime);
 }
