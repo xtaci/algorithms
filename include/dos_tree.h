@@ -112,18 +112,17 @@ namespace alg
 		void delete_key(dostree_node n)
 		{
 			rbtree_node child;
-			
-			// phase 1. fix up size
-			fixup_size(n);
 
-			// phase 2. handle red-black properties, and deletion work.
+			/* Copy key/value from predecessor and then delete it instead */
 			if (n->left != NULL && n->right != NULL) {
-				/* Copy key/value from predecessor and then delete it instead */
 				dostree_node pred = DOSNODE(maximum_node(n->left));
 				DOSNODE(n)->key = DOSNODE(pred)->key;
 				DOSNODE(n)->size = DOSNODE(pred)->size;
 				n = pred;
 			}
+
+			// fix up size from pred
+			fixup_size(n);
 
 			assert(n->left == NULL || n->right == NULL);
 			child = n->right == NULL ? n->left  : n->right;
