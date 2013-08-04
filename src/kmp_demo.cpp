@@ -12,7 +12,7 @@ int main(void)
 	char * W = (char*)malloc(6);
 
 	memset(S,0, 10000);
-	memset(W,0, 10);
+	memset(W,0, 6);
 
 	// random genrate a pattern for A, G, C,T
 	const char P[] = {'A', 'G','C','T'};
