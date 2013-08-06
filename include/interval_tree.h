@@ -118,7 +118,7 @@ namespace alg
 			rbtree_node child;
 			if (n == NULL) return;
 
-			/* Copy key/value from predecessor and then delete it instead */
+			/* Copy fields from predecessor and then delete it instead */
 			if (n->left != NULL && n->right != NULL) {
 				ivltree_node pred = IVLNODE(maximum_node(n->left));
 				n->low = pred->low;
@@ -135,7 +135,14 @@ namespace alg
 				n->color = node_color(child);
 				delete_case1(n);
 			}
+
 			replace_node(n, child);
+			// copy child value if exists, add your fields if you got one 
+			if (child != NULL) {
+				IVLNODE(n)->low = IVLNODE(child)->low;
+				IVLNODE(n)->high = IVLNODE(child)->high;
+			}
+
 			if (n->parent == NULL && child != NULL)
 				child->color = BLACK;
 
