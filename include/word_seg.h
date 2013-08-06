@@ -85,6 +85,7 @@ namespace alg
 			 * the 2-d array is in the format of :
 			 * SINGLE	-> S B M E
 			 * ... 		-> S B M E
+			 * A MORE SOPHISTICATED CALCULATION IS REQUIRED IN PRACTICE
 			 */
 			static const float _TP[4][4] = {
         		{0.5138298266610544, 0.48617017333894563, 0.000001, 0.000001},
