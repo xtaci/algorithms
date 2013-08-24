@@ -1,6 +1,6 @@
 ###Algorithms & Data Structures in C++
 
-征C++高手加入此项目，巭孬嫑, 目标:   ( Need volunteers for code review, bugfix. goal:  )
+####目标 ( goal ) :
 
     经典的算法实现
         (classical algorithms implementations)
@@ -9,14 +9,14 @@
     正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.
        (corret! and ease of use, one .header file per algorithm)
 
-约定：( Convention :  )
+####约定 ( Convention ):
 
     1.  一个算法用一个.h文件表示放到include下. ( one .header file per algorithm. )
     2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )
     3.  程序正确通过后，请发起Pull Requests，代码被验证后入库，并在README中发布新算法实现。
         (Please Use Fork+Pull Requests !!! Correctness is the most important!)
 
-已实现: ( Implemented : )
+####已实现 ( Implemented ):
 
     Array shuffle
     Prime test(trial division)
@@ -35,6 +35,7 @@
     Radix sort
     Quick sort
     Merge sort
+    Heap sort
     Double linked list
     Skip list
     Self-organized linked-list ops (move-to-front, move-ahead-one)
@@ -73,3 +74,7 @@
     K-Means
     Knuth–Morris–Pratt algorithm
 
+####贡献者 ( Contributors ) :  
+    Samana :  for heavy work of MSVC compatability
+    wycg1984: for K-Means
+    xmuliang: for HeapSort
