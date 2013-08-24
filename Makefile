@@ -52,7 +52,8 @@ PROGRAMS =  m_based \
 			imath_demo \
 			random_demo \
 			k-means_demo \
-			kmp_demo
+			kmp_demo \
+			heap_sort_demo
 
 all: $(PROGRAMS)
 

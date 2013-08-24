@@ -33,23 +33,23 @@ namespace alg
 		Heap<T> heap(number_of_elements);
 		int i;
 
-		/*In order to build a heap structure from input array*/
+		// In order to build a heap structure from input array
 		for(i=0;i<number_of_elements;i++)
 		{
-            heap.insert(array[i],0);    //set key with the value of the array,value to 0(no use)
+			heap.insert(array[i],0);    //set key with the value of the array,value to 0(no use)
 		}
 
-        /*Temporary array to store the minkey of each step,which is deleted from the heap*/
+        // Temporary array to store the minkey of each step,which is deleted from the heap
 		T tempArray[number_of_elements];
 		for(i=0;i<number_of_elements;i++)
 		{
-            tempArray[i]=heap.min_key();    //find the min key
-            heap.delete_min();
+			tempArray[i]=heap.min_key();    //find the min key
+			heap.delete_min();
 		}
 
 		for(i=0;i<number_of_elements;i++)
 		{
-            array[i]=tempArray[i];      //copy back to the original array
+			array[i]=tempArray[i];      //copy back to the original array
 		}
 	}
 }
