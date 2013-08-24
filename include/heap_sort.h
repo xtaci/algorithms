@@ -38,8 +38,8 @@ namespace alg
 		{
 			heap.insert(array[i],0);    //set key with the value of the array,value to 0(no use)
 		}
-
-        // Temporary array to store the minkey of each step,which is deleted from the heap
+		
+		// Temporary array to store the minkey of each step,which is deleted from the heap
 		T tempArray[number_of_elements];
 		for(i=0;i<number_of_elements;i++)
 		{
