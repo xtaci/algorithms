@@ -77,4 +77,4 @@
 ####贡献者 ( Contributors ) :  
     Samana :  for heavy work of MSVC compatability
     wycg1984: for K-Means
-    xmuliang: for HeapSort
+    xmuliang: for HeapSort, Kruskal MST

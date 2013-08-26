@@ -53,7 +53,8 @@ PROGRAMS =  m_based \
 			random_demo \
 			k-means_demo \
 			kmp_demo \
-			heap_sort_demo
+			heap_sort_demo \
+			kruskal_mst_demo
 
 all: $(PROGRAMS)
 
