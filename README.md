@@ -61,6 +61,7 @@
 
     Graph data structure
     Prim's minimum spanning tree
+	Kruskal MST
     Directed/Undirected graph ops
     Breadth First Search
     Depth First Search
