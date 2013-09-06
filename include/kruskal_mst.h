@@ -133,8 +133,7 @@ namespace alg
 			const Graph::Vertex * v;
 			KruskalAdjacent * pa;
 			uint32_t flag=0;    //record the edge to be added into the mst
-            uint32_t total_nodes=num_vertex;    //nodes of the Kruskal
-
+			uint32_t total_nodes=num_vertex;    //nodes of the Kruskal
 
 			while(true) {
 				int weight = INT_MAX;
