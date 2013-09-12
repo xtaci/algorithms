@@ -55,7 +55,8 @@ PROGRAMS =  m_based \
 			kmp_demo \
 			heap_sort_demo \
 			kruskal_mst_demo \
-			LRU_cache_demo
+			LRU_cache_demo \
+			base64_demo
 
 all: $(PROGRAMS)
 
