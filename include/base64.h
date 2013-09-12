@@ -25,7 +25,7 @@ namespace alg {
 	class CBase64 {
 		public:
 			static std::string encodeBase64(unsigned char *input , int input_len) {
-				std::string code="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+				const char * code="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 				unsigned char input_char[3];
 				char output_char[5];
 				int output_num;
@@ -70,7 +70,6 @@ namespace alg {
 					output_str.append(output_char);
 				}
 
-				//cout <<"encodeBase64 Res::: " << output_str <<  endl;
 				return output_str;
 			}
 
@@ -95,18 +94,13 @@ namespace alg {
 					}
 				}
 
-				//cout << "decodeBase64 ::: " <<output_str << endl;
 				return output_str;
-
 			}
 
-
 			static int indexOfCode(const char c) {
-				std::string code="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-				for (unsigned int i=0;i<code.size();i++)
-				{
-					if(code[i]==c)
+				const char * code="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+				for (unsigned int i=0;i<64;i++) {
+					if (code[i]==c)
 						return i;
 				}
 				return 0;

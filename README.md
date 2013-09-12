@@ -79,3 +79,4 @@
     Samana :  for heavy work of MSVC compatability
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
+	wyh267: for base64, LRU
