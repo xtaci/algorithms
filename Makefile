@@ -54,7 +54,8 @@ PROGRAMS =  m_based \
 			k-means_demo \
 			kmp_demo \
 			heap_sort_demo \
-			kruskal_mst_demo
+			kruskal_mst_demo \
+			LRU_cache_demo
 
 all: $(PROGRAMS)
 
