@@ -34,7 +34,7 @@ public:
 			for(int i=0;i<input_len;i+=3)
 				{
 					memset(input_char ,0,3);
-					memset(output_char ,61,4);
+					memset(output_char ,61,5);
 					if(i+3 <= input_len)
 						{
 							memcpy(input_char,input+i,3);
