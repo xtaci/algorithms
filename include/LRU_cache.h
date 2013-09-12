@@ -1,4 +1,34 @@
 
+/*******************************************************************************
+ * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ *
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
+ * /--\ | (_| (_) |  |  |_ | | | | | _> 
+ *         _|                      
+ *
+ * Least Recently Used (LRU): 
+ * 	discards the least recently used items first. This algorithm requires keeping track of what was used when, 
+ * which is expensive if one wants to make sure the algorithm always discards the least recently used item. 
+ * General implementations of this technique require keeping "age bits" for cache-lines and track the 
+ * "Least Recently Used" cache-line based on age-bits. In such an implementation, every time a cache-line is used, 
+ * the age of all other cache-lines changes
+ *  
+ *  
+ *  We use this double list to store the cache like this:
+ * 
+ *  NodeHead <==> Node1 <==> Node2 <==> ... ... <==> NodeN <==>NodeNear
+ * 
+ *  the "NodeHead" and "NodeNear" have no data , them just for head and near.
+ * 
+ *  Tow Interface:
+ *      getValue : get the value by key ,and put the Node to first
+ *      putValue : add or update the Node's Key and Value, and then, put the Node to first
+ * 
+ * http://en.wikipedia.org/wiki/LRU_cache#Least_Recently_Used
+ * 
+ ******************************************************************************/
+
+
 
 #ifndef _LRUCACHE_
 #define _LRUCACHE_
