@@ -26,7 +26,7 @@ public:
 		{
 			string code="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 			unsigned char input_char[3];
-			char output_char[4];
+			char output_char[5];
 			int output_num;
 			string output_str="";
 			int near=input_len%3;
@@ -48,6 +48,7 @@ public:
 									output_char[1]=code[((output_num>>12) & 0x3f)];
 									output_char[2]='=';
 									output_char[3]='=';
+									output_char[4]='\0';
 									}
 
 								if(near==2)
@@ -56,6 +57,7 @@ public:
 									output_char[1]=code[((output_num>>12) & 0x3f)];
 									output_char[2]=code[((output_num>>6) & 0x3f)];;
 									output_char[3]='=';
+									output_char[4]='\0';
 									}
 								
 								output_str.append(output_char);
@@ -67,6 +69,7 @@ public:
 					output_char[1]=code[((output_num>>12) & 0x3f)];
 					output_char[2]=code[((output_num>>6) & 0x3f)];
 					output_char[3]=code[((output_num) & 0x3f)];
+					output_char[4]='\0';
 					output_str.append(output_char);
 
 					
