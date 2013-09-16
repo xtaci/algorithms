@@ -58,6 +58,7 @@
     Bloom Filter
     SHA-1 Message Digest Algorithm
     MD5
+	Base64
 
     Graph data structure
     Prim's minimum spanning tree
@@ -79,3 +80,4 @@
     Samana :  for heavy work of MSVC compatability
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
+	wyh267: for base64, LRU
