@@ -5,13 +5,15 @@
  * /--\ | (_| (_) |  |  |_ | | | | | _> 
  *         _|                      
  *
- * RANDOM-SELECT
+ * Quickselect
+ *   In computer science, a quickselect is a selection algorithm related to the
+ * quicksort sorting algorithm. Like quicksort, it was developed by Tony Hoare, 
+ * and thus is also known as Hoare's selection algorithm. Like quicksort, it is
+ * efficient in practice and has good average-case performance, but has poor
+ * worst-case performance. Quickselect and variants is the selection algorithm  
+ * most often used in efficient real-world implementations.
  *
- * Features:
- * 1. select the smallest k-th element
- * 2. will modify orignal list
- *
- * http://en.wikipedia.org/wiki/Order_statistic
+ * http://en.wikipedia.org/wiki/Quickselect
  *
  ******************************************************************************/
 
