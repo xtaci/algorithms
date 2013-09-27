@@ -7,7 +7,7 @@
     服务器端
         (based on linux/gcc)
     正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.
-       (corret! and ease of use, one .header file per algorithm)
+       (correct! and ease of use, one .header file per algorithm)
 
 ####约定 ( Convention ):
 
