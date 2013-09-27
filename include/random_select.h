@@ -28,8 +28,7 @@ namespace alg
 	 * the random_select partition routine
 	 */
 	template<typename T>
-	static int __partition(T list[],int begin, int end)
-	{
+	static int __partition(T list[],int begin, int end) {
 		int pivot_idx = RANDOM(begin,end);
 		T pivot = list[pivot_idx];
 		swap(list[begin],list[pivot_idx]);
@@ -37,8 +36,7 @@ namespace alg
 		int i = begin + 1;
 		int j = end;
 	  
-		while(i <= j)
-		{
+		while(i <= j) {
 			while((i <= end) && (list[i] <= pivot))
 				i++;
 			while((j >= begin) && (list[j] > pivot))
@@ -55,20 +53,19 @@ namespace alg
 	 * select the k-th smallest number in 'list' of range [begin, end]
 	 */
 	template<typename T>
-	static int random_select(T list[], int begin, int end, int k)
-	{
+	static int random_select(T list[], int begin, int end, int k) {
 		if(begin == end)
 			return begin;
 	   
 		int pivot_idx = __partition<T>(list, begin, end);
 		int human_idx = pivot_idx - begin + 1;
 
-		if(k == human_idx)
-			return pivot_idx;
 		if(k < human_idx)
 			return random_select(list, begin, pivot_idx - 1, k);
-		if(k > human_idx)
+		else if(k > human_idx)
 			return random_select(list, pivot_idx+1, end, k - human_idx);
+
+		return pivot_idx;
 	}
 }
 
