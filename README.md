@@ -24,6 +24,7 @@
     2D Array
     Arbitary Integer
     Linear congruential generator
+	Maximum subarray problem
 
     Bit-Set data structure
     Queue data structure
