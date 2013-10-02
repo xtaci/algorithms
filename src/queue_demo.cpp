@@ -17,6 +17,8 @@ int main()
 		Q.enqueue(value);
 	}
 
+	printf("queue count:%u\n", Q.count());
+
 	printf("> DEQUEUE\n");
 	while(!Q.is_empty()) {
 		printf("dequeue %d\n",Q.front());

@@ -137,7 +137,7 @@ namespace alg
 		/**
 		 * return the queue count.
 		 */
-		inline int count() const { return m_size; };
+		inline uint32_t count() const { return m_size; };
 	};
 }
 #endif //
