@@ -138,6 +138,11 @@ namespace alg
 		 * return the queue count.
 		 */
 		inline uint32_t count() const { return m_size; };
+
+		/**
+		 * return the queue capacity.
+		 */
+		inline uint32_t capcity() const { return m_capacity; };
 	};
 }
 #endif //
