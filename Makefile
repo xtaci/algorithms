@@ -30,7 +30,7 @@ PROGRAMS =  m_based \
 			heap_demo \
 			interval_tree_demo \
 			dos_tree_demo \
-			skip_list_demo \
+			skiplist_demo \
 			lcs_demo	\
 			prim_mst_demo \
 			directed_graph_demo \
