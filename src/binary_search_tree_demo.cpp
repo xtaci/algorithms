@@ -27,23 +27,16 @@ int main()
 		t.insert(key[i], value[i]);
 	}
 
-	for(i = 0; i < MAX_ELEMENTS; i++){
-		printf("getting %d->%d\n",key[i], t[key[i]]);
-	}
+	t.print_helper();
 
 	for(i = 0; i < MAX_ELEMENTS; i++){
-		int k = rand()%100;
-		printf("testing %d-> %s\n",k,t.contains(k)?"YES":"NO");
+		printf("getting %d->%d\n",key[i], t.find(key[i])->value);
 	}
 
 	for(i = 0; i < MAX_ELEMENTS; i++){
 		t.deleteKey(key[i]);
-		printf("delete %d\n", key[i]);
-	}
-
-	for(i = 0; i < MAX_ELEMENTS; i++){
-		int k = rand()%100;
-		printf("testing %d-> %s\n",k,t.contains(k)?"YES":"NO");
+		t.print_helper();
+		printf("deleted %d\n\n", key[i]);
 	}
 
 	return 0;

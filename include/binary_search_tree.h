@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <exception>
+#include <iostream>
 
 namespace alg {
 	template<typename KeyT, typename ValueT>
@@ -60,39 +61,20 @@ namespace alg {
 			__destruct(m_root);
 		}
 
-		ValueT operator[] (const KeyT & key) {
-			if (m_root == NULL) throw error;
-			treeNode * tmp = m_root;
-	
-			while(true) {
-				if (key == tmp->key) return tmp->value;
-				else if(key < tmp->key) {
-					if (tmp->left == NULL) throw error;
-					tmp = tmp->left;
-				} else {
-					if (tmp->right == NULL) throw error;
-					tmp = tmp->right;
-				}
-			}
-		}
-
 		/**
-		 * test whether the key is in the tree
+		 * find key
 		 */
-		bool contains(const KeyT & key) {
-			if (m_root == NULL) return false;
-			treeNode * tmp = m_root;
-	
-			while(true) {
-				if (key == tmp->key) return true;
-				else if(key < tmp->key) {
-					if (tmp->left == NULL) return false;
-					tmp = tmp->left;
+		treeNode * find(const KeyT & key) {
+			treeNode * n= m_root;
+			while (n!=NULL && key != n->key) {
+				if (key < n->key) {
+					n = n->left;
 				} else {
-					if (tmp->right == NULL) return false;
-					tmp = tmp->right;
+					n = n->right;
 				}
 			}
+
+			return n;
 		}
 
 		/**
@@ -129,22 +111,8 @@ namespace alg {
 		 * delete a key from the binary search tree.
 		 */
 		bool deleteKey(const KeyT & key) {
-			treeNode * n = m_root;
-			treeNode * z = NULL;
-
-			while(n!=NULL) {
-				if (key == n->key) {	// found!
-					z = n;
-					break;
-				} else if(key < n->key) {
-					n = n->left;
-				} else {
-					n = n->right;
-				}
-			}
-
-			// delete the node
-			if (z==NULL) {
+			treeNode *z = find(key);
+			if (z == NULL) {
 				return false;
 			}
 		
@@ -173,6 +141,23 @@ namespace alg {
 			delete z;
 			return true;
 		}
+		
+		void print_tree(treeNode * n, int indent) {
+			if (n == NULL) {
+				return;
+			}
+			print_tree(n->right, indent+1);
+			int i;
+			for (i=0;i<indent;i++){
+				printf(" ");
+			}
+			std::cout << "[" << n->key << "," << n->value << "]" << std::endl;
+			print_tree(n->left, indent+1);
+		}
+
+		void print_helper() {
+			print_tree(m_root, 0);
+		}
 
 	private:
 		void __destruct(treeNode *n) {
@@ -187,7 +172,7 @@ namespace alg {
 		 */
 		void transplant(treeNode *u, treeNode *v) {
 			if (u->parent == NULL) {
-				m_root = u;
+				m_root = v;
 			} else if (u == u->parent->left) {
 				u->parent->left = v;
 			} else {
