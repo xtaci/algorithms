@@ -38,8 +38,9 @@ namespace alg
 		{
 			KeyT 	key;			// key
 			ValueT 	value;			// data
-			treeNode *left;	// left child
-			treeNode *right;	// right child
+			treeNode *parent;		// parent
+			treeNode *left;			// left child
+			treeNode *right;		// right child
 		};
 
 		class BSTException: public std::exception
@@ -58,13 +59,11 @@ namespace alg
 	public:
 		BST():m_root(NULL){};
 
-		~BST()
-		{
+		~BST() {
 			destruct(m_root);
 		}
 
-		ValueT operator[] (const KeyT & key)
-		{
+		ValueT operator[] (const KeyT & key) {
 			if (m_root == NULL) throw error;
 			treeNode * tmp = m_root;
 	
@@ -83,8 +82,7 @@ namespace alg
 		/**
 		 * test whether the key is in the tree
 		 */
-		bool contains(const KeyT & key)
-		{
+		bool contains(const KeyT & key) {
 			if (m_root == NULL) return false;
 			treeNode * tmp = m_root;
 	
@@ -103,44 +101,109 @@ namespace alg
 		/**
 		 * insert a new data into the binary search tree.
 		 */
-		bool insert(const KeyT & key, const ValueT & value)
-		{
-			treeNode *n = new treeNode;
-			n->key = key;
-			n->value = value;
-			n->left = n->right = NULL;
+		bool insert(const KeyT & key, const ValueT & value) {
+			treeNode *newnode = new treeNode;
+			newnode->key = key;
+			newnode->value = value;
+			newnode->left = newnode->right = newnode->parent = NULL;
 
 			if (m_root == NULL){
-				m_root = n;
+				m_root = newnode;
 				return true;
 			}
-			treeNode * tmp = m_root;
-				
+
+			treeNode * n = m_root;
 			while(true) {
-				if (key == tmp->key) {	// already inserted
-					delete n;
+				if (key == n->key) {	// already inserted
+					delete newnode;
 					return false;
 				}
-				else if(key < tmp->key) {
-					if (tmp->left == NULL) {
-						tmp->left = n;
+				else if(key < n->key) {
+					if (n->left == NULL) {
+						newnode->parent = n;
+						n->left = newnode;
 						return true;
-					} else tmp = tmp->left;
+					} else n = n->left;
 				} else {
-					if (tmp->right == NULL) {
-						tmp->right = n;
+					if (n->right == NULL) {
+						newnode->parent = n;
+						n->right = newnode;
 						return true;
-					} else tmp = tmp->right;
+					} else n = n->right;
 				}
 			}
 		}
+
+		/**
+		 * delete a key from the binary search tree.
+		 */
+		bool deleteKey(const KeyT & key) {
+			treeNode * n = m_root;
+			treeNode * z = NULL;
+
+			while(n!=NULL) {
+				if (key == n->key) {	// found!
+					z = n;
+					break;
+				}
+				else if(key < n->key) {
+					n = n->left;
+				} else {
+					n = n->right;
+				}
+			}
+
+			// delete the node
+			if (z==NULL) {
+				return false;
+			}
+		
+			if (z->left == NULL) {
+				transplant(z, z->right);
+			} else if (z->right == NULL) {
+				transplant(z, z->left);
+			} else {
+				treeNode *y = minimum(z->right);
+				if (y->parent != z) {
+					transplant(y, y->right);
+					y->right = z->right;
+					y->right->parent = y;
+				}
+
+				transplant(z,y);
+				y->left = z->left;
+				y->left->parent = y;
+			}
+		}
+
 	private:
-		void destruct(treeNode *n)
-		{
+		void destruct(treeNode *n) {
 			if (n==NULL) return;
 			destruct(n->left);
 			destruct(n->right);
 			delete n;
+		}
+
+		void transplant(treeNode *u, treeNode *v) {
+			if (u->parent == NULL) {
+				m_root = u;
+			} else if (u == u->parent->left) {
+				u->parent->left = v;
+			} else {
+				u->parent->right = v;
+			}
+
+			if (v!=NULL) {
+				v->parent = u->parent;
+			}
+		}
+
+		treeNode * minimum(treeNode *x) {
+			while (x->left != NULL) {
+				x = x->left;
+			}
+
+			return x;
 		}
 
 	private:
