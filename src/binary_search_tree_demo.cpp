@@ -36,5 +36,15 @@ int main()
 		printf("testing %d-> %s\n",k,t.contains(k)?"YES":"NO");
 	}
 
+	for(i = 0; i < MAX_ELEMENTS; i++){
+		t.deleteKey(key[i]);
+		printf("delete %d\n", key[i]);
+	}
+
+	for(i = 0; i < MAX_ELEMENTS; i++){
+		int k = rand()%100;
+		printf("testing %d-> %s\n",k,t.contains(k)?"YES":"NO");
+	}
+
 	return 0;
 }

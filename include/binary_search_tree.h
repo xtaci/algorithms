@@ -1,5 +1,5 @@
 /*******************************************************************************
- * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ * ALGORITHM IMPLEMENTAIONS
  *
  *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
  * /--\ | (_| (_) |  |  |_ | | | | | _> 
@@ -25,17 +25,14 @@
 #include <stdint.h>
 #include <exception>
 
-namespace alg
-{
+namespace alg {
 	template<typename KeyT, typename ValueT>
-	class BST
-	{
+	class BST {
 	private:
 		/**
 		 * binary search tree definiton.
 		 */
-		struct treeNode
-		{
+		struct treeNode {
 			KeyT 	key;			// key
 			ValueT 	value;			// data
 			treeNode *parent;		// parent
@@ -43,24 +40,24 @@ namespace alg
 			treeNode *right;		// right child
 		};
 
-		class BSTException: public std::exception
-		{
+		class BSTException: public std::exception {
 			public:
-			virtual const char * what() const throw()
-			{
+			virtual const char * what() const throw() {
 				return "key does not exist";
 			}
 		};
 	
 	private:
-		treeNode * m_root;
+		treeNode * m_root;		// the root
 		const BSTException error;
-	
+	private:
+		BST(const BST&);
+		BST& operator=(const BST&);
 	public:
 		BST():m_root(NULL){};
 
 		~BST() {
-			destruct(m_root);
+			__destruct(m_root);
 		}
 
 		ValueT operator[] (const KeyT & key) {
@@ -101,36 +98,30 @@ namespace alg
 		/**
 		 * insert a new data into the binary search tree.
 		 */
-		bool insert(const KeyT & key, const ValueT & value) {
-			treeNode *newnode = new treeNode;
-			newnode->key = key;
-			newnode->value = value;
-			newnode->left = newnode->right = newnode->parent = NULL;
-
-			if (m_root == NULL){
-				m_root = newnode;
-				return true;
-			}
+		void insert(const KeyT & key, const ValueT & value) {
+			treeNode *z= new treeNode;
+			z->key = key;
+			z->value = value;
+			z->left = z->right = z->parent = NULL;
 
 			treeNode * n = m_root;
-			while(true) {
-				if (key == n->key) {	// already inserted
-					delete newnode;
-					return false;
-				}
-				else if(key < n->key) {
-					if (n->left == NULL) {
-						newnode->parent = n;
-						n->left = newnode;
-						return true;
-					} else n = n->left;
+			treeNode * y = NULL;
+			while(n!=NULL) {
+				y = n;	
+				if(key < n->key) {
+					n = n->left;			
 				} else {
-					if (n->right == NULL) {
-						newnode->parent = n;
-						n->right = newnode;
-						return true;
-					} else n = n->right;
+					n = n->right;
 				}
+			}
+
+			z->parent = y;
+			if (y==NULL) {
+				m_root = z;
+			} else if (key < y->key) {
+				y->left = z;
+			} else {
+				y->right = z;
 			}
 		}
 
@@ -145,8 +136,7 @@ namespace alg
 				if (key == n->key) {	// found!
 					z = n;
 					break;
-				}
-				else if(key < n->key) {
+				} else if(key < n->key) {
 					n = n->left;
 				} else {
 					n = n->right;
@@ -163,27 +153,38 @@ namespace alg
 			} else if (z->right == NULL) {
 				transplant(z, z->left);
 			} else {
-				treeNode *y = minimum(z->right);
+				// find the minimum element of the right subtree
+				treeNode *y = minimum(z->right);	
 				if (y->parent != z) {
+					// replace y with right-child
 					transplant(y, y->right);
+					// replace right-child of y with the right-child of z
 					y->right = z->right;
+					// make y the parent of the right-child
 					y->right->parent = y;
 				}
-
+			
+				// replace z with y
 				transplant(z,y);
 				y->left = z->left;
 				y->left->parent = y;
 			}
+
+			delete z;
+			return true;
 		}
 
 	private:
-		void destruct(treeNode *n) {
+		void __destruct(treeNode *n) {
 			if (n==NULL) return;
-			destruct(n->left);
-			destruct(n->right);
+			__destruct(n->left);
+			__destruct(n->right);
 			delete n;
 		}
 
+		/**
+		 * replace node u with v.
+		 */
 		void transplant(treeNode *u, treeNode *v) {
 			if (u->parent == NULL) {
 				m_root = u;
@@ -198,6 +199,9 @@ namespace alg
 			}
 		}
 
+		/**
+		 * find the minimum element of the subtree
+		 */
 		treeNode * minimum(treeNode *x) {
 			while (x->left != NULL) {
 				x = x->left;
@@ -205,10 +209,6 @@ namespace alg
 
 			return x;
 		}
-
-	private:
-		BST(const BST&);
-		BST& operator=(const BST&);
 	};
 }
 
