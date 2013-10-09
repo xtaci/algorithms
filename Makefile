@@ -57,7 +57,8 @@ PROGRAMS =  m_based \
 			kruskal_mst_demo \
 			LRU_cache_demo \
 			base64_demo	\
-			max_subarray_demo
+			max_subarray_demo \
+			disjoint-set_demo
 
 all: $(PROGRAMS)
 
