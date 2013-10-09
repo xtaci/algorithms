@@ -76,6 +76,7 @@
     A* algorithm
     K-Means
     Knuth–Morris–Pratt algorithm
+	Disjoint-Set
 
 ####贡献者 ( Contributors ) :  
     Samana :  for heavy work of MSVC compatability
