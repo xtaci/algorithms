@@ -5,6 +5,8 @@
 int main(void) {
 	alg::Set<int> s1;
 	alg::Set<int> s2;
+	s1.element = 1;
+	s2.element = 2;
 	alg::MakeSet(&s1);
 	alg::MakeSet(&s2);
 
