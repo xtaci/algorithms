@@ -25,7 +25,6 @@ namespace alg {
 	template<typename T>
 	struct Set{
 		Set<T>* parent;
-		T element;
 		int rank;
 	};
 
