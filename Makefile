@@ -58,7 +58,7 @@ PROGRAMS =  m_based \
 			LRU_cache_demo \
 			base64_demo	\
 			max_subarray_demo \
-			push_relabel_demo
+			relabel_to_front_demo
 
 all: $(PROGRAMS)
 
