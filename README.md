@@ -70,6 +70,7 @@
     Dijkstra's algorithm
     Bellman-Ford algorithm
     Edmonds-Karp Maximal Flow
+	Push–Relabel algorithm
 
     Huffman Coding
     Word segementation(CHN/GB18030) using HMM and viterbi algorithm.
@@ -83,3 +84,4 @@
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
 	wyh267: for base64, LRU
+	ZhangYou0122 : Push-Relabel algorithm
