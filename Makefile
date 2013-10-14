@@ -58,7 +58,8 @@ PROGRAMS =  m_based \
 			LRU_cache_demo \
 			base64_demo	\
 			max_subarray_demo \
-			disjoint-set_demo
+			disjoint-set_demo \
+			relabel_to_front_demo
 
 all: $(PROGRAMS)
 
