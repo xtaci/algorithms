@@ -50,18 +50,22 @@ namespace alg {
 		};
 	private:
 		node m_root;
-		void * map;
 		int fd;
 	private:
 		BTree(const BTree &);
 		BTree& operator=(const BTree&);
 	public:
 		BTree(const char * path) {
-			fd = open(path, O_RDWR);
+			fd = open(path, O_RDWR|O_CREAT, 0640);
 			if (fd == -1)
 				return;
 			node x = (node)allocate_node();
-			x->leaf = true;
+			int n = read(fd,x,BLOCKSIZE);
+			if (n != BLOCKSIZE) {	// init new btree
+				x->leaf = true;
+				WRITE(x);
+			}
+			m_root = (node)x;
 		}
 
 		~BTree() {
@@ -88,7 +92,29 @@ namespace alg {
 			}
 		}
 
+		void Insert(int32_t k) {
+			node r = m_root;
+			if (r->n == 2*T - 1) {
+				node s = (node)allocate_node();
+				// replace old root
+				m_root->offset = -1;
+				WRITE(m_root);
+				// new root
+				s->offset = 0;
+				s->n = 0;
+				s->c[1] = m_root->offset;
+				m_root = s;
+				split_child(s, 1);
+				insert_nonfull(s, k);
+			} else {
+				insert_nonfull(r, k);
+			}
+		}
+
 	private:
+		void insert_nonfull(node s, int32_t k) {
+		}
+
 		// disk ops
 		void * allocate_node() {
 			node x = (node)malloc(sizeof(node_t));
@@ -139,7 +165,7 @@ namespace alg {
 			x->n = x->n +1;
 			WRITE(x);
 		}
-		
+
 		void READ(node x, int32_t i) {
 			if (x->pc[i] != NULL) {
 				return;
