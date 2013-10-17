@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 #define BLOCKSIZE	4096
+#define T 255
 namespace alg {
 	class BTree {
 	private:
@@ -35,11 +36,12 @@ namespace alg {
 		// t = 255
 		typedef struct __attribute__ ((packed)) node_t {
 			int16_t leaf;		// is leaf?
-			int16_t n;			// num keys
-			int32_t keys[509];	// keys
+			int16_t n;			// num key
+			int32_t offset;		// block offset
+			int32_t key[509];	// key
 			int32_t c[510];		// childs pointers (file offsets related to 0)
-			char padding[16];	// padding to 4096
-			void *pc[510];	// memory
+			char padding[12];	// padding to 4096
+			void *pc[510];		// memory
 		} *node;
 
 		struct search_r {
@@ -58,12 +60,8 @@ namespace alg {
 			fd = open(path, O_RDWR);
 			if (fd == -1)
 				return;
-			node x = allocate_node();
+			node x = (node)allocate_node();
 			x->leaf = true;
-			x->n = 0;
-			memset(x->keys, 0, sizeof(x->keys));
-			memset(x->c, 0, sizeof(x->c));
-			memset(x->pc, 0, sizeof(x->pc));
 		}
 
 		~BTree() {
@@ -76,35 +74,89 @@ namespace alg {
 		search_r Search(node x, int32_t k) {
 			int i = 1;
 			search_r ret;
-			while (i<=x->n && k > x->keys[i]) i++;
+			while (i<=x->n && k > x->key[i]) i++;
 
-			if (i <= x->n && k == x->keys[i]) {
+			if (i <= x->n && k == x->key[i]) {
 				ret.n = x, ret.i = i;
 				return ret;
 			} else if (x->leaf) {
 				ret.n = NULL, ret.i = i;
 				return ret;
 			} else {
-				disk_read(x, i);
+				READ(x, i);
 				return Search((node)x->pc[i], k);
 			}
 		}
 
 	private:
 		// disk ops
-		node allocate_node() {
-			node x = new node_t;
+		void * allocate_node() {
+			node x = (node)malloc(sizeof(node_t));
+			x->leaf = false;
+			x->n = 0;
+			x->offset = -1;
+			memset(x->key, 0, sizeof(x->key));
+			memset(x->c, 0, sizeof(x->c));
+			memset(x->pc, 0, sizeof(x->pc));
 			return x;
 		}
+
+		void split_child(node x, int32_t i) {
+			node z = (node)allocate_node();
+			node y = (node)x->pc[i];
+			z->leaf = y->leaf;
+			z->n = T - 1;
+
+			int j;
+			for (j=1;j<=T-1;j++) {	// init z
+				z->key[j] = y->key[j+T];
+			}
+
+			if (y->leaf == false) {
+				for (j=1;j<=T;j++) {
+					z->c[j] = y->c[j+T];
+					z->pc[j] = y->pc[j+T];	// copy mem ref also
+				}
+			}
+
+			y->n = T-1;	// splited y
+			WRITE(y);
+			WRITE(z);
+
+			for (j=x->n+1;j>=i+1;j--) {
+				x->c[j+1] = x->c[j];	// shift
+				x->pc[j+1] = x->pc[j];
+			}
+
+			// relocate z
+			x->c[i+1] = z->offset;
+			x->pc[i+1] = z;
+
+			for (j=x->n;j>=i;j--) {
+				x->key[j+1] = x->key[j];
+			}
+			x->key[i] = y->key[T];
+			x->n = x->n +1;
+			WRITE(x);
+		}
 		
-		void disk_read(node x, int32_t i) {
+		void READ(node x, int32_t i) {
 			if (x->pc[i] != NULL) {
 				return;
 			}
 
-			x->pc[i] = malloc(sizeof(node_t));
+			x->pc[i] = allocate_node();
 			lseek(fd, x->c[i], SEEK_SET);
 			read(fd, x->pc[i], BLOCKSIZE);
+		}
+
+		void WRITE(node x) {
+			if (x->offset !=-1) {
+				lseek(fd, x->offset, SEEK_SET);
+			} else {
+				x->offset = lseek(fd,0, SEEK_END);
+			}
+			write(fd, x, BLOCKSIZE);
 		}
 	};
 }
