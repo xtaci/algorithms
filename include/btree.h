@@ -151,7 +151,9 @@ namespace alg {
 			}
 		}
 
-		// disk ops
+		/**
+		 * allocate empty node struct
+		 */
 		void * allocate_node() {
 			node x = (node)malloc(sizeof(node_t));
 			x->leaf = false;
@@ -162,6 +164,9 @@ namespace alg {
 			return x;
 		}
 
+		/**
+		 * split a node into 2.
+		 */
 		void split_child(node x, int32_t i) {
 			std::auto_ptr<node_t> z((node)allocate_node());
 			std::auto_ptr<node_t> y(READ(x, i));
@@ -198,6 +203,9 @@ namespace alg {
 			WRITE(x);
 		}
 
+		/**
+		 * Read a 4K-block from disk, and returns the node struct.
+		 */
 		node READ(node x, int32_t i) {
 			void *xi = allocate_node();
 			lseek(fd, x->c[i], SEEK_SET);
@@ -205,6 +213,9 @@ namespace alg {
 			return (node)xi;
 		}
 
+		/**
+		 * 	update a node struct to file, create if offset is -1.
+		 */
 		void WRITE(node x) {
 			if (x->offset !=-1) {
 				lseek(fd, x->offset, SEEK_SET);
