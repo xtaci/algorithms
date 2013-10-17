@@ -30,18 +30,21 @@
 
 #define BLOCKSIZE	4096
 #define T 255
+#define LEAF 	0x0001
+#define ONDISK	0x0002
+
 namespace alg {
 	class BTree {
 	private:
 		// 4K node, 4096 bytes to write
 		// t = 255
 		struct node_t {
-			int16_t leaf;		// is leaf?
-			int16_t n;			// num key
-			int32_t offset;		// block offset (8 byte head)
-			int32_t key[509];	// key
-			int32_t c[510];		// childs pointers (file offsets related to 0)
-			char padding[12];	// padding to 4096
+			uint16_t n;				// num key
+			uint16_t flag;			// flags
+			uint32_t offset;		// block offset (8 byte head)
+			char padding[12];		// padding to 4096
+			int32_t key[509];		// key
+			int32_t c[510];			// childs pointers (file offsets related to 0)
 		} __attribute__ ((packed));
 		typedef struct node_t *node;
 
@@ -67,7 +70,7 @@ namespace alg {
 			node x = (node)allocate_node();
 			int n = read(fd,x,BLOCKSIZE);
 			if (n != BLOCKSIZE) {	// init new btree
-				x->leaf = true;
+				x->flag |= LEAF;
 				WRITE(x);
 			}
 			m_root = (node)x;
@@ -86,13 +89,14 @@ namespace alg {
 			if (r->n == 2*T - 1) {
 				node s = (node)allocate_node();
 				// place the old root node to the end of the file
-				m_root->offset = -1;
-				WRITE(m_root);	
+				m_root->flag &= ~ONDISK;
+				WRITE(m_root);
 				// new root
+				s->flag &= ~LEAF;
 				s->offset = 0;
 				s->n = 0;
 				s->c[0] = m_root->offset;
-				free(m_root);
+				//free(m_root);
 				m_root = s;
 				split_child(s, 0);
 				insert_nonfull(s, k);
@@ -106,14 +110,14 @@ namespace alg {
 		 * search a key, returns node and index
 		 */
 		search_r search(node x, int32_t k) {
-			int i = 0;
+			uint16_t i = 0;
 			search_r ret;
 			while (i<x->n && k > x->key[i]) i++;
 
-			if (i < x->n && k == x->key[i]) {
+			if (i<x->n && k == x->key[i]) {
 				ret.n = x, ret.i = i;
 				return ret;
-			} else if (x->leaf) {
+			} else if (x->flag & LEAF) {
 				ret.n = NULL, ret.i = i;
 				return ret;
 			} else {
@@ -127,7 +131,7 @@ namespace alg {
 		 */
 		void insert_nonfull(node x, int32_t k) {
 			int32_t i = x->n-1;
-			if (x->leaf) {
+			if (x->flag & LEAF) {
 				while (i>=0 && k <x->key[i]) {
 					x->key[i+1] = x->key[i];
 					i = i - 1;
@@ -140,14 +144,15 @@ namespace alg {
 					i = i-1;
 				}
 				i=i+1;
-				std::auto_ptr<node_t> xi(READ(x, i));
+				node xi = READ(x, i);
 				if (xi->n == 2*T-1) {
 					split_child(x, i);
 					if (k > x->key[i]) {
 						i = i+1;
 					}
 				}
-				insert_nonfull(xi.get(), k);
+				insert_nonfull(xi, k);
+				free(xi);
 			}
 		}
 
@@ -156,9 +161,9 @@ namespace alg {
 		 */
 		void * allocate_node() {
 			node x = (node)malloc(sizeof(node_t));
-			x->leaf = false;
 			x->n = 0;
-			x->offset = -1;
+			x->offset = 0;
+			x->flag = 0;
 			memset(x->key, 0, sizeof(x->key));
 			memset(x->c, 0, sizeof(x->c));
 			return x;
@@ -170,15 +175,15 @@ namespace alg {
 		void split_child(node x, int32_t i) {
 			std::auto_ptr<node_t> z((node)allocate_node());
 			std::auto_ptr<node_t> y(READ(x, i));
-			z->leaf = y->leaf;
+			z->flag |= (y->flag & LEAF);
 			z->n = T - 1;
 
-			int j;
+			uint16_t j;
 			for (j=0;j<T-1;j++) {	// init z
 				z->key[j] = y->key[j+T];
 			}
 
-			if (!y->leaf) {
+			if (!(y->flag & LEAF)) {
 				for (j=0;j<T;j++) {
 					z->c[j] = y->c[j+T];
 				}
@@ -192,13 +197,13 @@ namespace alg {
 				x->c[j+1] = x->c[j];	// shift
 			}
 
-			// relocate z
+			// save z
 			x->c[i+1] = z->offset;
 
 			for (j=x->n-1;j>=i;j--) {
 				x->key[j+1] = x->key[j];
 			}
-			x->key[i] = y->key[T];
+			x->key[i] = y->key[T-1];
 			x->n = x->n +1;
 			WRITE(x);
 		}
@@ -217,11 +222,12 @@ namespace alg {
 		 * 	update a node struct to file, create if offset is -1.
 		 */
 		void WRITE(node x) {
-			if (x->offset !=-1) {
+			if (x->flag & ONDISK) {
 				lseek(fd, x->offset, SEEK_SET);
 			} else {
 				x->offset = lseek(fd,0, SEEK_END);
 			}
+			x->flag |= ONDISK;
 			write(fd, x, BLOCKSIZE);
 		}
 	};
