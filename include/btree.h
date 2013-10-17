@@ -92,6 +92,7 @@ namespace alg {
 				s->offset = 0;
 				s->n = 0;
 				s->c[0] = m_root->offset;
+				free(m_root);
 				m_root = s;
 				split_child(s, 0);
 				insert_nonfull(s, k);
