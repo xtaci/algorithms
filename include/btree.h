@@ -91,9 +91,9 @@ namespace alg {
 				// new root
 				s->offset = 0;
 				s->n = 0;
-				s->c[1] = m_root->offset;
+				s->c[0] = m_root->offset;
 				m_root = s;
-				split_child(s, 1);
+				split_child(s, 0);
 				insert_nonfull(s, k);
 			} else {
 				insert_nonfull(r, k);
@@ -105,11 +105,11 @@ namespace alg {
 		 * search a key, returns node and index
 		 */
 		search_r search(node x, int32_t k) {
-			int i = 1;
+			int i = 0;
 			search_r ret;
-			while (i<=x->n && k > x->key[i]) i++;
+			while (i<x->n && k > x->key[i]) i++;
 
-			if (i <= x->n && k == x->key[i]) {
+			if (i < x->n && k == x->key[i]) {
 				ret.n = x, ret.i = i;
 				return ret;
 			} else if (x->leaf) {
@@ -125,9 +125,9 @@ namespace alg {
 		 * insert into non-full node
 		 */
 		void insert_nonfull(node x, int32_t k) {
-			int32_t i = x->n;
+			int32_t i = x->n-1;
 			if (x->leaf) {
-				while (i>=1 && k <x->key[i]) {
+				while (i>=0 && k <x->key[i]) {
 					x->key[i+1] = x->key[i];
 					i = i - 1;
 				}
@@ -135,7 +135,7 @@ namespace alg {
 				x->n = x->n + 1;
 				WRITE(x);
 			} else {
-				while(i>=1 && k < x->key[i]) {
+				while(i>=0 && k < x->key[i]) {
 					i = i-1;
 				}
 				i=i+1;
@@ -168,12 +168,12 @@ namespace alg {
 			z->n = T - 1;
 
 			int j;
-			for (j=1;j<=T-1;j++) {	// init z
+			for (j=0;j<T-1;j++) {	// init z
 				z->key[j] = y->key[j+T];
 			}
 
 			if (!y->leaf) {
-				for (j=1;j<=T;j++) {
+				for (j=0;j<T;j++) {
 					z->c[j] = y->c[j+T];
 				}
 			}
@@ -182,14 +182,14 @@ namespace alg {
 			WRITE(y.get());
 			WRITE(z.get());
 
-			for (j=x->n+1;j>=i+1;j--) {
+			for (j=x->n;j>=i+1;j--) {
 				x->c[j+1] = x->c[j];	// shift
 			}
 
 			// relocate z
 			x->c[i+1] = z->offset;
 
-			for (j=x->n;j>=i;j--) {
+			for (j=x->n-1;j>=i;j--) {
 				x->key[j+1] = x->key[j];
 			}
 			x->key[i] = y->key[T];
