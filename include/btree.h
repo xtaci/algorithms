@@ -26,6 +26,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <memory>
 
 #define BLOCKSIZE	4096
 #define T 255
@@ -41,11 +42,13 @@ namespace alg {
 			int32_t key[509];	// key
 			int32_t c[510];		// childs pointers (file offsets related to 0)
 			char padding[12];	// padding to 4096
-			void *pc[510];		// memory
 		} __attribute__ ((packed));
 		typedef struct node_t *node;
 
 	public:
+		/**
+		 * search result
+		 */
 		struct search_r {
 			node n;
 			int32_t i;
@@ -82,14 +85,13 @@ namespace alg {
 			node r = m_root;
 			if (r->n == 2*T - 1) {
 				node s = (node)allocate_node();
-				// re-place the old root
+				// place the old root node to the end of the file
 				m_root->offset = -1;
-				WRITE(m_root);
+				WRITE(m_root);	
 				// new root
 				s->offset = 0;
 				s->n = 0;
 				s->c[1] = m_root->offset;
-				s->pc[1] = m_root;
 				m_root = s;
 				split_child(s, 1);
 				insert_nonfull(s, k);
@@ -114,15 +116,18 @@ namespace alg {
 				ret.n = NULL, ret.i = i;
 				return ret;
 			} else {
-				READ(x, i);
-				return search((node)x->pc[i], k);
+				std::auto_ptr<node_t> xi(READ(x, i));
+				return search(xi.get(), k);
 			}
 		}
 
+		/**
+		 * insert into non-full node
+		 */
 		void insert_nonfull(node x, int32_t k) {
 			int32_t i = x->n;
 			if (x->leaf) {
-				while (i>=1 && k <=x->key[i]) {
+				while (i>=1 && k <x->key[i]) {
 					x->key[i+1] = x->key[i];
 					i = i - 1;
 				}
@@ -130,18 +135,18 @@ namespace alg {
 				x->n = x->n + 1;
 				WRITE(x);
 			} else {
-				while(i>=1 && k <= x->key[i]) {
+				while(i>=1 && k < x->key[i]) {
 					i = i-1;
 				}
 				i=i+1;
-				READ(x, i);
-				if (((node)x->pc[i])->n == 2*T-1) {
+				std::auto_ptr<node_t> xi(READ(x, i));
+				if (xi->n == 2*T-1) {
 					split_child(x, i);
 					if (k > x->key[i]) {
 						i = i+1;
 					}
 				}
-				insert_nonfull((node)x->pc[i], k);
+				insert_nonfull(xi.get(), k);
 			}
 		}
 
@@ -153,13 +158,12 @@ namespace alg {
 			x->offset = -1;
 			memset(x->key, 0, sizeof(x->key));
 			memset(x->c, 0, sizeof(x->c));
-			memset(x->pc, 0, sizeof(x->pc));
 			return x;
 		}
 
 		void split_child(node x, int32_t i) {
-			node z = (node)allocate_node();
-			node y = (node)x->pc[i];
+			std::auto_ptr<node_t> z((node)allocate_node());
+			std::auto_ptr<node_t> y(READ(x, i));
 			z->leaf = y->leaf;
 			z->n = T - 1;
 
@@ -171,22 +175,19 @@ namespace alg {
 			if (!y->leaf) {
 				for (j=1;j<=T;j++) {
 					z->c[j] = y->c[j+T];
-					z->pc[j] = y->pc[j+T];	// copy mem ref also
 				}
 			}
 
 			y->n = T-1;	// splited y
-			WRITE(y);
-			WRITE(z);
+			WRITE(y.get());
+			WRITE(z.get());
 
 			for (j=x->n+1;j>=i+1;j--) {
 				x->c[j+1] = x->c[j];	// shift
-				x->pc[j+1] = x->pc[j];
 			}
 
 			// relocate z
 			x->c[i+1] = z->offset;
-			x->pc[i+1] = z;
 
 			for (j=x->n;j>=i;j--) {
 				x->key[j+1] = x->key[j];
@@ -196,14 +197,11 @@ namespace alg {
 			WRITE(x);
 		}
 
-		void READ(node x, int32_t i) {
-			if (x->pc[i] != NULL) {
-				return;
-			}
-
-			x->pc[i] = allocate_node();
+		node READ(node x, int32_t i) {
+			void *xi = allocate_node();
 			lseek(fd, x->c[i], SEEK_SET);
-			read(fd, x->pc[i], BLOCKSIZE);
+			read(fd, xi, BLOCKSIZE);
+			return (node)xi;
 		}
 
 		void WRITE(node x) {
