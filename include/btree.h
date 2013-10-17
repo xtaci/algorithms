@@ -96,13 +96,14 @@ namespace alg {
 			node r = m_root;
 			if (r->n == 2*T - 1) {
 				node s = (node)allocate_node();
-				// replace old root
+				// re-place the old root
 				m_root->offset = -1;
 				WRITE(m_root);
 				// new root
 				s->offset = 0;
 				s->n = 0;
 				s->c[1] = m_root->offset;
+				s->pc[1] = m_root;
 				m_root = s;
 				split_child(s, 1);
 				insert_nonfull(s, k);
@@ -112,7 +113,29 @@ namespace alg {
 		}
 
 	private:
-		void insert_nonfull(node s, int32_t k) {
+		void insert_nonfull(node x, int32_t k) {
+			int32_t i = x->n;
+			if (x->leaf) {
+				while (i>=1 && k <=x->key[i]) {
+					x->key[i+1] = x->key[i];
+					i = i - 1;
+				}
+				x->key[i+1] = k;
+				x->n = x->n + 1;
+			} else {
+				while(i>=1 && k <= x->key[i]) {
+					i = i-1;
+				}
+				i=i+1;
+				READ(x, i);
+				if (((node)x->pc[i])->n == 2*T-1) {
+					split_child(x, i);
+					if (k > x->key[i]) {
+						i = i+1;
+					}
+				}
+				insert_nonfull((node)x->pc[i], k);
+			}
 		}
 
 		// disk ops
@@ -138,7 +161,7 @@ namespace alg {
 				z->key[j] = y->key[j+T];
 			}
 
-			if (y->leaf == false) {
+			if (!y->leaf) {
 				for (j=1;j<=T;j++) {
 					z->c[j] = y->c[j+T];
 					z->pc[j] = y->pc[j+T];	// copy mem ref also
