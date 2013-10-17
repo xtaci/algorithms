@@ -34,16 +34,18 @@ namespace alg {
 	private:
 		// 4K node, 4096 bytes to write
 		// t = 255
-		typedef struct __attribute__ ((packed)) node_t {
+		struct node_t {
 			int16_t leaf;		// is leaf?
 			int16_t n;			// num key
-			int32_t offset;		// block offset
+			int32_t offset;		// block offset (8 byte head)
 			int32_t key[509];	// key
 			int32_t c[510];		// childs pointers (file offsets related to 0)
 			char padding[12];	// padding to 4096
 			void *pc[510];		// memory
-		} *node;
+		} __attribute__ ((packed));
+		typedef struct node_t *node;
 
+	public:
 		struct search_r {
 			node n;
 			int32_t i;
@@ -71,25 +73,9 @@ namespace alg {
 		~BTree() {
 			close(fd);
 		}
-
-		/**
-		 * search a key, returns node and index
-		 */
-		search_r Search(node x, int32_t k) {
-			int i = 1;
-			search_r ret;
-			while (i<=x->n && k > x->key[i]) i++;
-
-			if (i <= x->n && k == x->key[i]) {
-				ret.n = x, ret.i = i;
-				return ret;
-			} else if (x->leaf) {
-				ret.n = NULL, ret.i = i;
-				return ret;
-			} else {
-				READ(x, i);
-				return Search((node)x->pc[i], k);
-			}
+		
+		search_r Search(int32_t x) {
+			return search(m_root, x);
 		}
 
 		void Insert(int32_t k) {
@@ -113,6 +99,26 @@ namespace alg {
 		}
 
 	private:
+		/**
+		 * search a key, returns node and index
+		 */
+		search_r search(node x, int32_t k) {
+			int i = 1;
+			search_r ret;
+			while (i<=x->n && k > x->key[i]) i++;
+
+			if (i <= x->n && k == x->key[i]) {
+				ret.n = x, ret.i = i;
+				return ret;
+			} else if (x->leaf) {
+				ret.n = NULL, ret.i = i;
+				return ret;
+			} else {
+				READ(x, i);
+				return search((node)x->pc[i], k);
+			}
+		}
+
 		void insert_nonfull(node x, int32_t k) {
 			int32_t i = x->n;
 			if (x->leaf) {
@@ -122,6 +128,7 @@ namespace alg {
 				}
 				x->key[i+1] = k;
 				x->n = x->n + 1;
+				WRITE(x);
 			} else {
 				while(i>=1 && k <= x->key[i]) {
 					i = i-1;
