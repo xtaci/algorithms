@@ -48,14 +48,6 @@ namespace alg {
 		} __attribute__ ((packed));
 		typedef struct node_t *node;
 
-	public:
-		/**
-		 * search result
-		 */
-		struct search_r {
-			node n;
-			int32_t i;
-		};
 	private:
 		node m_root;
 		int fd;
@@ -80,7 +72,7 @@ namespace alg {
 			close(fd);
 		}
 		
-		search_r Search(int32_t x) {
+		int32_t Search(int32_t x) {
 			return search(m_root, x);
 		}
 
@@ -108,17 +100,14 @@ namespace alg {
 		/**
 		 * search a key, returns node and index
 		 */
-		search_r search(node x, int32_t k) {
+		int32_t search(node x, int32_t k) {
 			int32_t i = 0;
-			search_r ret;
 			while (i<x->n && k > x->key[i]) i++;
 
 			if (i<x->n && k == x->key[i]) {
-				ret.n = x, ret.i = i;
-				return ret;
+				return i;
 			} else if (x->flag & LEAF) {
-				ret.n = NULL, ret.i = i;
-				return ret;
+				return -1;
 			} else {
 				std::auto_ptr<node_t> xi(READ(x, i));
 				return search(xi.get(), k);
@@ -174,7 +163,11 @@ namespace alg {
 		void split_child(node x, int32_t i) {
 			std::auto_ptr<node_t> z((node)allocate_node());
 			std::auto_ptr<node_t> y(READ(x, i));
+			z->flag &= ~LEAF;
 			z->flag |= (y->flag & LEAF);
+			printf("leafz:%x\n", z->flag);
+			printf("leafy:%x\n", y->flag);
+			printf("leafx:%x offset:%x\n", x->flag, x->offset);
 			z->n = T - 1;
 
 			int32_t j;
