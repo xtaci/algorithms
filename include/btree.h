@@ -85,6 +85,8 @@ namespace alg {
 				// new root
 				node s = (node)allocate_node();
 				s->flag &= ~LEAF;
+				s->flag |= ONDISK;	// write to offset 0
+				s->offset = 0;
 				s->c[0] = m_root->offset;
 				// free old & set new
 				free(m_root);
