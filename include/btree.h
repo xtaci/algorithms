@@ -29,7 +29,7 @@
 #include <memory>
 
 #define BLOCKSIZE	4096
-#define T 255
+#define T 		255
 #define LEAF 	0x0001
 #define ONDISK	0x0002
 
@@ -104,11 +104,16 @@ namespace alg {
 		 */
 		int32_t search(node x, int32_t k) {
 			int32_t i = 0;
-			while (i<x->n && k > x->key[i]) i++;
+			while (i<x->n && (k > x->key[i])) i++;
 
 			if (i<x->n && k == x->key[i]) {
 				return i;
 			} else if (x->flag & LEAF) {
+				int c;
+				for (c=0;c<x->n;c++) {
+					printf("%d ", x->key[c]);
+				}
+				printf("[%d]\n", x->key[i]);
 				return -1;
 			} else {
 				std::auto_ptr<node_t> xi(READ(x, i));
@@ -151,11 +156,7 @@ namespace alg {
 		 */
 		void * allocate_node() {
 			node x = (node)malloc(sizeof(node_t));
-			x->n = 0;
-			x->offset = 0;
-			x->flag = 0;
-			memset(x->key, 0, sizeof(x->key));
-			memset(x->c, 0, sizeof(x->c));
+			memset(x, 0, sizeof(node_t));
 			return x;
 		}
 
@@ -165,11 +166,7 @@ namespace alg {
 		void split_child(node x, int32_t i) {
 			std::auto_ptr<node_t> z((node)allocate_node());
 			std::auto_ptr<node_t> y(READ(x, i));
-			z->flag &= ~LEAF;
 			z->flag |= (y->flag & LEAF);
-			printf("leafz:%x\n", z->flag);
-			printf("leafy:%x\n", y->flag);
-			printf("leafx:%x offset:%x\n", x->flag, x->offset);
 			z->n = T - 1;
 
 			int32_t j;
@@ -188,10 +185,8 @@ namespace alg {
 			WRITE(z.get());
 
 			for (j=x->n;j>=i+1;j--) {
-				x->c[j+1] = x->c[j];	// shift
+				x->c[j+1] = x->c[j];	// right shift
 			}
-
-			// save z
 			x->c[i+1] = z->offset;
 
 			for (j=x->n-1;j>=i;j--) {
