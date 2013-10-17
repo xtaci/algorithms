@@ -87,16 +87,15 @@ namespace alg {
 		void Insert(int32_t k) {
 			node r = m_root;
 			if (r->n == 2*T - 1) {
-				node s = (node)allocate_node();
 				// place the old root node to the end of the file
 				m_root->flag &= ~ONDISK;
 				WRITE(m_root);
 				// new root
+				node s = (node)allocate_node();
 				s->flag &= ~LEAF;
-				s->offset = 0;
-				s->n = 0;
 				s->c[0] = m_root->offset;
-				//free(m_root);
+				// free old & set new
+				free(m_root);
 				m_root = s;
 				split_child(s, 0);
 				insert_nonfull(s, k);
@@ -110,7 +109,7 @@ namespace alg {
 		 * search a key, returns node and index
 		 */
 		search_r search(node x, int32_t k) {
-			uint16_t i = 0;
+			int32_t i = 0;
 			search_r ret;
 			while (i<x->n && k > x->key[i]) i++;
 
@@ -178,7 +177,7 @@ namespace alg {
 			z->flag |= (y->flag & LEAF);
 			z->n = T - 1;
 
-			uint16_t j;
+			int32_t j;
 			for (j=0;j<T-1;j++) {	// init z
 				z->key[j] = y->key[j+T];
 			}
@@ -204,7 +203,7 @@ namespace alg {
 				x->key[j+1] = x->key[j];
 			}
 			x->key[i] = y->key[T-1];
-			x->n = x->n +1;
+			x->n = x->n+1;
 			WRITE(x);
 		}
 
