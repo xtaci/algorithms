@@ -141,8 +141,9 @@ namespace alg {
 					if (k > x->key[i]) {
 						i = i+1;
 					}
+					// reload x[i] after split_child(will modify child x[i])
+					xi = READ(x, i);
 				}
-				xi = READ(x, i);	// reload x[i]
 				insert_nonfull(xi, k);
 				free(xi);
 			}
