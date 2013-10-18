@@ -8,7 +8,7 @@ int main(void) {
 
 	for (i=0;i<100000;i++) {
 		x.Insert(i);	
-		int32_t r = x.Search(i);
-		printf("idx[%d]\n", r);
+		BTree::nr r = x.Search(i);
+		printf("offset[%x] idx[%d]\n", r.offset, r.idx);
 	}
 }

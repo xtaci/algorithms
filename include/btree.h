@@ -48,6 +48,12 @@ namespace alg {
 		} __attribute__ ((packed));
 		typedef struct node_t *node;
 
+	public:	
+		// node and index
+		struct nr {
+			uint32_t offset;
+			int32_t idx;
+		};
 	private:
 		node m_root;
 		int fd;
@@ -72,7 +78,7 @@ namespace alg {
 			close(fd);
 		}
 		
-		int32_t Search(int32_t x) {
+		nr Search(int32_t x) {
 			return search(m_root, x);
 		}
 
@@ -99,18 +105,28 @@ namespace alg {
 			}
 		}
 
+		void DeleteKey(int32_t k) {
+			node x =  m_root;
+			delete_op(m_root, k);
+		}
+
 	private:
 		/**
 		 * search a key, returns node and index
 		 */
-		int32_t search(node x, int32_t k) {
+		nr search(node x, int32_t k) {
 			int32_t i = 0;
+			nr ret;
 			while (i<x->n && k > x->key[i]) i++;
 
 			if (i<x->n && k == x->key[i]) {	// search in [0,n-1]
-				return i;
+				ret.offset = x->offset;
+				ret.idx = i;
+				return ret;
 			} else if (x->flag & LEAF) {	// leaf, no more childs
-				return -1;
+				ret.offset = 0;
+				ret.idx = -1;
+				return ret;
 			} else {
 				std::auto_ptr<node_t> xi(READ(x, i));	// in last child
 				return search(xi.get(), k);
@@ -198,6 +214,57 @@ namespace alg {
 			x->key[i] = y->key[T-1];	// copy the middle element of y into x
 			x->n = x->n+1;
 			WRITE(x);
+		}
+
+		/**
+		 * recursion deletion
+		 */
+		void delete_op(node x, int32_t k) {
+			int32_t i;
+			for (i=0;i<x->n;i++) {
+				if (x->key[i] == k) {	// leaf node, case1
+					break;
+				}
+			}
+		
+			if (i<x->n && (x->flag & LEAF)) {
+				int j;
+				for (j = i;j<x->n-1;j++) {	// shift copy
+					x->key[j] = x->key[j+1];
+				}
+				WRITE(x);
+			} else if (x->key[i] == k) {	// non-leaf
+				if (i = x->n-1 || i == 0) {	// outside, case 2c
+					delete_case3(x);
+				} else {
+					node y= READ(x, i-1);
+					if (y->n >= T) {		// case 2a
+						x->key[i] = y->key[y->n-1];	// subsitute the key with predecessor
+						delete_op(y, x->key[i]);
+						free(y);
+						return;
+					}
+					
+					node z = READ(x, i+1);
+					if (z->n >= T) {	// case 2b
+						x->key[i] = z->key[0];
+						delete_op(z, x->key[i]);
+						return;
+					}
+
+					// case 2c:
+					if (y->n == T-1 && z->n == T-1) {
+						
+					}
+					delete_case3(x);
+				}
+			}
+		}
+
+		/**
+		 * delete case3
+		 */
+		void delete_case3(node x) {
 		}
 
 		/**
