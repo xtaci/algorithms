@@ -106,12 +106,12 @@ namespace alg {
 			int32_t i = 0;
 			while (i<x->n && k > x->key[i]) i++;
 
-			if (i<x->n && k == x->key[i]) {
+			if (i<x->n && k == x->key[i]) {	// search in [0,n-1]
 				return i;
-			} else if (x->flag & LEAF) {
+			} else if (x->flag & LEAF) {	// leaf, no more childs
 				return -1;
 			} else {
-				std::auto_ptr<node_t> xi(READ(x, i));
+				std::auto_ptr<node_t> xi(READ(x, i));	// in last child
 				return search(xi.get(), k);
 			}
 		}
@@ -121,8 +121,8 @@ namespace alg {
 		 */
 		void insert_nonfull(node x, int32_t k) {
 			int32_t i = x->n-1;
-			if (x->flag & LEAF) {
-				while (i>=0 && k <x->key[i]) {
+			if (x->flag & LEAF) {	// insert into leaf
+				while (i>=0 && k < x->key[i]) {	// shift from right to left, when k < key[i]
 					x->key[i+1] = x->key[i];
 					i = i - 1;
 				}
@@ -173,28 +173,26 @@ namespace alg {
 			z->n = T - 1;
 
 			int32_t j;
-			for (j=0;j<T-1;j++) {	// init z
+			for (j=0;j<T-1;j++) {	// init z, t-1 keys
 				z->key[j] = y->key[j+T];
 			}
 
-			if (!(y->flag & LEAF)) {
+			if (!(y->flag & LEAF)) {	// if not leaf, copy childs too.
 				for (j=0;j<T;j++) {
 					z->c[j] = y->c[j+T];
 				}
 			}
 
-			y->n = T-1;	// splited y
+			y->n = T-1;	// shrink y to t-1 elements
 			WRITE(y.get());
 			WRITE(z.get());
 
-			for (j=x->n;j>=i+1;j--) {
-				x->c[j+1] = x->c[j];	// shift
+			for (j=x->n;j>=i+1;j--) { // make place for the new child in x
+				x->c[j+1] = x->c[j];
 			}
 
-			// save z
-			x->c[i+1] = z->offset;
-
-			for (j=x->n-1;j>=i;j--) {
+			x->c[i+1] = z->offset; // make z the child of x
+			for (j=x->n-1;j>=i;j--) { // move keys in x
 				x->key[j+1] = x->key[j];
 			}
 			x->key[i] = y->key[T-1];
