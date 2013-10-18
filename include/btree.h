@@ -87,6 +87,7 @@ namespace alg {
 				s->flag &= ~LEAF;
 				s->flag |= ONDISK;	// write to offset 0
 				s->offset = 0;
+				s->n = 0;
 				s->c[0] = m_root->offset;
 				// free old & set new
 				free(m_root);
@@ -141,6 +142,7 @@ namespace alg {
 						i = i+1;
 					}
 				}
+				xi = READ(x, i);	// reload x[i]
 				insert_nonfull(xi, k);
 				free(xi);
 			}
@@ -167,9 +169,6 @@ namespace alg {
 			std::auto_ptr<node_t> y(READ(x, i));
 			z->flag &= ~LEAF;
 			z->flag |= (y->flag & LEAF);
-			printf("leafz:%x\n", z->flag);
-			printf("leafy:%x\n", y->flag);
-			printf("leafx:%x offset:%x\n", x->flag, x->offset);
 			z->n = T - 1;
 
 			int32_t j;
@@ -195,7 +194,7 @@ namespace alg {
 			for (j=x->n-1;j>=i;j--) { // move keys in x
 				x->key[j+1] = x->key[j];
 			}
-			x->key[i] = y->key[T-1];
+			x->key[i] = y->key[T-1];	// copy the middle element of y into x
 			x->n = x->n+1;
 			WRITE(x);
 		}
@@ -209,7 +208,7 @@ namespace alg {
 			read(fd, xi, BLOCKSIZE);
 			return (node)xi;
 		}
-
+		
 		/**
 		 * 	update a node struct to file, create if offset is -1.
 		 */
