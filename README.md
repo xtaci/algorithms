@@ -48,6 +48,7 @@
     Interval tree
     Prefix Tree(Trie)
     *Suffix Tree(未实现)*
+	B-Tree
 
     Hash by multiplication
     Hash table
