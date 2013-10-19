@@ -29,9 +29,10 @@
 #include <memory>
 
 #define BLOCKSIZE	4096
-#define T 255
-#define LEAF 	0x0001
-#define ONDISK	0x0002
+#define T 			255
+#define LEAF 		0x0001
+#define ONDISK		0x0002
+#define MARKFREE	0x0004
 
 namespace alg {
 	class BTree {
@@ -217,7 +218,7 @@ namespace alg {
 		}
 
 		/**
-		 * recursion deletion
+		 * recursive deletion.
 		 */
 		void delete_op(node x, int32_t k) {
 			int32_t i;
@@ -240,22 +241,53 @@ namespace alg {
 					node y= READ(x, i-1);
 					if (y->n >= T) {		// case 2a
 						x->key[i] = y->key[y->n-1];	// subsitute the key with predecessor
+						WRITE(x);
+
 						delete_op(y, x->key[i]);
 						free(y);
 						return;
 					}
+					free(y);
 					
 					node z = READ(x, i+1);
 					if (z->n >= T) {	// case 2b
 						x->key[i] = z->key[0];
+						WRITE(x);
 						delete_op(z, x->key[i]);
 						return;
 					}
+					free(z);
 
 					// case 2c:
 					if (y->n == T-1 && z->n == T-1) {
+						// merge k & z into y
+						y->key[y->n] = k;
 						
+						int j;
+						for (j=0;j<z->n;j++) {	// merge n keys, k already in 
+							y->key[y->n+j+1] = z->key[j];
+						}
+						for (j=0;j<z->n+1;j++) {	// merge n+1 childs
+							y->c[y->n+j+1] = z->key[j];
+						}
+						// mark free this node
+						z->flag |= MARKFREE;
+						y->n = y->n + z->n + 1; // size after merge
+						WRITE(z);
+						WRITE(y);
+
+						// shift x
+						for (j=i;j<x->n-1;j++) {
+							x->key[i] = x->key[i+1];
+						}
+						x->n = x->n - 1;
+						WRITE(x);
+
+						// recursive delete k
+						delete_op(y, k);
+						return;
 					}
+
 					delete_case3(x);
 				}
 			}
