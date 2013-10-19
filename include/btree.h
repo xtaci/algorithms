@@ -48,6 +48,12 @@ namespace alg {
 		} __attribute__ ((packed));
 		typedef struct node_t *node;
 
+	public:	
+		// node and index
+		struct nr {
+			uint32_t offset;
+			int32_t idx;
+		};
 	private:
 		node m_root;
 		int fd;
@@ -72,7 +78,7 @@ namespace alg {
 			close(fd);
 		}
 		
-		int32_t Search(int32_t x) {
+		nr Search(int32_t x) {
 			return search(m_root, x);
 		}
 
@@ -87,6 +93,7 @@ namespace alg {
 				s->flag &= ~LEAF;
 				s->flag |= ONDISK;	// write to offset 0
 				s->offset = 0;
+				s->n = 0;
 				s->c[0] = m_root->offset;
 				// free old & set new
 				free(m_root);
@@ -98,20 +105,30 @@ namespace alg {
 			}
 		}
 
+		void DeleteKey(int32_t k) {
+			node x =  m_root;
+			delete_op(m_root, k);
+		}
+
 	private:
 		/**
 		 * search a key, returns node and index
 		 */
-		int32_t search(node x, int32_t k) {
+		nr search(node x, int32_t k) {
 			int32_t i = 0;
+			nr ret;
 			while (i<x->n && k > x->key[i]) i++;
 
-			if (i<x->n && k == x->key[i]) {
-				return i;
-			} else if (x->flag & LEAF) {
-				return -1;
+			if (i<x->n && k == x->key[i]) {	// search in [0,n-1]
+				ret.offset = x->offset;
+				ret.idx = i;
+				return ret;
+			} else if (x->flag & LEAF) {	// leaf, no more childs
+				ret.offset = 0;
+				ret.idx = -1;
+				return ret;
 			} else {
-				std::auto_ptr<node_t> xi(READ(x, i));
+				std::auto_ptr<node_t> xi(READ(x, i));	// in last child
 				return search(xi.get(), k);
 			}
 		}
@@ -121,8 +138,8 @@ namespace alg {
 		 */
 		void insert_nonfull(node x, int32_t k) {
 			int32_t i = x->n-1;
-			if (x->flag & LEAF) {
-				while (i>=0 && k <x->key[i]) {
+			if (x->flag & LEAF) {	// insert into leaf
+				while (i>=0 && k < x->key[i]) {	// shift from right to left, when k < key[i]
 					x->key[i+1] = x->key[i];
 					i = i - 1;
 				}
@@ -140,6 +157,8 @@ namespace alg {
 					if (k > x->key[i]) {
 						i = i+1;
 					}
+					// reload x[i] after split_child(will modify child x[i])
+					xi = READ(x, i);
 				}
 				insert_nonfull(xi, k);
 				free(xi);
@@ -167,39 +186,85 @@ namespace alg {
 			std::auto_ptr<node_t> y(READ(x, i));
 			z->flag &= ~LEAF;
 			z->flag |= (y->flag & LEAF);
-			printf("leafz:%x\n", z->flag);
-			printf("leafy:%x\n", y->flag);
-			printf("leafx:%x offset:%x\n", x->flag, x->offset);
 			z->n = T - 1;
 
 			int32_t j;
-			for (j=0;j<T-1;j++) {	// init z
+			for (j=0;j<T-1;j++) {	// init z, t-1 keys
 				z->key[j] = y->key[j+T];
 			}
 
-			if (!(y->flag & LEAF)) {
+			if (!(y->flag & LEAF)) {	// if not leaf, copy childs too.
 				for (j=0;j<T;j++) {
 					z->c[j] = y->c[j+T];
 				}
 			}
 
-			y->n = T-1;	// splited y
+			y->n = T-1;	// shrink y to t-1 elements
 			WRITE(y.get());
 			WRITE(z.get());
 
-			for (j=x->n;j>=i+1;j--) {
-				x->c[j+1] = x->c[j];	// shift
+			for (j=x->n;j>=i+1;j--) { // make place for the new child in x
+				x->c[j+1] = x->c[j];
 			}
 
-			// save z
-			x->c[i+1] = z->offset;
-
-			for (j=x->n-1;j>=i;j--) {
+			x->c[i+1] = z->offset; // make z the child of x
+			for (j=x->n-1;j>=i;j--) { // move keys in x
 				x->key[j+1] = x->key[j];
 			}
-			x->key[i] = y->key[T-1];
+			x->key[i] = y->key[T-1];	// copy the middle element of y into x
 			x->n = x->n+1;
 			WRITE(x);
+		}
+
+		/**
+		 * recursion deletion
+		 */
+		void delete_op(node x, int32_t k) {
+			int32_t i;
+			for (i=0;i<x->n;i++) {
+				if (x->key[i] == k) {	// leaf node, case1
+					break;
+				}
+			}
+		
+			if (i<x->n && (x->flag & LEAF)) {
+				int j;
+				for (j = i;j<x->n-1;j++) {	// shift copy
+					x->key[j] = x->key[j+1];
+				}
+				WRITE(x);
+			} else if (x->key[i] == k) {	// non-leaf
+				if (i = x->n-1 || i == 0) {	// outside, case 2c
+					delete_case3(x);
+				} else {
+					node y= READ(x, i-1);
+					if (y->n >= T) {		// case 2a
+						x->key[i] = y->key[y->n-1];	// subsitute the key with predecessor
+						delete_op(y, x->key[i]);
+						free(y);
+						return;
+					}
+					
+					node z = READ(x, i+1);
+					if (z->n >= T) {	// case 2b
+						x->key[i] = z->key[0];
+						delete_op(z, x->key[i]);
+						return;
+					}
+
+					// case 2c:
+					if (y->n == T-1 && z->n == T-1) {
+						
+					}
+					delete_case3(x);
+				}
+			}
+		}
+
+		/**
+		 * delete case3
+		 */
+		void delete_case3(node x) {
 		}
 
 		/**
@@ -211,7 +276,7 @@ namespace alg {
 			read(fd, xi, BLOCKSIZE);
 			return (node)xi;
 		}
-
+		
 		/**
 		 * 	update a node struct to file, create if offset is -1.
 		 */
