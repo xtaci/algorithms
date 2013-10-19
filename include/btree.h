@@ -240,27 +240,20 @@ namespace alg {
 						WRITE(x);
 						return;
 					} else { // in non-leaf node
-						node y, z;
-						if (i-1 >= 0) {	// case 2a
-							y = READ(x, i-1);
-							std::auto_ptr<node_t> _y(y);
-							if (y->n >= T) {		
-								x->key[i] = y->key[y->n-1];
-								WRITE(x);
-								delete_op(y, x->key[i]);
-								return;
-							}
+						std::auto_ptr<node_t> y(READ(x, i));
+						if (y->n >= T) {				// case 2a.
+							x->key[i] = y->key[y->n-1];
+							WRITE(x);
+							delete_op(y.get(), x->key[i]);
+							return;
 						}
 
-						if (i+1 < x->n) { // case 2b
-							z = READ(x, i+1);
-							std::auto_ptr<node_t> _z(z);
-							if (z->n >= T) {
-								x->key[i] = z->key[0];
-								WRITE(x);
-								delete_op(z, x->key[i]);
-								return;
-							}
+						std::auto_ptr<node_t> z(READ(x, i+1));
+						if (z->n >= T) {	// case 2b.
+							x->key[i] = z->key[0];
+							WRITE(x);
+							delete_op(z.get(), x->key[i]);
+							return;
 						}
 
 						if (y->n == T-1 && z->n == T-1) { // case 2c
@@ -277,8 +270,8 @@ namespace alg {
 							// mark free this node
 							z->flag |= MARKFREE;
 							y->n = y->n + z->n + 1; // size after merge
-							WRITE(z);
-							WRITE(y);
+							WRITE(z.get());
+							WRITE(y.get());
 
 							// shift x
 							for (j=i;j<x->n-1;j++) {
@@ -288,7 +281,7 @@ namespace alg {
 							WRITE(x);
 
 							// recursive delete k
-							delete_op(y, k);
+							delete_op(y.get(), k);
 							return;
 						}
 
