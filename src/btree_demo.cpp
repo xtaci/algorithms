@@ -8,7 +8,6 @@ int main(void) {
 
 	for (i=0;i<100000;i++) {
 		x.Insert(i);	
-		BTree::nr r = x.Search(i);
 	}
 	
 	for (i=0;i<100000;i++) {
