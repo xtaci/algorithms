@@ -226,6 +226,15 @@ namespace alg {
 			 */
 			void delete_op(node x, int32_t k) {
 				int32_t i;
+				/*
+					int t;
+					printf("key:%d n:%d\n",k, x->n);
+					for (t=0;t<x->n;t++) {
+						printf("=%d=", x->key[t]);
+					}
+					printf("\n");
+				*/
+
 				if (x->n == 0) {	// emtpy node
 					return;
 				}
@@ -234,26 +243,30 @@ namespace alg {
 				while (i>=0 && k < x->key[i]) { // search the key.
 					i = i - 1;
 				}
-
+				
 				if (i >= 0 && x->key[i] == k) {	// key exists in this node.
-					printf("in case 1 & 2 [%d] [%d]\n", i,x->n);
 					if (x->flag & LEAF) {
-						// case 1.
-						// If the key k is in node x and x is a leaf, delete the key k from x.
-						int j;
-						for (j = i;j<x->n-1;j++) {	// shifting the keys.
-							x->key[j] = x->key[j+1];
-						}
-						WRITE(x);
-						printf("deleted %d offset %x\n", k, x);
-						return;
+						printf("in case 1 [%d] [%d]\n", i,x->n);
+						case1(x, i, k);
 					} else {
+						printf("in case 2 [%d] [%d]\n", i,x->n);
 						case2(x, i, k);
 					}
 				} else {
 					// case 3. on x.c[i+1]
 					case3(x, i+1, k);
 				}
+			}
+
+			void case1(node x, int32_t i, int32_t k) {
+				// case 1.
+				// If the key k is in node x and x is a leaf, delete the key k from x.
+				int j;
+				for (j = i;j<x->n-1;j++) {	// shifting the keys.
+					x->key[j] = x->key[j+1];
+				}
+				x->n = x->n - 1;
+				WRITE(x);
 			}
 
 			void case2(node x, int32_t i, int32_t k) {
@@ -301,10 +314,10 @@ namespace alg {
 
 					int j;
 					for (j=0;j<z->n;j++) {		// merge keys of z
-						y->key[y->n+j+1] = z->key[j];
+						y->key[y->n+1+j] = z->key[j];
 					}
 					for (j=0;j<z->n+1;j++) {	// merge childs of z
-						y->c[y->n+j+1] = z->c[j];
+						y->c[y->n+1+j] = z->c[j];
 					}
 
 					// mark free z
@@ -314,11 +327,11 @@ namespace alg {
 					WRITE(y.get());
 
 					for (j=i;j<x->n-1;j++) { // delete k from node x
-						x->key[i] = x->key[i+1];
+						x->key[j] = x->key[j+1];
 					}
 
 					for (j=i+1;j<x->n;j++){	// delete pointer to z --> (i+1)th
-						x->c[i] = x->c[i+1];
+						x->c[j] = x->c[j+1];
 					}
 					x->n = x->n - 1;
 					WRITE(x);
@@ -332,6 +345,7 @@ namespace alg {
 
 			void case3(node x, int32_t i, int32_t k) {
 				std::auto_ptr<node_t> ci(READ(x, i));
+
 				// case 3a.
 				// If x.c[i] has only t - 1 keys but has an immediate sibling with at least t keys,
 				// give x.c[i] an extra key by moving a key from x down into x.c[i], moving a
@@ -409,11 +423,10 @@ namespace alg {
 								x->key[j] = x->key[j+1];
 							}
 
-							for (j=i;j<x->n;j++) {
+							for (j=i+1;j<x->n;j++) {
 								x->c[j] = x->c[j+1];
 							}
 							x->n = x->n - 1;
-							x->c[0] = left->offset;
 
 							// append x.c[i] into left sibling
 							for (j=0;j<ci->n;j++) {
@@ -425,16 +438,23 @@ namespace alg {
 							}
 							left->n += ci->n;	// left became 2T-1
 							ci->flag |= MARKFREE;	// free ci
+							ci->n = 0;
 							WRITE(ci.get());
 							WRITE(x);
+							// root check
+							if (x->n == 0 && x->offset ==0) {
+								left->flag |= MARKFREE;
+								WRITE(left.get());
+								left->flag &= ~MARKFREE;
+								left->offset = 0;
+							}
 							WRITE(left.get());
-
 							delete_op(left.get(), k);
 							return;
 						} else if (right->n == T-1) {
 							std::cerr<<"case3b, right";
 							// copy x[i] to x.c[i]
-							ci->key[x->n] = x->key[i];
+							ci->key[ci->n] = x->key[i];
 							ci->n = ci->n + 1;
 							// remove key[i] from x and also the child
 							// shrink the size & set the child-0 to ci
@@ -443,15 +463,14 @@ namespace alg {
 								x->key[j] = x->key[j+1];
 							}
 
-							for (j=i;j<x->n;j++) {
+							for (j=i+1;j<x->n;j++) {
 								x->c[j] = x->c[j+1];
 							}
 							x->n = x->n - 1;
-							x->c[i] = ci->offset;
 
 							// append right sibling into x.c[i]
 							for (j=0;j<right->n;j++) {
-								ci->key[ci->n + j] =right->key[j];
+								ci->key[ci->n + j] = right->key[j];
 							}
 
 							for (j=0;j<right->n+1;j++) {
@@ -459,28 +478,24 @@ namespace alg {
 							}
 							ci->n += right->n;			// ci became 2T-1
 							right->flag |= MARKFREE;	// free right
+							right->n = 0;
 							WRITE(right.get());
 							WRITE(x);
+							// root check
+							if (x->n == 0 && x->offset ==0) {
+								ci->flag |= MARKFREE;
+								WRITE(ci.get());
+								ci->flag &= ~MARKFREE;
+								ci->offset = 0;
+							}
 							WRITE(ci.get());
 							delete_op(ci.get(), k);
 							return;
 						}
 					}
 				} else {
-					int t;
-					printf("key[%d]\n",k);
 					delete_op(ci.get(), k);
 				}
-			}
-
-
-			/**
-			 * duplicate the node
-			 */
-			node DUP(node x) {
-				void *n = allocate_node();
-				memcpy(n, x, BLOCKSIZE);
-				return (node)n;
 			}
 
 			/**
