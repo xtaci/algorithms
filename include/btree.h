@@ -225,7 +225,7 @@ namespace alg {
 				if (x->n == 0) {	// emtpy node
 					return;
 				}
-			
+
 				i = x->n - 1;
 				while (i>=0 && k < x->key[i]) { // search the key.
 					i = i - 1;
@@ -289,59 +289,119 @@ namespace alg {
 				} else {	// case 3
 					i = i+1;	// child to search
 					std::auto_ptr<node_t> ci(READ(x, i));
-				
-					if (ci->n == T-1) { // case 3a.
-						if (i-1>=0) {
-							std::auto_ptr<node_t> left(READ(x, i-1)); // left sibling
-							if (left->n > T) {
-								int j;
-								for (j=ci->n-2;j>=0;j++) { // right shift ci keys
-									ci->key[j+1] = ci->key[j];
-								}
 
-								for (j=ci->n-1;j>=0;j++) { // right shift ci childs
-									ci->c[j+1] = ci->c[j];
-								}
-								ci->n = ci->n+1;
-								ci->key[0] = x->key[i];	// copy key from x[i] to ci[0]
-								ci->c[0] = left->c[left->n];	// copy child pointer from left last child
-								x->key[i] = left->key[left->n-1];	// copy from left last key
-								left->n = left->n-1;	// decrease left num keys
-
-								WRITE(ci.get());
-								WRITE(x);
-								WRITE(left.get());
-								delete_op(ci.get(), k); 
+					// case 3a. left sibling
+					if (ci->n == T-1) {
+						std::auto_ptr<node_t> left(READ(x, i-1)); 
+						if (i-1>=0 && left->n > T) {
+							int j;
+							for (j=ci->n-2;j>=0;j++) { // right shift ci keys
+								ci->key[j+1] = ci->key[j];
 							}
+
+							for (j=ci->n-1;j>=0;j++) { // right shift ci childs
+								ci->c[j+1] = ci->c[j];
+							}
+							ci->n = ci->n+1;
+							ci->key[0] = x->key[i];	// copy key from x[i] to ci[0]
+							ci->c[0] = left->c[left->n];	// copy child pointer from left last child
+							x->key[i] = left->key[left->n-1];	// copy from left last key
+							left->n = left->n-1;	// decrease left num keys
+
+							WRITE(ci.get());
+							WRITE(x);
+							WRITE(left.get());
+							delete_op(ci.get(), k); 
+							return;
 						}
-						
-						if (i+1<ci->n) {
-							std::auto_ptr<node_t> right(READ(x, i+1)); // right sibling
-							if (right->n > T) {
-								ci->key[ci->n-1] = x->key[i];
-								ci->c[ci->n] = right->c[0];
-								ci->n = ci->n+1;
-								x->key[i] = right->key[0];
 
-								int j;
-								for (j=0;j<right->n-1;j++) { // left shift sibling keys
-									right->key[j] = right->key[j+1];
-								}
+						// case 3a. right sibling
+						std::auto_ptr<node_t> right(READ(x, i+1));
+						if (i+1<ci->n && right->n > T) {
+							ci->key[ci->n-1] = x->key[i];
+							ci->c[ci->n] = right->c[0];
+							ci->n = ci->n+1;
+							x->key[i] = right->key[0];
 
-								for (j=0;j<right->n;j++) { // left shift ci childs
-									right->c[j] = right->c[j+1];
-								}
-
-								WRITE(ci.get());
-								WRITE(x);
-								WRITE(right.get());
-								delete_op(ci.get(), k); 
+							int j;
+							for (j=0;j<right->n-1;j++) { // left shift sibling keys
+								right->key[j] = right->key[j+1];
 							}
+
+							for (j=0;j<right->n;j++) { // left shift ci childs
+								right->c[j] = right->c[j+1];
+							}
+
+							WRITE(ci.get());
+							WRITE(x);
+							WRITE(right.get());
+							delete_op(ci.get(), k); 
+							return;
+						}
+
+						// case 3b.
+						if (left->n == T-1) {
+							// copy x[i] to left
+							left->key[left->n] = x->key[i];
+							left->n = left->n + 1;
+
+							// shift x
+							int j;
+							for (j=i;j<x->n-1;j++) {
+								x->key[j] = x->key[j+1];
+							}
+
+							for (j=i+1;j<x->n;j++) {	// always overwrite right child
+								x->c[j] = x->c[j+1];
+							}
+
+							// append ci into left sibling
+							for (j=0;j<ci->n;j++) {
+								left->key[j+left->n] = ci->key[j];
+							}
+
+							for (j=0;j<ci->n+1;j++) {
+								left->c[j+left->n] = ci->c[j];
+							}
+							left->n += ci->n;	// left became 2T-1
+							ci->flag |= MARKFREE;	// free ci
+							WRITE(ci.get());
+							WRITE(x);
+							WRITE(left.get());
+							delete_op(left.get(), k);
+						} else {
+							// copy x[i] to ci
+							ci->key[ci->n] = x->key[i];
+							ci->n = ci->n + 1;
+							
+							// shift x
+							int j;
+							for (j=i;j<x->n-1;j++) {
+								x->key[j] = x->key[j+1];
+							}
+
+							for (j=i+1;j<x->n;j++) {	// always overwrite right child
+								x->c[j] = x->c[j+1];
+							}
+
+							// append right sibling into ci
+							for (j=0;j<right->n;j++) {
+								ci->key[ci->n+j] = right->key[j];
+							}
+
+							for (j=0;j<left->n+1;j++) {
+								ci->c[ci->n+j] = right->c[j];
+							}
+							right->flag |= MARKFREE;
+							WRITE(ci.get());
+							WRITE(x);
+							WRITE(right.get());
+							delete_op(ci.get(),k);
 						}
 					}
-				}
 
-				return;
+					return;
+				}
 			}
 
 
