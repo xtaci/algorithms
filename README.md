@@ -15,6 +15,7 @@
     2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )
     3.  程序正确通过后，请发起Pull Requests，代码被验证后入库，并在README中发布新算法实现。
         (Please Use Fork+Pull Requests !!! Correctness is the most important!)
+	4.  TAB = 4 space.  set ts=4 in vim
 
 ####已实现 ( Implemented ):
 

@@ -9,6 +9,11 @@ int main(void) {
 	for (i=0;i<100000;i++) {
 		x.Insert(i);	
 		BTree::nr r = x.Search(i);
-		printf("offset[%x] idx[%d]\n", r.offset, r.idx);
+	}
+	
+	for (i=0;i<100000;i++) {
+		x.DeleteKey(i);
+		BTree::nr r = x.Search(i);
+		printf("key[%d] offset[%x] idx[%d]\n", i, r.offset, r.idx);
 	}
 }

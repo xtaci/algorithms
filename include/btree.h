@@ -21,6 +21,8 @@
 #ifndef __BTREE_H__
 #define __BTREE_H__
 
+#include <stdio.h>
+#include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -107,7 +109,6 @@ namespace alg {
 			}
 
 			void DeleteKey(int32_t k) {
-				node x =  m_root;
 				delete_op(m_root, k);
 			}
 
@@ -240,6 +241,7 @@ namespace alg {
 							x->key[j] = x->key[j+1];
 						}
 						WRITE(x);
+						printf("case1");
 						return;
 					} else {
 						// case 2a:
@@ -249,13 +251,14 @@ namespace alg {
 						// (We can find k0 and delete it in a single downward pass.)
 						std::auto_ptr<node_t> y(READ(x, i));
 						if (y->n >= T) {
+							printf("case2a");
 							int32_t k0 = y->key[y->n-1];
 							x->key[i] = k0;
 							WRITE(x);
 							delete_op(y.get(), k0);
 							return;
 						}
-						
+
 						// case 2b.
 						// If y has fewer than t keys, then, symmetrically, examine 
 						// the child z that follows k in node x. If z has at least t keys,
@@ -264,6 +267,7 @@ namespace alg {
 						// and delete it in a single downward pass.)
 						std::auto_ptr<node_t> z(READ(x, i+1));
 						if (z->n >= T) {
+							printf("case2b");
 							int32_t k0 = z->key[0];
 							x->key[i] = k0;
 							WRITE(x);
@@ -277,6 +281,7 @@ namespace alg {
 						// pointer to z, and y now contains 2t - 1 keys. 
 						// Then free z and recursively delete k from y.
 						if (y->n == T-1 && z->n == T-1) {
+							printf("case2c");
 							// merge k & z into y
 							y->key[y->n] = k;
 
@@ -308,6 +313,7 @@ namespace alg {
 							delete_op(y.get(), k);
 							return;
 						}
+						printf("other in case2");
 
 					}
 				} else {
@@ -321,15 +327,17 @@ namespace alg {
 					// appropriate child pointer from the sibling into x.c[i].
 					if (ci->n == T-1) {
 						std::auto_ptr<node_t> left(READ(x, i-1)); 
-						if (i-1>=0 && left->n > T) {
+						printf("case 3a: %d %d\n", left->n, i-1);
+						if (i-1>=0 && left->n >= T) {
+							printf("case3a, left");
 							// right shift keys and childs of x.c[i] to make place for a key
 							// right shift ci childs
 							int j;
-							for (j=ci->n-1;j>0;j++) { 
+							for (j=ci->n-1;j>0;j--) { 
 								ci->key[j] = ci->key[j-1];
 							}
 
-							for (j=ci->n;j>0;j++) {
+							for (j=ci->n;j>0;j--) {
 								ci->c[j] = ci->c[j-1];
 							}
 							ci->n = ci->n+1;
@@ -347,7 +355,9 @@ namespace alg {
 
 						// case 3a. right sibling
 						std::auto_ptr<node_t> right(READ(x, i+1));
-						if (i+1<ci->n && right->n > T) {
+						printf("case 3a-r: %d %d\n", right->n, i+1);
+						if (i+1<=x->n && right->n >= T) {
+							printf("case3a, right");
 							ci->key[ci->n] = x->key[i];		// append key from x
 							ci->c[ci->n+1] = right->c[0];	// append child from right
 							ci->n = ci->n+1;
@@ -374,63 +384,128 @@ namespace alg {
 						// If x.c[i] and both of x.c[i]’s immediate siblings have t-1 keys, merge x.c[i]
 						// with one sibling, which involves moving a key from x down into the new
 						// merged node to become the median key for that node.
-						if (left->n == T-1 && right->n == T-1) {
-							// copy x[i] to left
-							left->key[left->n] = x->key[i];
-							left->n = left->n + 1;
-			
-							// remove key[i] from x and also the child
-							int j;
-							for (j=i;j<x->n-1;j++) {
-								x->key[j] = x->key[j+1];
-							}
+						if ((i-1<0 ||left->n == T-1) && (i+1 <=x->n || right->n == T-1)) {
+							std::cerr << "case3b in";
+							if (left->n == T-1) {
+								std::cerr<<"case3b, left";
+								// copy x[i] to left
+								left->key[left->n] = x->key[i];
+								left->n = left->n + 1;
 
-							for (j=i;j<x->n;j++) {
-								x->c[j] = x->c[j+1];
-							}
+								// remove key[i] from x and also the child
+								// shrink the size & set the child-0 to left
+								int j;
+								for (j=i;j<x->n-1;j++) {
+									x->key[j] = x->key[j+1];
+								}
 
-							// point child-0 to left
-							x->c[0] = left->offset;
+								for (j=i;j<x->n;j++) {
+									x->c[j] = x->c[j+1];
+								}
+								x->n = x->n - 1;
+								x->c[0] = left->offset;
 
-							// append x.c[i] into left sibling
-							for (j=0;j<ci->n;j++) {
-								left->key[left->n + j] = ci->key[j];
-							}
+								// append x.c[i] into left sibling
+								for (j=0;j<ci->n;j++) {
+									left->key[left->n + j] = ci->key[j];
+								}
 
-							for (j=0;j<ci->n+1;j++) {
-								left->c[j+left->n] = ci->c[j];
-							}
-							left->n += ci->n;	// left became 2T-1
-							ci->flag |= MARKFREE;	// free ci
-							WRITE(ci.get());
-							WRITE(x);
-							
-							// root check
-							if (x->n == 0) {
-								m_root = left.get();	// free the old block , and
-								left->flag |= MARKFREE;	// make root the first block of the file
-								WRITE(left.get());
-								left->flag &= ~MARKFREE;
-								left->offset = 0;
-							}
+								for (j=0;j<ci->n+1;j++) {
+									left->c[left->n + j] = ci->c[j];
+								}
+								left->n += ci->n;	// left became 2T-1
+								ci->flag |= MARKFREE;	// free ci
+								WRITE(ci.get());
+								WRITE(x);
 
-							WRITE(left.get());
-							delete_op(left.get(), k);
+								// root check
+								if (x->n == 0 && x == m_root) {
+									left->flag |= MARKFREE;	
+									WRITE(left.get());
+									left->flag &= ~MARKFREE;
+									left->offset = 0;			// set to the first block
+									WRITE(left.get());
+									free(m_root);
+									m_root = DUP(left.get());
+								} else {
+									WRITE(left.get());
+								}
+
+								delete_op(left.get(), k);
+								return;
+							} else if (right->n == T-1) {
+								std::cerr<<"case3b, right";
+								// copy x[i] to x.c[i]
+								ci->key[x->n] = x->key[i];
+								ci->n = x->n + 1;
+
+								// remove key[i] from x and also the child
+								// shrink the size & set the child-0 to ci
+								int j;
+								for (j=i;j<x->n-1;j++) {
+									x->key[j] = x->key[j+1];
+								}
+
+								for (j=i;j<x->n;j++) {
+									x->c[j] = x->c[j+1];
+								}
+								x->n = x->n - 1;
+								x->c[0] = ci->offset;
+
+								// append right sibling into x.c[i]
+								for (j=0;j<ci->n;j++) {
+									ci->key[ci->n + j] =right->key[j];
+								}
+
+								for (j=0;j<ci->n+1;j++) {
+									ci->c[ci->n + j] = right->c[j];
+								}
+								ci->n += right->n;			// ci became 2T-1
+								right->flag |= MARKFREE;	// free right
+								WRITE(right.get());
+								WRITE(x);
+
+								// root check,
+								// free the old block , and make root the first block of the file
+								if (x->n == 0 && x == m_root) {
+									ci->flag |= MARKFREE;
+									WRITE(ci.get());
+									ci->flag &= ~MARKFREE;
+									ci->offset = 0;
+									WRITE(ci.get());
+									free(m_root);
+									m_root = DUP(ci.get());
+								} else {
+									WRITE(ci.get());
+								}
+
+								delete_op(ci.get(), k);
+								return;
+							}
 						}
 					}
-
-					return;
 				}
 			}
 
+
+			/**
+			 * duplicate the node
+			 */
+			node DUP(node x) {
+				void *n = allocate_node();
+				memcpy(n, x, BLOCKSIZE);
+				return (node)n;
+			}
 
 			/**
 			 * Read a 4K-block from disk, and returns the node struct.
 			 */
 			node READ(node x, int32_t i) {
 				void *xi = allocate_node();
-				lseek(fd, x->c[i], SEEK_SET);
-				read(fd, xi, BLOCKSIZE);
+				if (i >=0 || i <= x->n) {
+					lseek(fd, x->c[i], SEEK_SET);
+					read(fd, xi, BLOCKSIZE);
+				}
 				return (node)xi;
 			}
 
