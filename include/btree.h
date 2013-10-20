@@ -231,32 +231,52 @@ namespace alg {
 					i = i - 1;
 				}
 
-				if (x->key[i] == k) {	// key in this node.
-					if (x->flag & LEAF) {	// if it's a leaf node. case 1.
+				if (x->key[i] == k) {	// key exists in this node.
+					// case 1.
+					// If the key k is in node x and x is a leaf, delete the key k from x.
+					if (x->flag & LEAF) {
 						int j;
-						for (j = i;j<x->n-1;j++) {	// shift copy
+						for (j = i;j<x->n-1;j++) {	// shifting the keys.
 							x->key[j] = x->key[j+1];
 						}
 						WRITE(x);
 						return;
-					} else { // in non-leaf node
+					} else {
+						// case 2a:
+						// If the child y that precedes k in node x has at least t 
+						// keys, then find the predecessor k0 of k in the subtree 
+						// rooted at y. Recursively delete k0, and replace k by k0 in x. 
+						// (We can find k0 and delete it in a single downward pass.)
 						std::auto_ptr<node_t> y(READ(x, i));
-						if (y->n >= T) {				// case 2a.
-							x->key[i] = y->key[y->n-1];
+						if (y->n >= T) {
+							int32_t k0 = y->key[y->n-1];
+							x->key[i] = k0;
 							WRITE(x);
-							delete_op(y.get(), x->key[i]);
+							delete_op(y.get(), k0);
 							return;
 						}
-
+						
+						// case 2b.
+						// If y has fewer than t keys, then, symmetrically, examine 
+						// the child z that follows k in node x. If z has at least t keys,
+						// then find the successor k0 of k in the subtree rooted at z. 
+						// Recursively delete k0, and replace k by k0 in x. (We can find k0 
+						// and delete it in a single downward pass.)
 						std::auto_ptr<node_t> z(READ(x, i+1));
-						if (z->n >= T) {	// case 2b.
-							x->key[i] = z->key[0];
+						if (z->n >= T) {
+							int32_t k0 = z->key[0];
+							x->key[i] = k0;
 							WRITE(x);
-							delete_op(z.get(), x->key[i]);
+							delete_op(z.get(), k0);
 							return;
 						}
 
-						if (y->n == T-1 && z->n == T-1) { // case 2c
+						// case 2c:
+						// Otherwise, if both y and ´ have only t 2 1 keys, 
+						// merge k and all of ´ into y,  so that x loses both k and the 
+						// pointer to ´, and y now contains 2t c 1 keys. 
+						// Then free ´ and recursively delete k from y.
+						if (y->n == T-1 && z->n == T-1) {
 							// merge k & z into y
 							y->key[y->n] = k;
 
