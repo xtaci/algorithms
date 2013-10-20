@@ -232,9 +232,9 @@ namespace alg {
 				}
 
 				if (x->key[i] == k) {	// key exists in this node.
-					// case 1.
-					// If the key k is in node x and x is a leaf, delete the key k from x.
 					if (x->flag & LEAF) {
+						// case 1.
+						// If the key k is in node x and x is a leaf, delete the key k from x.
 						int j;
 						for (j = i;j<x->n-1;j++) {	// shifting the keys.
 							x->key[j] = x->key[j+1];
@@ -310,27 +310,33 @@ namespace alg {
 						}
 
 					}
-				} else {	// case 3
-					i = i+1;	// child to search
+				} else {
+					i = i+1; // child ci
 					std::auto_ptr<node_t> ci(READ(x, i));
 
-					// case 3a. left sibling
+					// case 3a.
+					// If x.c[i] has only t - 1 keys but has an immediate sibling with at least t keys,
+					// give x.c[i] an extra key by moving a key from x down into x.c[i], moving a
+					// key from x.c[i]’s immediate left or right sibling up into x, and moving the
+					// appropriate child pointer from the sibling into x.c[i].
 					if (ci->n == T-1) {
 						std::auto_ptr<node_t> left(READ(x, i-1)); 
 						if (i-1>=0 && left->n > T) {
+							// right shift keys and childs of x.c[i] to make place for a key
+							// right shift ci childs
 							int j;
-							for (j=ci->n-2;j>=0;j++) { // right shift ci keys
-								ci->key[j+1] = ci->key[j];
+							for (j=ci->n-1;j>0;j++) { 
+								ci->key[j] = ci->key[j-1];
 							}
 
-							for (j=ci->n-1;j>=0;j++) { // right shift ci childs
-								ci->c[j+1] = ci->c[j];
+							for (j=ci->n;j>0;j++) {
+								ci->c[j] = ci->c[j-1];
 							}
 							ci->n = ci->n+1;
-							ci->key[0] = x->key[i];	// copy key from x[i] to ci[0]
-							ci->c[0] = left->c[left->n];	// copy child pointer from left last child
-							x->key[i] = left->key[left->n-1];	// copy from left last key
-							left->n = left->n-1;	// decrease left num keys
+							ci->key[0] = x->key[i];				// copy key from x[i] to ci[0]
+							ci->c[0] = left->c[left->n];		// copy child from left last child.
+							x->key[i] = left->key[left->n-1];	// copy left last key into x[i]
+							left->n = left->n-1;				// decrease left size
 
 							WRITE(ci.get());
 							WRITE(x);
@@ -342,24 +348,25 @@ namespace alg {
 						// case 3a. right sibling
 						std::auto_ptr<node_t> right(READ(x, i+1));
 						if (i+1<ci->n && right->n > T) {
-							ci->key[ci->n-1] = x->key[i];
-							ci->c[ci->n] = right->c[0];
+							ci->key[ci->n] = x->key[i];		// append key from x
+							ci->c[ci->n+1] = right->c[0];	// append child from right
 							ci->n = ci->n+1;
-							x->key[i] = right->key[0];
+							x->key[i] = right->key[0];		// subsitute key in x
 
 							int j;
-							for (j=0;j<right->n-1;j++) { // left shift sibling keys
+							for (j=0;j<right->n-1;j++) { // remove key[0] from right sibling
 								right->key[j] = right->key[j+1];
 							}
 
-							for (j=0;j<right->n;j++) { // left shift ci childs
+							for (j=0;j<right->n;j++) { // and also the child c[0] of the right sibling.
 								right->c[j] = right->c[j+1];
 							}
+							right->n = right->n - 1;	// reduce the size of the right sibling.
 
 							WRITE(ci.get());
 							WRITE(x);
 							WRITE(right.get());
-							delete_op(ci.get(), k); 
+							delete_op(ci.get(), k); 	// recursive delete key in x.c[i]
 							return;
 						}
 
