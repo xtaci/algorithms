@@ -272,30 +272,34 @@ namespace alg {
 						}
 
 						// case 2c:
-						// Otherwise, if both y and ´ have only t 2 1 keys, 
-						// merge k and all of ´ into y,  so that x loses both k and the 
-						// pointer to ´, and y now contains 2t c 1 keys. 
-						// Then free ´ and recursively delete k from y.
+						// Otherwise, if both y and z have only t-1 keys, 
+						// merge k and all of z into y,  so that x loses both k and the 
+						// pointer to z, and y now contains 2t - 1 keys. 
+						// Then free z and recursively delete k from y.
 						if (y->n == T-1 && z->n == T-1) {
 							// merge k & z into y
 							y->key[y->n] = k;
 
 							int j;
-							for (j=0;j<z->n;j++) {	// merge n keys, k already in 
+							for (j=0;j<z->n;j++) {		// merge keys of z
 								y->key[y->n+j+1] = z->key[j];
 							}
-							for (j=0;j<z->n+1;j++) {	// merge n+1 childs
-								y->c[y->n+j+1] = z->key[j];
+							for (j=0;j<z->n+1;j++) {	// merge childs of z
+								y->c[y->n+j+1] = z->c[j];
 							}
-							// mark free this node
+
+							// mark free z
 							z->flag |= MARKFREE;
 							y->n = y->n + z->n + 1; // size after merge
 							WRITE(z.get());
 							WRITE(y.get());
 
-							// shift x
-							for (j=i;j<x->n-1;j++) {
+							for (j=i;j<x->n-1;j++) { // delete k from node x
 								x->key[i] = x->key[i+1];
+							}
+
+							for (j=i+1;j<x->n;j++){	// delete pointer to z --> (i+1)th
+								x->c[i] = x->c[i+1];
 							}
 							x->n = x->n - 1;
 							WRITE(x);
