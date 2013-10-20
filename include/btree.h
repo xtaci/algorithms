@@ -371,24 +371,30 @@ namespace alg {
 						}
 
 						// case 3b.
-						if (left->n == T-1) {
+						// If x.c[i] and both of x.c[i]’s immediate siblings have t-1 keys, merge x.c[i]
+						// with one sibling, which involves moving a key from x down into the new
+						// merged node to become the median key for that node.
+						if (left->n == T-1 && right->n == T-1) {
 							// copy x[i] to left
 							left->key[left->n] = x->key[i];
 							left->n = left->n + 1;
-
-							// shift x
+			
+							// remove key[i] from x and also the child
 							int j;
 							for (j=i;j<x->n-1;j++) {
 								x->key[j] = x->key[j+1];
 							}
 
-							for (j=i+1;j<x->n;j++) {	// always overwrite right child
+							for (j=i;j<x->n;j++) {
 								x->c[j] = x->c[j+1];
 							}
 
-							// append ci into left sibling
+							// point child-0 to left
+							x->c[0] = left->offset;
+
+							// append x.c[i] into left sibling
 							for (j=0;j<ci->n;j++) {
-								left->key[j+left->n] = ci->key[j];
+								left->key[left->n + j] = ci->key[j];
 							}
 
 							for (j=0;j<ci->n+1;j++) {
@@ -398,36 +404,18 @@ namespace alg {
 							ci->flag |= MARKFREE;	// free ci
 							WRITE(ci.get());
 							WRITE(x);
+							
+							// root check
+							if (x->n == 0) {
+								m_root = left.get();	// free the old block , and
+								left->flag |= MARKFREE;	// make root the first block of the file
+								WRITE(left.get());
+								left->flag &= ~MARKFREE;
+								left->offset = 0;
+							}
+
 							WRITE(left.get());
 							delete_op(left.get(), k);
-						} else {
-							// copy x[i] to ci
-							ci->key[ci->n] = x->key[i];
-							ci->n = ci->n + 1;
-							
-							// shift x
-							int j;
-							for (j=i;j<x->n-1;j++) {
-								x->key[j] = x->key[j+1];
-							}
-
-							for (j=i+1;j<x->n;j++) {	// always overwrite right child
-								x->c[j] = x->c[j+1];
-							}
-
-							// append right sibling into ci
-							for (j=0;j<right->n;j++) {
-								ci->key[ci->n+j] = right->key[j];
-							}
-
-							for (j=0;j<left->n+1;j++) {
-								ci->c[ci->n+j] = right->c[j];
-							}
-							right->flag |= MARKFREE;
-							WRITE(ci.get());
-							WRITE(x);
-							WRITE(right.get());
-							delete_op(ci.get(),k);
 						}
 					}
 
