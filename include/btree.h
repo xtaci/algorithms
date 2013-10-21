@@ -411,16 +411,9 @@ namespace alg {
 
 							// remove key[i] from x and also the child
 							// shrink the size & set the child-0 to left
+							delete_i(x, i);
+
 							int j;
-							for (j=i;j<x->n-1;j++) {
-								x->key[j] = x->key[j+1];
-							}
-
-							for (j=i+1;j<x->n;j++) {
-								x->c[j] = x->c[j+1];
-							}
-							x->n = x->n - 1;
-
 							// append x.c[i] into left sibling
 							for (j=0;j<ci->n;j++) {
 								left->key[left->n + j] = ci->key[j];
@@ -450,16 +443,9 @@ namespace alg {
 							ci->n = ci->n + 1;
 							// remove key[i] from x and also the child
 							// shrink the size & set the child-0 to ci
+							delete_i(x, i);
+
 							int j;
-							for (j=i;j<x->n-1;j++) {
-								x->key[j] = x->key[j+1];
-							}
-
-							for (j=i+1;j<x->n;j++) {
-								x->c[j] = x->c[j+1];
-							}
-							x->n = x->n - 1;
-
 							// append right sibling into x.c[i]
 							for (j=0;j<right->n;j++) {
 								ci->key[ci->n + j] = right->key[j];
@@ -488,6 +474,21 @@ namespace alg {
 				} else {
 					delete_op(ci.get(), k);
 				}
+			}
+
+			/**
+			 * delete ith node
+			 */
+			void delete_i(node x, int32_t i)  {
+				int j;
+				for (j=i;j<x->n-1;j++) {
+					x->key[j] = x->key[j+1];
+				}
+
+				for (j=i+1;j<x->n;j++) {
+					x->c[j] = x->c[j+1];
+				}
+				x->n = x->n - 1;
 			}
 
 			/**
