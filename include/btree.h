@@ -340,7 +340,6 @@ namespace alg {
 
 			void case3(node x, int32_t i, int32_t k) {
 				std::auto_ptr<node_t> ci(READ(x, i));
-
 				// case 3a.
 				// If x.c[i] has only t - 1 keys but has an immediate sibling with at least t keys,
 				// give x.c[i] an extra key by moving a key from x down into x.c[i], moving a
