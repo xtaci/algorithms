@@ -73,7 +73,7 @@ namespace alg {
 				fd = open(path, O_RDWR|O_CREAT, 0640);
 				if (fd == -1)
 					return;
-				node x = (node)allocate_node();
+				node x = (node)ALLOCBLK();
 				int n = read(fd,x,BLOCKSIZE);
 				if (n != BLOCKSIZE) {	// init new btree
 					x->flag |= LEAF;
@@ -97,7 +97,7 @@ namespace alg {
 					r->flag &= ~ONDISK;
 					WRITE(r);
 					// new root
-					node s = (node)allocate_node();
+					node s = (node)ALLOCBLK();
 					s->flag &= ~LEAF;
 					s->flag |= ONDISK;	// write to offset 0
 					s->offset = 0;
@@ -143,9 +143,9 @@ namespace alg {
 			 */
 			void insert_nonfull(node x, int32_t k) {
 				int32_t i = x->n-1;
-				if (x->flag & LEAF) {	// insert into leaf
-					while (i>=0 && k < x->key[i]) {	// shift from right to left, when k < key[i]
-						x->key[i+1] = x->key[i];
+				if (x->flag & LEAF) {	// insert into this leaf
+					while (i>=0 && k < x->key[i]) {	// right shift to
+						x->key[i+1] = x->key[i];	// make place for k
 						i = i - 1;
 					}
 					x->key[i+1] = k;
@@ -156,13 +156,14 @@ namespace alg {
 						i = i-1;
 					}
 					i=i+1;
-					node xi = READ(x, i);
+					node xi = READ(x, i);		// insert the key into one child.
 					if (xi->n == 2*T-1) {
 						split_child(x, i);
 						if (k > x->key[i]) {
 							i = i+1;
 						}
-						// reload x[i] after split_child(will modify child x[i])
+						// NOTICE!
+						// reload x[i] after split_child.
 						xi = READ(x, i);
 					}
 					insert_nonfull(xi, k);
@@ -171,23 +172,10 @@ namespace alg {
 			}
 
 			/**
-			 * allocate empty node struct
-			 */
-			void * allocate_node() {
-				node x = new node_t;
-				x->n = 0;
-				x->offset = 0;
-				x->flag = 0;
-				memset(x->key, 0, sizeof(x->key));
-				memset(x->c, 0, sizeof(x->c));
-				return x;
-			}
-
-			/**
 			 * split a node into 2.
 			 */
 			void split_child(node x, int32_t i) {
-				std::auto_ptr<node_t> z((node)allocate_node());
+				std::auto_ptr<node_t> z((node)ALLOCBLK());
 				std::auto_ptr<node_t> y(READ(x, i));
 				z->flag &= ~LEAF;
 				z->flag |= (y->flag & LEAF);
@@ -258,11 +246,13 @@ namespace alg {
 				}
 			}
 
+			/**
+			 * case 1.
+			 * If the key k is in node x and x is a leaf, delete the key k from x.
+			 */
 			void case1(node x, int32_t i, int32_t k) {
-				// case 1.
-				// If the key k is in node x and x is a leaf, delete the key k from x.
 				int j;
-				for (j = i;j<x->n-1;j++) {	// shifting the keys.
+				for (j = i;j<x->n-1;j++) {	// shifting the keys only, no childs available.
 					x->key[j] = x->key[j+1];
 				}
 				x->n = x->n - 1;
@@ -346,138 +336,139 @@ namespace alg {
 
 			void case3(node x, int32_t i, int32_t k) {
 				std::auto_ptr<node_t> ci(READ(x, i));
+				if (ci->n > T-1) {	// ready to delete in child.
+					delete_op(ci.get(), k);
+					return;
+				}
+
 				// case 3a.
 				// If x.c[i] has only t - 1 keys but has an immediate sibling with at least t keys,
 				// give x.c[i] an extra key by moving a key from x down into x.c[i], moving a
 				// key from x.c[i]’s immediate left or right sibling up into x, and moving the
 				// appropriate child pointer from the sibling into x.c[i].
-				if (ci->n == T-1) {
-					std::auto_ptr<node_t> left(READ(x, i-1));
-					if (i-1>=0 && left->n >= T) {
-						// printf("case3a, left");
-						// right shift keys and childs of x.c[i] to make place for a key
-						// right shift ci childs
-						int j;
-						for (j=ci->n-1;j>0;j--) { 
-							ci->key[j] = ci->key[j-1];
-						}
-
-						for (j=ci->n;j>0;j--) {
-							ci->c[j] = ci->c[j-1];
-						}
-						ci->n = ci->n+1;
-						ci->key[0] = x->key[i-1];			// copy key from x[i-1] to ci[0]
-						ci->c[0] = left->c[left->n];		// copy child from left last child.
-						x->key[i] = left->key[left->n-1];	// copy left last key into x[i]
-						left->n = left->n-1;				// decrease left size
-
-						WRITE(ci.get());
-						WRITE(x);
-						WRITE(left.get());
-						delete_op(ci.get(), k); 
-						return;
+				std::auto_ptr<node_t> left(READ(x, i-1));
+				if (i-1>=0 && left->n >= T) {
+					// printf("case3a, left");
+					// right shift keys and childs of x.c[i] to make place for a key
+					// right shift ci childs
+					int j;
+					for (j=ci->n-1;j>0;j--) { 
+						ci->key[j] = ci->key[j-1];
 					}
 
-					// case 3a. right sibling
-					std::auto_ptr<node_t> right(READ(x, i+1));
-					if (i+1<=x->n && right->n >= T) {
-						// printf("case3a, right");
-						ci->key[ci->n] = x->key[i];		// append key from x
-						ci->c[ci->n+1] = right->c[0];	// append child from right
-						ci->n = ci->n+1;
-						x->key[i] = right->key[0];		// subsitute key in x
+					for (j=ci->n;j>0;j--) {
+						ci->c[j] = ci->c[j-1];
+					}
+					ci->n = ci->n+1;
+					ci->key[0] = x->key[i-1];			// copy key from x[i-1] to ci[0]
+					ci->c[0] = left->c[left->n];		// copy child from left last child.
+					x->key[i] = left->key[left->n-1];	// copy left last key into x[i]
+					left->n = left->n-1;				// decrease left size
 
-						int j;
-						for (j=0;j<right->n-1;j++) { // remove key[0] from right sibling
-							right->key[j] = right->key[j+1];
-						}
+					WRITE(ci.get());
+					WRITE(x);
+					WRITE(left.get());
+					delete_op(ci.get(), k); 
+					return;
+				}
 
-						for (j=0;j<right->n;j++) { // and also the child c[0] of the right sibling.
-							right->c[j] = right->c[j+1];
-						}
-						right->n = right->n - 1;	// reduce the size of the right sibling.
+				// case 3a. right sibling
+				std::auto_ptr<node_t> right(READ(x, i+1));
+				if (i+1<=x->n && right->n >= T) {
+					// printf("case3a, right");
+					ci->key[ci->n] = x->key[i];		// append key from x
+					ci->c[ci->n+1] = right->c[0];	// append child from right
+					ci->n = ci->n+1;
+					x->key[i] = right->key[0];		// subsitute key in x
 
-						WRITE(ci.get());
-						WRITE(x);
-						WRITE(right.get());
-						delete_op(ci.get(), k); 	// recursive delete key in x.c[i]
-						return;
+					int j;
+					for (j=0;j<right->n-1;j++) { // remove key[0] from right sibling
+						right->key[j] = right->key[j+1];
 					}
 
-					// case 3b.
-					// If x.c[i] and both of x.c[i]’s immediate siblings have t-1 keys, merge x.c[i]
-					// with one sibling, which involves moving a key from x down into the new
-					// merged node to become the median key for that node.
-					if ((i-1<0 ||left->n == T-1) && (i+1 <=x->n || right->n == T-1)) {
-						if (left->n == T-1) {
-							// copy x[i] to left
-							left->key[left->n] = x->key[i];
-							left->n = left->n + 1;
+					for (j=0;j<right->n;j++) { // and also the child c[0] of the right sibling.
+						right->c[j] = right->c[j+1];
+					}
+					right->n = right->n - 1;	// reduce the size of the right sibling.
 
-							// remove key[i] from x and also the child
-							// shrink the size & set the child-0 to left
-							delete_i(x, i);
+					WRITE(ci.get());
+					WRITE(x);
+					WRITE(right.get());
+					delete_op(ci.get(), k); 	// recursive delete key in x.c[i]
+					return;
+				}
 
-							int j;
-							// append x.c[i] into left sibling
-							for (j=0;j<ci->n;j++) {
-								left->key[left->n + j] = ci->key[j];
-							}
+				// case 3b.
+				// If x.c[i] and both of x.c[i]’s immediate siblings have t-1 keys, merge x.c[i]
+				// with one sibling, which involves moving a key from x down into the new
+				// merged node to become the median key for that node.
+				if ((i-1<0 ||left->n == T-1) && (i+1 <=x->n || right->n == T-1)) {
+					if (left->n == T-1) {
+						// copy x[i] to left
+						left->key[left->n] = x->key[i];
+						left->n = left->n + 1;
 
-							for (j=0;j<ci->n+1;j++) {
-								left->c[left->n + j] = ci->c[j];
-							}
-							left->n += ci->n;	// left became 2T-1
-							ci->flag |= MARKFREE;	// free ci
-							ci->n = 0;
-							WRITE(ci.get());
-							WRITE(x);
-							// root check
-							if (x->n == 0 && x->offset ==0) {
-								left->flag |= MARKFREE;
-								WRITE(left.get());
-								left->flag &= ~MARKFREE;
-								left->offset = 0;
-							}
+						// remove key[i] from x and also the child
+						// shrink the size & set the child-0 to left
+						delete_i(x, i);
+
+						int j;
+						// append x.c[i] into left sibling
+						for (j=0;j<ci->n;j++) {
+							left->key[left->n + j] = ci->key[j];
+						}
+
+						for (j=0;j<ci->n+1;j++) {
+							left->c[left->n + j] = ci->c[j];
+						}
+						left->n += ci->n;	// left became 2T-1
+						ci->flag |= MARKFREE;	// free ci
+						ci->n = 0;
+						WRITE(ci.get());
+						WRITE(x);
+						// root check
+						if (x->n == 0 && x->offset ==0) {
+							left->flag |= MARKFREE;
 							WRITE(left.get());
-							delete_op(left.get(), k);
-							return;
-						} else if (right->n == T-1) {
-							// copy x[i] to x.c[i]
-							ci->key[ci->n] = x->key[i];
-							ci->n = ci->n + 1;
-							// remove key[i] from x and also the child
-							// shrink the size & set the child-0 to ci
-							delete_i(x, i);
-
-							int j;
-							// append right sibling into x.c[i]
-							for (j=0;j<right->n;j++) {
-								ci->key[ci->n + j] = right->key[j];
-							}
-
-							for (j=0;j<right->n+1;j++) {
-								ci->c[ci->n + j] = right->c[j];
-							}
-							ci->n += right->n;			// ci became 2T-1
-							right->flag |= MARKFREE;	// free right
-							right->n = 0;
-							WRITE(right.get());
-							WRITE(x);
-							// root check
-							if (x->n == 0 && x->offset ==0) {
-								ci->flag |= MARKFREE;
-								WRITE(ci.get());
-								ci->flag &= ~MARKFREE;
-								ci->offset = 0;
-							}
-							WRITE(ci.get());
-							delete_op(ci.get(), k);
-							return;
+							left->flag &= ~MARKFREE;
+							left->offset = 0;
 						}
+						WRITE(left.get());
+						delete_op(left.get(), k);
+						return;
+					} else if (right->n == T-1) {
+						// copy x[i] to x.c[i]
+						ci->key[ci->n] = x->key[i];
+						ci->n = ci->n + 1;
+						// remove key[i] from x and also the child
+						// shrink the size & set the child-0 to ci
+						delete_i(x, i);
+
+						int j;
+						// append right sibling into x.c[i]
+						for (j=0;j<right->n;j++) {
+							ci->key[ci->n + j] = right->key[j];
+						}
+
+						for (j=0;j<right->n+1;j++) {
+							ci->c[ci->n + j] = right->c[j];
+						}
+						ci->n += right->n;			// ci became 2T-1
+						right->flag |= MARKFREE;	// free right
+						right->n = 0;
+						WRITE(right.get());
+						WRITE(x);
+						// root check
+						if (x->n == 0 && x->offset ==0) {
+							ci->flag |= MARKFREE;
+							WRITE(ci.get());
+							ci->flag &= ~MARKFREE;
+							ci->offset = 0;
+						}
+						WRITE(ci.get());
+						delete_op(ci.get(), k);
+						return;
 					}
-				} else {
-					delete_op(ci.get(), k);
 				}
 			}
 
@@ -497,10 +488,22 @@ namespace alg {
 			}
 
 			/**
+			 * allocate empty node struct
+			 */
+			void * ALLOCBLK() {
+				node x = new node_t;
+				x->n = 0;
+				x->offset = 0;
+				x->flag = 0;
+				memset(x->key, 0, sizeof(x->key));
+				memset(x->c, 0, sizeof(x->c));
+				return x;
+			}
+			/**
 			 * Load the root block
 			 */
 			node ROOT() {
-				void *root = allocate_node();
+				void *root = ALLOCBLK();
 				lseek(fd, 0, SEEK_SET);
 				read(fd, root, BLOCKSIZE);
 				return (node)root;
@@ -510,7 +513,7 @@ namespace alg {
 			 * Read a 4K-block from disk, and returns the node struct.
 			 */
 			node READ(node x, int32_t i) {
-				void *xi = allocate_node();
+				void *xi = ALLOCBLK();
 				if (i >=0 && i <= x->n) {
 					lseek(fd, x->c[i], SEEK_SET);
 					read(fd, xi, BLOCKSIZE);
