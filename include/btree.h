@@ -133,7 +133,7 @@ namespace alg {
 					ret.idx = -1;
 					return ret;
 				} else {
-					std::auto_ptr<node_t> xi(READ(x, i));	// in last child
+					std::auto_ptr<node_t> xi(READ(x, i));	// search in a child
 					return search(xi.get(), k);
 				}
 			}
