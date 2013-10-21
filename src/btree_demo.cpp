@@ -8,11 +8,14 @@ int main(void) {
 
 	for (i=0;i<1000;i++) {
 		x.Insert(i);	
+		printf("insert %d\n", i);
 	}
 	
 	for (i=0;i<1000;i++) {
 		x.DeleteKey(i);
 		BTree::nr r = x.Search(i);
-		printf("key[%d] offset[%x] idx[%d]\n", i, r.offset, r.idx);
+		if (r.idx == -1) {
+			printf("key[%d] removed\n", i);
+		}
 	}
 }

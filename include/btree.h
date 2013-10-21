@@ -22,7 +22,7 @@
 #define __BTREE_H__
 
 #include <stdio.h>
-#include <iostream>
+#include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -121,12 +121,6 @@ namespace alg {
 				if (i<x->n && k == x->key[i]) {	// search in [0,n-1]
 					ret.offset = x->offset;
 					ret.idx = i;
-					/*
-					   int t;
-					   for (t=0;t<x->n;t++) {
-					   printf("%d ",x->key[t]);
-					   }
-					 */
 					return ret;
 				} else if (x->flag & LEAF) {	// leaf, no more childs
 					ret.offset = 0;
@@ -246,10 +240,10 @@ namespace alg {
 				
 				if (i >= 0 && x->key[i] == k) {	// key exists in this node.
 					if (x->flag & LEAF) {
-						printf("in case 1 [%d] [%d]\n", i,x->n);
+						//printf("in case 1 [%d] [%d]\n", i,x->n);
 						case1(x, i, k);
 					} else {
-						printf("in case 2 [%d] [%d]\n", i,x->n);
+						//printf("in case 2 [%d] [%d]\n", i,x->n);
 						case2(x, i, k);
 					}
 				} else {
@@ -278,9 +272,8 @@ namespace alg {
 				std::auto_ptr<node_t> y(READ(x, i));
 				if (y->n >= T) {
 					int32_t k0 = y->key[y->n-1];
-					printf("case2a %d %d\n", k0, x->key[i]);
+					//printf("case2a %d %d\n", k0, x->key[i]);
 					x->key[i] = k0;
-					printf("key[i] %d\n", k0, x->key[i]);
 					WRITE(x);
 					delete_op(y.get(), k0);
 					return;
@@ -295,7 +288,7 @@ namespace alg {
 				std::auto_ptr<node_t> z(READ(x, i+1));
 				if (z->n >= T) {
 					int32_t k0 = z->key[0];
-					printf("case2b %d %d\n", k0, x->key[i]);
+					//printf("case2b %d %d\n", k0, x->key[i]);
 					x->key[i] = k0;
 					WRITE(x);
 					delete_op(z.get(), k0);
@@ -308,7 +301,7 @@ namespace alg {
 				// pointer to z, and y now contains 2t - 1 keys. 
 				// Then free z and recursively delete k from y.
 				if (y->n == T-1 && z->n == T-1) {
-					printf("case2c");
+					//printf("case2c");
 					// merge k & z into y
 					y->key[y->n] = k;
 
@@ -340,7 +333,9 @@ namespace alg {
 					delete_op(y.get(), k);
 					return;
 				}
-				printf("other in case2");
+
+				// cannot reach here
+				assert(false);
 			}
 
 			void case3(node x, int32_t i, int32_t k) {
@@ -354,7 +349,7 @@ namespace alg {
 				if (ci->n == T-1) {
 					std::auto_ptr<node_t> left(READ(x, i-1));
 					if (i-1>=0 && left->n >= T) {
-						printf("case3a, left");
+						// printf("case3a, left");
 						// right shift keys and childs of x.c[i] to make place for a key
 						// right shift ci childs
 						int j;
@@ -381,7 +376,7 @@ namespace alg {
 					// case 3a. right sibling
 					std::auto_ptr<node_t> right(READ(x, i+1));
 					if (i+1<=x->n && right->n >= T) {
-						printf("case3a, right");
+						// printf("case3a, right");
 						ci->key[ci->n] = x->key[i];		// append key from x
 						ci->c[ci->n+1] = right->c[0];	// append child from right
 						ci->n = ci->n+1;
@@ -409,9 +404,7 @@ namespace alg {
 					// with one sibling, which involves moving a key from x down into the new
 					// merged node to become the median key for that node.
 					if ((i-1<0 ||left->n == T-1) && (i+1 <=x->n || right->n == T-1)) {
-						std::cerr << "case3b in";
 						if (left->n == T-1) {
-							std::cerr<<"case3b, left";
 							// copy x[i] to left
 							left->key[left->n] = x->key[i];
 							left->n = left->n + 1;
@@ -452,7 +445,6 @@ namespace alg {
 							delete_op(left.get(), k);
 							return;
 						} else if (right->n == T-1) {
-							std::cerr<<"case3b, right";
 							// copy x[i] to x.c[i]
 							ci->key[ci->n] = x->key[i];
 							ci->n = ci->n + 1;
