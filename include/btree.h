@@ -497,6 +497,7 @@ namespace alg {
 				x->flag = 0;
 				memset(x->key, 0, sizeof(x->key));
 				memset(x->c, 0, sizeof(x->c));
+				memset(x->padding, 0xcc, sizeof(x->padding)); 
 				return x;
 			}
 			/**
