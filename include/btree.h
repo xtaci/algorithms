@@ -489,8 +489,8 @@ namespace alg {
 
 			/**
 			 * Allocate empty node struct.
-			 * A better allocator should be consider in practice,
-			 * such as re-cycling the freed up blocks on disk, so used blocks.
+			 * A better allocator should be consider in practice, such as
+			 * re-cycling the freed up blocks on disk, so used blocks
 			 * should be traced in some data strucuture, file header maybe.
 			 */
 			void * ALLOCBLK() {
