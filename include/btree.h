@@ -50,10 +50,10 @@ namespace alg {
 			struct node_t {
 				uint16_t n;				// num key
 				uint16_t flag;			// flags
-				uint32_t offset;		// block offset (8 byte head)
+				uint32_t offset;		// lseek offset related to file beginning
 				char padding[12];		// padding to 4096
 				int32_t key[509];		// key
-				int32_t c[510];			// childs pointers (file offsets related to 0)
+				int32_t c[510];			// childs pointers (represented as file offsets)
 			} __attribute__ ((packed));
 			typedef struct node_t *node;
 
@@ -473,7 +473,7 @@ namespace alg {
 			}
 
 			/**
-			 * delete ith node
+			 * delete ith key & child.
 			 */
 			void delete_i(node x, int32_t i)  {
 				int j;
@@ -488,7 +488,10 @@ namespace alg {
 			}
 
 			/**
-			 * allocate empty node struct
+			 * Allocate empty node struct.
+			 * A better allocator should be consider in practice,
+			 * such as re-cycling the freed up blocks on disk, so used blocks.
+			 * should be traced in some data strucuture, file header maybe.
 			 */
 			void * ALLOCBLK() {
 				node x = new node_t;
@@ -500,6 +503,7 @@ namespace alg {
 				memset(x->padding, 0xcc, sizeof(x->padding)); 
 				return x;
 			}
+
 			/**
 			 * Load the root block
 			 */
