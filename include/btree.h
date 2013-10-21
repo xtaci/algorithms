@@ -53,7 +53,7 @@ namespace alg {
 
 		public:	
 			// node and index
-			struct nr {
+			struct Res {
 				uint32_t offset;
 				int32_t idx;
 			};
@@ -79,7 +79,7 @@ namespace alg {
 				close(fd);
 			}
 
-			nr Search(int32_t x) {
+			Res Search(int32_t x) {
 				node root = ROOT();
 				return search(root, x);
 			}
@@ -113,9 +113,9 @@ namespace alg {
 			/**
 			 * search a key, returns node and index
 			 */
-			nr search(node x, int32_t k) {
+			Res search(node x, int32_t k) {
 				int32_t i = 0;
-				nr ret;
+				Res ret;
 				while (i<x->n && k > x->key[i]) i++;
 
 				if (i<x->n && k == x->key[i]) {	// search in [0,n-1]

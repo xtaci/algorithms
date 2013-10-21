@@ -13,7 +13,7 @@ int main(void) {
 	
 	for (i=0;i<1000;i++) {
 		x.DeleteKey(i);
-		BTree::nr r = x.Search(i);
+		BTree::Res r = x.Search(i);
 		if (r.idx == -1) {
 			printf("key[%d] removed\n", i);
 		}
