@@ -15,6 +15,12 @@
  * read and write large blocks of data. It is commonly used in databases and 
  * filesystems.
  *
+ * NOTES ON PRACTICAL USAGE:
+ *   1. Implement a buffer manager for B-Tree, such as using Hash<idx, node> and
+ * LRU, to control which node is in memory, and of course O_DIRECT flag.
+ *   2. Extend the node struct with satellite data pointer(offset), enlarge the
+ * node size to 2*PAGE or even more.
+ *
  * http://en.wikipedia.org/wiki/B-tree
  ******************************************************************************/
 
