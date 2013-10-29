@@ -36,30 +36,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <map>
+
+using namespace std;
 
 namespace alg {
-	class LRUCache{
+	
+	template<typename K,typename V>
+	class LRUCache
+	{
 		typedef struct _Node_{
-			int key;
-			int value;
+			K key;
+			V value;
 
 			struct _Node_ *next;
 			struct _Node_ *pre;
 
 		} CacheNode;
-
-		public:
+	
+	public:
 		LRUCache(int cache_size=10) {
 			cache_size_ = cache_size;
-			cache_real_size_ = 0;
 			p_cache_list_head = new CacheNode();
 			p_cache_list_near = new CacheNode();
 			p_cache_list_head->next = p_cache_list_near;
 			p_cache_list_head->pre = NULL;
 			p_cache_list_near->pre = p_cache_list_head;
 			p_cache_list_near->next = NULL;
+			
 		}
-
+	
+	
 		~LRUCache() {
 			CacheNode *p;
 			p = p_cache_list_head->next;
@@ -69,82 +76,106 @@ namespace alg {
 			}
 
 			delete p_cache_list_near;
+			cache_hash.clear();
 		}
-
-		int getValue(int key) { 
-			CacheNode *p=p_cache_list_head->next;	
-			while (p->next!=NULL) {
-				if (p->key == key) { //catch node
-					detachNode(p);
-					addToFront(p);
-					return p->value;
-				}	
-				p=p->next;	
+	
+	
+	
+		V getValue(K key) {
+			//put the value in front of the list if find the key
+			if(cache_hash.find(key) != cache_hash.end()){
+				CacheNode *p=cache_hash[key];
+				detachNode(p);
+				addFristNode(p);
+			    return (cache_hash[key]->value);
+			}else{
+				
+				cout << "[ERROR]No key with name ::" << key << endl;
+				return V();
 			}
-			return -1;
+
 		}
+	
+	
+	
+	
+		bool putValue(K key,V value) {
+			if(cache_hash.find(key) != cache_hash.end()){
+				cache_hash[key]->value=value;
+				detachNode((CacheNode *)cache_hash[key]);
+				addFristNode((CacheNode *)cache_hash[key]);
+				if(cache_hash.size()>cache_size_){
+						delEndNode();					
+					}
+			}else{
+				CacheNode *p=new CacheNode();
+				p->key=key;
+				p->value=value;
+				addFristNode(p);
+				cache_hash[key]=p;
+				if(cache_hash.size()>cache_size_){
+						cout << "[INFO]LRU Cache is full ... Delete Last One..." << endl;
+						delEndNode();
+					}
+				
 
-		bool putValue(int key,int value) {
-			CacheNode *p=p_cache_list_head->next;
-			while (p->next!=NULL) {
-				if(p->key == key) { //catch node
-					p->value=value;
-					getValue(key);
-					return true;
-				}	
-				p=p->next;	
 			}
-
-			if (cache_real_size_ >= cache_size_) {
-				std::cout << "free" <<std::endl;
-				p=p_cache_list_near->pre->pre;
-				delete p->next;
-				p->next=p_cache_list_near;
-				p_cache_list_near->pre=p;
-			}
-
-			p = new CacheNode();//(CacheNode *)malloc(sizeof(CacheNode));
-
-			if (p==NULL)
-				return false;
-
-			addToFront(p);
-			p->key=key;
-			p->value=value;
-
-			cache_real_size_++;
-
+					
 			return true;	
 		}
-
-		void displayNodes() {
+	
+	
+		
+		
+		
+		void display(){	
 			CacheNode *p=p_cache_list_head->next;
-
 			while(p->next!=NULL) {
-				std::cout << " Key : " << p->key << " Value : " << p->value << std::endl; 
+				std::cout << " KEY[" << p->key << "]<==>VALUE[" << p->value <<"]" << std::endl; 
 				p=p->next;
-
 			}
-			std::cout << std::endl;
+			std::cout << std::endl;			
 		}
-
-		private:
+	
+	private:
 		int cache_size_;
-		int cache_real_size_;
 		CacheNode *p_cache_list_head;
 		CacheNode *p_cache_list_near;
-
-		void detachNode(CacheNode *node) {
+		map<K,CacheNode*>cache_hash;
+	
+		
+		void detachNode(CacheNode *node){
 			node->pre->next=node->next;
-			node->next->pre=node->pre;
+			node->next->pre=node->pre;		
 		}
-
-		void addToFront(CacheNode *node) {
-			node->next=p_cache_list_head->next;
-			p_cache_list_head->next->pre=node;
-			p_cache_list_head->next=node;
-			node->pre=p_cache_list_head;
+	
+	
+		void addFristNode(CacheNode *node){
+			node->pre=p_cache_list_head;			
+			if(cache_hash.empty())
+			{
+				node->next=p_cache_list_near;
+				p_cache_list_near->pre=node;
+				p_cache_list_head->next=node;
+			}else
+			{
+				node->next=p_cache_list_head->next;
+				p_cache_list_head->next->pre=node;
+				p_cache_list_head->next=node;
+			}
 		}
+	
+	
+			
+		void delEndNode(){
+			CacheNode *p=p_cache_list_near->pre;
+			detachNode(p);
+			cout << "[INFO]Delete key ::: " << p->key <<endl;
+			cache_hash.erase(p->key);
+			free(p);
+			
+		}
+	
 	};
 }
 
