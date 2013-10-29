@@ -3,42 +3,33 @@
 #include "LRU_cache.h"
 
 using namespace std;
+using namespace alg;
+
 int main() {
-#if 1
-	alg::LRUCache *cache=new alg::LRUCache(9);
+		
+		
+	LRUCache<string,string> Cache(5);
+	Cache.putValue("key1","value1");
+	Cache.putValue("key2","value2");
+	Cache.putValue("key3","value3");
+	Cache.putValue("key4","value4");
+	Cache.putValue("key5","value5");
+	Cache.putValue("key6","value6");
+	
+	
+	cout << "Display The LRU Cache...." << endl;
+	Cache.display();
+	
+	cout << "Now,Visit the LRU Cache with \"key4\"" << endl;
+	cout << "The \"key4\" Value is : "<< Cache.getValue("key4") << endl;
+	cout << "The New LRU Cache is ... " << endl;
+	Cache.display();
+	
+	cout << "Now, Update The LRU Cache with \"key5\" and new value is \"newValue5\" ... " << endl;
+	Cache.putValue("key5","newValue5");
+	cout << "The New LRU Cache is ... " << endl; 
+	Cache.display();
+	Cache.getValue("aaa");
+	
 
-	cache->putValue(1,1);
-	cache->putValue(2,2);
-	cache->putValue(3,3);
-	cache->putValue(4,3);
-	cache->putValue(5,2);
-	cache->displayNodes();
-
-	cout << cache->getValue(4) << endl;
-	cache->displayNodes();
-	//cache->displayNodes();
-	cout << cache->getValue(3) << endl;	
-	cache->displayNodes();
-	cout << cache->getValue(3) << endl;	
-	cache->displayNodes();
-	cout << cache->getValue(1) << endl;	
-	cache->displayNodes();
-	cout << cache->getValue(2) << endl;
-	cache->displayNodes();	
-	cout << cache->getValue(9) << endl;	
-
-	cache->displayNodes();
-
-	cache->putValue(4,9);
-	//cout << cache->getValue(2) << endl;
-	//cout << cache->getValue(3) << endl;
-	cache->displayNodes();
-	cout << cache->getValue(4) << endl;	
-	cache->displayNodes();
-	cout << cache->getValue(2) << endl;	
-	cache->displayNodes();
-
-	delete cache;
-#endif
-	return 1;
 }
