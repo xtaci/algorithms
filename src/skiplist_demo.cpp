@@ -1,9 +1,7 @@
 #include <stdio.h>
-#include "skip_list.h"
+#include "skiplist.h"
 
 using namespace alg;
-
-
 
 int main()
 {
@@ -25,7 +23,11 @@ int main()
 	printf("Random get keys :\n");
 	for(i = 0; i < MAX_ELEMENTS; i++ ){
 		int r = rand()%100;
-		printf("get: %d->%d\n",r, ss[r]); 
+		try {
+			printf("get: %d->%d\n",r, ss[r]); 
+		} catch (std::exception &e) {
+			printf("%s\n", e.what());
+		}
 	}
 	
 	printf("random deleteion:\n");

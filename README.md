@@ -7,7 +7,7 @@
     服务器端
         (based on linux/gcc)
     正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.
-       (corret! and ease of use, one .header file per algorithm)
+       (correct! and ease of use, one .header file per algorithm)
 
 ####约定 ( Convention ):
 
@@ -15,6 +15,7 @@
     2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )
     3.  程序正确通过后，请发起Pull Requests，代码被验证后入库，并在README中发布新算法实现。
         (Please Use Fork+Pull Requests !!! Correctness is the most important!)
+	4.  TAB = 4 space.  set ts=4 in vim
 
 ####已实现 ( Implemented ):
 
@@ -24,6 +25,7 @@
     2D Array
     Arbitary Integer
     Linear congruential generator
+	Maximum subarray problem
 
     Bit-Set data structure
     Queue data structure
@@ -47,6 +49,7 @@
     Interval tree
     Prefix Tree(Trie)
     *Suffix Tree(未实现)*
+	B-Tree
 
     Hash by multiplication
     Hash table
@@ -58,6 +61,7 @@
     Bloom Filter
     SHA-1 Message Digest Algorithm
     MD5
+	Base64
 
     Graph data structure
     Prim's minimum spanning tree
@@ -68,14 +72,18 @@
     Dijkstra's algorithm
     Bellman-Ford algorithm
     Edmonds-Karp Maximal Flow
+	Push–Relabel algorithm
 
     Huffman Coding
     Word segementation(CHN/GB18030) using HMM and viterbi algorithm.
     A* algorithm
     K-Means
     Knuth–Morris–Pratt algorithm
+	Disjoint-Set
 
 ####贡献者 ( Contributors ) :  
     Samana :  for heavy work of MSVC compatability
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
+	wyh267: for base64, LRU
+	ZhangYou0122 : Push-Relabel algorithm

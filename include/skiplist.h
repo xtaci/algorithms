@@ -18,6 +18,7 @@
 #include <string.h>
 #include <time.h>
 #include <limits.h>
+#include <exception>
 
 namespace alg
 {
@@ -35,6 +36,16 @@ namespace alg
 		int m_level;				// the max level of skip list
 
 		static const int SL_MAX_LEVEL = 6;
+
+		class NotFoundException: public std::exception
+		{
+			public:
+			virtual const char * what() const throw()
+			{
+				return "cannot find the element in skiplist";
+			}
+		};
+		const NotFoundException 			excp_notfound;
 
 	public:
 		SkipList() 
@@ -55,7 +66,7 @@ namespace alg
 	public:
 		/**
 		 * search the given key from the skip list
-		 * if the key is not exist, return NULL 
+		 * if the key is not exist, throw exception
 		 */
 		inline ValueT operator[] (KeyT key) const
 		{
@@ -70,7 +81,7 @@ namespace alg
 			x = x->forward[0];
 			if(x != NULL && x->key == key)
 				return x->value;
-			return NULL;
+			throw excp_notfound;
 		}
 
 		/**

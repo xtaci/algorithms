@@ -1,5 +1,5 @@
 /*******************************************************************************
- * DANIEL'S ALGORITHM IMPLEMENTAIONS
+ * ALGORITHM IMPLEMENTAIONS
  *
  *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
  * /--\ | (_| (_) |  |  |_ | | | | | _> 
@@ -24,128 +24,176 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <exception>
+#include <iostream>
 
-namespace alg
-{
+namespace alg {
 	template<typename KeyT, typename ValueT>
-	class BST
-	{
+	class BST {
 	private:
 		/**
 		 * binary search tree definiton.
 		 */
-		struct treeNode
-		{
+		struct treeNode {
 			KeyT 	key;			// key
 			ValueT 	value;			// data
-			treeNode *left;	// left child
-			treeNode *right;	// right child
+			treeNode *parent;		// parent
+			treeNode *left;			// left child
+			treeNode *right;		// right child
 		};
 
-		class BSTException: public std::exception
-		{
+		class BSTException: public std::exception {
 			public:
-			virtual const char * what() const throw()
-			{
+			virtual const char * what() const throw() {
 				return "key does not exist";
 			}
 		};
 	
 	private:
-		treeNode * m_root;
+		treeNode * m_root;		// the root
 		const BSTException error;
-	
+	private:
+		BST(const BST&);
+		BST& operator=(const BST&);
 	public:
 		BST():m_root(NULL){};
 
-		~BST()
-		{
-			destruct(m_root);
-		}
-
-		ValueT operator[] (const KeyT & key)
-		{
-			if (m_root == NULL) throw error;
-			treeNode * tmp = m_root;
-	
-			while(true) {
-				if (key == tmp->key) return tmp->value;
-				else if(key < tmp->key) {
-					if (tmp->left == NULL) throw error;
-					tmp = tmp->left;
-				} else {
-					if (tmp->right == NULL) throw error;
-					tmp = tmp->right;
-				}
-			}
+		~BST() {
+			__destruct(m_root);
 		}
 
 		/**
-		 * test whether the key is in the tree
+		 * find key
 		 */
-		bool contains(const KeyT & key)
-		{
-			if (m_root == NULL) return false;
-			treeNode * tmp = m_root;
-	
-			while(true) {
-				if (key == tmp->key) return true;
-				else if(key < tmp->key) {
-					if (tmp->left == NULL) return false;
-					tmp = tmp->left;
+		treeNode * find(const KeyT & key) {
+			treeNode * n= m_root;
+			while (n!=NULL && key != n->key) {
+				if (key < n->key) {
+					n = n->left;
 				} else {
-					if (tmp->right == NULL) return false;
-					tmp = tmp->right;
+					n = n->right;
 				}
 			}
+
+			return n;
 		}
 
 		/**
 		 * insert a new data into the binary search tree.
 		 */
-		bool insert(const KeyT & key, const ValueT & value)
-		{
-			treeNode *n = new treeNode;
-			n->key = key;
-			n->value = value;
-			n->left = n->right = NULL;
+		void insert(const KeyT & key, const ValueT & value) {
+			treeNode *z= new treeNode;
+			z->key = key;
+			z->value = value;
+			z->left = z->right = z->parent = NULL;
 
-			if (m_root == NULL){
-				m_root = n;
-				return true;
-			}
-			treeNode * tmp = m_root;
-				
-			while(true) {
-				if (key == tmp->key) {	// already inserted
-					delete n;
-					return false;
-				}
-				else if(key < tmp->key) {
-					if (tmp->left == NULL) {
-						tmp->left = n;
-						return true;
-					} else tmp = tmp->left;
+			treeNode * n = m_root;
+			treeNode * y = NULL;
+			while(n!=NULL) {
+				y = n;	
+				if(key < n->key) {
+					n = n->left;			
 				} else {
-					if (tmp->right == NULL) {
-						tmp->right = n;
-						return true;
-					} else tmp = tmp->right;
+					n = n->right;
 				}
+			}
+
+			z->parent = y;
+			if (y==NULL) {
+				m_root = z;
+			} else if (key < y->key) {
+				y->left = z;
+			} else {
+				y->right = z;
 			}
 		}
+
+		/**
+		 * delete a key from the binary search tree.
+		 */
+		bool deleteKey(const KeyT & key) {
+			treeNode *z = find(key);
+			if (z == NULL) {
+				return false;
+			}
+		
+			if (z->left == NULL) {
+				transplant(z, z->right);
+			} else if (z->right == NULL) {
+				transplant(z, z->left);
+			} else {
+				// find the minimum element of the right subtree
+				treeNode *y = minimum(z->right);	
+				if (y->parent != z) {
+					// replace y with right-child
+					transplant(y, y->right);
+					// replace right-child of y with the right-child of z
+					y->right = z->right;
+					// make y the parent of the right-child
+					y->right->parent = y;
+				}
+			
+				// replace z with y
+				transplant(z,y);
+				y->left = z->left;
+				y->left->parent = y;
+			}
+
+			delete z;
+			return true;
+		}
+		
+		void print_tree(treeNode * n, int indent) {
+			if (n == NULL) {
+				return;
+			}
+			print_tree(n->right, indent+1);
+			int i;
+			for (i=0;i<indent;i++){
+				printf(" ");
+			}
+			std::cout << "[" << n->key << "," << n->value << "]" << std::endl;
+			print_tree(n->left, indent+1);
+		}
+
+		void print_helper() {
+			print_tree(m_root, 0);
+		}
+
 	private:
-		void destruct(treeNode *n)
-		{
+		void __destruct(treeNode *n) {
 			if (n==NULL) return;
-			destruct(n->left);
-			destruct(n->right);
+			__destruct(n->left);
+			__destruct(n->right);
 			delete n;
 		}
 
-	private:
-		BST(const BST&);
-		BST& operator=(const BST&);
+		/**
+		 * replace node u with v.
+		 */
+		void transplant(treeNode *u, treeNode *v) {
+			if (u->parent == NULL) {
+				m_root = v;
+			} else if (u == u->parent->left) {
+				u->parent->left = v;
+			} else {
+				u->parent->right = v;
+			}
+
+			if (v!=NULL) {
+				v->parent = u->parent;
+			}
+		}
+
+		/**
+		 * find the minimum element of the subtree
+		 */
+		treeNode * minimum(treeNode *x) {
+			while (x->left != NULL) {
+				x = x->left;
+			}
+
+			return x;
+		}
 	};
 }
 

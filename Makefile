@@ -3,7 +3,7 @@ CC=gcc
 CPP=g++
 AR=ar
 RANLIB=ranlib
-CFLAGS= -O2 -Wall -Wno-unused-function
+CFLAGS= -g -O2 -Wall -Wno-unused-function
 SRCDIR = ./src
 INCLUDEDIR = -I./include -I.
 DEPS = 
@@ -30,7 +30,7 @@ PROGRAMS =  m_based \
 			heap_demo \
 			interval_tree_demo \
 			dos_tree_demo \
-			skip_list_demo \
+			skiplist_demo \
 			lcs_demo	\
 			prim_mst_demo \
 			directed_graph_demo \
@@ -56,7 +56,11 @@ PROGRAMS =  m_based \
 			heap_sort_demo \
 			kruskal_mst_demo \
 			LRU_cache_demo \
-			base64_demo
+			base64_demo	\
+			max_subarray_demo \
+			disjoint-set_demo \
+			relabel_to_front_demo \
+			btree_demo
 
 all: $(PROGRAMS)
 

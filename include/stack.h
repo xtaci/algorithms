@@ -119,7 +119,7 @@ public:
 	/**
 	 * return value by index
 	 */
-	inline const T& operator[] (int idx) const 
+	inline const T& operator[] (uint32_t idx) const 
 	{
 		if (idx<0 || idx >= m_capacity) throw exp_ioob;
 		return m_elements[m_size-1-idx]; 
