@@ -20,6 +20,8 @@
 #ifndef __FIB_HEAP_H__
 #define __FIB_HEAP_H__
 #include <stdint.h>
+#include <unistd.h>
+#include "double_linked_list.h"
 namespace alg {
 	template<typename _Key,typename _Val>
 	class FibHeap {
@@ -33,6 +35,7 @@ namespace alg {
 			bool mark;
 			key_type key;
 			value_type value;
+			struct list_head node;	// list data struct
 		} *Node;
 	private:
 		FibHeap(const FibHeap &);
@@ -40,8 +43,28 @@ namespace alg {
 	private:
 		int32_t n;	
 		Node min;
+		struct list_head rootlist;
 	public:
-		FibHeap() {
+		FibHeap():n(0),min(0){
+			INIT_LIST_HEAD(&rootlist);
+		}
+
+		void Insert(key_type key, value_type value) {
+			Node x = new node_t;
+			x->degree = 0;
+			x->p = NULL;
+			x->child = NULL;
+			x->mark = false;
+			if (min == NULL) {
+				min = x;
+				list_add(&x->node, &rootlist);
+			} else {
+				list_add(&x->node, &rootlist);
+				if (x->key < min->key) {
+					min = x;
+				}
+			}
+			n = n+1;
 		}
 	};
 }
