@@ -19,6 +19,7 @@
 
 #ifndef __FIB_HEAP_H__
 #define __FIB_HEAP_H__
+#include <math.h>
 #include <stdint.h>
 #include <unistd.h>
 #include "double_linked_list.h"
@@ -112,6 +113,10 @@ namespace alg {
 				}
 
 				void Consolidate() {
+				}
+			
+				int32_t D(int32_t n) {
+					return int32_t(ceil(log(n)));
 				}
 		};
 }
