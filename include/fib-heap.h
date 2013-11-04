@@ -95,7 +95,7 @@ namespace alg {
 					if (z != NULL) {
 						Node n, ns;
 						// for each child x of z, add x to the root list of H
-						list_for_each_entry_safe(n,ns, z->child, node){
+						list_for_each_entry_safe(n,ns, &z->child.node, node){
 							list_add(&n->node, &rootlist);
 							n->parent = NULL;
 						}
@@ -113,10 +113,58 @@ namespace alg {
 				}
 
 				void Consolidate() {
+					int32_t dn = D(n);
+					Node A[dn];			// let A[0..D(H.n)] to be a new array
+					int32_t i;	
+					for (i=0;i<dn;i++) {
+						A[i] = NULL;
+					}
+
+					Node w, ws;
+					// for each node w in the root list of H
+					list_for_each_entry_safe(w,ws, &rootlist, node){
+						Node x = w;
+						int32_t d = x->degree;
+						while (A[d] != NULL) {
+							Node y = A[d];	// another node with the same degree as x
+							if (x->key > y->key) {
+								Node tmp = x;
+								x = y;
+								y = tmp;
+							}
+							Link(y,x);
+							A[d] = NULL;
+							d = d + 1;
+						}
+						A[d] = x;
+					}
+					min = NULL;
+					for (i=0;i<dn;i++) {
+						if (A[i]!=NULL) {
+							if (min == NULL) {
+								// create a root list for H containing just A[i]
+								INIT_LIST_HEAD(&rootlist);
+								list_add(&A[i]->node, &rootlist);
+								min = A[i];
+							} else {
+								list_add(&A[i]->node, &rootlist);
+								if (A[i]->key < min->key) {
+									min = A[i];
+								}
+							}
+						}
+					}
 				}
-			
+			private:	
 				int32_t D(int32_t n) {
 					return int32_t(ceil(log(n)));
+				}
+
+				void Link(Node y, Node x) {
+					list_del(&y->node, &rootlist);
+					y->parent = x;
+					x->degree = x->degree + 1;
+					y->mark = false;
 				}
 		};
 }
