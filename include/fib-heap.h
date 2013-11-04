@@ -58,6 +58,8 @@ namespace alg {
 					x->degree = 0;
 					x->parent = NULL;
 					x->mark = false;
+					x->key = key;
+					x->value = value;
 					INIT_LIST_HEAD(&x->node);
 					INIT_LIST_HEAD(&x->child);
 					if (min == NULL) {
@@ -69,6 +71,11 @@ namespace alg {
 							min = x;
 						}
 					}
+
+						Node m,mm;
+					list_for_each_entry_safe(m,mm, &rootlist, node){
+							printf("%d %d\n", m->key, m->value);
+						}
 					n = n+1;
 				}
 
@@ -96,20 +103,24 @@ namespace alg {
 					if (z != NULL) {
 						Node x, xs;
 						// for each child x of z, add x to the root list of H
-						list_for_each_entry_safe(x,xs, &z->child, node){
-							list_del(&x->node);
+						list_for_each_entry_safe(x,xs, &z->child, child){
+							list_del(&x->child);
 							list_add(&x->node, &rootlist);
 							x->parent = NULL;
 						}
-
-						// remove z from the root list of H
-						list_del(&z->node);
 						if (z == right(z)) {	// the only node on the root list
 							min = NULL;
 						} else {
+							list_for_each_entry_safe(x,xs,&z->node, node){
+								printf("%d %d\n", x->key, x->value);
+							}
 							min = right(z);
-							Consolidate();
+							//Consolidate();
 						}
+						/*
+						// remove z from the root list of H
+						list_del(&z->node);
+						*/
 						n = n + 1;
 					}
 					return z;
