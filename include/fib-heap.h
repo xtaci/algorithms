@@ -32,10 +32,10 @@ namespace alg {
 				typedef struct node_t {
 					int32_t degree;
 					node_t * parent;
-					node_t * child;	
 					bool mark;
 					key_type key;
 					value_type value;
+					struct list_head child;
 					struct list_head node;	// list data struct
 				} *Node;
 			private:
@@ -56,9 +56,10 @@ namespace alg {
 				void Insert(key_type key, value_type value) {
 					Node x = new node_t;
 					x->degree = 0;
-					x->p = NULL;
-					x->child = NULL;
+					x->parent = NULL;
 					x->mark = false;
+					INIT_LIST_HEAD(&x->node);
+					INIT_LIST_HEAD(&x->child);
 					if (min == NULL) {
 						min = x;
 						list_add(&x->node, &rootlist);
@@ -90,33 +91,35 @@ namespace alg {
 				/**
 				 * Extract Min Element
 				 */
-				Node * ExtractMin() {
+				Node ExtractMin() {
 					Node z = min;
 					if (z != NULL) {
-						Node n, ns;
+						Node x, xs;
 						// for each child x of z, add x to the root list of H
-						list_for_each_entry_safe(n,ns, &z->child.node, node){
-							list_add(&n->node, &rootlist);
-							n->parent = NULL;
+						list_for_each_entry_safe(x,xs, &z->child, node){
+							list_del(&x->node);
+							list_add(&x->node, &rootlist);
+							x->parent = NULL;
 						}
 
 						// remove z from the root list of H
-						list_del(&z->node, &rootlist);
-						if (z == z->next) {	// the only node on the root list
+						list_del(&z->node);
+						if (z == right(z)) {	// the only node on the root list
 							min = NULL;
 						} else {
-							min = z->right;
+							min = right(z);
 							Consolidate();
 						}
 						n = n + 1;
 					}
+					return z;
 				}
 
 				void Consolidate() {
 					int32_t dn = D(n);
-					Node A[dn];			// let A[0..D(H.n)] to be a new array
+					Node A[dn+1];			// let A[0..D(H.n)] to be a new array
 					int32_t i;	
-					for (i=0;i<dn;i++) {
+					for (i=0;i<=dn;i++) {
 						A[i] = NULL;
 					}
 
@@ -127,7 +130,7 @@ namespace alg {
 						int32_t d = x->degree;
 						while (A[d] != NULL) {
 							Node y = A[d];	// another node with the same degree as x
-							if (x->key > y->key) {
+							if (x->key > y->key) {	// exchange x with y
 								Node tmp = x;
 								x = y;
 								y = tmp;
@@ -139,7 +142,7 @@ namespace alg {
 						A[d] = x;
 					}
 					min = NULL;
-					for (i=0;i<dn;i++) {
+					for (i=0;i<=dn;i++) {
 						if (A[i]!=NULL) {
 							if (min == NULL) {
 								// create a root list for H containing just A[i]
@@ -160,9 +163,14 @@ namespace alg {
 					return int32_t(ceil(log(n)));
 				}
 
+				Node right(Node x) {
+					return list_entry(x->node.next, node_t, node);
+				}
+
 				void Link(Node y, Node x) {
-					list_del(&y->node, &rootlist);
+					list_del(&y->node);
 					y->parent = x;
+					list_add(&y->node, &x->child);
 					x->degree = x->degree + 1;
 					y->mark = false;
 				}
