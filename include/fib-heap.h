@@ -104,13 +104,9 @@ namespace alg {
 							x->parent = NULL;
 						}
 
-						if (z->node.next != &m_root) {	// pick one sibling 
-							min = list_entry(z->node.next, node_t, node);
-							list_del(&z->node);
-							Consolidate();
-						} else if (z->node.prev != &m_root ) {	
-							min = list_entry(z->node.prev, node_t, node);
-							list_del(&z->node);
+						list_del(&z->node);
+						if (!list_empty(&m_root)) {
+							min = list_entry(m_root.next, node_t, node);
 							Consolidate();
 						} else { // the only node on the root list
 							min = NULL;
@@ -131,9 +127,8 @@ namespace alg {
 
 					Node w, ws;
 					// for each node w in the root list of H
-					list_for_each_entry_safe(w, ws, &m_root, node){
+					list_for_each_entry_safe(w, ws, &m_root, node) {
 						Node x = w;
-						printf("%d %d\n", x->degree, x->key);
 						int32_t d = x->degree;
 						while (A[d] != NULL) {
 							Node y = A[d];	// another node with the same degree as x
@@ -152,7 +147,8 @@ namespace alg {
 					for (i=0;i<=dn;i++) {
 						if (A[i]!=NULL) {
 							if (min == NULL) {
-								// insert into rootlist
+								// create a root list for H containing just A[i]
+								INIT_LIST_HEAD(&m_root);
 								list_add(&A[i]->node, &m_root);
 								min = A[i];
 							} else {
@@ -166,7 +162,10 @@ namespace alg {
 				}
 			private:	
 				int32_t D(int32_t n) {
-					return int32_t(ceil(log(n)));
+					float p1 =  logf(n);
+					float p2 =  logf(1.61803);
+					//printf("D(n) = %f\n", floor(p1/p2));
+					return int32_t(floor(p1/p2));
 				}
 
 				void Link(Node y, Node x) {
