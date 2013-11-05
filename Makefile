@@ -8,7 +8,7 @@ SRCDIR = ./src
 INCLUDEDIR = -I./include -I.
 DEPS = 
 LIBS = -lm
-PROGRAMS =  m_based \
+PROGRAMS =  m_based_demo \
 			integer_demo \
 			insertion_sort_demo \
 			radix_sort_demo \
@@ -22,7 +22,7 @@ PROGRAMS =  m_based \
 			stack_demo \
 			queue_demo \
 			priority_queue_demo \
-			prime_test \
+			prime_demo \
 			universal_hash_demo \
 			perfect_hash_demo \
 			binary_search_tree_demo \
