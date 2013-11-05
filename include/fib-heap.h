@@ -106,8 +106,8 @@ namespace alg {
 
 						list_del(&z->node);
 						if (!list_empty(&m_root)) {
-							min = list_entry(m_root.next, node_t, node);
-							Consolidate();
+							min = list_entry(m_root.next, node_t, node);	// is this necessary?
+							CONSOLIDATE();
 						} else { // the only node on the root list
 							min = NULL;
 						}
@@ -117,7 +117,49 @@ namespace alg {
 					return z;
 				}
 
-				void Consolidate() {
+				/**
+				 * FIB-HEAP-DECREASE-KEY(H,x, k) /
+				 */
+				void DecreaseKey(Node x, key_type k) {
+					if (k > x->key) {
+						return;
+					}
+					x->key = k;
+					Node y = x->parent;	
+					if (y != NULL && x->key < y->key) {
+						CUT(x,y);
+						CASCADING_CUT(y);
+					}
+				}
+
+			private:
+				/**
+				 * CUT(H,x,y)
+				 * 1 remove x from the child list of y, decrementing y.degree
+				 * 2 add x to the root list of H
+				 * 3 x.p = NIL
+				 * 4 x.mark = FALSE
+				 */
+				void CUT(Node x, Node y) {
+					list_del(&x->node);
+					list_add(&x->node, &m_root);
+					x->parent = NULL;
+					x->mark = false;
+				}
+
+				void CASCADING_CUT(Node y) {
+					Node z = y->parent;
+					if (z!=NULL) {
+						if (y->mark == false) {
+							y->mark = true;
+						} else {
+							CUT(y,z);
+							CASCADING_CUT(z);
+						}
+					}
+				}
+
+				void CONSOLIDATE() {
 					int32_t dn = D(n);
 					Node A[dn+1];			// let A[0..D(H.n)] to be a new array
 					int32_t i;	
@@ -137,7 +179,7 @@ namespace alg {
 								x = y;
 								y = tmp;
 							}
-							Link(y,x);
+							LINK(y,x);
 							A[d] = NULL;
 							d = d + 1;
 						}
@@ -160,15 +202,21 @@ namespace alg {
 						}
 					}
 				}
-			private:	
+
 				int32_t D(int32_t n) {
 					float p1 =  logf(n);
-					float p2 =  logf(1.61803);
+					float p2 =  logf(1.61803);	// golden ratio
 					//printf("D(n) = %f\n", floor(p1/p2));
 					return int32_t(floor(p1/p2));
 				}
-
-				void Link(Node y, Node x) {
+			
+				/**
+				 * FIB-HEAP-LINK(H, y, x)
+				 * 1 remove y from the root list of H
+				 * 2 makey a child of x, incrementing x.degree
+				 * 3 y.mark = FALSE
+				 */
+				void LINK(Node y, Node x) {
 					y->parent = x;
 					list_add(&y->node, &x->child_head);
 					x->degree = x->degree + 1;
