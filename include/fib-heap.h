@@ -24,30 +24,31 @@
 #include <unistd.h>
 #include "double_linked_list.h"
 namespace alg {
-	template<typename _Key,typename _Val>
+		template<typename _Key, typename _Val>
 		class FibHeap {
 			public:
 				typedef _Key key_type;
 				typedef _Val value_type;
-				typedef struct node_t {
+				struct node_t {
 					int32_t degree;
 					node_t * parent;
 					bool mark;
 					key_type key;
 					value_type value;
-					struct list_head child;
-					struct list_head node;	// list data struct
-				} *Node;
+					struct list_head child_head;	// child list head
+					struct list_head node;	// sibling list
+				};
+				typedef struct node_t *Node;
 			private:
 				FibHeap(const FibHeap &);
 				FibHeap& operator=(const FibHeap&);
 			private:
 				int32_t n;	
 				Node min;
-				struct list_head rootlist;
+				struct list_head m_root;	// root list
 			public:
-				FibHeap():n(0),min(0){
-					INIT_LIST_HEAD(&rootlist);
+				FibHeap():n(0),min(NULL){
+					INIT_LIST_HEAD(&m_root);
 				}
 
 				/**
@@ -60,22 +61,16 @@ namespace alg {
 					x->mark = false;
 					x->key = key;
 					x->value = value;
-					INIT_LIST_HEAD(&x->node);
-					INIT_LIST_HEAD(&x->child);
+					INIT_LIST_HEAD(&x->child_head);
 					if (min == NULL) {
 						min = x;
-						list_add(&x->node, &rootlist);
+						list_add(&x->node, &m_root);
 					} else {
-						list_add(&x->node, &rootlist);
+						list_add(&x->node, &m_root);
 						if (x->key < min->key) {
 							min = x;
 						}
 					}
-
-						Node m,mm;
-					list_for_each_entry_safe(m,mm, &rootlist, node){
-							printf("%d %d\n", m->key, m->value);
-						}
 					n = n+1;
 				}
 
@@ -85,9 +80,9 @@ namespace alg {
 				static FibHeap* Union(FibHeap *H1, FibHeap *H2) {
 					FibHeap * H = new FibHeap();
 					H->min = H1->min;
-					H->rootlist = H1->rootlist;
-					list_splice(&H->rootlist, &H1->rootlist);	// concat 2 root-list
-					list_splice(&H->rootlist, &H2->rootlist);
+					H->m_root = H1->m_root;
+					list_splice(&H->m_root, &H1->m_root);	// concat 2 root-list
+					list_splice(&H->m_root, &H2->m_root);
 					if (H1->min == NULL || (H2.min != NULL && H2->min.key < H1->min.key)) {
 						H->min = H2->min;
 					}
@@ -103,24 +98,24 @@ namespace alg {
 					if (z != NULL) {
 						Node x, xs;
 						// for each child x of z, add x to the root list of H
-						list_for_each_entry_safe(x,xs, &z->child, child){
-							list_del(&x->child);
-							list_add(&x->node, &rootlist);
+						list_for_each_entry_safe(x, xs, &z->child_head, node) {
+							list_del(&x->node);
+							list_add(&x->node, &m_root);
 							x->parent = NULL;
 						}
-						if (z == right(z)) {	// the only node on the root list
+
+						if (z->node.next != &m_root) {	// pick one sibling 
+							min = list_entry(z->node.next, node_t, node);
+							list_del(&z->node);
+							Consolidate();
+						} else if (z->node.prev != &m_root ) {	
+							min = list_entry(z->node.prev, node_t, node);
+							list_del(&z->node);
+							Consolidate();
+						} else { // the only node on the root list
 							min = NULL;
-						} else {
-							list_for_each_entry_safe(x,xs,&z->node, node){
-								printf("%d %d\n", x->key, x->value);
-							}
-							min = right(z);
-							//Consolidate();
 						}
-						/*
 						// remove z from the root list of H
-						list_del(&z->node);
-						*/
 						n = n + 1;
 					}
 					return z;
@@ -136,8 +131,9 @@ namespace alg {
 
 					Node w, ws;
 					// for each node w in the root list of H
-					list_for_each_entry_safe(w,ws, &rootlist, node){
+					list_for_each_entry_safe(w, ws, &m_root, node){
 						Node x = w;
+						printf("%d %d\n", x->degree, x->key);
 						int32_t d = x->degree;
 						while (A[d] != NULL) {
 							Node y = A[d];	// another node with the same degree as x
@@ -156,12 +152,11 @@ namespace alg {
 					for (i=0;i<=dn;i++) {
 						if (A[i]!=NULL) {
 							if (min == NULL) {
-								// create a root list for H containing just A[i]
-								INIT_LIST_HEAD(&rootlist);
-								list_add(&A[i]->node, &rootlist);
+								// insert into rootlist
+								list_add(&A[i]->node, &m_root);
 								min = A[i];
 							} else {
-								list_add(&A[i]->node, &rootlist);
+								list_add(&A[i]->node, &m_root);
 								if (A[i]->key < min->key) {
 									min = A[i];
 								}
@@ -174,14 +169,9 @@ namespace alg {
 					return int32_t(ceil(log(n)));
 				}
 
-				Node right(Node x) {
-					return list_entry(x->node.next, node_t, node);
-				}
-
 				void Link(Node y, Node x) {
-					list_del(&y->node);
 					y->parent = x;
-					list_add(&y->node, &x->child);
+					list_add(&y->node, &x->child_head);
 					x->degree = x->degree + 1;
 					y->mark = false;
 				}
