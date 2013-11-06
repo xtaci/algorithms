@@ -18,28 +18,26 @@
 #include <math.h>
 #include "imath.h"
 
-namespace alg
-{
+namespace alg {
 	/**
 	 * check whether a given number is a prime number.
 	 * using naive method.
 	 */
-	static bool test_prime(unsigned int n)
-	{
+	static bool test_prime(unsigned int n) {
 		switch (n) {
-		case 0:
-		case 1:
-			return false;
-		case 2:
-			return true;
+			case 0:
+			case 1:
+				return false;
+			case 2:
+				return true;
 		}
 
 		if (n%2	== 0) return false;
 
 		unsigned sqrtn = sqrt(n);
- 		for (unsigned int i = 2; i <= sqrtn; ++i) {
-        	if (n % i == 0) {
-            	return false;
+		for (unsigned int i = 2; i <= sqrtn; ++i) {
+			if (n % i == 0) {
+				return false;
 			}
 		}
 		return true;
@@ -50,12 +48,12 @@ namespace alg
 	 */
 	static inline bool miller_rabin_test(unsigned int n) {
 		switch (n) {
-		case 0:
-		case 1:
-			return false;
-		case 2:
-		case 3:
-			return true;
+			case 0:
+			case 1:
+				return false;
+			case 2:
+			case 3:
+				return true;
 		}
 
 		if (n%2	== 0) return false;
@@ -66,7 +64,7 @@ namespace alg
 		// test 3-times
 		for (int k=0;k<3;k++){
 			unsigned a = rand()%(n-4) + 2;
-		
+
 			unsigned x = Exp(a, d, n);
 			//printf("%u %u %u %u\n", a,d, n,x);
 			if (x == 1 || x == n - 1) {
@@ -78,13 +76,13 @@ namespace alg
 				if (x == 1) return false;
 				if (x == n-1) continue;
 			}
-			
+
 			return false;
 		}
 
 		return true;
 	}
-	
+
 	/**
 	 * mixed implementation
 	 */

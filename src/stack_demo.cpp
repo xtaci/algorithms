@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "stack.h"
 
+using namespace alg;
 int main()
 {
 	Stack<int> S(4);
