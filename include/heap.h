@@ -28,177 +28,167 @@
 #include <stdbool.h>
 #include <limits.h>
 
-namespace alg
-{
+namespace alg { 
 	/**
-	 * define binary heap structure.
-	 */
+   	 * define binary heap structure.
+   	 */
 	template<typename T>
-	class Heap {
-	private:
-		/**
-		 * define key-value pair of heap struct.
-		 */
-		struct KV {
-		public:
-			int key;
-			T value;
+		class Heap {
+			private:
+				/**
+				 * define key-value pair of heap struct.
+				 */
+				struct KV {
+					public:
+						int key;
+						T value;
+				};
+				uint32_t m_size;	// current heap size.
+				uint32_t m_max;		// max heap size.
+				KV * m_kvs;			// key value pairs.
+
+			public:
+				Heap(int max) {
+					m_size = 0;
+					m_max = max+1;
+					m_kvs = new KV[m_max];
+					m_kvs[0].key = INT_MIN;
+				};
+
+				~Heap() {
+					delete [] m_kvs;
+				};
+
+			private:
+				Heap(const Heap &);
+				Heap& operator=(const Heap&);
+
+			public:
+
+				inline int min_key() const { return m_kvs[1].key; };
+				inline const T & min_value() const { return m_kvs[1].value; };
+
+				// for loop through the kvs
+				inline uint32_t count() const { return m_size; };
+				inline const T & operator[] (uint32_t idx) const { return m_kvs[idx+1].value; };
+
+				/**
+				 * insert a 'key'->'value' pair into the heap.
+				 */
+				void insert(int key, const T & value) {
+					// heap full, just return;
+					if(m_size == m_max) return; 
+
+					m_size++;
+					m_kvs[m_size].key	= key;
+					m_kvs[m_size].value	= value;
+
+					// Adjust its position
+					int now = m_size;
+					while(m_kvs[now/2].key > key) {
+						m_kvs[now] = m_kvs[now/2];
+						now /= 2;
+					}
+
+					m_kvs[now].key		= key;
+					m_kvs[now].value	= value;
+				}
+
+				/**
+				 * emptiness test
+				 */
+				inline bool is_empty() const { return (m_size==0)?true:false; }
+
+				/**
+				 * clear the heap
+				 */
+				inline void clear() { m_size = 0; }
+
+				/**
+				 * contains test
+				 */
+				bool contains(const T & value) {
+					for(uint32_t i=1;i<=m_size;i++) {
+						if(m_kvs[i].value == value) return true;
+					}
+
+					return false;
+				}
+
+				/**
+				 * delete the min element --> heap top.
+				 */
+				void delete_min() {
+					// heap[1] is the minimum key. So we remove heap[1].
+					// Size of the heap is decreased.  Now heap[1] has to be filled.
+					// We put the last key in its place and see if it fits.  If it
+					// does not fit, take minimum key among both its children and
+					// replaces parent with it.  Again See if the last key fits 
+					//in that place.
+					int lastKey;
+					T lastValue;	
+					uint32_t child,now;
+
+					// empty heap, just return
+					if (m_size == 0) return; 
+
+					lastKey = m_kvs[m_size].key;
+					lastValue = m_kvs[m_size].value;
+					m_size--;
+
+					// now refers to the index at which we are now
+					for(now = 1; now*2 <= m_size ;now = child) {
+						// child is the index of the key which is minimum among 
+						// both the children, Indexes of children are i*2 and i*2 + 1
+						child = now*2;
+						// child!=heapSize beacuse heap[heapSize+1] does not exist, 
+						// which means it has only one child 
+						if(child != m_size && 
+								m_kvs[child+1].key < m_kvs[child].key) {
+							child++;	// choose the minium one.
+						}
+						// To check if the last key fits or not it suffices to check 
+						// if the last key is less than the minimum key among both the children
+						if(lastKey > m_kvs[child].key) {
+							m_kvs[now] = m_kvs[child];
+						}
+						else { // It fits there
+							break;
+						}
+					}
+
+					m_kvs[now].key 	= lastKey;
+					m_kvs[now].value= lastValue;
+				}
+
+				/**
+				 * so called DECREASE KEY operation.
+				 * step 1. find the value
+				 * step 2. decrease the key to the newkey
+				 */
+				void decrease_key(const T & value, int newkey) {
+					uint32_t index = m_size+1;
+					for (uint32_t i=1;i<=m_size;i++) {
+						if (m_kvs[i].value == value) {
+							index = i;
+							break;
+						}
+					}
+
+					if (index > m_size) return; 				// value not found 
+
+					if (newkey >= m_kvs[index].key) return; 	// violate DECREASE meanning.
+
+					int now = index;
+					while(m_kvs[now/2].key > newkey) {
+						m_kvs[now] = m_kvs[now/2];
+						now /= 2;
+					}
+
+					m_kvs[now].key 	= newkey;
+					m_kvs[now].value= value;
+				}
 		};
-		uint32_t m_size;	// current heap size.
-		uint32_t m_max;		// max heap size.
-		KV * m_kvs;			// key value pairs.
-
-	public:
-		Heap(int max) 
-		{
-			m_size = 0;
-			m_max = max+1;
-			m_kvs = new KV[m_max];
-			m_kvs[0].key = INT_MIN;
-		};
-
-		~Heap() 
-		{
-			delete [] m_kvs;
-		};
-
-	private:
-		Heap(const Heap &);
-		Heap& operator=(const Heap&);
-
-	public:
-
-		inline int min_key() const { return m_kvs[1].key; };
-		inline const T & min_value() const { return m_kvs[1].value; };
-
-		// for loop through the kvs
-		inline uint32_t count() const { return m_size; };
-		inline const T & operator[] (uint32_t idx) const { return m_kvs[idx+1].value; };
-
-		/**
-		 * insert a 'key'->'value' pair into the heap.
-		 */
-		void insert(int key, const T & value) 
-		{
-			// heap full, just return;
-			if(m_size == m_max) return; 
-
-			m_size++;
-			m_kvs[m_size].key	= key;
-			m_kvs[m_size].value	= value;
-
-			/*Adjust its position*/
-			int now = m_size;
-			while(m_kvs[now/2].key > key) 
-			{
-				m_kvs[now] = m_kvs[now/2];
-				now /= 2;
-			}
-
-			m_kvs[now].key		= key;
-			m_kvs[now].value	= value;
-		}
-
-		/**
-		 * emptiness test
-		 */
-		inline bool is_empty() const { return (m_size==0)?true:false; }
-
-		/**
-		 * clear the heap
-		 */
-		inline void clear() { m_size = 0; }
-
-		/**
-		 * contains test
-		 */
-		bool contains(const T & value)
-		{
-			for(uint32_t i=1;i<=m_size;i++) {
-				if(m_kvs[i].value == value) return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * delete the min element --> heap top.
-		 */
-		void delete_min() 
-		{
-			// heap[1] is the minimum key. So we remove heap[1].
-			// Size of the heap is decreased.  Now heap[1] has to be filled.
-			// We put the last key in its place and see if it fits.  If it
-			// does not fit, take minimum key among both its children and
-			// replaces parent with it.  Again See if the last key fits 
-			//in that place.
-			int lastKey;
-			T lastValue;	
-			uint32_t child,now;
-
-			// empty heap, just return
-			if (m_size == 0) return; 
-		   
-			lastKey = m_kvs[m_size].key;
-			lastValue = m_kvs[m_size].value;
-			m_size--;
-
-			// now refers to the index at which we are now
-			for(now = 1; now*2 <= m_size ;now = child)
-			{
-				// child is the index of the key which is minimum among 
-				// both the children, Indexes of children are i*2 and i*2 + 1
-				child = now*2;
-				// child!=heapSize beacuse heap[heapSize+1] does not exist, 
-				// which means it has only one child 
-				if(child != m_size && 
-					m_kvs[child+1].key < m_kvs[child].key) {
-					child++;	// choose the minium one.
-				}
-				// To check if the last key fits or not it suffices to check 
-				// if the last key is less than the minimum key among both the children
-				if(lastKey > m_kvs[child].key) {
-					m_kvs[now] = m_kvs[child];
-				}
-				else { // It fits there
-					break;
-				}
-			}
-
-			m_kvs[now].key 	= lastKey;
-			m_kvs[now].value= lastValue;
-		}
-
-		/**
-		 * so called DECREASE KEY operation.
-		 * step 1. find the value
-		 * step 2. decrease the key to the newkey
-		 */
-		void decrease_key(const T & value, int newkey)
-		{
-			uint32_t index = m_size+1;
-			for (uint32_t i=1;i<=m_size;i++) {
-				if (m_kvs[i].value == value) {
-					index = i;
-					break;
-				}
-			}
-
-			if (index > m_size) return; 				// value not found 
-
-			if (newkey >= m_kvs[index].key) return; 	// violate DECREASE meanning.
-			
-			int now = index;
-			while(m_kvs[now/2].key > newkey) 
-			{
-				m_kvs[now] = m_kvs[now/2];
-				now /= 2;
-			}
-
-			m_kvs[now].key 	= newkey;
-			m_kvs[now].value= value;
-		}
-	};
 }
 
 #endif //
