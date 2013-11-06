@@ -24,30 +24,31 @@
 #include <unistd.h>
 #include "double_linked_list.h"
 namespace alg {
-	template<typename _Key,typename _Val>
+		template<typename _Key, typename _Val>
 		class FibHeap {
 			public:
 				typedef _Key key_type;
 				typedef _Val value_type;
-				typedef struct node_t {
+				struct node_t {
 					int32_t degree;
 					node_t * parent;
-					node_t * child;	
 					bool mark;
 					key_type key;
 					value_type value;
-					struct list_head node;	// list data struct
-				} *Node;
+					struct list_head child_head;	// child list head
+					struct list_head node;	// sibling list
+				};
+				typedef struct node_t *Node;
 			private:
 				FibHeap(const FibHeap &);
 				FibHeap& operator=(const FibHeap&);
 			private:
 				int32_t n;	
 				Node min;
-				struct list_head rootlist;
+				struct list_head m_root;	// root list
 			public:
-				FibHeap():n(0),min(0){
-					INIT_LIST_HEAD(&rootlist);
+				FibHeap():n(0),min(NULL){
+					INIT_LIST_HEAD(&m_root);
 				}
 
 				/**
@@ -56,14 +57,16 @@ namespace alg {
 				void Insert(key_type key, value_type value) {
 					Node x = new node_t;
 					x->degree = 0;
-					x->p = NULL;
-					x->child = NULL;
+					x->parent = NULL;
 					x->mark = false;
+					x->key = key;
+					x->value = value;
+					INIT_LIST_HEAD(&x->child_head);
 					if (min == NULL) {
 						min = x;
-						list_add(&x->node, &rootlist);
+						list_add(&x->node, &m_root);
 					} else {
-						list_add(&x->node, &rootlist);
+						list_add(&x->node, &m_root);
 						if (x->key < min->key) {
 							min = x;
 						}
@@ -77,9 +80,9 @@ namespace alg {
 				static FibHeap* Union(FibHeap *H1, FibHeap *H2) {
 					FibHeap * H = new FibHeap();
 					H->min = H1->min;
-					H->rootlist = H1->rootlist;
-					list_splice(&H->rootlist, &H1->rootlist);	// concat 2 root-list
-					list_splice(&H->rootlist, &H2->rootlist);
+					H->m_root = H1->m_root;
+					list_splice(&H->m_root, &H1->m_root);	// concat 2 root-list
+					list_splice(&H->m_root, &H2->m_root);
 					if (H1->min == NULL || (H2.min != NULL && H2->min.key < H1->min.key)) {
 						H->min = H2->min;
 					}
@@ -90,64 +93,108 @@ namespace alg {
 				/**
 				 * Extract Min Element
 				 */
-				Node * ExtractMin() {
+				Node ExtractMin() {
 					Node z = min;
 					if (z != NULL) {
-						Node n, ns;
+						Node x, xs;
 						// for each child x of z, add x to the root list of H
-						list_for_each_entry_safe(n,ns, &z->child.node, node){
-							list_add(&n->node, &rootlist);
-							n->parent = NULL;
+						list_for_each_entry_safe(x, xs, &z->child_head, node) {
+							list_del(&x->node);
+							list_add(&x->node, &m_root);
+							x->parent = NULL;
 						}
 
-						// remove z from the root list of H
-						list_del(&z->node, &rootlist);
-						if (z == z->next) {	// the only node on the root list
+						list_del(&z->node);
+						if (!list_empty(&m_root)) {
+							min = list_entry(m_root.next, node_t, node);	// is this necessary?
+							CONSOLIDATE();
+						} else { // the only node on the root list
 							min = NULL;
-						} else {
-							min = z->right;
-							Consolidate();
 						}
+						// remove z from the root list of H
 						n = n + 1;
+					}
+					return z;
+				}
+
+				/**
+				 * FIB-HEAP-DECREASE-KEY(H,x, k) /
+				 */
+				void DecreaseKey(Node x, key_type k) {
+					if (k > x->key) {
+						return;
+					}
+					x->key = k;
+					Node y = x->parent;	
+					if (y != NULL && x->key < y->key) {
+						CUT(x,y);
+						CASCADING_CUT(y);
 					}
 				}
 
-				void Consolidate() {
+			private:
+				/**
+				 * CUT(H,x,y)
+				 * 1 remove x from the child list of y, decrementing y.degree
+				 * 2 add x to the root list of H
+				 * 3 x.p = NIL
+				 * 4 x.mark = FALSE
+				 */
+				void CUT(Node x, Node y) {
+					list_del(&x->node);
+					list_add(&x->node, &m_root);
+					x->parent = NULL;
+					x->mark = false;
+				}
+
+				void CASCADING_CUT(Node y) {
+					Node z = y->parent;
+					if (z!=NULL) {
+						if (y->mark == false) {
+							y->mark = true;
+						} else {
+							CUT(y,z);
+							CASCADING_CUT(z);
+						}
+					}
+				}
+
+				void CONSOLIDATE() {
 					int32_t dn = D(n);
-					Node A[dn];			// let A[0..D(H.n)] to be a new array
+					Node A[dn+1];			// let A[0..D(H.n)] to be a new array
 					int32_t i;	
-					for (i=0;i<dn;i++) {
+					for (i=0;i<=dn;i++) {
 						A[i] = NULL;
 					}
 
 					Node w, ws;
 					// for each node w in the root list of H
-					list_for_each_entry_safe(w,ws, &rootlist, node){
+					list_for_each_entry_safe(w, ws, &m_root, node) {
 						Node x = w;
 						int32_t d = x->degree;
 						while (A[d] != NULL) {
 							Node y = A[d];	// another node with the same degree as x
-							if (x->key > y->key) {
+							if (x->key > y->key) {	// exchange x with y
 								Node tmp = x;
 								x = y;
 								y = tmp;
 							}
-							Link(y,x);
+							LINK(y,x);
 							A[d] = NULL;
 							d = d + 1;
 						}
 						A[d] = x;
 					}
 					min = NULL;
-					for (i=0;i<dn;i++) {
+					for (i=0;i<=dn;i++) {
 						if (A[i]!=NULL) {
 							if (min == NULL) {
 								// create a root list for H containing just A[i]
-								INIT_LIST_HEAD(&rootlist);
-								list_add(&A[i]->node, &rootlist);
+								INIT_LIST_HEAD(&m_root);
+								list_add(&A[i]->node, &m_root);
 								min = A[i];
 							} else {
-								list_add(&A[i]->node, &rootlist);
+								list_add(&A[i]->node, &m_root);
 								if (A[i]->key < min->key) {
 									min = A[i];
 								}
@@ -155,14 +202,23 @@ namespace alg {
 						}
 					}
 				}
-			private:	
-				int32_t D(int32_t n) {
-					return int32_t(ceil(log(n)));
-				}
 
-				void Link(Node y, Node x) {
-					list_del(&y->node, &rootlist);
+				int32_t D(int32_t n) {
+					float p1 =  logf(n);
+					float p2 =  logf(1.61803);	// golden ratio
+					//printf("D(n) = %f\n", floor(p1/p2));
+					return int32_t(floor(p1/p2));
+				}
+			
+				/**
+				 * FIB-HEAP-LINK(H, y, x)
+				 * 1 remove y from the root list of H
+				 * 2 makey a child of x, incrementing x.degree
+				 * 3 y.mark = FALSE
+				 */
+				void LINK(Node y, Node x) {
 					y->parent = x;
+					list_add(&y->node, &x->child_head);
 					x->degree = x->degree + 1;
 					y->mark = false;
 				}

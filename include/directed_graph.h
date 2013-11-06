@@ -28,101 +28,99 @@
 
 namespace alg
 {
-	class DirectedGraph:public Graph
-	{
-	private:
-		/**
-		 * delete a vertex from adjacent lists
-		 */
-		void delete_me(uint32_t id)
-		{
-			// delete every connection, iterator through every adjacent list
-			Adjacent * adj;
-			list_for_each_entry(adj, &a_head, a_node){
-				if (adj->v.id != id) {
-					if((*adj)[id]!=NULL) {	// if connected to id
-						adj->delete_vertex(id);
-						num_edges--;
+	class DirectedGraph:public Graph {
+		private:
+			/**
+			 * delete a vertex from adjacent lists
+			 */
+			void delete_me(uint32_t id)
+			{
+				// delete every connection, iterator through every adjacent list
+				Adjacent * adj;
+				list_for_each_entry(adj, &a_head, a_node){
+					if (adj->v.id != id) {
+						if((*adj)[id]!=NULL) {	// if connected to id
+							adj->delete_vertex(id);
+							num_edges--;
+						}
 					}
 				}
 			}
-		}
-	public:
-		/**
-		 * delete a vertex with specified id 
-		 */
-		void delete_vertex(uint32_t id)
-		{
-			Adjacent * a = (*this)[id];
-			if (a==NULL) return;
-			delete_me(id);	
-			// delete adjacent list itself.
-			num_vertex--;
-			num_edges -= a->num_neigh;
-			list_del(&a->a_node);
-			delete a;
-		}
-	
-		/**
-		 * create a new vertex and add to the graph, with specified id.
-		 */
-		bool add_vertex(uint32_t id)
-		{
-			if ((*this)[id]!=NULL) return false;
+		public:
+			/**
+			 * delete a vertex with specified id 
+			 */
+			void delete_vertex(uint32_t id)
+			{
+				Adjacent * a = (*this)[id];
+				if (a==NULL) return;
+				delete_me(id);	
+				// delete adjacent list itself.
+				num_vertex--;
+				num_edges -= a->num_neigh;
+				list_del(&a->a_node);
+				delete a;
+			}
 
-			// new empty adjacent list
-			Adjacent * a = new Adjacent(id); 
-			list_add_tail(&a->a_node, &a_head);
-			num_vertex++;
+			/**
+			 * create a new vertex and add to the graph, with specified id.
+			 */
+			bool add_vertex(uint32_t id)
+			{
+				if ((*this)[id]!=NULL) return false;
 
-			return true;
-		}
+				// new empty adjacent list
+				Adjacent * a = new Adjacent(id); 
+				list_add_tail(&a->a_node, &a_head);
+				num_vertex++;
 
-		/**
-		 * add an edge for x -> y
-		 */
-		bool add_edge(uint32_t x, uint32_t y, int32_t weight)
-		{
-			struct Adjacent * a1 = (*this)[x];
-			struct Adjacent * a2 = (*this)[y];
+				return true;
+			}
 
-			// make sure both vertex exists & not connected from x->y
-			if (a1==NULL || a2==NULL) return false;
-			if (is_adjacent(a1, a2)) return false;
+			/**
+			 * add an edge for x -> y
+			 */
+			bool add_edge(uint32_t x, uint32_t y, int32_t weight)
+			{
+				struct Adjacent * a1 = (*this)[x];
+				struct Adjacent * a2 = (*this)[y];
 
-			// create new vertex & add to adjacent list
-			Vertex * n = new Vertex(y);
-			n->weight = weight;
-			list_add_tail(&n->v_node, &a1->v_head);
-			
-			num_edges++;
-			a1->num_neigh++;
+				// make sure both vertex exists & not connected from x->y
+				if (a1==NULL || a2==NULL) return false;
+				if (is_adjacent(a1, a2)) return false;
 
-			return true;
-		}
+				// create new vertex & add to adjacent list
+				Vertex * n = new Vertex(y);
+				n->weight = weight;
+				list_add_tail(&n->v_node, &a1->v_head);
 
-		/**
-		 * delete an edge for x -> y
-		 */
-		void delete_edge(uint32_t x, uint32_t y)
-		{
-			struct Adjacent * a1 = (*this)[x];
-			struct Adjacent * a2 = (*this)[y];
-			if (a1==NULL || a2==NULL) return ;
-			if (!is_adjacent(a1, a2)) return ;
-			
-			Vertex * v, *n;
-			// find y in adjacent list of x
-			list_for_each_entry_safe(v, n, &a1->v_head, v_node){
-				if (v->id == y) {
-					list_del(&v->v_node);
-					delete v;
-					num_edges--;
-					a1->num_neigh--;
+				num_edges++;
+				a1->num_neigh++;
+
+				return true;
+			}
+
+			/**
+			 * delete an edge for x -> y
+			 */
+			void delete_edge(uint32_t x, uint32_t y)
+			{
+				struct Adjacent * a1 = (*this)[x];
+				struct Adjacent * a2 = (*this)[y];
+				if (a1==NULL || a2==NULL) return ;
+				if (!is_adjacent(a1, a2)) return ;
+
+				Vertex * v, *n;
+				// find y in adjacent list of x
+				list_for_each_entry_safe(v, n, &a1->v_head, v_node){
+					if (v->id == y) {
+						list_del(&v->v_node);
+						delete v;
+						num_edges--;
+						a1->num_neigh--;
+					}
 				}
 			}
-		}
-
 	};
 }
 

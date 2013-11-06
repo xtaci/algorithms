@@ -26,8 +26,7 @@
 #include "random.h"
 #include "integer.h"
 
-namespace alg
-{
+namespace alg {
 	struct UHash {
 		uint32_t a[KLEN];
 		uint32_t prime;	
@@ -36,8 +35,7 @@ namespace alg
 	/**
 	 * init an universal hash struct
 	 */
-	static inline void uhash_init(struct UHash * params, uint32_t max_element)
-	{
+	static inline void uhash_init(struct UHash * params, uint32_t max_element) {
 		int i;
 		// the size of the hash bucket is the prime larger than 2 * max_element
 		for(i=max_element+1;;i++) {
@@ -55,8 +53,7 @@ namespace alg
 	/**
 	 * hash a key
 	 */
-	static inline uint32_t uhash_integer(const struct UHash * params, uint64_t key)
-	{
+	static inline uint32_t uhash_integer(const struct UHash * params, uint64_t key) {
 		uint32_t k[KLEN];
 		uint32_t sum;
 
@@ -69,8 +66,7 @@ namespace alg
 	 * hash an arbitary length integer.
 	 * len, number of 32-bit integer, max len is 32
 	 */
-	static uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len)
-	{
+	static uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len) {
 		// TODO : need a better algorithm, or NOT?
 		return key[0]%params->prime;
 	}

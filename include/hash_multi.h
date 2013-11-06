@@ -23,21 +23,19 @@
 #include "generic.h"
 #include "prime.h"
 
-namespace alg
-{
+namespace alg {
 	struct MultiHash {
 		uint64_t A;
 		uint32_t r; // prime, init your hash table with size -> r
 	};
 
-	static const short BITWIDTH=32;
+	static const short BITWIDTH = 32;
 	static inline uint32_t multi_hash_table_size(const struct MultiHash * ht) { return 1<<(ht->r); } 
 
 	/**
 	 * multi_hash.
 	 */
-	static inline uint32_t multi_hash(const struct MultiHash * ht, uint32_t key)
-	{
+	static inline uint32_t multi_hash(const struct MultiHash * ht, uint32_t key) {
 		uint32_t hash;
 		hash = ((ht->A * key)&0xFFFFFFFF)>>(BITWIDTH-ht->r); //mod 2^w equals logic bitmask ops
 		return hash;
@@ -50,8 +48,7 @@ namespace alg
 	/**
 	 * init a hash table with size specified.
 	 */
-	static MultiHash * multi_hash_init(uint32_t size)
-	{
+	static MultiHash * multi_hash_init(uint32_t size) {
 		// find prime larger than log2(size)
 		uint32_t r = ceil(log2(size));
 		int i;

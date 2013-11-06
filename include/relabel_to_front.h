@@ -20,10 +20,8 @@
 #include "hash_table.h"
 #include "2darray.h"
 
-namespace alg
-{
-	class RelabelToFront	
-	{
+namespace alg {
+	class RelabelToFront	{
 	private:
 		const Graph & g;
 		DirectedGraph * possible_residual_edge;	// record possible residual edges
@@ -41,8 +39,7 @@ namespace alg
 			g(graph),
 			m_residual(g.vertex_count(), g.vertex_count()),
 			m_map(g.vertex_count()), m_rmap(g.vertex_count()),
-					e(g.vertex_count()), h(g.vertex_count())
-		{
+					e(g.vertex_count()), h(g.vertex_count()) {
 			Graph::Adjacent * a;
 			int id=0;
 			list_for_each_entry(a, &g.list(), a_node){
@@ -71,13 +68,11 @@ namespace alg
 			}
 		}
 
-		~RelabelToFront()
-		{
+		~RelabelToFront() {
 			delete possible_residual_edge;
 		}
 
-		void initialize_preflow(uint32_t src)
-		{
+		void initialize_preflow(uint32_t src) {
 			Graph::Adjacent * a;
 			list_for_each_entry(a, &g.list(), a_node){
 				h[m_map[a->v.id]] = 0;
@@ -99,8 +94,7 @@ namespace alg
 			}
 		}
 
-		void push(int from, int to)
-		{
+		void push(int from, int to) {
 			int delta = Min(e[from], m_residual(from, to));
 			m_residual(from, to) -= delta;
 			m_residual(to, from) += delta;
@@ -108,13 +102,11 @@ namespace alg
 			e[to] += delta;
 		}
 
-		void relabel(int from, int height)
-		{
+		void relabel(int from, int height) {
 			h[from] = height + 1;
 		}
 
-		void relabel(int from)
-		{
+		void relabel(int from) {
 			int min_height = INT_MAX;
 			Graph::Adjacent * a = (* possible_residual_edge)[from];
 			Graph::Vertex * v;
@@ -134,8 +126,7 @@ namespace alg
 			h[from] = min_height + 1;
 		}
 
-		void discharge(int from)
-		{
+		void discharge(int from) {
 			if (e[from] <= 0){
 				return;
 			}
@@ -164,8 +155,7 @@ namespace alg
 			}
 		}
 
-		int run(uint32_t src, uint32_t sink)
-		{
+		int run(uint32_t src, uint32_t sink) {
 			initialize_preflow(src);
 			
 		    DirectedGraph * VertexList = new DirectedGraph;
@@ -197,19 +187,16 @@ namespace alg
 		/*	
 		 * This function implemented push-relabel algorithm in a naive way. But it's not push-to-front.
 		 */
-		int run_push_relabel(uint32_t src, uint32_t sink)
-		{
+		int run_push_relabel(uint32_t src, uint32_t sink) {
 			initialize_preflow(src);
 
 			bool overflow = true;
 			while (overflow){
 				overflow = false;
 				// source point and sink point are not overflow-point by definition.
-				for (uint32_t i=1; i<g.vertex_count()-1; i++)
-				{
+				for (uint32_t i=1; i<g.vertex_count()-1; i++) {
 					int from = i;
-					if (e[from] > 0)
-					{
+					if (e[from] > 0) {
 						overflow = true;
 						bool need_relabel = true, residual_edge = false;
 						int min_height = INT_MAX;

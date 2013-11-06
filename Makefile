@@ -3,12 +3,12 @@ CC=gcc
 CPP=g++
 AR=ar
 RANLIB=ranlib
-CFLAGS= -g -O2 -Wall -Wno-unused-function
+CFLAGS= -g -Wall -Wno-unused-function
 SRCDIR = ./src
 INCLUDEDIR = -I./include -I.
 DEPS = 
 LIBS = -lm
-PROGRAMS =  m_based \
+PROGRAMS =  m_based_demo \
 			integer_demo \
 			insertion_sort_demo \
 			radix_sort_demo \
@@ -22,7 +22,7 @@ PROGRAMS =  m_based \
 			stack_demo \
 			queue_demo \
 			priority_queue_demo \
-			prime_test \
+			prime_demo \
 			universal_hash_demo \
 			perfect_hash_demo \
 			binary_search_tree_demo \
@@ -60,7 +60,8 @@ PROGRAMS =  m_based \
 			max_subarray_demo \
 			disjoint-set_demo \
 			relabel_to_front_demo \
-			btree_demo
+			btree_demo \
+			fib-heap_demo
 
 all: $(PROGRAMS)
 

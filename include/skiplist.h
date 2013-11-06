@@ -20,11 +20,9 @@
 #include <limits.h>
 #include <exception>
 
-namespace alg
-{
+namespace alg {
 	template<typename KeyT, typename ValueT>
-	class SkipList 
-	{
+	class SkipList {
 	private:
 		struct SkipNode {
 			KeyT	key;			// key
@@ -37,25 +35,21 @@ namespace alg
 
 		static const int SL_MAX_LEVEL = 6;
 
-		class NotFoundException: public std::exception
-		{
+		class NotFoundException: public std::exception {
 			public:
-			virtual const char * what() const throw()
-			{
+			virtual const char * what() const throw() {
 				return "cannot find the element in skiplist";
 			}
 		};
 		const NotFoundException 			excp_notfound;
 
 	public:
-		SkipList() 
-		{
+		SkipList() {
 			m_header = make_node(SL_MAX_LEVEL, 0, 0);
 			m_level = 0;
 		}
 
-		~SkipList()
-		{	
+		~SkipList() {	
 			// TODO: free nodes
 		}
 
@@ -68,8 +62,7 @@ namespace alg
 		 * search the given key from the skip list
 		 * if the key is not exist, throw exception
 		 */
-		inline ValueT operator[] (KeyT key) const
-		{
+		inline ValueT operator[] (KeyT key) const {
 			struct SkipNode* x = m_header;
 
 			// travels down until level-0
@@ -87,8 +80,7 @@ namespace alg
 		/**
 		 * insert a key->key pair into the list
 		 */
-		void insert(KeyT key, ValueT value) 
-		{
+		void insert(KeyT key, ValueT value) {
 			struct SkipNode * x = m_header;	
 			struct SkipNode * update[SL_MAX_LEVEL + 1];
 			memset(update, 0, SL_MAX_LEVEL + 1);
@@ -127,8 +119,7 @@ namespace alg
 		/**
 		 * delete a node by it's key
 		 */
-		void delete_key(KeyT key) 
-		{
+		void delete_key(KeyT key) {
 			struct SkipNode* x = m_header;	
 			struct SkipNode* update[SL_MAX_LEVEL + 1];
 			memset(update, 0, SL_MAX_LEVEL + 1);
@@ -157,8 +148,7 @@ namespace alg
 			}
 		}
 
-		void print()
-		{
+		void print() {
 			for(int i=m_level-1;i>=0;i--) {
 				SkipNode* x = m_header->forward[i];
 				printf("{");
@@ -180,8 +170,7 @@ namespace alg
 		/**
 		 * get the random promote level 
 		 */
-		int random_level() 
-		{
+		int random_level() {
 			int lvl = 0;
 			// the possibility is 1/2 for each level	
 			while(rand_norm() < 0.5f && lvl < SL_MAX_LEVEL)
@@ -193,8 +182,7 @@ namespace alg
 		/**
 		 * make a node with specified level & key
 		 */
-		SkipNode * make_node(int level, KeyT key, ValueT value) 
-		{
+		SkipNode * make_node(int level, KeyT key, ValueT value) {
 			SkipNode * n = new SkipNode;
 
 			// the max forward entry for a key is : level + 1
@@ -204,7 +192,6 @@ namespace alg
 
 			return n;
 		}
-
 	};
 }
 
