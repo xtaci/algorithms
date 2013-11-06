@@ -215,13 +215,13 @@ namespace alg {
 			void delete_op(node x, int32_t k) {
 				int32_t i;
 				/*
-					int t;
-					printf("key:%d n:%d\n",k, x->n);
-					for (t=0;t<x->n;t++) {
-						printf("=%d=", x->key[t]);
-					}
-					printf("\n");
-				*/
+				   int t;
+				   printf("key:%d n:%d\n",k, x->n);
+				   for (t=0;t<x->n;t++) {
+				   printf("=%d=", x->key[t]);
+				   }
+				   printf("\n");
+				 */
 
 				if (x->n == 0) {	// emtpy node
 					return;
@@ -231,7 +231,7 @@ namespace alg {
 				while (i>=0 && k < x->key[i]) { // search the key.
 					i = i - 1;
 				}
-				
+
 				if (i >= 0 && x->key[i] == k) {	// key exists in this node.
 					if (x->flag & LEAF) {
 						//printf("in case 1 [%d] [%d]\n", i,x->n);

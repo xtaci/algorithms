@@ -32,10 +32,8 @@
 #include "directed_graph.h"
 #include "hash_table.h"
 
-namespace alg 
-{
-	static void breadth_first_search(const Graph & g, uint32_t source)
-	{
+namespace alg {
+	static void breadth_first_search(const Graph & g, uint32_t source) {
 		static const uint32_t MARK = 0xDEAD;
 
 		Graph::Adjacent * root = g[source];
@@ -47,7 +45,7 @@ namespace alg
 		Queue<uint32_t> Q(g.vertex_count());
 		Q.enqueue(root->v.id);
 		ht[root->v.id] = MARK;
-		
+
 		while(!Q.is_empty()) {
 			uint32_t t = Q.front();
 			printf("%d->", t);
@@ -65,8 +63,7 @@ namespace alg
 		printf("\n");
 	}
 
-	static void depth_first_search(const Graph & g, uint32_t source)
-	{
+	static void depth_first_search(const Graph & g, uint32_t source) {
 		static const uint32_t MARK = 0xDEAD;
 
 		Graph::Adjacent * root = g[source];
@@ -78,7 +75,7 @@ namespace alg
 		Stack<uint32_t> S(g.vertex_count());
 		S.push(root->v.id);
 		ht[root->v.id] = MARK;
-		
+
 		while(!S.is_empty()) {
 			uint32_t t = S.top();	
 			printf("%d->", t);
@@ -92,7 +89,7 @@ namespace alg
 				}
 			}
 		}
-		
+
 		printf("\n");
 	}
 }

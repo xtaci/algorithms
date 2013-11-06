@@ -8,7 +8,7 @@
  * COMMON MATH OPS
  *
  ******************************************************************************/
- 
+
 #ifndef __IMATH_H__
 #define __IMATH_H__
 
@@ -16,13 +16,11 @@
 #include <string.h>
 #include <limits.h>
 
-namespace alg
-{
+namespace alg {
 	/**
 	 * dot product of given arrays K and A of len, saved in SUM
 	 */
-	static uint32_t dot_product(const uint32_t * K, const uint32_t * A, uint32_t len)
-	{ 
+	static uint32_t dot_product(const uint32_t * K, const uint32_t * A, uint32_t len) { 
 		uint32_t i; 
 		uint32_t sum = 0; 
 		for (i=0; i<len;i++) {
@@ -37,9 +35,8 @@ namespace alg
 	 * m -- must be a prime number larger than 2(3 least)
 	 * k -- must be size of KLEN * sizeof(uint32_t)
 	 */
-	#define KLEN 64
-	static void m_based(uint64_t key, int m, uint32_t k[]) 
-	{
+#define KLEN 64
+	static void m_based(uint64_t key, int m, uint32_t k[]) {
 		memset(k,0,sizeof(uint32_t) * KLEN);
 
 		int quotient;
@@ -74,17 +71,17 @@ namespace alg
 	 */
 	static inline int ZerosR(unsigned int v) {
 		int c;  // output: c will count v's trailing zero bits,
-				// so if v is 1101000 (base 2), then c will be 3
+		// so if v is 1101000 (base 2), then c will be 3
 		if (v)
 		{
-		  v = (v ^ (v - 1)) >> 1;  // Set v's trailing 0s to 1s and zero rest
-		  for (c = 0; v; c++) {
-			v >>= 1;
-		  }
+			v = (v ^ (v - 1)) >> 1;  // Set v's trailing 0s to 1s and zero rest
+			for (c = 0; v; c++) {
+				v >>= 1;
+			}
 		}
 		else
 		{
-		  c = CHAR_BIT * sizeof(v);
+			c = CHAR_BIT * sizeof(v);
 		}
 
 		return c;

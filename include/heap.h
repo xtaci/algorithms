@@ -30,8 +30,8 @@
 
 namespace alg { 
 	/**
-   	 * define binary heap structure.
-   	 */
+	 * define binary heap structure.
+	 */
 	template<typename T>
 		class Heap {
 			private:

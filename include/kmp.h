@@ -33,7 +33,7 @@ namespace alg {
 		int m = 0;
 		int i = 0;
 		int T[LEN_W];
-		
+
 		kmp_table(W,T, LEN_W);
 
 		while (m+i < LEN_S) {
