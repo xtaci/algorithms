@@ -62,7 +62,7 @@
 namespace alg {
 	class BellmanFord {
 		private:		
-			HashTable<int32_t> dist; 		// hash table for distance.
+			HashTable<int32_t, int32_t> dist; 		// hash table for distance.
 			bool has_neg_cycle;				// negative weighted cycle mark.
 			const Graph & g;	
 		public:
@@ -72,10 +72,9 @@ namespace alg {
 			/**
 			 * Bellman-Ford algorithm
 			 */
-			HashTable<int32_t> * run(uint32_t source)
-			{
+			HashTable<int32_t, int32_t> * run(uint32_t source) {
 				// hash table for previous vertex
-				HashTable<int32_t> *  previous = new HashTable<int32_t>(g.vertex_count()); 
+				HashTable<int32_t, int32_t> *  previous = new HashTable<int32_t, int32_t>(g.vertex_count()); 
 				// source vertex
 				dist[source] = 0;
 

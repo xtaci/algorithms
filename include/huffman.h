@@ -54,7 +54,7 @@ namespace alg {
 			};
 
 		private:
-			HashTable<HuffCode> m_symbol;		// hash table for encoding 
+			HashTable<uint32_t, HuffCode> m_symbol;		// hash table for encoding 
 			HuffNode * m_root;					// the root node for decoding
 			uint32_t m_freqs[256];				// frequency array, you can pass this array 
 			// to the peer for constructing huffman

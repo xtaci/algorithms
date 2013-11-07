@@ -37,7 +37,7 @@ namespace alg {
 		static const uint32_t MARK = 0xDEAD;
 
 		Graph::Adjacent * root = g[source];
-		HashTable<uint32_t> ht(g.vertex_count());		
+		HashTable<uint32_t, uint32_t> ht(g.vertex_count());		
 
 		if (root==NULL) return;
 
@@ -67,7 +67,7 @@ namespace alg {
 		static const uint32_t MARK = 0xDEAD;
 
 		Graph::Adjacent * root = g[source];
-		HashTable<uint32_t> ht(g.vertex_count());		
+		HashTable<uint32_t, uint32_t> ht(g.vertex_count());		
 
 		if (root==NULL) return;
 

@@ -28,11 +28,11 @@ namespace alg {
 
 		Array2D<int> m_residual;
 
-		HashTable<uint32_t> m_map;
-		HashTable<uint32_t> m_rmap;
+		HashTable<uint32_t, uint32_t> m_map;
+		HashTable<uint32_t, uint32_t> m_rmap;
 
-		HashTable<int> e;	//excess flow
-		HashTable<int> h;	//value of height function
+		HashTable<uint32_t, int> e;	//excess flow
+		HashTable<uint32_t, int> h;	//value of height function
 		
 	public:
 		RelabelToFront(const Graph & graph):
@@ -231,10 +231,10 @@ namespace alg {
 		}
 
 		inline const Array2D<int> & residual() const { return m_residual; }
-		inline const HashTable<uint32_t> & map() const {return m_map; }
-		inline const HashTable<uint32_t> & rmap() const { return m_rmap; }
-		inline const HashTable<int> & excess() const { return e; }
-		inline const HashTable<int> & height() const { return h; }
+		inline const HashTable<uint32_t, uint32_t> & map() const {return m_map; }
+		inline const HashTable<uint32_t, uint32_t> & rmap() const { return m_rmap; }
+		inline const HashTable<uint32_t, int> & excess() const { return e; }
+		inline const HashTable<uint32_t, int> & height() const { return h; }
 	};
 }
 
