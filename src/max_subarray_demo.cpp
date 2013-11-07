@@ -11,7 +11,7 @@ int main() {
 	int i;
 
 	printf("the array:\n");
-	for (i=0;i<sizeof(arr)/sizeof(int);i++) {
+	for (i=0;i<int(sizeof(arr)/sizeof(int));i++) {
 		printf("%d\t", arr[i]);
 	}
 

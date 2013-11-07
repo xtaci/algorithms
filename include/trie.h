@@ -54,7 +54,7 @@ namespace alg {
 				_add(m_root, str);
 			}
 
-			int Count(char *str) {
+			int Count(const char *str) {
 				char * _str = strdup(str);
 				_lowercase(_str);
 
@@ -63,7 +63,7 @@ namespace alg {
 				return cnt;
 			}
 
-			int CountPrefix(char *prefix) {
+			int CountPrefix(const char *prefix) {
 				char * _str = strdup(prefix);
 				_lowercase(_str);
 
@@ -73,15 +73,14 @@ namespace alg {
 			}
 
 		private:
-			void _lowercase(char *str) 
-			{
+			void _lowercase(char *str) {
 				int i;
 				for (i=0;str[i];i++) {
 					str[i] = tolower(str[i]);
 				}
 			}
 
-			void _add(node *n, char * str) {
+			void _add(node *n, const char * str) {
 				if (str[0] == '\0') {
 					n->words++;
 				} else {
@@ -95,7 +94,7 @@ namespace alg {
 				} 
 			}
 
-			int _count(node *n, char * str) {
+			int _count(node *n, const char * str) {
 				if (str[0] == '\0') {
 					return n->words;
 				} else {

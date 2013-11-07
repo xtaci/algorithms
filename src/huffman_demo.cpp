@@ -14,11 +14,11 @@ int main(void)
 
 	printf("encoding message: \n%s\n", STR);
 
-	printf("<<< before huffman coding : length:%d bytes\n", strlen(STR));
+	printf("<<< before huffman coding : length:%lu bytes\n", strlen(STR));
 	memset(codes, 0, sizeof(codes));
 	length = tree.encode(STR, codes); 
 
-	printf(">>> after huffman coding : length:%d bytes\n", length/8);
+	printf(">>> after huffman coding : length:%u bytes\n", length/8);
 	printf("decoding messsage:\n");
 	tree.decode(codes, length);
 

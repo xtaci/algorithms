@@ -40,13 +40,14 @@ namespace alg {
 				 */
 				struct KV {
 					public:
-						int key;
+						int32_t key;
 						T value;
 				};
-				uint32_t m_size;	// current heap size.
-				uint32_t m_max;		// max heap size.
+				int32_t m_size;	// current heap size.
+				int32_t m_max;		// max heap size.
 				KV * m_kvs;			// key value pairs.
 
+				//HashTable<int32_t, >
 			public:
 				Heap(int max) {
 					m_size = 0;
@@ -108,7 +109,7 @@ namespace alg {
 				 * contains test
 				 */
 				bool contains(const T & value) {
-					for(uint32_t i=1;i<=m_size;i++) {
+					for(int32_t i=1;i<=m_size;i++) {
 						if(m_kvs[i].value == value) return true;
 					}
 
@@ -125,9 +126,9 @@ namespace alg {
 					// does not fit, take minimum key among both its children and
 					// replaces parent with it.  Again See if the last key fits 
 					//in that place.
-					int lastKey;
+					int32_t lastKey;
 					T lastValue;	
-					uint32_t child,now;
+					int32_t child,now;
 
 					// empty heap, just return
 					if (m_size == 0) return; 
@@ -166,9 +167,9 @@ namespace alg {
 				 * step 1. find the value
 				 * step 2. decrease the key to the newkey
 				 */
-				void decrease_key(const T & value, int newkey) {
-					uint32_t index = m_size+1;
-					for (uint32_t i=1;i<=m_size;i++) {
+				void decrease_key(const T & value, int32_t newkey) {
+					int32_t index = m_size+1;
+					for (int32_t i=1;i<=m_size;i++) {
 						if (m_kvs[i].value == value) {
 							index = i;
 							break;
