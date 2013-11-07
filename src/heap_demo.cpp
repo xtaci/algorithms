@@ -8,12 +8,12 @@ int main()
 	using namespace alg;
 	int MAXELEMENTS=50;
 	Heap<int> heap(MAXELEMENTS);
-	
-	int i;
+
+	int32_t i;
 	srand(time(NULL));
 	for (i=0;i < MAXELEMENTS; i++) {
 		int value = rand()%1000;
-		heap.insert(100-i, value);
+		heap.insert(i, value);
 		printf("inserting: %d->%d\n", 100-i, value);
 	}
 
