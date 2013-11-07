@@ -61,10 +61,15 @@ namespace alg {
 				dist[src_id] = 0;
 
 				while(!Q.is_empty()) {    // for every un-visited vertex, try relaxing the path
-					Graph::Adjacent * u = g[Q.min_value()];	// the vertex to process
-					int dist_u = dist[Q.min_value()];		// current known shortest distance to u
-					visited[Q.min_value()] = true;			// mark the vertex as visited.
-					Q.delete_min();							// remove u from Q
+					int32_t id = Q.min_value();
+					Q.delete_min();		// remove u from Q
+					if (visited[id]) {	// jump visited vertex
+						continue;
+					}
+
+					Graph::Adjacent * u = g[id];	// the vertex to process
+					int dist_u = dist[id];			// current known shortest distance to u
+					visited[id] = true;	// mark the vertex as visited.
 
 					Graph::Vertex * v;
 					list_for_each_entry(v, &u->v_head, v_node){
