@@ -122,7 +122,7 @@ namespace alg {
 			 * The word segmentation structure.
 			 */
 		private:
-			HashTable<WordEP> wordht;	// a WORD-> WordEP hashtable
+			HashTable<uint32_t, WordEP> wordht;	// a WORD-> WordEP hashtable
 			uint32_t words[GB18030_NR];	// every char in GB18030
 
 		public:

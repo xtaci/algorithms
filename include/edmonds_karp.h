@@ -41,11 +41,11 @@ namespace alg {
 		private:
 			const Graph & g;
 			Array2D<int> m_residual;	// residual network , 2d array
-			HashTable<int> m_pre; 				// pre node of current node 
+			HashTable<int, int> m_pre; 				// pre node of current node 
 			bool * m_visits; 			// mark whether current node is visited
 
-			HashTable<uint32_t> m_map;		// vertex id to ordinary row/col number mapping
-			HashTable<uint32_t> m_rmap;	// reverse mapping of map.
+			HashTable<int32_t, uint32_t> m_map;		// vertex id to ordinary row/col number mapping
+			HashTable<uint32_t, int32_t> m_rmap;	// reverse mapping of map.
 
 		public:
 			EdmondsKarp(const Graph & graph): 
@@ -114,8 +114,8 @@ namespace alg {
 			}
 
 			inline const Array2D<int> & residual() const { return m_residual;}
-			inline const HashTable<uint32_t> & map() const { return m_map;}
-			inline const HashTable<uint32_t> & rmap() const { return m_rmap;}
+			inline const HashTable<int32_t, uint32_t> & map() const { return m_map;}
+			inline const HashTable<uint32_t, int32_t> & rmap() const { return m_rmap;}
 
 		private:
 			/**

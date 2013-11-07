@@ -84,7 +84,7 @@ namespace alg {
 				openset.insert(0, x1*ncol+y1);
 
 				// The map of navigated nodes.	
-				HashTable<uint32_t> came_from(nrow*ncol);
+				HashTable<uint32_t, uint32_t> came_from(nrow*ncol);
 
 				g_score(x1,y1) = 0.0f;
 				f_score(x1,y1) = g_score(x1,y1) + estimate(x1,y1,x2,y2);
