@@ -18,24 +18,62 @@
 #define __HASH_TABLE_H__
 
 #include <stdint.h>
+#include <string.h>
 #include <limits.h>
 #include <stdexcept>
 #include "double_linked_list.h"
 #include "hash_multi.h"
+#include "hash_string.h"
 
 namespace alg {
 	/**
+	 * default compare funcs
+	 */
+	template<typename T> 
+	struct hash_code {
+		uint32_t operator()(T) {
+			printf("must provide a hash function for _Key\n");
+			return 0;
+		}
+	};
+
+	template<>
+	struct hash_code<const char *> {
+		uint32_t operator()(const char* value) {
+			return hash_fnv1a(value, strlen(value));
+		}
+	};
+
+	template<>
+	struct hash_code<uint32_t> {
+		uint32_t operator()(uint32_t value) {
+			return value;
+		}
+	};
+
+	template<>
+	struct hash_code<int32_t> {
+		uint32_t operator()(int32_t value) {
+			return (uint32_t)value;
+		}
+	};
+
+
+	/**
 	 * definition of a hash table.
 	 */
-	template<typename T>
+	template<typename _Key, typename _Value, typename _HashCode = hash_code<_Key> >
 		class HashTable {
+			typedef _Key key_type;
+			typedef _Value value_type;
+			typedef _HashCode hash_code_fn;
 			private:
 				/**
 				 * definiton of Key-Value pair.
 				 */
 				struct HashKV {
-					uint32_t key;	// 32-bit key
-					T value;		// value
+					key_type key;	// 32-bit key
+					value_type value;		// value
 					struct list_head node;	// KV is a list element.
 				};
 
@@ -79,9 +117,9 @@ namespace alg {
 				/**
 				 * test if the hash table has the key
 				 */
-				bool contains(uint32_t key) const {
+				bool contains(key_type key) const {
 					// hash the key using a hash function.
-					uint32_t hash = multi_hash(m_multi, key);
+					uint32_t hash = multi_hash(m_multi, hash_code_fn()(key));
 
 					//  we iterate through the list.
 					HashKV * kv;
@@ -96,9 +134,9 @@ namespace alg {
 				/**
 				 * delete by key
 				 */
-				bool delete_key(uint32_t key) {
+				bool delete_key(key_type key) {
 					// hash the key using a hash function.
-					uint32_t hash = multi_hash(m_multi, key);
+					uint32_t hash = multi_hash(m_multi, hash_code_fn()(key));
 
 					HashKV * kv, *nkv;
 					list_for_each_entry_safe(kv,nkv,&m_slots[hash], node) {
@@ -113,9 +151,9 @@ namespace alg {
 				}
 
 				// const version of operator []
-				const T& operator[] (uint32_t key) const {
+				const value_type& operator[] (key_type key) const {
 					// hash the key using a hash function.
-					uint32_t hash = multi_hash(m_multi, key);
+					uint32_t hash = multi_hash(m_multi, hash_code_fn()(key));
 
 					//  we iterate through the list.
 					HashKV * kv;
@@ -136,8 +174,8 @@ namespace alg {
 				/**
 				 * operator []
 				 */
-				T& operator[] (uint32_t key) {
-					return const_cast<T&>(static_cast<const HashTable&>(*this)[key]);
+				value_type& operator[] (key_type key) {
+					return const_cast<value_type&>(static_cast<const HashTable&>(*this)[key]);
 				}
 
 				void clear() {

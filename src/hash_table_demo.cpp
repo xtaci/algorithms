@@ -10,7 +10,7 @@ int main()
 	const int MAX_ELEMENTS = 50;
 	srand(time(NULL));
 	
-	HashTable<int32_t> ht(MAX_ELEMENTS);
+	HashTable<uint32_t, uint32_t> ht(MAX_ELEMENTS);
 
 	printf("Hash Table Demo: \n");
 	int i;
