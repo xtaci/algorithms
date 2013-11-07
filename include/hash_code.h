@@ -1,5 +1,6 @@
 #ifndef __HASH_CODE_H__
 #define __HASH_CODE_H__
+#include <string.h>
 #include "hash_string.h"
 namespace alg {
 	/**

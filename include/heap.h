@@ -27,6 +27,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <limits.h>
+#include "hash_code.h"
+#include "hash_table.h"
 
 namespace alg { 
 	/**
@@ -43,21 +45,24 @@ namespace alg {
 						int32_t key;
 						T value;
 				};
-				int32_t m_size;	// current heap size.
+				int32_t m_size;		// current heap size.
 				int32_t m_max;		// max heap size.
 				KV * m_kvs;			// key value pairs.
 
-				//HashTable<int32_t, >
+				HashTable<int32_t, int32_t>  * m_idx; // key -> idx
+
 			public:
 				Heap(int max) {
 					m_size = 0;
 					m_max = max+1;
 					m_kvs = new KV[m_max];
 					m_kvs[0].key = INT_MIN;
+					m_idx = new HashTable<int32_t, int32_t>(m_max);
 				};
 
 				~Heap() {
 					delete [] m_kvs;
+					delete m_idx;
 				};
 
 			private:
@@ -83,16 +88,19 @@ namespace alg {
 					m_size++;
 					m_kvs[m_size].key	= key;
 					m_kvs[m_size].value	= value;
+					(*m_idx)[key] = m_size;
 
 					// Adjust its position
 					int now = m_size;
 					while(m_kvs[now/2].key > key) {
 						m_kvs[now] = m_kvs[now/2];
+						(*m_idx)[m_kvs[now/2].key] = now;
 						now /= 2;
 					}
 
 					m_kvs[now].key		= key;
 					m_kvs[now].value	= value;
+					(*m_idx)[key] 	= now;
 				}
 
 				/**
@@ -144,14 +152,14 @@ namespace alg {
 						child = now*2;
 						// child!=heapSize beacuse heap[heapSize+1] does not exist, 
 						// which means it has only one child 
-						if(child != m_size && 
-								m_kvs[child+1].key < m_kvs[child].key) {
+						if(child != m_size && m_kvs[child+1].key < m_kvs[child].key) {
 							child++;	// choose the minium one.
 						}
 						// To check if the last key fits or not it suffices to check 
 						// if the last key is less than the minimum key among both the children
 						if(lastKey > m_kvs[child].key) {
 							m_kvs[now] = m_kvs[child];
+							(*m_idx)[child] 	= now;	// record index
 						}
 						else { // It fits there
 							break;
@@ -160,6 +168,7 @@ namespace alg {
 
 					m_kvs[now].key 	= lastKey;
 					m_kvs[now].value= lastValue;
+					(*m_idx)[lastKey] 	= now;	// record index
 				}
 
 				/**
@@ -167,17 +176,9 @@ namespace alg {
 				 * step 1. find the value
 				 * step 2. decrease the key to the newkey
 				 */
-				void decrease_key(const T & value, int32_t newkey) {
-					int32_t index = m_size+1;
-					for (int32_t i=1;i<=m_size;i++) {
-						if (m_kvs[i].value == value) {
-							index = i;
-							break;
-						}
-					}
-
-					if (index > m_size) return; 				// value not found 
-
+				void decrease_key(int32_t oldkey, int32_t newkey) {
+					int32_t index = (*m_idx)[oldkey];
+					if (index > m_size || index == 0) return; 	// value not found 
 					if (newkey >= m_kvs[index].key) return; 	// violate DECREASE meanning.
 
 					int now = index;
@@ -187,7 +188,6 @@ namespace alg {
 					}
 
 					m_kvs[now].key 	= newkey;
-					m_kvs[now].value= value;
 				}
 		};
 }
