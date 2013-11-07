@@ -47,7 +47,7 @@ int main(void)
 	Dijkstra dijkstra(*g);
 	Graph::Adjacent * a;
 	printf("finding Dijkstra shortest path starting from 0: \n");
-	HashTable<int32_t> * result = dijkstra.run(0);
+	HashTable<int32_t,int32_t> * result = dijkstra.run(0);
 
 	list_for_each_entry(a, &g->list(), a_node){
 		printf("previous of %u is ", a->v.id);

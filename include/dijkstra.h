@@ -41,7 +41,7 @@ namespace alg {
 		private:
 			const Graph & g; 
 			Heap<uint32_t> Q;		// a binary heap
-			HashTable<uint32_t> dist; 	// distance hash table
+			HashTable<int32_t, int32_t> dist; 	// distance hash table
 		public:
 			static const int UNDEFINED = -1;
 			/**
@@ -52,9 +52,9 @@ namespace alg {
 			dist(g.vertex_count()) {}
 
 			// run dijkstra algorithm, and return the previous table
-			HashTable<int32_t> * run(uint32_t src_id) {
+			HashTable<int32_t, int32_t> * run(uint32_t src_id) {
 				// previous vertex hash table
-				HashTable<int32_t> * previous = new HashTable<int32_t>(g.vertex_count()); 	
+				HashTable<int32_t, int32_t> * previous = new HashTable<int32_t,int32_t>(g.vertex_count()); 	
 
 				Q.clear();
 				dist.clear();
