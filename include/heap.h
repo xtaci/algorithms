@@ -159,7 +159,7 @@ namespace alg {
 						// if the last key is less than the minimum key among both the children
 						if(lastKey > m_kvs[child].key) {
 							m_kvs[now] = m_kvs[child];
-							(*m_idx)[child] 	= now;	// record index
+							(*m_idx)[m_kvs[now].key] = now;	// record index
 						}
 						else { // It fits there
 							break;
@@ -180,14 +180,17 @@ namespace alg {
 					int32_t index = (*m_idx)[oldkey];
 					if (index > m_size || index == 0) return; 	// value not found 
 					if (newkey >= m_kvs[index].key) return; 	// violate DECREASE meanning.
+					T oldvalue = m_kvs[index].value;
 
 					int now = index;
 					while(m_kvs[now/2].key > newkey) {
 						m_kvs[now] = m_kvs[now/2];
+						(*m_idx)[m_kvs[now].key] = now;	// record index
 						now /= 2;
 					}
 
 					m_kvs[now].key 	= newkey;
+					m_kvs[now].value = oldvalue;
 				}
 		};
 }
