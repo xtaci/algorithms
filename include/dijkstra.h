@@ -40,7 +40,7 @@ namespace alg {
 			// run dijkstra algorithm, and return the previous table
 			static HashTable<int32_t, int32_t> * run(const struct Graph & g, uint32_t src_id) {
 				// a binary heap
-				Heap<uint32_t> Q(g.vertex_count());
+				Heap<uint32_t> Q(g.vertex_count() + g.edge_count());
 				// distance hash table
 				HashTable<int32_t, int32_t> dist(g.vertex_count());
 				// previous vertex hash table
