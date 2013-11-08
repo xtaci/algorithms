@@ -6,18 +6,18 @@
 int main()
 {	
 	using namespace alg;
-	int MAXELEMENTS=50;
+	int MAXELEMENTS=10;
 	Heap<int> heap(MAXELEMENTS);
 
 	int32_t i;
 	srand(time(NULL));
 	for (i=0;i < MAXELEMENTS; i++) {
-		int value = rand()%1000;
+		int32_t value = i;
 		heap.insert(i, value);
-		printf("inserting: %d->%d\n", 100-i, value);
+		printf("inserting: %d->%d\n", i, value);
 	}
 
-	int index = 20;
+	int index = 9;
 	printf("decrease a key[%d] to %d\n", index, -1);
 	heap.decrease_key(index, -1);
 	while(!heap.is_empty()) {
