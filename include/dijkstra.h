@@ -63,7 +63,8 @@ namespace alg {
 				while(!Q.is_empty()) {    // for every un-visited vertex, try relaxing the path
 					int32_t id = Q.min_value();
 					Q.delete_min();		// remove u from Q
-					if (visited[id]) {	// jump visited vertex
+					if (visited[id]) {	// jump visited vertex, it means a closer vertex has found
+						// printf("visted:%d %d\n", id, dist[id]);
 						continue;
 					}
 
@@ -76,6 +77,14 @@ namespace alg {
 						uint32_t alt = dist_u + v->weight;
 						uint32_t dist_v = dist[v->id];
 						if (alt < dist_v && !visited[v->id]) {
+							/*
+							   uint32_t tmp = dist[v->id];
+							   if (tmp != INT_MAX) {
+							   printf("old %d %d\n", v->id, tmp);
+							   printf("new %d %d\n", v->id, dist[v->id]);
+							   }
+							 */
+
 							dist[v->id] = alt;
 							(*previous)[v->id] = u->v.id;
 							Q.insert(alt, v->id);
