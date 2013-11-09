@@ -4,41 +4,13 @@
 
 #include "edmonds_karp.h"
 using namespace alg;
-/**
- * randomly generate a graph, for test purpose
- */
-DirectedGraph * randgraph(int nvertex) 
-{
-	DirectedGraph * g = new DirectedGraph;
-	int i;	
-	
-	for(i=0;i<nvertex;i++) {
-		g->add_vertex(i);
-	}
-
-	// random connect
-	for(i=0;i<nvertex;i++) {
-		int j;
-		for(j=i+1;j<nvertex;j++) {
-			int dice = rand()%2;
-			if (dice == 0) { 
-				int w = rand()%100;
-				g->add_edge(i, j, w);
-			}
-		}
-	}
-
-	
-	return g;
-}
-
 int main(void)
 {
 	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 6;
-	DirectedGraph * g = randgraph(NVERTEX);
-	g->print();
+	DirectedGraph * g = DirectedGraph::randgraph(NVERTEX);
+	g->printdot();
 
 	printf("finding Maximal Flow from 0 to 5: \n");	
 	EdmondsKarp ek(*g);

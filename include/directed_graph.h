@@ -62,8 +62,9 @@ namespace alg
 				for(i=0;i<nvertex;i++) {
 					int j;
 					for(j=i+1;j<nvertex;j++) {
-						int dice = rand()%5;
-						if (dice == 0) {  // chance 20%
+						// 33% connection
+						int dice = rand()%3;
+						if (dice == 0) {  
 							int w = rand()%100;
 							g->add_edge(i, j, w);
 						}

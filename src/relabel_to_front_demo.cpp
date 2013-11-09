@@ -5,35 +5,6 @@
 #include "edmonds_karp.h"
 #include "relabel_to_front.h"
 using namespace alg;
-/**
- * randomly generate a graph, for test purpose
- */
-DirectedGraph * randgraph(int nvertex) 
-{
-	DirectedGraph * g = new DirectedGraph;
-	int i;	
-	
-	for(i=0;i<nvertex;i++) {
-		g->add_vertex(i);
-	}
-
-	// random connect
-	for(i=0;i<nvertex;i++) {
-		int j;
-		for(j=0;j<nvertex;j++) {
-			if (i == j)
-				continue;
-			int dice = rand()%2;
-			if (dice == 0) { 
-				int w = rand()%100;
-				g->add_edge(i, j, w);
-			}
-		}
-	}
-
-	
-	return g;
-}
 
 int main(void)
 {
@@ -43,8 +14,8 @@ int main(void)
 
 	clock_t ek_start, ek_end, pr_start, pr_end;
 
-	DirectedGraph * g = randgraph(NVERTEX);
-//	g->print();
+	DirectedGraph * g = DirectedGraph::randgraph(NVERTEX);
+//	g->printdot();
 
 	printf("finding Maximal Flow from 0 to %d: \n", NVERTEX-1);
 	printf("The graph containing %d edges.\n", g->edge_count());
