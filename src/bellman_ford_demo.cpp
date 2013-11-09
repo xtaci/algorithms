@@ -41,7 +41,7 @@ int main(void)
 	srand(time(NULL));
 	int NVERTEX = 50;
 	DirectedGraph * g = randgraph(NVERTEX);
-	g->print();
+	g->printdot();
 
 	BellmanFord bf(*g);
 

@@ -48,6 +48,32 @@ namespace alg
 			}
 		public:
 			/**
+			 * randomly generate a graph, for test purpose
+			 */
+			static DirectedGraph * randgraph(int nvertex) {
+				DirectedGraph * g = new DirectedGraph;
+				int i;	
+
+				for(i=0;i<nvertex;i++) {
+					g->add_vertex(i);
+				}
+
+				// random connect
+				for(i=0;i<nvertex;i++) {
+					int j;
+					for(j=i+1;j<nvertex;j++) {
+						int dice = rand()%5;
+						if (dice == 0) {  // chance 20%
+							int w = rand()%100;
+							g->add_edge(i, j, w);
+						}
+					}
+				}
+				return g;
+			}
+
+		public:
+			/**
 			 * delete a vertex with specified id 
 			 */
 			void delete_vertex(uint32_t id)
