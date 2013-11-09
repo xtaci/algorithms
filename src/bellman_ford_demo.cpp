@@ -8,39 +8,11 @@
 #include "bellman_ford.h"
 
 using namespace alg;
-/**
- * randomly generate a graph, for test purpose
- */
-DirectedGraph * randgraph(int nvertex) 
-{
-	DirectedGraph * g = new DirectedGraph;
-	int i;	
-	
-	for(i=0;i<nvertex;i++) {
-		g->add_vertex(i);
-	}
-
-	// random connect
-	for(i=3;i<nvertex;i++) {
-		int j;
-		for(j=i+1;j<nvertex;j++) {
-			int dice = rand()%5;
-			if (dice == 0) {  // chance 20%
-				int w = rand()%100;
-				g->add_edge(i, j, w);
-			}
-		}
-	}
-
-	
-	return g;
-}
-
 int main(void)
 {
 	srand(time(NULL));
-	int NVERTEX = 50;
-	DirectedGraph * g = randgraph(NVERTEX);
+	int NVERTEX = 10;
+	DirectedGraph * g = DirectedGraph::randgraph(NVERTEX);
 	g->printdot();
 
 	BellmanFord bf(*g);
