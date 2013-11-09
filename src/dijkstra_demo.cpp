@@ -24,8 +24,8 @@ DirectedGraph * randgraph(int nvertex)
 	for(i=0;i<nvertex;i++) {
 		int j;
 		for(j=i+1;j<nvertex;j++) {
-			int dice = rand()%5;
-			if (dice == 0) {  // chance 20%
+			int dice = rand()%2;
+			if (dice == 0) { 
 				int w = rand()%100;
 				g->add_edge(i, j, w);
 			}
@@ -40,9 +40,9 @@ int main(void)
 {
 	using namespace alg;
 	srand(time(NULL));
-	int NVERTEX = 50;
+	int NVERTEX = 10;
 	std::auto_ptr<DirectedGraph> g(randgraph(NVERTEX));
-	g->print();
+	g->printdot();
 
 	Graph::Adjacent * a;
 	printf("finding Dijkstra shortest path starting from 0: \n");
@@ -56,9 +56,9 @@ int main(void)
 	}
 	delete result;
 
-	printf("finding Dijkstra shortest path starting from 10: \n");	
+	printf("finding Dijkstra shortest path starting from 1: \n");	
 
-	result = Dijkstra::run(*g, 10);
+	result = Dijkstra::run(*g, 1);
 	list_for_each_entry(a, &g->list(), a_node){
 		printf("previous of %u is ", a->v.id);
 		int32_t pre = (*result)[a->v.id];

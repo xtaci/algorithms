@@ -125,6 +125,22 @@ namespace alg {
 				}	
 			}
 
+			/**
+			 * print a graph as graphviz '.dot' format
+			 */
+			void printdot() const {
+				Adjacent * a;
+				printf("digraph G {\n");
+				printf("\tnode [shape = circle];\n");
+				list_for_each_entry(a, &a_head, a_node){
+					Vertex * v;
+					list_for_each_entry(v, &a->v_head, v_node){
+						printf("\t%d -> %d [label = \"%d\"];\n", a->v.id, v->id, v->weight);
+					}
+				}
+				printf("}\n");
+			}
+
 			const list_head & list() const {return a_head; }
 
 			// Interface
