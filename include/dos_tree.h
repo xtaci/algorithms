@@ -124,14 +124,6 @@ namespace alg {
 					delete_case1(n);
 				}
 				replace_node(n, child);
-				// copy child value if exists
-				if (child != NULL) {
-					DOSNODE(n)->key = DOSNODE(child)->key;
-					DOSNODE(n)->size = DOSNODE(child)->size;
-				}
-				if (n->parent == NULL && child != NULL)
-					child->color = BLACK;
-
 				delete (DOSNODE(n));
 			}
 
