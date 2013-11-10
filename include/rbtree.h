@@ -12,7 +12,7 @@
  * 2. O(logn) lookup performance
  *
  * http://en.wikipedia.org/wiki/Red_black_tree
- *     
+ * http://en.literateprograms.org/Red-black_tree_(C)
  ******************************************************************************/
 
 #ifndef __RBTREE_H__
@@ -124,8 +124,6 @@ namespace alg {
 						delete_case1(n);
 					}
 					replace_node(n, child);
-					if (n->parent == NULL && child != NULL)
-						child->color = BLACK;
 					delete(n);
 				}
 

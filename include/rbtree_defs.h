@@ -12,7 +12,7 @@
  * 2. O(logn) lookup performance
  *
  * http://en.wikipedia.org/wiki/Red_black_tree
- *     
+ * http://en.literateprograms.org/Red-black_tree_(C)
  ******************************************************************************/
 
 #ifndef __RBTREE_DEFS_H__

@@ -46,7 +46,7 @@ int main() {
 	int MAXELEMENT = 50;
 	printf("Inserting: \t");
     for(i=0; i<MAXELEMENT; i++) {
-        int key  = rand() % 100;
+        int key  = i;
         int value = rand() % 10000;
         printf("[%d, %d]\t", key, value);
 		t.insert(key, value);
@@ -58,7 +58,7 @@ int main() {
 
     printf("\nDeleting: \t");
     for(i=0; i<MAXELEMENT; i++) {
-        int key = rand() % 100;
+        int key = i;
         printf("[%d]\t", key);
         t.delete_key(key);
     }

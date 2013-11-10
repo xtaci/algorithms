@@ -132,15 +132,6 @@ namespace alg {
 				}
 
 				replace_node(n, child);
-				// copy child value if exists, add your fields if you got one 
-				if (child != NULL) {
-					IVLNODE(n)->low = IVLNODE(child)->low;
-					IVLNODE(n)->high = IVLNODE(child)->high;
-				}
-
-				if (n->parent == NULL && child != NULL)
-					child->color = BLACK;
-
 				delete(n);
 			}
 
