@@ -19,7 +19,7 @@
    5.  Graph的输出格式为 [Graphviz](http://www.graphviz.org/) Dot格式.
    	(the output format of the graph is in dot of graphviz.)
    	eg:
-   	![demosvg](https://raw.github.com/xtaci/algorithms/master/demo_dot.svg)
+   	![demograph](demo_graph.png)
 
 ####已实现 ( Implemented ):
 
@@ -29,7 +29,7 @@
     2D Array
     Arbitary Integer
     Linear congruential generator
-	Maximum subarray problem
+    Maximum subarray problem
 
     Bit-Set data structure
     Queue data structure
@@ -53,7 +53,7 @@
     Interval tree
     Prefix Tree(Trie)
     *Suffix Tree(未实现)*
-	B-Tree
+    B-Tree
 
     Hash by multiplication
     Hash table
@@ -65,29 +65,29 @@
     Bloom Filter
     SHA-1 Message Digest Algorithm
     MD5
-	Base64
+Base64
 
     Graph data structure
     Prim's minimum spanning tree
-	Kruskal MST
+    Kruskal MST
     Directed/Undirected graph ops
     Breadth First Search
     Depth First Search
     Dijkstra's algorithm
     Bellman-Ford algorithm
     Edmonds-Karp Maximal Flow
-	Push–Relabel algorithm
+    Push–Relabel algorithm
 
     Huffman Coding
     Word segementation(CHN/GB18030) using HMM and viterbi algorithm.
     A* algorithm
     K-Means
     Knuth–Morris–Pratt algorithm
-	Disjoint-Set
+    Disjoint-Set
 
 ####贡献者 ( Contributors ) :  
     Samana :  for heavy work of MSVC compatability
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
-	wyh267: for base64, LRU
-	ZhangYou0122 : Push-Relabel algorithm
+    wyh267: for base64, LRU
+    ZhangYou0122 : Push-Relabel algorithm
