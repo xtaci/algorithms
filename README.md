@@ -65,7 +65,7 @@
     Bloom Filter
     SHA-1 Message Digest Algorithm
     MD5
-Base64
+    Base64
 
     Graph data structure
     Prim's minimum spanning tree
