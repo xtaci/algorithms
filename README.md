@@ -31,11 +31,12 @@
     Linear congruential generator
     Maximum subarray problem
 
-    Bit-Set data structure
-    Queue data structure
-    Stack data structure
-    Binary heap data structure
-    Priority queue
+    Bit-Set
+    Queue
+    Stack
+    Binary Heap
+	Fibonacci Heap
+    Priority Queue (list based)
 
     Insertion sort
     Radix sort
