@@ -19,7 +19,7 @@
    5.  Graph的输出格式为 [Graphviz](http://www.graphviz.org/) Dot格式.
    	(the output format of the graph is in dot of graphviz.)
    	eg:
-   	![Architecture](/demo_dot.svg)
+   	![demosvg](https://raw.github.com/xtaci/algorithms/master/demo_dot.svg)
 
 ####已实现 ( Implemented ):
 
