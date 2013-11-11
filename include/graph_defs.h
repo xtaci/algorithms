@@ -130,6 +130,7 @@ namespace alg {
 			 */
 			void printdot() const {
 				Adjacent * a;
+				printf("==== BEGIN OF DOT ====\n");
 				printf("digraph G {\n");
 				printf("\tnode [shape = circle];\n");
 				list_for_each_entry(a, &a_head, a_node){
@@ -139,6 +140,7 @@ namespace alg {
 					}
 				}
 				printf("}\n");
+				printf("==== END OF DOT ====\n");
 			}
 
 			const list_head & list() const {return a_head; }
