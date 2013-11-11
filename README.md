@@ -2,12 +2,12 @@
 
 ####目标 ( goal ) :
 
-    经典的算法实现
-        (classical algorithms implementations)
-    服务器端
-        (based on linux/gcc)
-    正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.
-       (correct! and ease of use, one .header file per algorithm)
+   1. 经典的算法实现      
+      (classical algorithms implementations)      
+   2. 服务器端       
+      (based on linux/gcc)       
+   3. 正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.       
+      (correct! and ease of use, one .header file per algorithm)        
 
 ####约定 ( Convention ):
 
