@@ -124,6 +124,8 @@ namespace alg {
 					delete_case1(n);
 				}
 				replace_node(n, child);
+	    		if (n->parent == NULL && child != NULL)	// root
+        			child->color = BLACK;
 				delete (DOSNODE(n));
 			}
 

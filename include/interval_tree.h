@@ -132,6 +132,8 @@ namespace alg {
 				}
 
 				replace_node(n, child);
+	    		if (n->parent == NULL && child != NULL)	// root
+        			child->color = BLACK;
 				delete(n);
 			}
 
