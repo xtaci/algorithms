@@ -31,13 +31,17 @@ int main(void)
 	printf("\nconstructing a negative cycle and run again\n");	
 
 	// construct a negative cycle;
-	g->add_edge(0,1, -1);
-	g->add_edge(1,2, -1);
-	g->add_edge(2,0, -1);
+	g->add_vertex(100);
+	g->add_vertex(101);
+	g->add_vertex(102);
+	g->add_edge(100,101, -1);
+	g->add_edge(101,102, -1);
+	g->add_edge(102,100, -1);
 
 	BellmanFord bf2(*g);
 	std::auto_ptr<HashTable<int32_t, int32_t> > previous2(bf2.run(0));
 
+	g->printdot();
 	printf("\nwe %s have negative weighted cycle.\n", bf2.has_negative_cycle()?"DO":"DON'T");
 
 	delete g;

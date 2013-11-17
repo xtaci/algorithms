@@ -241,7 +241,8 @@ namespace alg {
 					sibling(n)->color = RED;
 					sibling(n)->right->color = BLACK;
 					rotate_left(sibling(n));
-				} delete_case6(n);
+				} 
+				delete_case6(n);
 			}
 
 			void delete_case6(rbtree_node n) {
