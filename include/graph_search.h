@@ -51,13 +51,13 @@ namespace alg {
 
 		while(!Q.is_empty()) {
 			uint32_t id = Q.front();
-			printf("%d->", id);
+			printf("%d->", id);		// output discovered id
 			Q.dequeue();	
 			Graph::Vertex * _v;
 			Graph::Adjacent * u = g[id];
 			list_for_each_entry(_v, &u->v_head, v_node) {
-				Graph::Adjacent * v = g[_v->id];
-				if (v->color == Graph::WHITE) {
+				Graph::Adjacent * v = g[_v->id];	// retrive the original adjacent list
+				if (v->color == Graph::WHITE) {		// to change node color
 					v->color = Graph::GRAY;
 					v->d = u->d + 1;
 					Q.enqueue(v->v.id); 
@@ -65,7 +65,6 @@ namespace alg {
 			}
 			u->color = Graph::BLACK;
 		}
-
 		printf("\n");
 	}
 
@@ -87,8 +86,12 @@ namespace alg {
 				_DFS_VISIT(g, a);
 			}
 		}
+		printf("\n");
 	}
 
+	/**
+	 * recursivly visit (Call Stack)
+	 */
 	static void _DFS_VISIT(Graph &g, Graph::Adjacent * u) {
 		// white vertex u has just benn discovered
 		u->d = ++g.graph_tick;
