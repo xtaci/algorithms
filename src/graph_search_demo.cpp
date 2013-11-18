@@ -16,9 +16,9 @@ int main()
 	g->printdot();
 
 	printf("breadth first search: \n");
-	breadth_first_search(*g, 0);
+	BFS(*g, 0);
 	printf("depth first search: \n");
-	depth_first_search(*g, 0);
+	DFS(*g);
 
 	delete g;
 	return 0;
