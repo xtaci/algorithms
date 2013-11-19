@@ -26,15 +26,13 @@
 #include "graph_defs.h"
 #include "double_linked_list.h"
 
-namespace alg
-{
+namespace alg {
 	class DirectedGraph:public Graph {
 		private:
 			/**
 			 * delete a vertex from adjacent lists
 			 */
-			void delete_me(uint32_t id)
-			{
+			void delete_me(uint32_t id) {
 				// delete every connection, iterator through every adjacent list
 				Adjacent * adj;
 				list_for_each_entry(adj, &a_head, a_node){
@@ -77,8 +75,7 @@ namespace alg
 			/**
 			 * delete a vertex with specified id 
 			 */
-			void delete_vertex(uint32_t id)
-			{
+			void delete_vertex(uint32_t id) {
 				Adjacent * a = (*this)[id];
 				if (a==NULL) return;
 				delete_me(id);	
@@ -92,8 +89,7 @@ namespace alg
 			/**
 			 * create a new vertex and add to the graph, with specified id.
 			 */
-			bool add_vertex(uint32_t id)
-			{
+			bool add_vertex(uint32_t id) {
 				if ((*this)[id]!=NULL) return false;
 
 				// new empty adjacent list
@@ -107,8 +103,7 @@ namespace alg
 			/**
 			 * add an edge for x -> y
 			 */
-			bool add_edge(uint32_t x, uint32_t y, int32_t weight)
-			{
+			bool add_edge(uint32_t x, uint32_t y, int32_t weight) {
 				struct Adjacent * a1 = (*this)[x];
 				struct Adjacent * a2 = (*this)[y];
 
@@ -130,8 +125,7 @@ namespace alg
 			/**
 			 * delete an edge for x -> y
 			 */
-			void delete_edge(uint32_t x, uint32_t y)
-			{
+			void delete_edge(uint32_t x, uint32_t y) {
 				struct Adjacent * a1 = (*this)[x];
 				struct Adjacent * a2 = (*this)[y];
 				if (a1==NULL || a2==NULL) return ;
@@ -147,6 +141,24 @@ namespace alg
 						a1->num_neigh--;
 					}
 				}
+			}
+
+			/**
+			 * create the transpose of a directed-graph
+			 */
+			DirectedGraph * tranpose() {
+				DirectedGraph * trans = new DirectedGraph;
+				Adjacent * a;
+				list_for_each_entry(a, &a_head, a_node){
+					trans->add_vertex(a->v.id);
+					Vertex * v;
+					list_for_each_entry(v, &a->v_head, v_node){
+						trans->add_vertex(v->id);
+						trans->add_edge(v->id, a->v.id, v->weight);
+					}
+				}	
+
+				return trans;
 			}
 	};
 }
