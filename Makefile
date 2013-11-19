@@ -61,6 +61,7 @@ PROGRAMS =  m_based_demo \
 			disjoint-set_demo \
 			relabel_to_front_demo \
 			btree_demo \
+			sort_demo \
 			fib-heap_demo
 
 all: $(PROGRAMS)
