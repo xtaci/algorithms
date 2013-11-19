@@ -103,9 +103,9 @@ namespace alg {
 				_DFS_VISIT(g, v);
 			}
 		}
-		printf("%d->", u->v.id);
 		u->color = Graph::BLACK;
 		u->f = ++g.graph_tick;
+		printf("%d(d:%d, f:%d) -> ", u->v.id, u->d, u->f);
 	}
 }
 
