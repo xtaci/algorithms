@@ -46,11 +46,10 @@ namespace alg {
 						virtual const char * what() const throw() {
 							return "key does not exist";
 						}
-				};
+				} excp_key;
 
 			private:
 				treeNode * m_root;		// the root
-				const BSTException error;
 			private:
 				BST(const BST&);
 				BST& operator=(const BST&);

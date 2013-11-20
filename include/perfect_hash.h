@@ -29,10 +29,10 @@ namespace alg {
 						virtual const char * what() const throw() {
 							return "key does not exist";
 						}
-				};
+				} excp_key;
 
 				// Level-2 Slot definition
-				class SlotL2 {
+				struct SlotL2 {
 					public:
 						uint32_t cnt;	// collison count
 						uint32_t key;	//key
@@ -57,8 +57,6 @@ namespace alg {
 				struct SlotL1 * slots;	// level 1 slots
 				struct UHash params;   // 1st level 
 				uint32_t num_slots;
-				const PerfHTException error;
-
 			public:
 				PerfHT(uint32_t keys[], uint32_t len) {
 					// remove duplicate keys
@@ -105,7 +103,7 @@ namespace alg {
 						}
 					}
 
-					throw error;
+					throw excp_key;
 				}
 
 				/**

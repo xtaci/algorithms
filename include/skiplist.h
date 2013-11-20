@@ -40,8 +40,7 @@ namespace alg {
 			virtual const char * what() const throw() {
 				return "cannot find the element in skiplist";
 			}
-		};
-		const NotFoundException 			excp_notfound;
+		} excp_notfound;
 
 	public:
 		SkipList() {

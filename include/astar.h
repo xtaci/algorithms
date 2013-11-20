@@ -49,7 +49,6 @@ namespace alg {
 			};
 
 			static const unsigned char WALL = 0xFF;
-			static const float SQRT2 = 1.414213562373095;
 
 		private:
 			const Array2D<unsigned char> & m_grid;	
@@ -72,6 +71,7 @@ namespace alg {
 			 * a integer representing path is returned, you should delete it after. 
 			 */
 			AStarResult * run(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
+				static float SQRT2 = 1.414213562373095;
 				uint32_t nrow = m_grid.row();
 				uint32_t ncol = m_grid.col();
 				m_closedset.clear(false);

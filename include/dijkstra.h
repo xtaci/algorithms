@@ -38,7 +38,7 @@ namespace alg {
 		public:
 			static const int UNDEFINED = -1;
 			// run dijkstra algorithm, and return the previous table
-			static HashTable<int32_t, int32_t> * run(const struct Graph & g, uint32_t src_id) {
+			static HashTable<int32_t, int32_t> * run(const Graph & g, uint32_t src_id) {
 				// a binary heap
 				Heap<uint32_t> Q(g.vertex_count() + g.edge_count());
 				// distance hash table

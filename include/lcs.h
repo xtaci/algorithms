@@ -64,7 +64,7 @@ namespace alg {
 	 * pass an empty stack, pop out the result in sequential order. 
 	 */
 	template<typename T>
-		static void lcs_backtrack(Stack<int> & S, struct Array2D<uint32_t> & A,
+		static void lcs_backtrack(Stack<int> & S, Array2D<uint32_t> & A,
 				const T X[], const T Y[], 
 				const uint32_t i, uint32_t j) {
 			if (i==0 || j==0) return;
