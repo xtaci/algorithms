@@ -69,6 +69,7 @@
     Base64
 
     Graph data structure
+	Strongly Connected Components(SCC)
     Prim's minimum spanning tree
     Kruskal MST
     Directed/Undirected graph ops

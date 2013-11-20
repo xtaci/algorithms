@@ -36,7 +36,7 @@ namespace alg {
 						{
 							return "stack is empty";
 						}
-				};
+				} excp_empty;
 
 				class StackIndexOutOfBoundException: public std::exception {
 					public:
@@ -44,13 +44,11 @@ namespace alg {
 						{
 							return "Index out of bound.";
 						}
-				};
+				} excp_ioob;
 
 				uint32_t m_capacity;		// the total capacity
 				uint32_t m_size;			// current stack size
 				T * m_elements;		// the elements
-				const StackEmptyException 			exp_empty;
-				const StackIndexOutOfBoundException exp_ioob;
 
 			public:
 				/**
@@ -90,7 +88,7 @@ namespace alg {
 				 * get the top element
 				 */
 				inline const T& top() const {
-					if (m_size==0) throw exp_empty;
+					if (m_size==0) throw excp_empty;
 					return m_elements[m_size-1]; 
 				}
 
@@ -115,7 +113,7 @@ namespace alg {
 				 * return value by index
 				 */
 				inline const T& operator[] (uint32_t idx) const {
-					if (idx<0 || idx >= m_capacity) throw exp_ioob;
+					if (idx >= m_capacity) throw excp_ioob;
 					return m_elements[m_size-1-idx]; 
 				}
 		};

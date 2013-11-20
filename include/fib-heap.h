@@ -83,7 +83,7 @@ namespace alg {
 					H->m_root = H1->m_root;
 					list_splice(&H->m_root, &H1->m_root);	// concat 2 root-list
 					list_splice(&H->m_root, &H2->m_root);
-					if (H1->min == NULL || (H2.min != NULL && H2->min.key < H1->min.key)) {
+					if (H1->min == NULL || (H2->min != NULL && H2->min.key < H1->min.key)) {
 						H->min = H2->min;
 					}
 					H->n = H1->n + H2->n;

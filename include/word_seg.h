@@ -123,8 +123,6 @@ namespace alg {
 			 */
 		private:
 			HashTable<uint32_t, WordEP> wordht;	// a WORD-> WordEP hashtable
-			uint32_t words[GB18030_NR];	// every char in GB18030
-
 		public:
 			WordSeg() : wordht(GB18030_NR){ }
 

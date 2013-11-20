@@ -32,7 +32,7 @@ namespace alg {
 						virtual const char * what() const throw() {
 							return "Queue is empty.";
 						}
-				};
+				} excp_empty;
 
 			private:
 				uint32_t m_capacity;		// queue capacity
@@ -40,8 +40,6 @@ namespace alg {
 				uint32_t m_front;			// index of the first element
 				uint32_t m_rear;			// index of the last element
 				T * m_elements;	// the elements
-
-				const QueueEmptyException exp_empty;
 
 			public:
 				/**
@@ -88,7 +86,7 @@ namespace alg {
 				 * return the front element.
 				 */
 				inline const T& front() const {
-					if (m_size==0) throw exp_empty;
+					if (m_size==0) throw excp_empty;
 					return m_elements[m_front];	
 				};
 
