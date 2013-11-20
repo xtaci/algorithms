@@ -83,7 +83,9 @@ namespace alg {
 		g.graph_tick = 0;
 		list_for_each_entry(a, &g.list(), a_node) {
 			if (a->color == Graph::WHITE) {
+				printf("DFS from : %d\t",a->v.id);
 				_DFS_VISIT(g, a);
+				printf("\n");
 			}
 		}
 		printf("\n");
@@ -97,8 +99,9 @@ namespace alg {
 		u->d = ++g.graph_tick;
 		u->color = Graph::GRAY;
 
-		Graph::Adjacent * v;
-		list_for_each_entry(v, &g.list(), a_node) { // explore edge (u, v)
+		Graph::Vertex * _v;
+		list_for_each_entry(_v, &u->v_head, v_node) { // explore edge (u, v)
+			Graph::Adjacent * v = g[_v->id];	// retrive the original adjacent list
 			if (v->color == Graph::WHITE) {
 				_DFS_VISIT(g, v);
 			}

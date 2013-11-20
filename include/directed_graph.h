@@ -146,7 +146,7 @@ namespace alg {
 			/**
 			 * create the transpose of a directed-graph
 			 */
-			DirectedGraph * tranpose() {
+			DirectedGraph * transpose() {
 				DirectedGraph * trans = new DirectedGraph;
 				Adjacent * a;
 				list_for_each_entry(a, &a_head, a_node){
