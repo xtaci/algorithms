@@ -84,7 +84,7 @@ namespace alg {
 			struct list_head a_head; // list header
 		public:
 			int32_t graph_tick;	// for counting discover & finish time
-			
+
 			Graph() {
 				num_vertex = 0;
 				num_edges = 0;
@@ -142,7 +142,17 @@ namespace alg {
 				printf("\tnode [shape = circle];\n");
 				list_for_each_entry(a, &a_head, a_node){
 					Vertex * v;
-					printf("\t%d;\n", a->v.id);
+					switch (a->color) {
+						case GRAY:
+							printf("\t%d [style=filled fillcolor=gray];\n", a->v.id);
+							break;
+						case BLACK:
+							printf("\t%d [style=filled fillcolor=black fontcolor=white];\n", a->v.id);
+							break;
+						default:
+							printf("\t%d;\n", a->v.id);
+					}
+
 					list_for_each_entry(v, &a->v_head, v_node){
 						printf("\t%d -> %d [label = \"%d\"];\n", a->v.id, v->id, v->weight);
 					}
