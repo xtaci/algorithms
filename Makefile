@@ -15,7 +15,8 @@ PROGRAMS =  m_based \
 			shuffle_demo \
 			quick_sort_demo \
 			merge_sort_demo \
-			sort_demo
+			sort_demo \
+			bubble_sort_demo
 
 all: $(PROGRAMS)
 
