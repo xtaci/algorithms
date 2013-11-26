@@ -38,6 +38,8 @@
 	Fibonacci Heap
     Priority Queue (list based)
 
+	Bubble sort
+	Selection sort
     Insertion sort
     Radix sort
     Quick sort
@@ -91,5 +93,5 @@
     Samana :  for heavy work of MSVC compatability
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
-    wyh267: for base64, LRU
+    wyh267: for base64, LRU, bubble sort, selection sort
     ZhangYou0122 : Push-Relabel algorithm
