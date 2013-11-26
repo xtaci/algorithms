@@ -1,8 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h> 
-#include <time.h>
 
-#include "generic.h"
 #include "selection_sort.h"
 
 template<typename T>
@@ -12,7 +9,6 @@ static void printlist(T & list,int count) {
 		printf("%d\t ",list[i]);
 	printf("\n");
 }
-
 
 int main (int argc, char const *argv[]) {
 	const int MAX_ELEMENTS = 10;
