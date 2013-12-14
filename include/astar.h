@@ -135,9 +135,9 @@ namespace alg {
 
 							float tentative = g_score(cy,cx);
 							if (nx == cx || ny == cy) {
-								tentative += 1;
+								tentative += 1 + m_grid(ny,nx);
 							} else {
-								tentative += SQRT2;
+								tentative += (1 + m_grid(ny,nx)) * SQRT2;
 							}
 
 							// if neighbour not in the openset or dist < g_score[neighbour]	
