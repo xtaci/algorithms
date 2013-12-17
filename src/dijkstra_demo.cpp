@@ -18,8 +18,8 @@ int main(void)
 	g->printdot();
 
 	Graph::Adjacent * a;
-	printf("finding Dijkstra shortest path starting from 0: \n");
-	HashTable<int32_t,int32_t> * result = Dijkstra::run(*g, 0);
+	printf("finding Dijkstra shortest path starting from 1: \n");
+	HashTable<int32_t,int32_t> * result = Dijkstra::run(*g, 1);
 
 	list_for_each_entry(a, &g->list(), a_node){
 		printf("previous of %u is ", a->v.id);
@@ -29,9 +29,9 @@ int main(void)
 	}
 	delete result;
 
-	printf("finding Dijkstra shortest path starting from 1: \n");	
+	printf("finding Dijkstra shortest path starting from 2: \n");	
 
-	result = Dijkstra::run(*g, 1);
+	result = Dijkstra::run(*g, 2);
 	list_for_each_entry(a, &g->list(), a_node){
 		printf("previous of %u is ", a->v.id);
 		int32_t pre = (*result)[a->v.id];

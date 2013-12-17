@@ -5,24 +5,18 @@
 
 #include "undirected_graph.h"
 #include "prim_mst.h"
-using namespace alg;
-
 
 int main(void)
 {
 	using namespace alg;
 	srand(time(NULL));
 	int NVERTEX = 10;
-	UndirectedGraph * g = UndirectedGraph::randgraph(NVERTEX);
+	alg::UndirectedGraph * g = alg::UndirectedGraph::randgraph(NVERTEX);
 	g->printdot();
 	printf("Generating Prim's Graph: \n");	
-	Prim pg(*g);
-	pg.print();
-
-	printf("Generating Minimal spanning tree: \n");	
-	Graph * mst = pg.run();
-	mst->printdot();
-	delete mst;
+	Graph * prim = alg::Prim::run(*g, 1);
+	prim->printdot();
+	delete prim;
 	delete g;
 	return 0;	
 }

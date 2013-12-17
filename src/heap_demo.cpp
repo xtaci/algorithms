@@ -17,9 +17,8 @@ int main()
 		printf("inserting: %d->%d\n", i, value);
 	}
 
-	int index = 9;
-	printf("decrease a key[%d] to %d\n", index, -1);
-	heap.decrease_key(index, -1);
+	printf("decrease a value[%d] to %d\n", 5, -1);
+	heap.decrease_key(5, -1);
 	while(!heap.is_empty()) {
 		printf("deleting min: %d->%d\n", heap.min_key(), heap.min_value());
 		heap.delete_min();
