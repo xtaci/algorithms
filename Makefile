@@ -67,7 +67,8 @@ PROGRAMS =  m_based_demo \
 			sort_demo \
 			bubble_sort_demo \
 			selection_sort_demo	\
-			8queue_demo
+			8queue_demo \
+			palindrome_demo
 
 all: $(PROGRAMS)
 
