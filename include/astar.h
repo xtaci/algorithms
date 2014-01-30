@@ -100,6 +100,7 @@ namespace alg {
 
 					if(cx == (int)x2 && cy==(int)y2) {	// we reached (x2,y2)
 						// reconstruct path & return
+						as->num_nodes = 2;
 						uint32_t tmp = x2*ncol+y2;
 						while((tmp=came_from[tmp]) != x1*ncol+y1) {
 							as->num_nodes++;
@@ -109,10 +110,14 @@ namespace alg {
 
 						tmp = x2*ncol+y2;
 						int idx=0;
+						as->path[idx++] = x2;
+						as->path[idx++] = y2;
 						while((tmp=came_from[tmp]) != x1*ncol+y1) {
 							as->path[idx++] = tmp/ncol;
 							as->path[idx++] = tmp%ncol;
 						}
+						as->path[idx++] = x1;
+						as->path[idx++] = y1;
 						return as;
 					}
 
