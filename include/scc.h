@@ -38,15 +38,15 @@ namespace alg {
 		// step 1. discover vertices of G in decreasing of u.f
 		Heap<int32_t> Q(g.vertex_count()) ;
 		Graph::Adjacent * a;
-        list_for_each_entry(a, &g.list(), a_node) {
+		list_for_each_entry(a, &g.list(), a_node) {
 			Q.insert(INT_MAX - a->f, a->v.id);	// descending order of a->f
-        }
+		}
 
 		// step 2. discover 
-        // mark all vertex color to WHITE   
-        list_for_each_entry(a, &GT->list(), a_node) {
-            a->color = Graph::WHITE;
-        }
+		// mark all vertex color to WHITE   
+		list_for_each_entry(a, &GT->list(), a_node) {
+			a->color = Graph::WHITE;
+		}
 
 		// step 3. call DFS(GT), but in the main loop of DFS, consider the vertices
 		// in order of decreasing u.f (as computed in line 1)
