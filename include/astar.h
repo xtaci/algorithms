@@ -107,13 +107,14 @@ namespace alg {
 				as->path = NULL;
 				as->num_nodes = 0;
 
+				// the main A*algorithm
 				while(!m_openset.is_empty()) {
 					uint32_t value = m_openset.min_value();
 					int	cx = value/ncol;
 					int	cy = value%ncol;
 
-					if(cx == (int)x2 && cy==(int)y2) {	// we reached (x2,y2)
-						// reconstruct path & return
+					if(cx == (int)x2 && cy==(int)y2) {	// great! we've reached the target position (x2,y2)
+						// reconstruct path
 						as->num_nodes = 2;
 						uint32_t tmp = x2*ncol+y2;
 						while((tmp=came_from[tmp]) != x1*ncol+y1) {
@@ -135,37 +136,38 @@ namespace alg {
 						return as;
 					}
 
+					// delete current positon from openset and move it into closed set.
 					m_openset.delete_min();
 					m_closedset(cx, cy) = true;
 					m_openset_grid(cx, cy) = false;
 
-					// for each neighbor
+					// for each valid neighbor of current position
 					int nx, ny;
 					for(nx=cx-1;nx<=cx+1;nx++) {
-						if (nx<0 || nx>=(int)ncol) continue;
 						for(ny=cy-1;ny<=cy+1;ny++) {
-							if (ny<0 || ny>=(int)nrow) continue;
-
-							// except the wall;
-							if(m_grid(nx,ny) == WALL) continue;
+							// exclude invalid position
+							if (nx<0 || nx>=(int)ncol || ny<0 || ny>=(int)nrow) continue;
 							// except the cur itself
 							if(nx == cx && ny==cy) continue;
-							// if neighbour in the closed set	
+							// except the wall;
+							if(m_grid(nx,ny) == WALL) continue;
+							// exclude the neighbour in the closed set	
 							if(m_closedset(nx,ny)) continue;
 
+							// ok, we got a valid neighbour
 							float tentative = g_score(cx,cy);
-							if (nx == cx || ny == cy) {
-								tentative += 1 + m_grid(nx,ny);
-							} else {
-								tentative += (1 + m_grid(nx,ny)) * SQRT2;
+							if (nx == cx || ny == cy) {	// horizontal/vertical neighbour is near
+								tentative += 1;
+							} else { // diagonal neighbour is farther.
+								tentative += SQRT2;
 							}
 
 							// if neighbour not in the openset or dist < g_score[neighbour]	
 							if (!m_openset_grid(nx,ny) || tentative < g_score(nx,ny)) {
-								came_from[nx*ncol+ny] = cx*ncol+cy; // record path
-								g_score(nx,ny) = tentative;
-								f_score(nx,ny) = tentative + estimate(nx,ny,x2,y2);
-								if (!m_openset_grid(nx,ny)) {
+								came_from[nx*ncol+ny] = cx*ncol+cy; // record the path
+								g_score(nx,ny) = tentative;			// update path cost for current position
+								f_score(nx,ny) = tentative + estimate(nx,ny,x2,y2);	// record path cost to this neighbour
+								if (!m_openset_grid(nx,ny)) {	// only insert the neighbour if it hasn't been add to the openset.
 									m_openset.insert(f_score(nx,ny), nx*ncol+ny);
 									m_openset_grid(nx,ny) = true;
 								}
@@ -173,9 +175,16 @@ namespace alg {
 						}
 					}
 				}
+
+				// haven't reached target
 				return as;
 			}
 		private:
+			/**
+			 * Estimate the cost for going this way, such as:
+			 * acrossing the swamp will be much slower than walking on the road.
+			 * design for you game.
+			 */
 			inline float estimate(int x1, int y1, int x2, int y2) const {
 				return sqrtf((x2-x1) * (x2-x1) + (y2-y1)*(y2-y1));
 			}
