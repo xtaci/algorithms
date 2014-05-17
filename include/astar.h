@@ -85,9 +85,9 @@ namespace alg {
 				uint32_t ncol = m_grid.col();
 
 				// test wheather the (x1, y1) is the wall, we don't do stupid searching.
-				//if (m_grid(x1, y1) == WALL) {
-				//	return NULL;
-				//}
+				if (m_grid(x1, y1) == WALL) {
+					return NULL;
+				}
 
 				// the set of tentavie nodes to be evaluated,
 				// initialy containing the start node	
