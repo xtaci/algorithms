@@ -52,6 +52,10 @@ namespace alg {
 
 		private:
 			const Array2D<unsigned char> & m_grid;	
+			// the openset
+			Heap<uint32_t> m_openset;
+			// The set of nodes open -- for fast testing of a point in openset. heap contains test is quite slow -- O(n)
+			Array2D<bool> m_openset_grid;
 			// The set of nodes already evaluated.
 			Array2D<bool> m_closedset;
 			// Cost from start along best known path.	
@@ -61,9 +65,14 @@ namespace alg {
 		public:
 			AStar(const Array2D<unsigned char> & grid) :
 				m_grid(grid), 
+				m_openset(grid.row()*grid.col()),
+				m_openset_grid(grid.row(),grid.col()),
 				m_closedset(grid.row(),grid.col()),
 				g_score(grid.row(),grid.col()),
-				f_score(grid.row(),grid.col()) { }
+				f_score(grid.row(),grid.col()) { 
+					m_openset_grid.clear(false);
+					m_closedset.clear(false);
+				}
 
 			/**
 			 * the A* algorithm
@@ -74,27 +83,32 @@ namespace alg {
 				static float SQRT2 = 1.414213562373095;
 				uint32_t nrow = m_grid.row();
 				uint32_t ncol = m_grid.col();
-				m_closedset.clear(false);
+
+				// test wheather the (x1, y1) is the wall, we don't do stupid searching.
+				//if (m_grid(x1, y1) == WALL) {
+				//	return NULL;
+				//}
 
 				// the set of tentavie nodes to be evaluated,
 				// initialy containing the start node	
 				// encoding [x,y] to [x*ncol + y]
 				// using binary heap ...
-				Heap<uint32_t> openset(nrow*ncol);
-				openset.insert(0, x1*ncol+y1);
+				m_openset.insert(0, x1*ncol+y1);
+				// record the starting point in openset_grid
+				m_openset_grid(x1,y1) = true;
 
 				// The map of navigated nodes.	
 				HashTable<uint32_t, uint32_t> came_from(nrow*ncol);
 
-				g_score(y1,x1) = 0.0f;
-				f_score(y1,x1) = g_score(y1,x1) + estimate(x1,y1,x2,y2);
+				g_score(x1,y1) = 0.0f;
+				f_score(x1,y1) = g_score(x1,y1) + estimate(x1,y1,x2,y2);
 
 				AStarResult * as = new AStarResult;
 				as->path = NULL;
 				as->num_nodes = 0;
 
-				while(!openset.is_empty()) {
-					uint32_t value = openset.min_value();
+				while(!m_openset.is_empty()) {
+					uint32_t value = m_openset.min_value();
 					int	cx = value/ncol;
 					int	cy = value%ncol;
 
@@ -121,8 +135,9 @@ namespace alg {
 						return as;
 					}
 
-					openset.delete_min();
-					m_closedset(cy, cx) = true;
+					m_openset.delete_min();
+					m_closedset(cx, cy) = true;
+					m_openset_grid(cx, cy) = false;
 
 					// for each neighbor
 					int nx, ny;
@@ -132,26 +147,27 @@ namespace alg {
 							if (ny<0 || ny>=(int)nrow) continue;
 
 							// except the wall;
-							if(m_grid(ny,nx) == WALL) continue;
+							if(m_grid(nx,ny) == WALL) continue;
 							// except the cur itself
 							if(nx == cx && ny==cy) continue;
 							// if neighbour in the closed set	
-							if(m_closedset(ny,nx)) continue;
+							if(m_closedset(nx,ny)) continue;
 
-							float tentative = g_score(cy,cx);
+							float tentative = g_score(cx,cy);
 							if (nx == cx || ny == cy) {
-								tentative += 1 + m_grid(ny,nx);
+								tentative += 1 + m_grid(nx,ny);
 							} else {
-								tentative += (1 + m_grid(ny,nx)) * SQRT2;
+								tentative += (1 + m_grid(nx,ny)) * SQRT2;
 							}
 
 							// if neighbour not in the openset or dist < g_score[neighbour]	
-							if (!openset.contains(nx*ncol+ny) || tentative < g_score(ny,nx)) {
+							if (!m_openset_grid(nx,ny) || tentative < g_score(nx,ny)) {
 								came_from[nx*ncol+ny] = cx*ncol+cy; // record path
-								g_score(ny,nx) = tentative;
-								f_score(ny,nx) = tentative + estimate(nx,ny,x2,y2);
-								if (!openset.contains(nx*ncol+ny)) {
-									openset.insert(f_score(ny,nx), nx*ncol+ny);
+								g_score(nx,ny) = tentative;
+								f_score(nx,ny) = tentative + estimate(nx,ny,x2,y2);
+								if (!m_openset_grid(nx,ny)) {
+									m_openset.insert(f_score(nx,ny), nx*ncol+ny);
+									m_openset_grid(nx,ny) = true;
 								}
 							}
 						}
