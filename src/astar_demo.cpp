@@ -3,7 +3,7 @@
 #include <time.h>
 #include "astar.h"
 
-#define N 40
+#define N 128
 
 #define MARK 0xEE
 
