@@ -3,7 +3,7 @@ CC=gcc
 CPP=g++
 AR=ar
 RANLIB=ranlib
-CFLAGS= -g -Wall -Wno-unused-function
+CFLAGS= -g -Wall -Wno-unused-function -std=gnu++0x
 SRCDIR = ./src
 INCLUDEDIR = -I./include -I.
 DEPS = 
@@ -68,7 +68,8 @@ PROGRAMS =  m_based_demo \
 			bubble_sort_demo \
 			selection_sort_demo	\
 			8queue_demo \
-			palindrome_demo
+			palindrome_demo	\
+			suffix_array_demo
 
 all: $(PROGRAMS)
 
