@@ -57,6 +57,7 @@
     Prefix Tree(Trie)
     Suffix Tree
     B-Tree
+	Suffix Array
 
     Hash by multiplication
     Hash table
@@ -96,5 +97,5 @@
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
     wyh267: for base64, LRU, bubble sort, selection sort
-    ZhangYou0122: Push-Relabel algorithm         
-	UsingtcNower: Suffix Array
+    ZhangYou0122: Push-Relabel algorithm, Suffix Tree           
+	UsingtcNower: Suffix Array        
