@@ -21,7 +21,7 @@ class SuffixTree
 {
 public:
 	// active point is initialized as (root, None, 0), remainder initialized as 1
-	SuffixTree(string str):test_str(str), pos(0), root(test_str), active_point(&root, 0, 0), remainder(0), ls() {}
+	SuffixTree(string str):test_str(str), root(test_str), active_point(&root, 0, 0), remainder(0), pos(0), ls() {}
 	int construct(void);
 
 	// return -1 if no such sub exist, return the beginning postion of this substring in thr original string if it exist
@@ -82,13 +82,13 @@ private:
 
 	struct Edge{
 		// the begin and end pos of this edge, note that INT_MAX stands for #(the changing end pos of this entire string)
-		int begin, end;
+		unsigned int begin, end;
 		// Is there a better way to find test_str?
 		string& test_node_str;
 
 		Node * endpoint;
 
-		Edge(int b, int e, string& str):
+		Edge(unsigned int b, unsigned int e, string& str):
 			test_node_str(str) 
 		{
 			begin = b;
@@ -97,7 +97,7 @@ private:
 			//std::cout << "Edge initialized" << std::endl;
 		}
 
-		void change_edge(int b, int e)
+		void change_edge(unsigned int b, unsigned int e)
 		{
 			begin = b;
 			end = e;
@@ -118,7 +118,7 @@ private:
 			return me.begin < other.begin;
 		}
 
-		char operator[](int i)
+		char operator[](unsigned int i)
 		{
 			i += begin;
 			if (i > end)
@@ -129,12 +129,12 @@ private:
 
 		friend ostream& operator<<(ostream& os, Edge& edge)
 		{
-			int end = edge.test_node_str.size()-1;
+			unsigned int end = edge.test_node_str.size()-1;
 			if (end >= edge.end)
 				end = edge.end;
 
 			char c;
-			for (int i=edge.begin; i<=end; i++) {
+			for (unsigned int i=edge.begin; i<=end; i++) {
 				c = edge.test_node_str[i];
 				os << c;
 			}
@@ -246,7 +246,7 @@ private:
 	// how many suffixes is to be inserted?
 	int remainder;
 	// how many characters inserted?
-	int pos;
+	unsigned int pos;
 	char get_ele(int i) { return test_str[i]; }
 	// insert a char from pos to suffix tree
 	int insert();
