@@ -21,7 +21,7 @@ class SuffixTree
 {
 public:
 	// active point is initialized as (root, None, 0), remainder initialized as 1
-	SuffixTree(string str):test_str(str), root(test_str), active_point(&root, 0, 0), remainder(0), pos(0), ls() {}
+	SuffixTree(string str):test_str(str), root(test_str), active_point(&root, NULL, 0), remainder(0), pos(0), base_pos(0), ls() {}
 	int construct(void);
 
 	// return -1 if no such sub exist, return the beginning postion of this substring in thr original string if it exist
@@ -94,7 +94,7 @@ private:
 			begin = b;
 			end = e;
 			endpoint = NULL;
-			//std::cout << "Edge initialized" << std::endl;
+			std::cout << "Edge initialized" << std::endl;
 		}
 
 		void change_edge(unsigned int b, unsigned int e)
@@ -167,7 +167,7 @@ private:
 			make_pair(edge, true);
 			edges.insert(make_pair(edge, true)); 
 			findedges.insert(make_pair(test_node_str[edge->begin], edge));
-			//cout << "edge added. Now we have " << edges.size() << "edges." << endl;
+			cout << "edge added. Now we have " << edges.size() << "edges." << endl;
 		}
 
 		void del_edge(Edge* edge) {
@@ -178,9 +178,9 @@ private:
 			else {
 				// note we should erase the findedges too
 				edges.erase(edge);
-				//cout << "delete" << (*edge)[0] << endl;
+				cout << "delete" << (*edge)[0] << endl;
 				findedges.erase((*edge)[0]);
-				//cout << "edge deleted. Now we have " << edges.size() << "edges." << endl;
+				cout << "edge deleted. Now we have " << edges.size() << "edges." << endl;
 			}
 
 		}
@@ -188,13 +188,18 @@ private:
 		// find edge by the first char
 		Edge* find_edge(char c)
 		{
-			//cout << "finding edge";
+			cout << "finding edge char " << c;
 			map<char, Edge*>::iterator iter = findedges.find(c);
-			//cout << "founded?" << endl;
-			if (iter != findedges.end()) 
+			cout << " founded? ";
+
+			if (iter != findedges.end()) {
+				cout << "yes." << endl;
 				return iter->second;
-			else
+			}
+			else {
+				cout << "no." << endl;
 				return NULL;
+			}
 		}
 
 		bool isleaf() { return edges.empty(); }
@@ -224,10 +229,10 @@ private:
 	class ActivePoint{
 	public:
 		Node* active_node;
-		char active_edge;
+		Edge* active_edge;
 		int active_length;
 
-		ActivePoint(Node* node, char edge, int length): 
+		ActivePoint(Node* node, Edge* edge, int length): 
 			active_node(node), active_edge(edge), active_length(length) { std::cout << "ActivePoint initialized" << std::endl; }
 	};
 
@@ -236,8 +241,8 @@ private:
 
 	Node* get_active_node(void) { return active_point.active_node; }
 	void set_active_node(Node* node) { active_point.active_node = node; cout << "Active node set as " << node << endl; }
-	char get_active_edge(void) { return active_point.active_edge; }
-	void set_active_edge(char edge) { active_point.active_edge = edge; }
+	Edge* get_active_edge(void) { return active_point.active_edge; }
+	void set_active_edge(Edge* edge) { active_point.active_edge = edge; }
 	int get_active_length(void) { return active_point.active_length; }
 	void set_active_length(int len) { active_point.active_length = len; }
 	void inc_active_len() { active_point.active_length++; }
@@ -247,6 +252,7 @@ private:
 	int remainder;
 	// how many characters inserted?
 	unsigned int pos;
+	unsigned int base_pos;	// the beginnig position of suffixes need to be inserted
 	char get_ele(int i) { return test_str[i]; }
 	// insert a char from pos to suffix tree
 	int insert();
@@ -258,21 +264,32 @@ private:
 	Node* seperate_edge(Node * node, Edge* edge, int rule);
 
 	// check if we can change active node
-	void check_an(void)
+	void check_active_node(void)
 	{
 		Node* node = get_active_node();
-		Edge* edge = node->find_edge(get_active_edge());
+		Edge* edge = get_active_edge();
 
 		if (edge == NULL)
 			return;
 
-		int edge_size = edge->end - edge->begin + 1;
+		unsigned int edge_size = edge->end - edge->begin + 1;
+		unsigned int length = get_active_length();
 		
 		// update
-		if (edge_size == get_active_length()) {
+		if (edge_size == length) {
 			set_active_node(edge->endpoint);
 			set_active_edge(0);
 			set_active_length(0);
+			base_pos += edge_size;
+		}
+		else if (length > edge_size) {
+			set_active_length(length-edge_size);
+			set_active_node(edge->endpoint);
+			int new_length = get_active_length();
+			base_pos += edge_size;
+			Edge *new_active_edge = edge->endpoint->find_edge(get_ele(base_pos));
+			set_active_edge(new_active_edge);
+			check_active_node();
 		}
 	}
 
@@ -292,7 +309,7 @@ private:
 			prev = curr;
 			curr = node;
 			
-			if (!first) {
+			if (first == false) {
 				prev->suffix_link = curr;
 				cout << "Suffix link added from prev " << prev << " to curr " << curr << endl;
 			}
