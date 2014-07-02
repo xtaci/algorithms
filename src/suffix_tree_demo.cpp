@@ -50,127 +50,61 @@ int SuffixTree::construct(void)
 {
 	// test_str shouldn't have '#' until now
 	test_str = test_str + "#";
+	using std::numeric_limits;
 
 	while (pos < test_str.size()) {
 		ls.clear();
 		remainder++;
 		cout << "Char:  "  << test_str[pos] << endl;
-		cout << "Suffix yet inserted begin at " << base_pos << " " << test_str[base_pos] << endl;
 
-		int move = 0;
-		while (move == 0)
-			move = insert();
+		while (remainder) {
+			int length = get_active_length();
+			if (length == 0)
+				active_e = pos;
+
+			Node* node = active_point.active_node;
+			char a_char = get_active_edge();
+			Edge* a_edge = node->find_edge(a_char);
+
+
+			if (a_edge == NULL) {
+				Edge* newedge = new Edge(pos, numeric_limits<unsigned int>::max(), test_str);
+				node->add_edge(newedge);
+				ls.ins_link(node);
+			}	
+			else {
+				if (check_active_node())
+					continue;
+
+				char expected_ele = (*a_edge)[get_active_length()];
+				if (expected_ele == get_ele(pos)) {
+					inc_active_len();
+					ls.ins_link(node);
+					break;
+				}
+				Node *newnode = seperate_edge(node, a_edge);
+				Edge* newedge = new Edge(pos, numeric_limits<unsigned int>::max(), test_str);
+				newnode->add_edge(newedge);
+				ls.ins_link(newnode);
+			}
+			remainder--;
+			if (node == &root && get_active_length() > 0) {
+				dec_active_len();
+				active_e = pos - remainder + 1;
+			}
+			else if (node->suffix_link) {
+				set_active_node(node->suffix_link);
+			}
+			else
+				set_active_node(&root);
+		}
+
 		pos++;
 	}
 	return 0;
 }
 
-int SuffixTree::insert(void)
-{
-	using std::numeric_limits;
-
-	int move = 1;
-
-	Node* node = active_point.active_node;
-	int length = get_active_length();
-
-	Edge* a_edge = get_active_edge();
-
-	if (a_edge == NULL) {
-		Edge *search_edge = node->find_edge(get_ele(pos));
-		
-		if (search_edge == NULL) {
-			// insert new suffix
-			Edge *new_edge = new Edge(pos, numeric_limits<unsigned int>::max(), test_str);
-			node->add_edge(new_edge);
-			remainder--;
-			if (node->suffix_link) {
-				// move to suffix link
-				set_active_node(node->suffix_link);
-				Edge *new_active_edge = node->suffix_link->find_edge(base_pos);
-				set_active_edge(new_active_edge);
-				move = 0;
-			}
-			else {
-				// move to root
-				set_active_node(&root);
-
-				if (base_pos != pos) {
-					Edge *new_active_edge = root.find_edge(get_ele(base_pos));
-					set_active_edge(new_active_edge);
-					dec_active_len();
-				}
-				base_pos++;
-
-				if (remainder > 0) {
-					move = 0;
-				}
-				else
-					move = 1;
-			}
-		}
-		else {
-			// set new active edge
-			set_active_edge(search_edge);
-			inc_active_len();
-			move = 1;
-		}
-	}
-	else {
-		char expected_ele = (*a_edge)[get_active_length()];
-
-		cout << (*a_edge) << endl;
-		cout << get_active_length() << endl;
-		cout << expected_ele << " vs " << get_ele(pos) << endl;
-		if (expected_ele == get_ele(pos)) {
-			// expand active length
-			inc_active_len();
-			check_active_node();
-			move = 1;
-		}
-		else {
-			// seperate edge and insert new suffix
-			Node * new_node = seperate_edge(node, a_edge, length);
-			Edge *new_edge = new Edge(pos, numeric_limits<int>::max(), test_str);
-			new_node->add_edge(new_edge);
-			remainder--;
-			ls.ins_link(new_node);
-
-			if (new_node->suffix_link) {
-				// move to suffix link
-				set_active_node(node->suffix_link);
-				Edge *new_active_edge = node->suffix_link->find_edge(get_ele(base_pos));
-				set_active_edge(new_active_edge);
-				move = 0;
-			}
-			else {
-				// fall back to root
-				set_active_node(&root);
-				dec_active_len();
-				base_pos++;
-				if (base_pos != pos) {
-					Edge *new_active_edge = root.find_edge(get_ele(pos-remainder+1));
-					set_active_edge(new_active_edge);
-					base_pos = pos - remainder + 1;
-
-					set_active_length(pos-base_pos);
-					check_active_node();
-
-					move = 0;
-				}
-				else {
-					set_active_edge(NULL);
-					move = 0;
-				}
-			}
-
-		}
-	
-	}
-	return move;
-}
-
-SuffixTree::Node* SuffixTree::seperate_edge(Node * node, Edge* a_edge, int rule)
+SuffixTree::Node* SuffixTree::seperate_edge(Node * node, Edge* a_edge)
 {
 	cout << "seperate the old edge here: " << (*a_edge) << endl;
 	int new_begin = a_edge->begin + get_active_length();

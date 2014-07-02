@@ -21,7 +21,7 @@ class SuffixTree
 {
 public:
 	// active point is initialized as (root, None, 0), remainder initialized as 1
-	SuffixTree(string str):test_str(str), root(test_str), active_point(&root, NULL, 0), remainder(0), pos(0), base_pos(0), ls() {}
+	SuffixTree(string str):test_str(str), root(test_str), active_point(&root, 0, 0), remainder(0), pos(0), active_e(0), ls() {}
 	int construct(void);
 
 	// return -1 if no such sub exist, return the beginning postion of this substring in thr original string if it exist
@@ -229,10 +229,10 @@ private:
 	class ActivePoint{
 	public:
 		Node* active_node;
-		Edge* active_edge;
+		char active_edge;
 		int active_length;
 
-		ActivePoint(Node* node, Edge* edge, int length): 
+		ActivePoint(Node* node, char edge, int length): 
 			active_node(node), active_edge(edge), active_length(length) { std::cout << "ActivePoint initialized" << std::endl; }
 	};
 
@@ -241,8 +241,11 @@ private:
 
 	Node* get_active_node(void) { return active_point.active_node; }
 	void set_active_node(Node* node) { active_point.active_node = node; cout << "Active node set as " << node << endl; }
-	Edge* get_active_edge(void) { return active_point.active_edge; }
-	void set_active_edge(Edge* edge) { active_point.active_edge = edge; }
+	char get_active_edge(void) 
+	{ 
+		return test_str[active_e]; 
+	}
+
 	int get_active_length(void) { return active_point.active_length; }
 	void set_active_length(int len) { active_point.active_length = len; }
 	void inc_active_len() { active_point.active_length++; }
@@ -252,7 +255,7 @@ private:
 	int remainder;
 	// how many characters inserted?
 	unsigned int pos;
-	unsigned int base_pos;	// the beginnig position of suffixes need to be inserted
+	unsigned int active_e;	// the beginnig position of suffixes need to be inserted
 	char get_ele(int i) { return test_str[i]; }
 	// insert a char from pos to suffix tree
 	int insert();
@@ -261,36 +264,30 @@ private:
 	int print_node(Node* node, int level);
 
 
-	Node* seperate_edge(Node * node, Edge* edge, int rule);
+	Node* seperate_edge(Node * node, Edge* edge);
 
 	// check if we can change active node
-	void check_active_node(void)
+	bool check_active_node(void)
 	{
 		Node* node = get_active_node();
-		Edge* edge = get_active_edge();
+		char a_char = get_active_edge();
+		Edge* edge = node->find_edge(a_char);
 
 		if (edge == NULL)
-			return;
+			return false;
 
 		unsigned int edge_size = edge->end - edge->begin + 1;
 		unsigned int length = get_active_length();
 		
 		// update
-		if (edge_size == length) {
+		if (length >= edge_size) {
 			set_active_node(edge->endpoint);
-			set_active_edge(0);
-			set_active_length(0);
-			base_pos += edge_size;
-		}
-		else if (length > edge_size) {
 			set_active_length(length-edge_size);
-			set_active_node(edge->endpoint);
-			int new_length = get_active_length();
-			base_pos += edge_size;
-			Edge *new_active_edge = edge->endpoint->find_edge(get_ele(base_pos));
-			set_active_edge(new_active_edge);
-			check_active_node();
+			active_e += edge_size;
+			
+			return true;
 		}
+		return false;
 	}
 
 	// this class indicate when shall we insert a suffix link
