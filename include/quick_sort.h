@@ -74,8 +74,8 @@ namespace alg {
 				quicksort(list, begin, pivot_idx-1);
 				quicksort(list, pivot_idx+1, end);
 			} else if ( begin + 1 == end) {
-				if (list[begin + 1] > list[end])
-					swap(list[begin + 1], list[end]);
+				if (list[begin] > list[end])
+					swap(list[begin], list[end]);
 			}
 		}
 }
