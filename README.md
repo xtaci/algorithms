@@ -35,11 +35,11 @@
     Queue
     Stack
     Binary Heap
-	Fibonacci Heap
+    Fibonacci Heap
     Priority Queue (list based)
 
-	Bubble sort
-	Selection sort
+    Bubble sort
+    Selection sort
     Insertion sort
     Radix sort
     Quick sort
@@ -51,13 +51,14 @@
     Largest common sequence
 
     Binary search tree
+    AVL tree
     Dynamic order statistics
     Red-black tree
     Interval tree
     Prefix Tree(Trie)
     Suffix Tree
     B-Tree
-	Suffix Array
+    Suffix Array
 
     Hash by multiplication
     Hash table
@@ -72,7 +73,7 @@
     Base64
 
     Graph data structure
-	Strongly Connected Components(SCC)
+    Strongly Connected Components(SCC)
     Prim's minimum spanning tree
     Kruskal MST
     Directed/Undirected graph ops
@@ -89,13 +90,14 @@
     K-Means
     Knuth–Morris–Pratt algorithm
     Disjoint-Set
-	8-Queue Problem
-	Palindrome
+    8-Queue Problem
+    Palindrome
 
 ####贡献者 ( Contributors ) :  
-    Samana :  for heavy work of MSVC compatability
+    Samana:  for heavy work of MSVC compatability
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
     wyh267: for base64, LRU, bubble sort, selection sort
     ZhangYou0122: Push-Relabel algorithm, Suffix Tree           
-	UsingtcNower: Suffix Array        
+    UsingtcNower: Suffix Array
+    afernandez90: AVL trees

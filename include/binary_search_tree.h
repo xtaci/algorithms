@@ -8,7 +8,7 @@
  * BINARY SEARCH TREE
  *
  * Features:
- * 1. Expected search time is O(nlogn).
+ * 1. Expected search time is O(log(n)), with worst case O(n).
  * 2. Data should be !!!SHUFFLED!!! first before tree creation.
  * 3. First initialize the value of the root (pointer to the 
  *    structure treeNode) with NULL. eg:

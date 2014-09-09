@@ -3,7 +3,7 @@ CC=gcc
 CPP=g++
 AR=ar
 RANLIB=ranlib
-CFLAGS= -g -Wall -Wno-unused-function -std=gnu++0x
+CFLAGS= -g -Wall -Wno-unused-function -std=c++11
 SRCDIR = ./src
 INCLUDEDIR = -I./include -I.
 DEPS = 
@@ -70,7 +70,8 @@ PROGRAMS =  m_based_demo \
 			8queue_demo \
 			palindrome_demo \
 			suffix_array_demo \
-			suffix_tree_demo
+			suffix_tree_demo \
+			avl_demo
 
 all: $(PROGRAMS)
 
@@ -79,3 +80,4 @@ all: $(PROGRAMS)
 
 clean:
 	rm -rf $(PROGRAMS) *.dSYM
+
