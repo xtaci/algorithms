@@ -5,7 +5,7 @@ using namespace std;
 using namespace alg;
 
 const unsigned N = 4096*32;
-const unsigned N_ELEMS_TO_REMOVE = 4096*8;
+const unsigned N_ELEMS_TO_REMOVE = N-128; // Must be between 0 and N-1
 
 template <typename T> 
 void printTreeStatus(const AVL<T> &t) {
@@ -40,20 +40,27 @@ int main()
 	        cout << "ERROR: Value " << values[idx] << " was inserted and not found!" << endl;
     }
 
-    cout << "Now removing " << N_ELEMS_TO_REMOVE << " random elements for the tree... ";
+    cout << "Now removing a random element from the tree... ";
+    unsigned idx = rand() % N;
+    avl.erase(values[idx]);
+    cout << "Done" << endl;
+
+    printTreeStatus(avl);
+    
+    cout << "Now removing the root of the tree " << N_ELEMS_TO_REMOVE << " times... ";
     for (unsigned i = 0; i < N_ELEMS_TO_REMOVE; ++i) {
-        unsigned idx = rand() % N;
-        avl.erase(values[idx]);
+        avl.erase(avl.root());
     }
     cout << "Done" << endl;
 
     printTreeStatus(avl);
 
-    cout << "Do you want to see the GraphViz representation of the Tree (Y/n)? ";
+    // Outputting to cerr so the output can be redirected with ./avl_demo 2> <name>.gvz
+    cout << "Do you want to output the GraphViz representation of the tree to the cerr stream (Y/n)? ";
     char usrInput;
     cin >> usrInput;
-    if (usrInput == 'Y' || usrInput == 'y') avl.toGraphViz(cout, "AVL");
-
+    if (usrInput == 'Y' || usrInput == 'y') avl.toGraphViz(cerr, "AVL");
+    
     return 0;
 }
 

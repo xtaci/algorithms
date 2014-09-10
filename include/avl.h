@@ -51,8 +51,9 @@ class AVL {
 
         void erase(const T &x) {
             if (!isEmpty()) {
-                tree = tree->erase(x);
-                numNodes--;
+                bool found = false;
+                tree = tree->erase(x, found);
+                if (found) numNodes--;
             }
         }
 
@@ -64,7 +65,7 @@ class AVL {
             }
         }
 
-    private:
+    public:
 
         struct Node {
             Node *left, *right;
@@ -93,51 +94,58 @@ class AVL {
                 return update();
             }
 
-            Node *erase(const T &x) {
+            Node *erase(const T &x, bool &found) {
                 if (value == x) {
+                    found = true;
                     if (left == 0 && right == 0) {
                         delete this;
                         return 0;
                     } else if (left == 0) {
+                        Node *aux = right;
                         *this = *right;
-                        delete right;
+                        delete aux;
                     } else if (right == 0) {
+                        Node *aux = left;
                         *this = *left;
-                        delete left;
+                        delete aux;
                     } else {
                         // Tracing path to rightmost leaf of the left subtree
                         std::stack<Node*> trace;
 
                         Node *current = left;
-                        while (current->right != 0) {
+                        while (current != 0) {
                             trace.push(current);
                             current = current->right;
                         }
 
+                        current = trace.top();
                         value = current->value;
                         Node *lsubtree = current->left;
                         delete current;
+                        trace.pop();
 
-                        if (trace.empty()) trace.push(left);
-
-                        trace.top()->right = lsubtree;
-
-                        do {
-                            trace.top()->update();
+                        if (trace.empty()) { left = lsubtree; }
+                        else {
+                            trace.top()->right = lsubtree;
                             trace.pop();
-                        } while (!trace.empty());
+                            while (!trace.empty()) {
+                                current = trace.top();
+                                current->right = current->right->update();
+                                trace.pop();
+                            }
+                        }
                     }
                     return update();
                 }
                 else if (x < value) {
                     if (left != 0) {
-                        left = left->erase(x);
+                        left = left->erase(x, found);
                         return update();
                     } else return this;
                 }
                 else {
                     if (right != 0) {
-                        right = right->erase(x);
+                        right = right->erase(x, found);
                         return update();
                     } else return this;
                 }
