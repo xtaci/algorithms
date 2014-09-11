@@ -13,6 +13,9 @@
  * 3. Exportable to GraphViz format for easy visualization and verification
  *
  * http://en.wikipedia.org/wiki/AVL_tree
+ * 
+ * @author Alejandro Fernandez (alejandro.fernandez.suarez@gmail.com)
+ * @github afernandez90
  *
  ******************************************************************************/
 
