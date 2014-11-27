@@ -27,6 +27,7 @@
 #include <vector>
 #include <string>
 #include <math.h>
+#include <functional>
 
 using namespace std;
 
@@ -69,7 +70,7 @@ namespace alg {
 		for(size_t k=0;k<bucket.size();k++) bucket[k].resize(N+N);
 
 		for(L=1,K=0;(L>>1)<N;L<<=1,K++) {
-			sort(suffix.begin(), suffix.end(), bind(&SuffixArray::less_than, *this, placeholders::_1, placeholders::_2));
+			sort(suffix.begin(), suffix.end(), std::bind(&SuffixArray::less_than, *this, placeholders::_1, placeholders::_2));
 			update_bucket();
 		}
 	}

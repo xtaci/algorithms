@@ -34,7 +34,7 @@ namespace alg {
 
 		if (n%2	== 0) return false;
 
-		unsigned sqrtn = sqrt(n);
+		unsigned sqrtn = sqrt((double)n);
 		for (unsigned int i = 3; i <= sqrtn; i+=2) {
 			if (n % i == 0) {
 				return false;

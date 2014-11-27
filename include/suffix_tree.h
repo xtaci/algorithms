@@ -226,6 +226,8 @@ private:
 	};
 	//typedef struct Node Node;
 
+	friend struct Node;
+
 	class ActivePoint{
 	public:
 		Node* active_node;
