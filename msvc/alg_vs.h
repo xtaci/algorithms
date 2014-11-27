@@ -8,8 +8,8 @@
 
 #define strtok_r strtok_s
 
-#if _MSC_VER <= 1700
-#define ALG_VLA_NOT_SUPPORTED 1
+#if _MSC_VER <= 1800
+#define ALG_VLA_NOT_SUPPORTED
 #endif
 
 #define typeof decltype

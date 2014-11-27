@@ -42,7 +42,7 @@ namespace alg {
 	}
 
 #ifdef _MSC_VER
-#define log2(x) (log(x) / log(2))
+#define log2(x) (log(x) / log(2.0))
 #endif
 
 	/**
@@ -50,7 +50,7 @@ namespace alg {
 	 */
 	static MultiHash * multi_hash_init(uint32_t size) {
 		// find prime larger than log2(size)
-		uint32_t r = ceil(log2(size));
+		uint32_t r = ceil(log2((double)size));
 		int i;
 		for (i = r; ;i++) {
 			if (is_prime(i)) {

@@ -25,6 +25,8 @@
 #include <iostream>
 #include <cmath>
 #include <stack>
+#include <algorithm>
+#include <string>
 
 namespace alg {
 
