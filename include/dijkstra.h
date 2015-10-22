@@ -76,7 +76,7 @@ namespace alg {
 					list_for_each_entry(v, &u->v_head, v_node){
 						uint32_t alt = dist_u + v->weight;
 						uint32_t dist_v = dist[v->id];
-						if (alt < dist_v && !visited[v->id]) {
+						if (alt < dist_v) {
 							/*
 							   uint32_t tmp = dist[v->id];
 							   if (tmp != INT_MAX) {
