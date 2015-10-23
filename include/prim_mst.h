@@ -73,11 +73,12 @@ namespace alg {
 
 				while (!Q.is_empty()) {
 					Heap<uint32_t>::elem e = Q.pop();
-					Graph::Adjacent * u = g[e.data];	// the vertex to process
+					uint32_t id = e.data;
+					Graph::Adjacent * u = g[id];	// the vertex to process
 					Graph::Vertex * v;
 					list_for_each_entry(v, &u->v_head, v_node) {
 						if (Q.contains(v->id) && v->weight < keys[v->id]) {
-							pi[v->id] = e.data;
+							pi[v->id] = id;
 							Q.decrease_key(v->id, v->weight);
 							keys[v->id] = v->weight;
 						}
