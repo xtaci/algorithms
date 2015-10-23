@@ -57,7 +57,7 @@ namespace alg {
 			private:
 				int m_size;		// current heap size.
 				int m_max;		// max heap size.
-				elem * m_heap;			// key value pairs.
+				elem * m_heap;	// key value pairs.
 			public:
 				Heap(int max) {
 					m_size = 0;
@@ -122,8 +122,8 @@ namespace alg {
 				 *  remove the given data
 				 */
 				bool remove(T data) {
-					for (int i=0;i<m_size;i++) {	// loop finding 
-						if (m_heap[i].data == data) {	// found
+					for (int i=0;i<m_size;i++) { // loop finding 
+						if (m_heap[i].data == data) { // found
 							int n = m_size-1;
 							if (n != i) {
 								swap(m_heap[i], m_heap[n]);
