@@ -93,7 +93,7 @@ namespace alg {
 				// initialy containing the start node	
 				// encoding [x,y] to [x*ncol + y]
 				// using binary heap ...
-				m_openset.insert(0, x1*ncol+y1);
+				m_openset.push(0, x1*ncol+y1);
 				// record the starting point in openset_grid
 				m_openset_grid(x1,y1) = true;
 
@@ -109,7 +109,8 @@ namespace alg {
 
 				// the main A*algorithm
 				while(!m_openset.is_empty()) {
-					uint32_t value = m_openset.min_value();
+					Heap<uint32_t>::elem e = m_openset.pop();
+					uint32_t value = e.data;
 					int	cx = value/ncol;
 					int	cy = value%ncol;
 
@@ -136,8 +137,7 @@ namespace alg {
 						return as;
 					}
 
-					// delete current positon from openset and move it into closed set.
-					m_openset.delete_min();
+					// move it into closed set.
 					m_closedset(cx, cy) = true;
 					m_openset_grid(cx, cy) = false;
 
@@ -168,7 +168,7 @@ namespace alg {
 								g_score(nx,ny) = tentative;			// update path cost for current position
 								f_score(nx,ny) = tentative + estimate(nx,ny,x2,y2);	// record path cost to this neighbour
 								if (!m_openset_grid(nx,ny)) {	// only insert the neighbour if it hasn't been add to the openset.
-									m_openset.insert(f_score(nx,ny), nx*ncol+ny);
+									m_openset.push(f_score(nx,ny), nx*ncol+ny);
 									m_openset_grid(nx,ny) = true;
 								}
 							}

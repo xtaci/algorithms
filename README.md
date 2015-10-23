@@ -44,7 +44,6 @@
     Radix sort
     Quick sort
     Merge sort
-    Heap sort
     Double linked list
     Skip list
     Self-organized linked-list ops (move-to-front, move-ahead-one)

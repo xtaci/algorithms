@@ -39,7 +39,7 @@ namespace alg {
 		Heap<int32_t> Q(g.vertex_count()) ;
 		Graph::Adjacent * a;
 		list_for_each_entry(a, &g.list(), a_node) {
-			Q.insert(INT_MAX - a->f, a->v.id);	// descending order of a->f
+			Q.push(INT_MAX - a->f, a->v.id);	// descending order of a->f
 		}
 
 		// step 2. discover 
@@ -51,9 +51,9 @@ namespace alg {
 		// step 3. call DFS(GT), but in the main loop of DFS, consider the vertices
 		// in order of decreasing u.f (as computed in line 1)
 		while(!Q.is_empty()) {
-			int32_t key = Q.min_key();
-			int32_t id = Q.min_value();
-			Q.delete_min(); 
+			Heap<int32_t>::elem e = Q.pop();
+			int32_t key = e.key;
+			int32_t id = e.data;
 			if ((*GT)[id]->color == Graph::WHITE) {
 				printf("component:%d %d\n",id, INT_MAX - key);
 				_DFS_VISIT(*GT, (*GT)[id]);

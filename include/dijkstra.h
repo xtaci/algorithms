@@ -37,6 +37,7 @@ namespace alg {
 	class Dijkstra {
 		public:
 			static const int UNDEFINED = -1;
+			static const int LARGE_NUMBER = 999999;
 			// run dijkstra algorithm, and return the previous table
 			static HashTable<int32_t, int32_t> * run(const Graph & g, uint32_t src_id) {
 				// a binary heap
@@ -51,43 +52,35 @@ namespace alg {
 				// all vertices
 				Graph::Adjacent * a;
 				list_for_each_entry(a, &g.list(), a_node){
-					dist[a->v.id] = INT_MAX; // set inital distance to each vertex as INT_MAX
+					dist[a->v.id] = LARGE_NUMBER; // set inital distance to each vertex to a large number
 					(*previous)[a->v.id] =  UNDEFINED; // clear path to UNDEFINED
 					visited[a->v.id] = false; // all vertices are not visited
+					Q.push(LARGE_NUMBER, a->v.id);	// push all vertices to heap
 				}
 
 				// source vertex, the first vertex in Heap-Q
-				Q.insert(0, src_id);
 				dist[src_id] = 0;
+				// decrease-key the source vertex to 0
+				Q.decrease_key(src_id,0);
 
 				while(!Q.is_empty()) {    // for every un-visited vertex, try relaxing the path
-					int32_t id = Q.min_value();
-					Q.delete_min();		// remove u from Q
-					if (visited[id]) {	// jump visited vertex, it means a closer vertex has found
-						// printf("visted:%d %d\n", id, dist[id]);
+					Heap<uint32_t>::elem e = Q.pop();
+					uint32_t id = e.data;
+					if (visited[id]) {	// ignore visited vertex
 						continue;
 					}
 
 					Graph::Adjacent * u = g[id];	// the vertex to process
 					int dist_u = dist[id];			// current known shortest distance to u
-					visited[id] = true;	// mark the vertex as visited.
+					visited[id] = true;				// mark the vertex as visited.
 
 					Graph::Vertex * v;
 					list_for_each_entry(v, &u->v_head, v_node){
 						uint32_t alt = dist_u + v->weight;
-						uint32_t dist_v = dist[v->id];
-						if (alt < dist_v) {
-							/*
-							   uint32_t tmp = dist[v->id];
-							   if (tmp != INT_MAX) {
-							   printf("old %d %d\n", v->id, tmp);
-							   printf("new %d %d\n", v->id, dist[v->id]);
-							   }
-							 */
-
+						if (alt < dist[v->id]) {
 							dist[v->id] = alt;
-							(*previous)[v->id] = u->v.id;
-							Q.insert(alt, v->id);
+							(*previous)[v->id] = id;
+							Q.decrease_key(v->id, alt);	// decrease-key
 						}
 					}
 				}
