@@ -121,7 +121,7 @@ namespace alg {
 				/**
 				 *  remove the given data
 				 */
-				bool remove(T data) {
+				bool remove(const T &data) {
 					for (int i=0;i<m_size;i++) { // loop finding 
 						if (m_heap[i].data == data) { // found
 							int n = m_size-1;
@@ -141,7 +141,7 @@ namespace alg {
 				 *  decrease key
 				 *  simpliy implemented as remove then push
 				 */
-				void decrease_key(T data, int newkey) {
+				void decrease_key(const T &data, int newkey) {
 					if (remove(data)) {
 						push(newkey, data);
 					}
