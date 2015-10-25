@@ -27,7 +27,7 @@
     Prime test(trial division)
     Prime test(Miller-Rabin's method)
     2D Array
-    Arbitary Integer
+    Arbitrary Integer
     Linear congruential generator
     Maximum subarray problem
 
