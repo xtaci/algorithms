@@ -77,7 +77,7 @@ namespace alg {
 					Graph::Vertex * v;
 					list_for_each_entry(v, &u->v_head, v_node){
 						uint32_t alt = dist_u + v->weight;
-						if (alt < dist[v->id]) {
+						if (alt < (uint32_t) dist[v->id]) {
 							dist[v->id] = alt;
 							(*previous)[v->id] = id;
 							Q.decrease_key(v->id, alt);	// decrease-key
