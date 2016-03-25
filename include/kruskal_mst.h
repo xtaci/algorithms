@@ -91,7 +91,7 @@ namespace alg {
 
 				Graph::Vertex * v;
 				list_for_each_entry(v, &a.v_head, v_node){
-					pa->heap.insert(v->weight, v);  // weight->vertex
+					pa->heap.push(v->weight, v);  // weight->vertex
 				}
 			}
 

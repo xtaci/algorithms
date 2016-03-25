@@ -27,7 +27,7 @@
     Prime test(trial division)
     Prime test(Miller-Rabin's method)
     2D Array
-    Arbitary Integer
+    Arbitrary Integer
     Linear congruential generator
     Maximum subarray problem
 
@@ -44,7 +44,6 @@
     Radix sort
     Quick sort
     Merge sort
-    Heap sort
     Double linked list
     Skip list
     Self-organized linked-list ops (move-to-front, move-ahead-one)

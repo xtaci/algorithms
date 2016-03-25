@@ -24,7 +24,7 @@
 #define Min(a, b) ( (a < b) ? a : b )
 
 #define RANDOM_INIT()	srand(time(NULL))
-#define RANDOM(L, R)	(L + rand() % ((R) - (L))) // gen a random integer in [L, R]
+#define RANDOM(L, R)	(L + rand() % ((R) - (L) + 1)) // gen a random integer in [L, R]
 
 namespace alg {
 	/**
