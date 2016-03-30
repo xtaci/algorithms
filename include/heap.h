@@ -61,7 +61,7 @@ namespace alg {
 			public:
 				Heap(int max) {
 					m_size = 0;
-					m_max = max+1;
+					m_max = max;
 					m_heap = new elem[m_max];
 				};
 
@@ -101,7 +101,7 @@ namespace alg {
 				inline void clear() { m_size = 0; }
 
 				bool contains(const T & data) {
-					for(int i=1;i<=m_size;i++) {
+					for(int i=0;i<m_size;i++) {
 						if(m_heap[i].data== data) return true;
 					}
 					return false;
@@ -166,7 +166,7 @@ namespace alg {
 						}
 
 						int j = j1;
-						int j2 = j1+1; // left child
+						int j2 = j1+1; // right child
 						if (j2 < n && !less(j1,j2)) {
 							j = j2; 	// choose the minium one.
 						}
