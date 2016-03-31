@@ -13,6 +13,7 @@ LIBS = -lm
 PROGRAMS = m_based_demo \
 			integer_demo \
        		insertion_sort_demo \
+					shell_sort_demo \
        		radix_sort_demo \
        		shuffle_demo \
            	quick_sort_demo \
@@ -79,6 +80,9 @@ integer_demo: $(SRCDIR)/integer_demo.cpp
 	$(CPP) $(CFLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
 
 insertion_sort_demo: $(SRCDIR)/insertion_sort_demo.cpp
+	$(CPP) $(CFLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
+
+shell_sort_demo: $(SRCDIR)/shell_sort_demo.cpp
 	$(CPP) $(CFLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
 
 radix_sort_demo: $(SRCDIR)/radix_sort_demo.cpp

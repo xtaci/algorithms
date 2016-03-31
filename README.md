@@ -41,6 +41,7 @@
     Bubble sort
     Selection sort
     Insertion sort
+    Shell sort
     Radix sort
     Quick sort
     Merge sort
