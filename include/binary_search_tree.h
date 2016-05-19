@@ -31,7 +31,7 @@ namespace alg {
 		class BST {
 			private:
 				/**
-				 * binary search tree definiton.
+				 * binary search tree definition.
 				 */
 				struct treeNode {
 					KeyT 	key;			// key

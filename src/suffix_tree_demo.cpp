@@ -82,7 +82,7 @@ int SuffixTree::construct(void)
 					ls.ins_link(node);
 					break;
 				}
-				Node *newnode = seperate_edge(node, a_edge);
+				Node *newnode = separate_edge(node, a_edge);
 				Edge* newedge = new Edge(pos, numeric_limits<unsigned int>::max(), test_str);
 				newnode->add_edge(newedge);
 				ls.ins_link(newnode);
@@ -106,7 +106,7 @@ int SuffixTree::construct(void)
 
 SuffixTree::Node* SuffixTree::seperate_edge(Node * node, Edge* a_edge)
 {
-	cout << "seperate the old edge here: " << (*a_edge) << endl;
+	cout << "separate the old edge here: " << (*a_edge) << endl;
 	int new_begin = a_edge->begin + get_active_length();
 	int new_end = a_edge->end;
 
@@ -175,7 +175,7 @@ using namespace std;
 
 int main()
 {
-	cout << "Begining" << endl;
+	cout << "Beginning" << endl;
 	SuffixTree st("mississippi");
 
 	cout << "Constructing..." << endl;

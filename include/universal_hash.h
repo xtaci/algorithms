@@ -63,7 +63,7 @@ namespace alg {
 	}
 
 	/**
-	 * hash an arbitary length integer.
+	 * hash an arbitrary length integer.
 	 * len, number of 32-bit integer, max len is 32
 	 */
 	static uint32_t uhash_bigint(const struct UHash * params, uint32_t * key, uint32_t len) {

@@ -13,8 +13,8 @@
  *       and right part.
  *           Example: Say the input is  -10 32 45 -78 91 1 0 -16 then the left part will be  
  *           -10 32 45 -78 and the right part will be  91 1 0 6.
- *   (2) Sort Each of them seperately. Note that here sort does not mean to sort it using some other
- *            method. We already wrote fucntion to sort it. Use the same.
+ *   (2) Sort Each of them separately. Note that here sort does not mean to sort it using some other
+ *            method. We already wrote function to sort it. Use the same.
  *   (3) Then merge the two sorted parts.
  *
  * ------------

@@ -75,7 +75,7 @@ namespace alg {
 					list_add(&n->node, &m_head);
 					m_count++;
 				} else {
-					// sequentially find the apropriate position
+					// sequentially find the appropriate position
 					PQNode * pos;
 					bool found = false;
 					list_for_each_entry(pos, &m_head, node) {

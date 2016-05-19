@@ -52,7 +52,7 @@ namespace alg {
 				// all vertices
 				Graph::Adjacent * a;
 				list_for_each_entry(a, &g.list(), a_node){
-					dist[a->v.id] = LARGE_NUMBER; // set inital distance to each vertex to a large number
+					dist[a->v.id] = LARGE_NUMBER; // set initial distance to each vertex to a large number
 					(*previous)[a->v.id] =  UNDEFINED; // clear path to UNDEFINED
 					visited[a->v.id] = false; // all vertices are not visited
 					Q.push(LARGE_NUMBER, a->v.id);	// push all vertices to heap
