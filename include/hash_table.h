@@ -36,7 +36,7 @@ namespace alg {
 			typedef _HashCode hash_code_fn;
 			private:
 				/**
-				 * definiton of Key-Value pair.
+				 * definition of Key-Value pair.
 				 */
 				struct HashKV {
 					key_type key;	// 32-bit key
