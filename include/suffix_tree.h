@@ -24,7 +24,7 @@ public:
 	SuffixTree(string str):test_str(str), root(test_str), active_point(&root, 0, 0), remainder(0), pos(0), active_e(0), ls() {}
 	int construct(void);
 
-	// return -1 if no such sub exist, return the beginning postion of this substring in thr original string if it exist
+	// return -1 if no such sub exist, return the beginning position of this substring in thr original string if it exist
 	int search(string sub);
 
 	// return the length of the longest prefix of sub which can be matched in suffix tree
@@ -257,7 +257,7 @@ private:
 	int remainder;
 	// how many characters inserted?
 	unsigned int pos;
-	unsigned int active_e;	// the beginnig position of suffixes need to be inserted
+	unsigned int active_e;	// the beginning position of suffixes need to be inserted
 	char get_ele(int i) { return test_str[i]; }
 	// insert a char from pos to suffix tree
 	int insert();
@@ -266,7 +266,7 @@ private:
 	int print_node(Node* node, int level);
 
 
-	Node* seperate_edge(Node * node, Edge* edge);
+	Node* separate_edge(Node * node, Edge* edge);
 
 	// check if we can change active node
 	bool check_active_node(void)
