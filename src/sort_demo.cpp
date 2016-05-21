@@ -35,7 +35,7 @@ void swap(int &a,int &b){
 //make rand data
 void makeArray(vector<int>& array,int num){
 		
-	for(size_t i = 0; i < num; ++i)
+	for(int i = 0; i < num; ++i)
 	{
 		array.push_back(rand()%100);
 		/* code */

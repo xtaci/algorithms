@@ -31,7 +31,7 @@ public:
 	template <class Iterator>
 	Iterator inc_search(Iterator sub)
 	{
-		typedef typename Iterator::value_type T;	// extract real type
+		//typedef typename Iterator::value_type T;	// extract real type
 
 		Iterator result = sub;
 		Node* node = &root;
