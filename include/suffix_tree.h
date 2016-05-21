@@ -31,8 +31,6 @@ public:
 	template <class Iterator>
 	Iterator inc_search(Iterator sub)
 	{
-		typedef typename Iterator::value_type T;	// extract real type
-
 		Iterator result = sub;
 		Node* node = &root;
 		Edge* edge = NULL;
@@ -73,13 +71,7 @@ public:
 		return result;
 	}
 
-	int print_tree(void);
-private:
-	string test_str;
-
 	struct Node;
-	typedef struct Node Node;
-
 	struct Edge{
 		// the begin and end pos of this edge, note that INT_MAX stands for #(the changing end pos of this entire string)
 		unsigned int begin, end;
@@ -146,7 +138,6 @@ private:
 
 		bool is_none(void) { return begin == 0 && end == 0; }
 	};
-	typedef struct Edge Edge;
 
 	struct Node{
 		string& test_node_str;
@@ -224,10 +215,9 @@ private:
 			return os;
 		}
 	};
-	//typedef struct Node Node;
-
-	friend struct Node;
-
+	int print_tree(void);
+private:
+	string test_str;
 	class ActivePoint{
 	public:
 		Node* active_node;

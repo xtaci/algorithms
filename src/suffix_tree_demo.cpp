@@ -104,7 +104,7 @@ int SuffixTree::construct(void)
 	return 0;
 }
 
-SuffixTree::Node* SuffixTree::seperate_edge(Node * node, Edge* a_edge)
+SuffixTree::Node* SuffixTree::separate_edge(Node * node, Edge* a_edge)
 {
 	cout << "separate the old edge here: " << (*a_edge) << endl;
 	int new_begin = a_edge->begin + get_active_length();
