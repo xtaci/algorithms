@@ -1,5 +1,5 @@
-#ifndef GRAPH_DEFS_H__
-#define GRAPH_DEFS_H__
+#ifndef ALGO_GRAPH_DEFS_H__
+#define ALGO_GRAPH_DEFS_H__
 
 #include "double_linked_list.h"
 

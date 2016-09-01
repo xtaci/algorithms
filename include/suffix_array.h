@@ -20,8 +20,8 @@
  * AUTHOR: nowerzt@gmail.com
  ******************************************************************************/
 
-#ifndef SUFFIX_ARRAY_H__
-#define SUFFIX_ARRAY_H__
+#ifndef ALGO_SUFFIX_ARRAY_H__
+#define ALGO_SUFFIX_ARRAY_H__
 
 #include <algorithm>
 #include <vector>
@@ -100,4 +100,4 @@ namespace alg {
 	}
 }
 
-#endif // SUFFIX_ARRAY_H__
+#endif // ALGO_SUFFIX_ARRAY_H__

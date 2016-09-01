@@ -14,8 +14,8 @@
  *
  ******************************************************************************/
 
-#ifndef FENWICK_H__
-#define FENWICK_H__
+#ifndef ALGO_FENWICK_H__
+#define ALGO_FENWICK_H__
 
 #include <vector>
 

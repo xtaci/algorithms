@@ -10,8 +10,8 @@
  * Simulated by 1-dimension array.
  ******************************************************************************/
  
-#ifndef 2D_ARRAY_H__
-#define 2D_ARRAY_H__
+#ifndef ALGO_2D_ARRAY_H__
+#define ALGO_2D_ARRAY_H__
 #include <stdint.h>
 #include <stdlib.h>
 

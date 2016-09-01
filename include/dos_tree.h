@@ -16,8 +16,8 @@
  *
  ******************************************************************************/
 
-#ifndef DOS_TREE_H__
-#define DOS_TREE_H__
+#ifndef ALGO_DOS_TREE_H__
+#define ALGO_DOS_TREE_H__
 
 #include <stdlib.h>
 #include <assert.h>

@@ -15,8 +15,8 @@
  *
  ******************************************************************************/
 
-#ifndef PRIORITY_QUEUE_H__
-#define PRIORITY_QUEUE_H__
+#ifndef ALGO_PRIORITY_QUEUE_H__
+#define ALGO_PRIORITY_QUEUE_H__
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -80,7 +80,7 @@ namespace alg {
 					bool found = false;
 					list_for_each_entry(pos, &m_head, node) {
 						if (n->priority <= pos->priority) {
-							__list_add(&n->node, pos->node.prev, &pos->node);
+							list_add_(&n->node, pos->node.prev, &pos->node);
 							m_count++;
 							found = true;
 							break;

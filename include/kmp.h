@@ -15,8 +15,8 @@
  *
  ******************************************************************************/
 
-#ifndef KMP_H__
-#define KMP_H__
+#ifndef ALGO_KMP_H__
+#define ALGO_KMP_H__
 #include <string.h>
 
 namespace alg {

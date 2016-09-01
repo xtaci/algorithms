@@ -19,8 +19,8 @@
  *
  ******************************************************************************/
 
-#ifndef ASTAR_H__
-#define ASTAR_H__
+#ifndef ALGO_ASTAR_H__
+#define ALGO_ASTAR_H__
 
 #include <stdlib.h>
 #include <stdint.h>

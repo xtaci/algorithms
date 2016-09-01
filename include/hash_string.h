@@ -12,8 +12,8 @@
  *
  ******************************************************************************/
 
-#ifndef STRING_HASH_H__
-#define STRING_HASH_H__
+#ifndef ALGO_STRING_HASH_H__
+#define ALGO_STRING_HASH_H__
 
 #include <stdint.h>
 

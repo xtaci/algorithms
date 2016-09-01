@@ -19,8 +19,8 @@
  *
  ******************************************************************************/
 
-#ifndef AVL_H__
-#define AVL_H__
+#ifndef ALGO_AVL_H__
+#define ALGO_AVL_H__
 
 #include <iostream>
 #include <cmath>

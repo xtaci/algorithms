@@ -13,8 +13,8 @@
  *
  ******************************************************************************/
 
-#ifndef QUEUE_H__
-#define QUEUE_H__
+#ifndef ALGO_QUEUE_H__
+#define ALGO_QUEUE_H__
 
 #include <stdbool.h>
 #include <stdint.h>

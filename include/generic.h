@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 
-#ifndef ALG_INC_H__
-#define ALG_INC_H__
+#ifndef ALGO_ALG_INC_H__
+#define ALGO_ALG_INC_H__
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>

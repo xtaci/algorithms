@@ -17,8 +17,8 @@
  *
  ******************************************************************************/
 
-#ifndef RANDOM_SELECT_H__
-#define RANDOM_SELECT_H__
+#ifndef ALGO_RANDOM_SELECT_H__
+#define ALGO_RANDOM_SELECT_H__
 
 #include <generic.h> 
 
@@ -27,7 +27,7 @@ namespace alg {
 	 * the random_select partition routine
 	 */
 	template<typename T>
-		static int __partition(T list[],int begin, int end) {
+		static int partition_(T list[],int begin, int end) {
 			int pivot_idx = RANDOM(begin,end);
 			T pivot = list[pivot_idx];
 			swap(list[begin],list[pivot_idx]);
@@ -56,7 +56,7 @@ namespace alg {
 			if(begin == end)
 				return begin;
 
-			int pivot_idx = __partition<T>(list, begin, end);
+			int pivot_idx = partition_<T>(list, begin, end);
 			int human_idx = pivot_idx - begin + 1;
 
 			if(k < human_idx)

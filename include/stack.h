@@ -14,8 +14,8 @@
  *
  ******************************************************************************/
 
-#ifndef STACK_H__
-#define STACK_H__
+#ifndef ALGO_STACK_H__
+#define ALGO_STACK_H__
 
 #include <stdint.h>
 #include <stdbool.h>

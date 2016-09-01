@@ -22,8 +22,8 @@
  *
  ******************************************************************************/
 
-#ifndef PRIM_MST_H__
-#define PRIM_MST_H__
+#ifndef ALGO_PRIM_MST_H__
+#define ALGO_PRIM_MST_H__
 
 #include <stdio.h>
 #include <stdlib.h>

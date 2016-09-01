@@ -25,8 +25,8 @@
  * By Contibutor:xmuliang
  ******************************************************************************/
 
-#ifndef KRUSKAL_MST_H__
-#define KRUSKAL_MST_H__
+#ifndef ALGO_KRUSKAL_MST_H__
+#define ALGO_KRUSKAL_MST_H__
 
 #include <stdio.h>
 #include <stdlib.h>
