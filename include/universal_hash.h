@@ -11,8 +11,8 @@
  *
  ******************************************************************************/
 
-#ifndef __UNIVERSAL_HASH_H__
-#define __UNIVERSAL_HASH_H__
+#ifndef UNIVERSAL_HASH_H__
+#define UNIVERSAL_HASH_H__
 
 #include <stdio.h>
 #include <stdlib.h>

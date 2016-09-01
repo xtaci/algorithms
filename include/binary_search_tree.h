@@ -18,8 +18,8 @@
  *
  ******************************************************************************/
 
-#ifndef __BINARY_SEARCH_TREE_H__
-#define __BINARY_SEARCH_TREE_H__
+#ifndef BINARY_SEARCH_TREE_H__
+#define BINARY_SEARCH_TREE_H__
 
 #include <stdlib.h>
 #include <stdint.h>

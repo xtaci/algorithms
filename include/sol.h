@@ -16,8 +16,8 @@
  *
  ******************************************************************************/
 
-#ifndef __SOL_H__
-#define __SOL_H__
+#ifndef SOL_H__
+#define SOL_H__
 #include "double_linked_list.h"
 
 namespace alg {

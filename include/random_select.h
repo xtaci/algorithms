@@ -17,8 +17,8 @@
  *
  ******************************************************************************/
 
-#ifndef __RANDOM_SELECT_H__
-#define __RANDOM_SELECT_H__
+#ifndef RANDOM_SELECT_H__
+#define RANDOM_SELECT_H__
 
 #include <generic.h> 
 

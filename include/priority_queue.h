@@ -15,8 +15,8 @@
  *
  ******************************************************************************/
 
-#ifndef __PRIORITY_QUEUE_H__
-#define __PRIORITY_QUEUE_H__
+#ifndef PRIORITY_QUEUE_H__
+#define PRIORITY_QUEUE_H__
 
 #include <stdint.h>
 #include <stdbool.h>

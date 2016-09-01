@@ -12,8 +12,8 @@
  *
  ******************************************************************************/
 
-#ifndef __SIMHASH_H__
-#define __SIMHASH_H__
+#ifndef SIMHASH_H__
+#define SIMHASH_H__
 
 #include <string.h>
 #include <stdint.h>

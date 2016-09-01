@@ -16,8 +16,8 @@
  * http://en.wikipedia.org/wiki/Double_linked_list
  ******************************************************************************/
 
-#ifndef __DOUBLE_LINKED_LIST_H__
-#define __DOUBLE_LINKED_LIST_H__
+#ifndef DOUBLE_LINKED_LIST_H__
+#define DOUBLE_LINKED_LIST_H__
 
 struct list_head {
 	struct list_head *next, *prev;

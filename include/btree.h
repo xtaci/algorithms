@@ -24,8 +24,8 @@
  * http://en.wikipedia.org/wiki/B-tree
  ******************************************************************************/
 
-#ifndef __BTREE_H__
-#define __BTREE_H__
+#ifndef BTREE_H__
+#define BTREE_H__
 
 #include <stdio.h>
 #include <assert.h>

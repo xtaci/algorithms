@@ -23,8 +23,8 @@
  */
 
 
-#ifndef __MD5_H__
-#define __MD5_H__
+#ifndef MD5_H__
+#define MD5_H__
 #include <stdint.h>
 
 /* Data structure for MD5 (Message Digest) computation */

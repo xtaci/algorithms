@@ -9,8 +9,8 @@
  *
  * */
 
-#ifndef __RELABEL_TO_FRONT_H__
-#define __RELABEL_TO_FRONT_H__
+#ifndef RELABEL_TO_FRONT_H__
+#define RELABEL_TO_FRONT_H__
 
 #include <stdlib.h>
 #include <stdint.h>

@@ -15,8 +15,8 @@
  *
  ******************************************************************************/
 
-#ifndef __QUICKSORT_H__
-#define __QUICKSORT_H__
+#ifndef QUICKSORT_H__
+#define QUICKSORT_H__
 
 #include <generic.h> 
 

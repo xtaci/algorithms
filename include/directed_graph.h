@@ -14,8 +14,8 @@
  *
  ******************************************************************************/
 
-#ifndef __DIRECTED_GRAPH_H__
-#define __DIRECTED_GRAPH_H__
+#ifndef DIRECTED_GRAPH_H__
+#define DIRECTED_GRAPH_H__
 
 #include <stdio.h>
 #include <stdlib.h>

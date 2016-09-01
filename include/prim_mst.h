@@ -22,8 +22,8 @@
  *
  ******************************************************************************/
 
-#ifndef __PRIM_MST_H__
-#define __PRIM_MST_H__
+#ifndef PRIM_MST_H__
+#define PRIM_MST_H__
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -18,8 +18,8 @@
  * 
  ******************************************************************************/
 
-#ifndef __BLOOM_FILTER_H__
-#define __BLOOM_FILTER_H__
+#ifndef BLOOM_FILTER_H__
+#define BLOOM_FILTER_H__
 
 #include <stdint.h>
 #include <stdbool.h>

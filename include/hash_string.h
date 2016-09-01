@@ -12,8 +12,8 @@
  *
  ******************************************************************************/
 
-#ifndef __STRING_HASH_H__
-#define __STRING_HASH_H__
+#ifndef STRING_HASH_H__
+#define STRING_HASH_H__
 
 #include <stdint.h>
 

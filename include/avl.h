@@ -19,8 +19,8 @@
  *
  ******************************************************************************/
 
-#ifndef __AVL_H__
-#define __AVL_H__
+#ifndef AVL_H__
+#define AVL_H__
 
 #include <iostream>
 #include <cmath>

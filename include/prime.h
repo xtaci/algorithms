@@ -11,8 +11,8 @@
  * http://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
  *
  ******************************************************************************/
-#ifndef __PRIME_H__
-#define __PRIME_H__
+#ifndef PRIME_H__
+#define PRIME_H__
 
 #include <stdlib.h>
 #include <math.h>

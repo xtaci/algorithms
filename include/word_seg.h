@@ -17,8 +17,8 @@
  *
  ******************************************************************************/
 
-#ifndef __WORD_SEG_H__
-#define __WORD_SEG_H__
+#ifndef WORD_SEG_H__
+#define WORD_SEG_H__
 
 #include <stdio.h>
 #include <stdint.h>

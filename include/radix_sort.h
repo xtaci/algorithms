@@ -15,8 +15,8 @@
  *
  ******************************************************************************/
 
-#ifndef __RADIX_SORT_H__
-#define __RADIX_SORT_H__
+#ifndef RADIX_SORT_H__
+#define RADIX_SORT_H__
 
 #include <stdint.h>
 #include <string.h>

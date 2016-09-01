@@ -32,8 +32,8 @@
  *
  ******************************************************************************/
 
-#ifndef __MERGE_SORT_H__
-#define __MERGE_SORT_H__
+#ifndef MERGE_SORT_H__
+#define MERGE_SORT_H__
 
 namespace alg {
 	/**

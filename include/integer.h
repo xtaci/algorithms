@@ -12,8 +12,8 @@
  *
  ******************************************************************************/
 
-#ifndef __INTEGER_H__
-#define __INTEGER_H__
+#ifndef INTEGER_H__
+#define INTEGER_H__
 
 #include <stdlib.h>  
 #include <stdint.h>

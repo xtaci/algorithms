@@ -14,8 +14,8 @@
  *
  ******************************************************************************/
 
-#ifndef __HASH_TABLE_H__
-#define __HASH_TABLE_H__
+#ifndef HASH_TABLE_H__
+#define HASH_TABLE_H__
 
 #include <stdint.h>
 #include <string.h>

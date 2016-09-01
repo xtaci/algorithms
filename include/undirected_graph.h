@@ -14,8 +14,8 @@
  *
  ******************************************************************************/
 
-#ifndef __UNDIRECTED_GRAPH_H__
-#define __UNDIRECTED_GRAPH_H__
+#ifndef UNDIRECTED_GRAPH_H__
+#define UNDIRECTED_GRAPH_H__
 
 #include <stdio.h>
 #include <stdlib.h>

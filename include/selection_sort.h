@@ -17,8 +17,8 @@
  * http://en.wikipedia.org/wiki/Selection_sort
  ******************************************************************************/
 
-#ifndef __SELECTION_SORT_H__
-#define __SELECTION_SORT_H__
+#ifndef SELECTION_SORT_H__
+#define SELECTION_SORT_H__
 
 #include <assert.h>
 #include <generic.h>
@@ -49,4 +49,4 @@ namespace alg {
 		}
 }
 
-#endif //__SELECTION_SORT_H__
+#endif //SELECTION_SORT_H__

@@ -10,8 +10,8 @@
  * http://en.wikipedia.org/wiki/Trie
  ******************************************************************************/
 
-#ifndef __TRIE_H__
-#define __TRIE_H__
+#ifndef TRIE_H__
+#define TRIE_H__
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>

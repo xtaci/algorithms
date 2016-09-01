@@ -1,5 +1,5 @@
-#ifndef __GB18030_H__
-#define __GB18030_H__
+#ifndef GB18030_H__
+#define GB18030_H__
 
 /**
  * Read from the string encoded in GB18030 into WORD

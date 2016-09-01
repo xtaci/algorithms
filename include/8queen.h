@@ -9,8 +9,8 @@
  * http://en.wikipedia.org/wiki/Eight_queens_puzzle
  ******************************************************************************/
 
-#ifndef __8QUEEN_H__
-#define __8QUEEN_H__
+#ifndef 8QUEEN_H__
+#define 8QUEEN_H__
 
 #include <stdio.h>
 #include <string.h>
@@ -84,4 +84,4 @@ namespace alg {
 	};
 }
 
-#endif //__8QUEEN_H__
+#endif //8QUEEN_H__
