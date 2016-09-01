@@ -13,8 +13,8 @@
  *
  ******************************************************************************/
 
-#ifndef __INSERTION_SORT_H__
-#define __INSERTION_SORT_H__
+#ifndef ALGO_INSERTION_SORT_H__
+#define ALGO_INSERTION_SORT_H__
 
 namespace alg {
 	/**

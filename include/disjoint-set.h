@@ -18,8 +18,8 @@
  * http://en.wikipedia.org/wiki/Disjoint-set_data_structure
  ******************************************************************************/
 
-#ifndef __DISJOINTSET_H__
-#define __DISJOINTSET_H__
+#ifndef ALGO_DISJOINTSET_H__
+#define ALGO_DISJOINTSET_H__
 
 namespace alg {
 	template<typename T>

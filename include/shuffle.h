@@ -14,8 +14,8 @@
  * 
  ******************************************************************************/
 
-#ifndef __SHUFFLE_H__
-#define __SHUFFLE_H__
+#ifndef ALGO_SHUFFLE_H__
+#define ALGO_SHUFFLE_H__
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -17,8 +17,8 @@
  * http://en.wikipedia.org/wiki/Strongly_connected_component
  ******************************************************************************/
 
-#ifndef __SCC_H__
-#define __SCC_H__
+#ifndef ALGO_SCC_H__
+#define ALGO_SCC_H__
 #include <stdio.h>
 #include <stdint.h>
 #include <limits.h>

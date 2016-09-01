@@ -18,8 +18,8 @@
  *
  ******************************************************************************/
 
-#ifndef __BINARY_SEARCH_TREE_H__
-#define __BINARY_SEARCH_TREE_H__
+#ifndef ALGO_BINARY_SEARCH_TREE_H__
+#define ALGO_BINARY_SEARCH_TREE_H__
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -57,7 +57,7 @@ namespace alg {
 				BST():m_root(NULL){};
 
 				~BST() {
-					__destruct(m_root);
+					destruct_(m_root);
 				}
 
 				/**
@@ -159,10 +159,10 @@ namespace alg {
 				}
 
 			private:
-				void __destruct(treeNode *n) {
+				void destruct_(treeNode *n) {
 					if (n==NULL) return;
-					__destruct(n->left);
-					__destruct(n->right);
+					destruct_(n->left);
+					destruct_(n->right);
 					delete n;
 				}
 

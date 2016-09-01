@@ -1,5 +1,5 @@
-#ifndef __ALGVS_H__
-#define __ALGVS_H__
+#ifndef ALGO_ALGVS_H__
+#define ALGO_ALGVS_H__
 #ifdef _MSC_VER
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -15,4 +15,4 @@
 #define typeof decltype
 
 #endif//_MSC_VER
-#endif//__ALGVS_H__
+#endif//ALGO_ALGVS_H__

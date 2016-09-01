@@ -1,5 +1,5 @@
-#ifndef __BYTEORDER_H__
-#define __BYTEORDER_H__
+#ifndef ALGO_BYTEORDER_H__
+#define ALGO_BYTEORDER_H__
 #include <stdint.h>
 #include <stdbool.h>
 

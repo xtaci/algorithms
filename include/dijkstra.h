@@ -19,8 +19,8 @@
  *
  ******************************************************************************/
 
-#ifndef __DIJKSTRA_H__
-#define __DIJKSTRA_H__
+#ifndef ALGO_DIJKSTRA_H__
+#define ALGO_DIJKSTRA_H__
 
 #include <stdio.h>
 #include <stdlib.h>

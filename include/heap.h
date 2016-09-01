@@ -28,8 +28,8 @@
  * http://en.wikipedia.org/wiki/Binary_heap
  ******************************************************************************/
 
-#ifndef __HEAP_H__
-#define __HEAP_H__
+#ifndef ALGO_HEAP_H__
+#define ALGO_HEAP_H__
 
 #include <stdio.h>
 #include <stdlib.h>

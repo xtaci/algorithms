@@ -11,8 +11,8 @@
  *
  ******************************************************************************/
  
-#ifndef __SKIP_LIST_H__
-#define __SKIP_LIST_H__
+#ifndef ALGO_SKIP_LIST_H__
+#define ALGO_SKIP_LIST_H__
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>

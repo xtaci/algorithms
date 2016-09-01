@@ -15,8 +15,8 @@
  *
  ******************************************************************************/
 
-#ifndef __HASH_MULTIPLICATION_H__
-#define __HASH_MULTIPLICATION_H__
+#ifndef ALGO_HASH_MULTIPLICATION_H__
+#define ALGO_HASH_MULTIPLICATION_H__
 
 #include <math.h>
 #include <string.h>

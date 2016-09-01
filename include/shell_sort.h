@@ -13,8 +13,8 @@
  *
  ******************************************************************************/
 
-#ifndef __SHELL_SORT_H__
-#define __SHELL_SORT_H__
+#ifndef ALGO_SHELL_SORT_H__
+#define ALGO_SHELL_SORT_H__
 
 namespace alg {
 	/**

@@ -32,15 +32,15 @@
  *
  ******************************************************************************/
 
-#ifndef __MERGE_SORT_H__
-#define __MERGE_SORT_H__
+#ifndef ALGO_MERGE_SORT_H__
+#define ALGO_MERGE_SORT_H__
 
 namespace alg {
 	/**
 	 * Merge functions merges the two sorted parts. Sorted parts will be from [left, mid] and [mid+1, right].
 	 */
 	template<typename T>
-		static void __merge(T *array, int left, int mid, int right) {
+		static void merge_(T *array, int left, int mid, int right) {
 			/*We need a Temporary array to store the new sorted part*/
 			T tempArray[right-left+1];
 			int pos=0,lpos = left,rpos = mid + 1;
@@ -75,7 +75,7 @@ namespace alg {
 				/* Sort the right part */
 				merge_sort(array,mid+1,right);
 				/* Merge the two sorted parts */
-				__merge(array,left,mid,right);
+				merge_(array,left,mid,right);
 			}
 		}
 

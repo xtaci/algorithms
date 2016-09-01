@@ -10,8 +10,8 @@
  * http://en.wikipedia.org/wiki/Perfect_hash 
  *
  ******************************************************************************/
-#ifndef __PERFECT_HASH_H__
-#define __PERFECT_HASH_H__
+#ifndef ALGO_PERFECT_HASH_H__
+#define ALGO_PERFECT_HASH_H__
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
