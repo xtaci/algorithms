@@ -26,75 +26,68 @@
 
 ####已实现 ( Implemented ):
 
-    Array shuffle
-    Prime test(trial division)
-    Prime test(Miller-Rabin's method)
-    2D Array
-    Arbitrary Integer
-    Linear congruential generator
-    Maximum subarray problem
-
-    Bit-Set
-    Queue
-    Stack
-    Binary Heap
-    Fibonacci Heap
-    Priority Queue (list based)
-
-    Bubble sort
-    Selection sort
-    Insertion sort
-    Shell sort
-    Radix sort
-    Quick sort
-    Merge sort
-    Double linked list
-    Skip list
-    Self-organized linked-list ops (move-to-front, move-ahead-one)
-    Largest common sequence
-
-    Binary search tree
-    AVL tree
-    Dynamic order statistics
-    Red-black tree
-    Interval tree
-    Prefix Tree(Trie)
-    Suffix Tree
-    B-Tree
-    Suffix Array
-
-    Hash by multiplication
-    Hash table
-    Universal hash function
-    Perfect hash
-    Java's string hash
-    FNV-1a string hash
-    SimHash
-    Bloom Filter
-    SHA-1 Message Digest Algorithm
-    MD5
-    Base64
-
-    Graph data structure
-    Strongly Connected Components(SCC)
-    Prim's minimum spanning tree
-    Kruskal MST
-    Directed/Undirected graph ops
-    Breadth First Search
-    Depth First Search
-    Dijkstra's algorithm
-    Bellman-Ford algorithm
-    Edmonds-Karp Maximal Flow
-    Push–Relabel algorithm
-
-    Huffman Coding
-    Word segementation(CHN/GB18030) using HMM and viterbi algorithm.
-    A* algorithm
-    K-Means
-    Knuth–Morris–Pratt algorithm
-    Disjoint-Set
-    8-Queue Problem
-    Palindrome
+| Name | File |
+|------|------|
+|Array shuffle|https://github.com/xtaci/algorithms/blob/master/include/shuffle.h |
+|Prime test(trial division)|https://github.com/xtaci/algorithms/blob/master/include/prime.h|
+|Prime test(Miller-Rabin's method)|https://github.com/xtaci/algorithms/blob/master/include/prime.h|
+|2D Array|https://github.com/xtaci/algorithms/blob/master/include/2darray.h|
+|Arbitrary Integer|https://github.com/xtaci/algorithms/blob/master/include/integer.h|
+|Linear congruential generator|https://github.com/xtaci/algorithms/blob/master/include/random.h|
+|Maximum subarray problem|https://github.com/xtaci/algorithms/blob/master/include/max_subarray.h|
+|Bit-Set|https://github.com/xtaci/algorithms/blob/master/include/bitset.h|
+|Queue|https://github.com/xtaci/algorithms/blob/master/include/queue.h|
+|Stack|https://github.com/xtaci/algorithms/blob/master/include/stack.h|
+|Binary Heap|https://github.com/xtaci/algorithms/blob/master/include/heap.h|
+|Fibonacci Heap|https://github.com/xtaci/algorithms/blob/master/include/fib-heap.h|
+|Priority Queue (list based)|https://github.com/xtaci/algorithms/blob/master/include/priority_queue.h|
+|Bubble sort|https://github.com/xtaci/algorithms/blob/master/include/bubble_sort.h|
+|Selection sort|https://github.com/xtaci/algorithms/blob/master/include/selection_sort.h|
+|Insertion sort|https://github.com/xtaci/algorithms/blob/master/include/insertion_sort.h|
+|Shell sort|https://github.com/xtaci/algorithms/blob/master/include/shell_sort.h|
+|Radix sort|https://github.com/xtaci/algorithms/blob/master/include/radix_sort.h|
+|Quicksort|https://github.com/xtaci/algorithms/blob/master/include/quick_sort.h|
+|Merge sort|https://github.com/xtaci/algorithms/blob/master/include/merge_sort.h|
+|Double linked list|https://github.com/xtaci/algorithms/blob/master/include/double_linked_list.h|
+|Skip list|https://github.com/xtaci/algorithms/blob/master/include/skiplist.h|
+|Largest common sequence|https://github.com/xtaci/algorithms/blob/master/include/lcs.h|
+|Binary search tree|https://github.com/xtaci/algorithms/blob/master/include/binary_search_tree.h|
+|AVL tree|https://github.com/xtaci/algorithms/blob/master/include/avl.h|
+|Dynamic order statistics|https://github.com/xtaci/algorithms/blob/master/include/dos_tree.h|
+|Red-black tree|https://github.com/xtaci/algorithms/blob/master/include/rbtree.h|
+|Interval tree|https://github.com/xtaci/algorithms/blob/master/include/interval_tree.h|
+|Prefix Tree(Trie)|https://github.com/xtaci/algorithms/blob/master/include/trie.h|
+|Suffix Tree|https://github.com/xtaci/algorithms/blob/master/include/suffix_tree.h|
+|B-Tree|https://github.com/xtaci/algorithms/blob/master/include/btree.h|
+|Suffix Array|https://github.com/xtaci/algorithms/blob/master/include/suffix_array.h|
+|Hash by multiplication|https://github.com/xtaci/algorithms/blob/master/include/hash_multi.h|
+|Hash table|https://github.com/xtaci/algorithms/blob/master/include/hash_table.h|
+|Universal hash function|https://github.com/xtaci/algorithms/blob/master/include/universal_hash.h|
+|Perfect hash|https://github.com/xtaci/algorithms/blob/master/include/perfect_hash.h|
+|Java's string hash|https://github.com/xtaci/algorithms/blob/master/include/hash_string.h|
+|FNV-1a string hash|https://github.com/xtaci/algorithms/blob/master/include/hash_string.h|
+|SimHash|https://github.com/xtaci/algorithms/blob/master/include/simhash.h|
+|Bloom Filter|https://github.com/xtaci/algorithms/blob/master/include/bloom_filter.h|
+|SHA-1 Message Digest Algorithm|https://github.com/xtaci/algorithms/blob/master/include/sha1.h|
+|MD5|https://github.com/xtaci/algorithms/blob/master/include/md5.h|
+|Base64|https://github.com/xtaci/algorithms/blob/master/include/base64.h|
+|Strongly Connected Components(SCC)|https://github.com/xtaci/algorithms/blob/master/include/scc.h|
+|Prim's minimum spanning tree|https://github.com/xtaci/algorithms/blob/master/include/prim_mst.h|
+|Kruskal MST|https://github.com/xtaci/algorithms/blob/master/include/kruskal_mst.h|
+|Breadth First Search|https://github.com/xtaci/algorithms/blob/master/include/graph_search.h|
+|Depth First Search|https://github.com/xtaci/algorithms/blob/master/include/graph_search.h|
+|Dijkstra's algorithm|https://github.com/xtaci/algorithms/blob/master/include/dijkstra.h|
+|Bellman-Ford algorithm|https://github.com/xtaci/algorithms/blob/master/include/bellman_ford.h|
+|Edmonds-Karp Maximal Flow|https://github.com/xtaci/algorithms/blob/master/include/edmonds_karp.h|
+|Push–Relabel algorithm|https://github.com/xtaci/algorithms/blob/master/include/relabel_to_front.h|
+|Huffman Coding|https://github.com/xtaci/algorithms/blob/master/include/huffman.h|
+|Word segementation|https://github.com/xtaci/algorithms/blob/master/include/word_seg.h|
+|A\* algorithm|https://github.com/xtaci/algorithms/blob/master/include/astar.h|
+|K-Means|https://github.com/xtaci/algorithms/blob/master/include/k-means.h|
+|Knuth–Morris–Pratt algorithm|https://github.com/xtaci/algorithms/blob/master/include/kmp.h|
+|Disjoint-Set|https://github.com/xtaci/algorithms/blob/master/include/disjoint-set.h|
+|8-Queue Problem|https://github.com/xtaci/algorithms/blob/master/include/8queen.h|
+|Palindrome|https://github.com/xtaci/algorithms/blob/master/include/palindrome.h|
 
 ####贡献者 ( Contributors ) :  
     Samana:  for heavy work of MSVC compatability
