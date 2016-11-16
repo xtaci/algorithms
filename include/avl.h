@@ -38,7 +38,8 @@ class AVL {
         AVL() : tree(0), numNodes(0) {}
 
         ~AVL() {
-            tree->destroy();
+            if (tree)
+                tree->destroy();
         }
 
         T root () const           { return tree->value; }
