@@ -1,9 +1,9 @@
 /*******************************************************************************
  * ALGORITHM IMPLEMENTAIONS
  *
- *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
- * /--\ | (_| (_) |  |  |_ | | | | | _> 
- *         _|                      
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _
+ * /--\ | (_| (_) |  |  |_ | | | | | _>
+ *         _|
  *
  * Adelson-Velskii and Landis' (AVL) tree
  *
@@ -13,7 +13,7 @@
  * 3. Exportable to GraphViz format for easy visualization and verification
  *
  * http://en.wikipedia.org/wiki/AVL_tree
- * 
+ *
  * @author Alejandro Fernandez (alejandro.fernandez.suarez@gmail.com)
  * @github afernandez90
  *
@@ -36,6 +36,10 @@ class AVL {
     public:
 
         AVL() : tree(0), numNodes(0) {}
+
+        ~AVL() {
+            tree->destroy();
+        }
 
         T root () const           { return tree->value; }
         unsigned height() const   { return Node::getHeight(tree); }
@@ -78,6 +82,14 @@ class AVL {
             unsigned height;
 
             Node(const T &x) : left(0), right(0), value(x), height(1) {}
+
+            void destroy() {
+                if (left)
+                    left->destroy();
+                if (right)
+                    right->destroy();
+                delete this;
+            }
 
             bool contains(const T &x) const {
                 if (value == x) return true;
