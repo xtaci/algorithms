@@ -1,10 +1,14 @@
-#include <bits/stdc++.h>
+#include <cstdio>
+#include <vector>
 
-int numberOfNodes, MAXLOG;
+const int MAX_NODE = 5000;
+const int MAX_LOG = 20;
+
+int numberOfNodes, maxLog;
 std::vector< std::vector<int> > adjList;
-int parent[50005], nodeHeight[50005];
-bool visited[50005];
-int binaryLiftDp[50005][27];
+int parent[MAX_NODE], nodeHeight[MAX_NODE];
+bool visited[MAX_NODE];
+int binaryLiftDp[MAX_NODE][MAX_LOG];
 
 void dfs(int currentNode, int currentParent)
 {
@@ -31,10 +35,10 @@ int getMaxLog(){
 void initializeDP()
 {
     nodeHeight[-1] = -1;
-    MAXLOG = getMaxLog();
+    maxLog = getMaxLog();
     dfs(0, -1);
     for(int i = 0; i < numberOfNodes; i++) binaryLiftDp[i][0] = parent[i];
-    for(int i = 1; i <= MAXLOG; i++)
+    for(int i = 1; i <= maxLog; i++)
     {
         for(int j = 0; j < numberOfNodes; j++)
         {
@@ -48,13 +52,13 @@ void initializeDP()
 int LCA(int a, int b)
 {
     if(nodeHeight[a] < nodeHeight[b]) std::swap(a,b);
-    for(int i = MAXLOG; i >= 0; i--)
+    for(int i = maxLog; i >= 0; i--)
     {
         if(binaryLiftDp[a][i] + 1 && nodeHeight[binaryLiftDp[a][i]] >= nodeHeight[b])
             a = binaryLiftDp[a][i];
     }
     if(!(a - b)) return a;
-    for(int i = MAXLOG; i >= 0; i--)
+    for(int i = maxLog; i >= 0; i--)
     {
         if(binaryLiftDp[a][i] + 1 && binaryLiftDp[a][i] - binaryLiftDp[b][i])
             a = binaryLiftDp[a][i], b = binaryLiftDp[b][i];
