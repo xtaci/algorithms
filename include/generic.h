@@ -56,11 +56,11 @@ namespace alg {
 	 */
 	 template <typename T>
     static uint32_t remove_dup(T a[],uint32_t len){
-        set<T> s;
+        std::set<T> s;
         for(int i=0;i<len;i++) s.insert(a[i]);
         int newlen = s.size();
         int j=0;
-        for(typename set<T>::iterator i=s.begin();i!=s.end();++i){
+        for(typename std::set<T>::iterator i=s.begin();i!=s.end();++i){
             a[j++] = *i;
         }
         assert(newlen==j);
