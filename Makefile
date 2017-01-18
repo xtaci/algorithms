@@ -69,7 +69,8 @@ PROGRAMS = m_based_demo \
 			8queue_demo \
 			palindrome_demo \
 			suffix_tree_demo \
-			avl_demo
+			avl_demo \
+			bogo_sort_demo
 
 all: $(PROGRAMS)
 
@@ -260,6 +261,9 @@ avl_demo: $(SRCDIR)/avl_demo.cpp
 	$(CPP) $(CFLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
 
 suffix_array_demo: $(SRCDIR)/suffix_array_demo.cpp
+	$(CPP) $(C11FLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
+
+bogo_sort_demo: $(SRCDIR)/bogo_sort_demo.cpp
 	$(CPP) $(C11FLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
 
 clean:
