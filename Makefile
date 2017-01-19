@@ -264,7 +264,7 @@ suffix_array_demo: $(SRCDIR)/suffix_array_demo.cpp
 	$(CPP) $(C11FLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
 
 bogo_sort_demo: $(SRCDIR)/bogo_sort_demo.cpp
-	$(CPP) $(CFLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
+	$(CPP) $(C11FLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
 
 clean:
 	rm -rf $(PROGRAMS) *.dSYM
