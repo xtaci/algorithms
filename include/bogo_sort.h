@@ -31,10 +31,9 @@ namespace alg {
 
 	template<typename T>
 		static void bogo_sort(T *array , int number_of_elements) {
-			std::random_device rd;
-			std::mt19937 generator(rd());
 			while(!is_sorted<int>(array, number_of_elements)) {
-				std::shuffle(array, array+number_of_elements, generator);
+				unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+				std::shuffle(array, array+number_of_elements, std::default_random_engine(seed));
 			}
 		}
 
