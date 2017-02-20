@@ -1,16 +1,36 @@
+#include "LCA.h"
 #include <cstdio>
 #include <vector>
+#include <iostream>
+/**
+*Constructor is initialized with a Adjacency List that
+*describe a tree and If It doesn't describe a tree it asserts failure.
+*/
 
-const int MAX_NODE = 5000;
-const int MAX_LOG = 20;
+LCA::LCA(std::vector< std::pair<int,int> > edges): _numberOfNodes(edges.size() + 1), _maxLog(getMaxLog())
+{
+    //First we initialize the needed vectors
+    parent.resize(_numberOfNodes);
+    nodeHeight.resize(_numberOfNodes);
+    visited.resize(_numberOfNodes);
+    adjList.resize(_numberOfNodes);
+    binaryLiftDp = std::vector< std::vector<int> >(_numberOfNodes, std::vector<int>(_maxLog));
+    /**Construction of the Adjacency List to increase
+    *The efficiency of the tree traversal to O(V + E).
+    */
+    for(auto edge : edges){
+        adjList[edge.first].push_back(edge.second);
+        adjList[edge.second].push_back(edge.first);
+    }
+    //Initialize the Dynamic programming Vector.
+    initDP();
+}
 
-int numberOfNodes, maxLog;
-std::vector< std::vector<int> > adjList;
-int parent[MAX_NODE], nodeHeight[MAX_NODE];
-bool visited[MAX_NODE];
-int binaryLiftDp[MAX_NODE][MAX_LOG];
-
-void dfs(int currentNode, int currentParent)
+/**
+*DFS is used to find the parent and the height of each node
+*allowing the use of Binary Lifting.
+*/
+void LCA::dfs(int currentNode, int currentParent)
 {
     visited[currentNode] = true;
     parent[currentNode] = currentParent;
@@ -25,40 +45,58 @@ void dfs(int currentNode, int currentParent)
     }
 }
 
-int getMaxLog(){
+/**
+*Used to Calculate the Log to the base of two
+*for the number of the nodes to create the sparse table
+*used in binary Lifting.
+*/
+int LCA::getMaxLog(){
     int curValue = 1;
     int curLog = 1;
-    while(curValue < numberOfNodes) curValue *= 2, curLog++;
+    while(curValue < _numberOfNodes) curValue *= 2, curLog++;
     return curLog;
 }
 
-void initializeDP()
+void LCA::initDP()
 {
-    nodeHeight[-1] = -1;
-    maxLog = getMaxLog();
     dfs(0, -1);
-    for(int i = 0; i < numberOfNodes; i++) binaryLiftDp[i][0] = parent[i];
-    for(int i = 1; i <= maxLog; i++)
+    for(int i = 0; i < _numberOfNodes; i++) binaryLiftDp[i][0] = parent[i];
+    for(int i = 1; i <= _maxLog; i++)
     {
-        for(int j = 0; j < numberOfNodes; j++)
+        for(int j = 0; j < _numberOfNodes; j++)
         {
-            if(binaryLiftDp[j][i - 1] + 1)
+            /**
+            * Since the ith parent of the current node is equal to
+            * the ith / 2 parent to the ith /2 parent of the current node
+            * That's why the Recurrence relation is described as follow
+            */
+            if(binaryLiftDp[j][i - 1] != -1)
                 binaryLiftDp[j][i] = binaryLiftDp[binaryLiftDp[j][i - 1]][i - 1];
             else binaryLiftDp[j][i] = -1;
         }
     }
 }
 
-int LCA(int a, int b)
+int LCA::lcaQuery(int a, int b)
 {
+    /**
+    * First Both nodes must have same height
+    * So we will rise the node with the deeper height up in
+    * the tree to where they're equal.
+    */
     if(nodeHeight[a] < nodeHeight[b]) std::swap(a,b);
-    for(int i = maxLog; i >= 0; i--)
+    for(int i = _maxLog; i >= 0; i--)
     {
         if(binaryLiftDp[a][i] + 1 && nodeHeight[binaryLiftDp[a][i]] >= nodeHeight[b])
             a = binaryLiftDp[a][i];
     }
-    if(!(a - b)) return a;
-    for(int i = maxLog; i >= 0; i--)
+    /**
+    * If the node Lower is the LCA then return it.
+    * Else keep moving both nodes up as much as they aren't the same
+    * until it's only 1 node left which is the direct parent of both of them
+    */
+    if(a == b) return a;
+    for(int i = _maxLog; i >= 0; i--)
     {
         if(binaryLiftDp[a][i] + 1 && binaryLiftDp[a][i] - binaryLiftDp[b][i])
             a = binaryLiftDp[a][i], b = binaryLiftDp[b][i];
@@ -66,38 +104,14 @@ int LCA(int a, int b)
     return parent[a];
 }
 
-void buildTree()
-{
-    printf("Enter number of nodes of the tree: ");
-    scanf("%d", &numberOfNodes);
-    adjList.resize(numberOfNodes, std::vector<int> ());
-    for(int i = 0; i < numberOfNodes - 1; i++)
-    {
-        int firstNode, secondNode;
-        printf("Enter the two nodes to be connected: ");
-        scanf("%d %d", &firstNode, &secondNode);
-        adjList[firstNode].push_back(secondNode);
-        adjList[secondNode].push_back(firstNode);
-    }
-}
-
-void answerQueries()
-{
-    int queryCount;
-    printf("Enter the number of queries: ");
-    scanf("%d", &queryCount);
-    for(int i = 0; i < queryCount; i++)
-    {
-        int firstNode, secondNode;
-        printf("Enter the two nodes : ");
-        scanf("%d %d", &firstNode, &secondNode);
-        printf("%d\n", LCA(firstNode, secondNode));
-    }
-}
-
-int main()
-{
-    buildTree();
-    initializeDP();
-    answerQueries();
+int main(){
+    std::vector< std::pair<int,int> > edges;
+    edges.push_back({0,1});
+    edges.push_back({1,2});
+    edges.push_back({2,3});
+    edges.push_back({1,4});
+    LCA* l = new LCA(v);
+    std::cout << l->lcaQuery(0,1) << endl;
+    std::cout << l->lcaQuery(3,4) << endl;
+    std::cout << l->lcaQuery(3,2) << endl;
 }
