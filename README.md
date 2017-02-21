@@ -88,6 +88,7 @@
 |Disjoint-Set|https://github.com/xtaci/algorithms/blob/master/include/disjoint-set.h|
 |8-Queue Problem|https://github.com/xtaci/algorithms/blob/master/include/8queen.h|
 |Palindrome|https://github.com/xtaci/algorithms/blob/master/include/palindrome.h|
+|LCA using Binary Lifting|https://github.com/xtaci/algorithms/blob/master/include/LCA.h|
 
 ####贡献者 ( Contributors ) :  
     Samana:  for heavy work of MSVC compatability
