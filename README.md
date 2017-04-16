@@ -3,7 +3,7 @@
 [1]: https://travis-ci.org/xtaci/algorithms.svg?branch=master
 [2]: https://travis-ci.org/xtaci/algorithms
 
-####目标 ( goal ) :
+#### 目标 ( goal ) :
 
    1. 经典的算法实现      
       (classical algorithms implementations)      
@@ -12,7 +12,7 @@
    3. 正确，易于使用和改造, 一个头文件一个算法，并附带一个demo.       
       (correct! and ease of use, one .header file per algorithm)        
 
-####约定 ( Convention ):
+#### 约定 ( Convention ):
 
    1.  一个算法用一个.h文件表示放到include下. ( one .header file per algorithm. )
    2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )
@@ -24,7 +24,7 @@
    	eg:
    	![demograph](demo_graph.png)
 
-####已实现 ( Implemented ):
+#### 已实现 ( Implemented ):
 
 | Name | File |
 |------|------|
@@ -90,7 +90,7 @@
 |Palindrome|https://github.com/xtaci/algorithms/blob/master/include/palindrome.h|
 |LCA using Binary Lifting|https://github.com/xtaci/algorithms/blob/master/include/LCA.h|
 
-####贡献者 ( Contributors ) :  
+#### 贡献者 ( Contributors ) :  
     Samana:  for heavy work of MSVC compatability
     wycg1984: for K-Means
     xmuliang: for HeapSort, Kruskal MST
@@ -99,6 +99,6 @@
     UsingtcNower: Suffix Array
     afernandez90: AVL trees
 
-####支持此项目 ( Donations ) :     
+#### 支持此项目 ( Donations ) :     
 ![donate](donate_alg.png)          
 欢迎使用支付宝扫描上面的二维码，对该项目进行捐赠。捐赠款项将用于持续优化补全及完善。 
