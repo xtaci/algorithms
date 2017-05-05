@@ -74,7 +74,7 @@ namespace alg {
 				/**
 				 * test whether the stack is empty
 				 */
-				inline bool is_empty() const { return m_size==0?true:false; } 
+				inline bool is_empty() const { return m_size==0; } 
 
 				/**
 				 * pop stack
