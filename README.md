@@ -1,5 +1,7 @@
-###Algorithms & Data Structures in C++
+### Algorithms & Data Structures in C++
+
 [![Build Status][1]][2]
+
 [1]: https://travis-ci.org/xtaci/algorithms.svg?branch=master
 [2]: https://travis-ci.org/xtaci/algorithms
 
