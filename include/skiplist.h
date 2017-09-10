@@ -82,7 +82,7 @@ namespace alg {
 		void insert(KeyT key, ValueT value) {
 			struct SkipNode * x = m_header;	
 			struct SkipNode * update[SL_MAX_LEVEL + 1];
-			memset(update, 0, SL_MAX_LEVEL + 1);
+			memset(update, 0, (SL_MAX_LEVEL + 1) * sizeof(SkipNode*));
 
 			// travels down the list until we found a proper node
 			for(int i = m_level; i >= 0; i--) {
@@ -121,7 +121,7 @@ namespace alg {
 		void delete_key(KeyT key) {
 			struct SkipNode* x = m_header;	
 			struct SkipNode* update[SL_MAX_LEVEL + 1];
-			memset(update, 0, SL_MAX_LEVEL + 1);
+			memset(update, 0, (SL_MAX_LEVEL + 1) * sizeof(SkipNode*));
 
 			// find the node, and record it's level update info
 			for(int i = m_level; i >= 0; i--) {
