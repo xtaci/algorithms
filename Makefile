@@ -263,5 +263,5 @@ suffix_array_demo: $(SRCDIR)/suffix_array_demo.cpp
 	$(CPP) $(C11FLAGS) -o $@ $^ $(INCLUDEDIR) $(LIBS)
 
 clean:
-	rm -rf $(PROGRAMS) *.dSYM
+	rm -rf $(PROGRAMS) *.dSYM *.o
 
