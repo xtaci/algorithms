@@ -50,6 +50,7 @@
 |Radix sort|https://github.com/xtaci/algorithms/blob/master/include/radix_sort.h|
 |Quicksort|https://github.com/xtaci/algorithms/blob/master/include/quick_sort.h|
 |Merge sort|https://github.com/xtaci/algorithms/blob/master/include/merge_sort.h|
+|Quick select|https://github.com/xtaci/algorithms/blob/master/include/random_select.h|
 |Double linked list|https://github.com/xtaci/algorithms/blob/master/include/double_linked_list.h|
 |Skip list|https://github.com/xtaci/algorithms/blob/master/include/skiplist.h|
 |Largest common sequence|https://github.com/xtaci/algorithms/blob/master/include/lcs.h|
