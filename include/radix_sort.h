@@ -9,7 +9,7 @@
  *
  * Features: 
  *  1. sort unsigned 32-bit array in O(n) time
- *  2. subset sorted with couting sort.
+ *  2. subset sorted with counting sort.
  *
  * http://en.wikipedia.org/wiki/Radix_sort
  *
@@ -27,7 +27,7 @@
 
 namespace alg {
 	/**
-	 * couting sort
+	 * counting sort
 	 */
 	static void radix_(int byte, const unsigned N, const uint32_t *source, uint32_t *dest) {
 		unsigned count[256];
