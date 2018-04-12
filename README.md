@@ -16,8 +16,8 @@
 
 #### 约定 ( Convention ):
 
-   1.  一个算法用一个.h文件表示放到include下. ( one .header file per algorithm. )
-   2.  算法演示的demo程序放到src下.  ( one demo per algorithm.  )
+   1.  一个算法用一个.h文件表示放到include下. ( one .header file per algorithm, under include/)
+   2.  算法演示的demo程序放到src下.  ( one demo per algorithm, under src/)
    3.  程序正确通过后，请发起Pull Requests，代码被验证后入库，并在README中发布新算法实现。
        (Please Use Fork+Pull Requests !!! Correctness is the most important!)
    4.  TAB = 4 space.  set ts=4 in vim
@@ -50,6 +50,7 @@
 |Radix sort|https://github.com/xtaci/algorithms/blob/master/include/radix_sort.h|
 |Quicksort|https://github.com/xtaci/algorithms/blob/master/include/quick_sort.h|
 |Merge sort|https://github.com/xtaci/algorithms/blob/master/include/merge_sort.h|
+|Quick select|https://github.com/xtaci/algorithms/blob/master/include/random_select.h|
 |Double linked list|https://github.com/xtaci/algorithms/blob/master/include/double_linked_list.h|
 |Skip list|https://github.com/xtaci/algorithms/blob/master/include/skiplist.h|
 |Largest common sequence|https://github.com/xtaci/algorithms/blob/master/include/lcs.h|
