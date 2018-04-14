@@ -10,10 +10,10 @@ int main (int argc, char const *argv[]) {
 	const int MAX_ELEMENTS = 10;
 	int list[MAX_ELEMENTS];
 	for(int i = 0; i < MAX_ELEMENTS; i++ ){
-		list[i] = rand()%100;
+		list[i] = rand()%100;//assigning the list elements to random numbers
 	}
 	printf("The list before sorting is:\n");
-	printlist(list,MAX_ELEMENTS);
+	printlist(list,MAX_ELEMENTS); 
 
 	alg::BubbleSort(list,0,MAX_ELEMENTS-1);
 
