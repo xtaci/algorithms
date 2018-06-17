@@ -43,6 +43,26 @@ namespace alg {
 
 		return hash;
 	}
+
+	static uint32_t djb_hash_fnv1a(const char * str, uint32_t len) {
+		uint32_t hash = 5381;
+
+		for (uint32_t  i=0;i<len;i++) {
+			hash += (hash << 5) + str[i];
+		}
+
+		return hash;
+	}
+	static uint32_t rs_hash_fnv1a(const char * str, uint32_t len) {
+		uint32_t a = 63689, b = 378551, hash = 0;
+
+		for (uint32_t  i=0;i<len;i++) {
+			hash = hash * a + str[i];
+			a *= b;
+		}
+
+		return hash;
+	}
 }
 
 #endif //
