@@ -24,6 +24,10 @@ namespace alg {
 	 * using naive method.
 	 */
 	static bool test_prime(unsigned int n) {
+		//negative numbers can be prime
+		if(n < 0) {
+			n = -n;
+		}
 		switch (n) {
 			case 0:
 			case 1:
