@@ -1,0 +1,12 @@
+#pragma once
+
+template <class T>
+void gnome_sort(T A[], std::size_t begin, std::size_t end) {
+	for (std::size_t i = 0; i + 1 < end; ++i) {
+		if (A[i] > A[i + 1]) {
+			std::swap(A[i], A[i + 1]);
+			if (i != 0)
+				i -= 2;
+		}
+	}
+}
