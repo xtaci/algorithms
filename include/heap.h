@@ -54,7 +54,7 @@ namespace alg {
 						T data;
 				};
 
-			private:
+			public:
 				int m_size;		// current heap size.
 				int m_max;		// max heap size.
 				elem * m_heap;	// key value pairs.
@@ -188,6 +188,14 @@ namespace alg {
 
 				bool less(int i, int j) {
 					return m_heap[i].key < m_heap[j].key;
+				}
+
+				int min_key(){
+				    return m_heap[0].key;
+				}
+
+                T min_value(){
+                    return m_heap[0].data;
 				}
 		};
 }

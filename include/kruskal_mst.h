@@ -171,8 +171,8 @@ namespace alg {
 							flag++;
 						}
 
-						best_from->heap.delete_min();
-						lookup(best_to)->heap.delete_min();
+						best_from->heap.pop();
+						lookup(best_to)->heap.pop();
 					} else break;
 				}
 
@@ -188,7 +188,7 @@ namespace alg {
 				list_for_each_entry(pa, &m_pg, pa_node){
 					printf("%d->{", pa->v.id);
 					for(uint32_t i=0;i<pa->heap.count();i++) {
-						Graph::Vertex * v = pa->heap[i];
+						Graph::Vertex * v = pa->heap.m_heap[i].data;
 						printf("id:%d->w:%d \t", v->id, v->weight);
 					}
 					printf("}\n");
