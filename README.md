@@ -23,7 +23,8 @@
    4.  TAB = 4 space.  set ts=4 in vim
    5.  Graph的输出格式为 [Graphviz](http://www.graphviz.org/) Dot格式.
    	(the output format of the graph is in dot of graphviz.)
-   	eg:
+   	
+      eg:
    	![demograph](demo_graph.png)
 
 #### 已实现 ( Implemented ):
