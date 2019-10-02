@@ -17,7 +17,7 @@
 #include <vector>
 #include <set>
 namespace alg {
-	class QueenN {
+	class Queen8 {
 		private:
 			std::vector<std::vector<char> > board;
 			int cnt;
