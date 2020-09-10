@@ -19,11 +19,13 @@ namespace alg {
 
     private:
 
+        int n;
         vector < bool > prime;
         vector < int > primeCache; // cache all the prime numbers when the build method is called
         bool build_called; // if build() was called
 
         EratosteneSieve() {
+            this->n = SIZE;
             prime.resize(SIZE + 1, true);
             build_called = false;
         }
