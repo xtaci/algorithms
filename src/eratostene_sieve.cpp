@@ -20,7 +20,7 @@ int main() {
 
     vector < int > prime = sieve.getPrimes();
 
-    cout << "PRIME NUMBERS UNTIL 100\n";
+    cout << "PRIME NUMBERS UP TO 100\n";
 
     for(auto it : prime)
         cout << it << ' ';
