@@ -22,7 +22,7 @@ namespace alg {
         int n;
         vector < bool > prime;
         vector < int > primeCache; // cache all the prime numbers when the build method is called
-        bool build_called; // if build() was called
+        bool build_called; // if build() had been called
 
         EratosteneSieve() {
             this->n = SIZE;
