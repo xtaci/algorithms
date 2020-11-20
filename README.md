@@ -88,7 +88,7 @@
 |K-Means|https://github.com/xtaci/algorithms/blob/master/include/k-means.h|
 |Knuth–Morris–Pratt algorithm|https://github.com/xtaci/algorithms/blob/master/include/kmp.h|
 |Disjoint-Set|https://github.com/xtaci/algorithms/blob/master/include/disjoint-set.h|
-|8-Queue Problem|https://github.com/xtaci/algorithms/blob/master/include/8queen.h|
+|8-Queen Problem|https://github.com/xtaci/algorithms/blob/master/include/8queen.h|
 |Palindrome|https://github.com/xtaci/algorithms/blob/master/include/palindrome.h|
 |LCA using Binary Lifting|https://github.com/xtaci/algorithms/blob/master/include/LCA.h|
 
