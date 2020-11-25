@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#define Y Y
 namespace alg {
 	/**
 	 * shuffle the 'list' of length 'len'
