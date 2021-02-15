@@ -1,9 +1,9 @@
 /*******************************************************************************
  * DANIEL'S ALGORITHM IMPLEMENTAIONS
  *
- *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
- * /--\ | (_| (_) |  |  |_ | | | | | _> 
- *         _|                      
+ *  /\  |  _   _  ._ o _|_ |_  ._ _   _
+ * /--\ | (_| (_) |  |  |_ | | | | | _>
+ *         _|
  *
  * GENERIC METHODS FOR ALGORITHMS
  *
@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <set>
 
 #include "utils/gb18030.h"
 #include "utils/byteorder.h"
@@ -28,7 +29,7 @@
 
 namespace alg {
 	/**
-	 * swap 2-element, orignal value 
+	 * swap 2-element, orignal value
 	 */
 	template<typename T>
 		static inline void swap(T &x, T &y)
@@ -53,27 +54,19 @@ namespace alg {
 	 * pass in array with *len
 	 * return new length
 	 */
-	template<typename T>
-		static uint32_t remove_dup(T a[], uint32_t len) {
-			uint32_t i;
-			uint32_t newlen = len;
-			for (i=0; i<newlen; i++) {
-				T key = a[i];
-				uint32_t j;
-				for (j=i+1;j<newlen;j++) {
-					if(key == a[j]) {
-						/* found dup, move left one position. */ 
-						uint32_t k;
-						for (k=j;k<newlen-1;k++) {
-							a[k] = a[k+1];
-						}
-						newlen--;
-					}
-				}
-			}
-
-			return newlen;
-		}
+	 template <typename T>
+    static uint32_t remove_dup(T a[],uint32_t len){
+        std::set<T> s;
+	uint16_t i;
+        for(i=0;i<len;i++) s.insert(a[i]);
+        int newlen = s.size();
+        int j=0;
+        for(typename std::set<T>::iterator i=s.begin();i!=s.end();++i){
+            a[j++] = *i;
+        }
+        assert(newlen==j);
+        return j;
+    }
 }
 
 #endif //
