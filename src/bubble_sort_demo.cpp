@@ -4,7 +4,7 @@
 
 #include "generic.h"
 #include "bubble_sort.h"
-
+//program for bubble sorting
 using namespace alg;
 int main (int argc, char const *argv[]) {
 	const int MAX_ELEMENTS = 10;
