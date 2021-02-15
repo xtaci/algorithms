@@ -1,43 +1,41 @@
-#include <stdio.h>
-#include <generic.h>
-#include <time.h>
 
-#include "shuffle.h"
-#include "binary_search_tree.h"
-
-using namespace alg;
-int main()
-{
-	const int MAX_ELEMENTS = 10;
-	int key[MAX_ELEMENTS];
-	int value[MAX_ELEMENTS];
-
-	BST<int, int> t;
-
-	int i = 0;
-	srand(time(NULL));
-	// generate random numbers and fill them to the list
-	for(i = 0; i < MAX_ELEMENTS; i++ ){
-		key[i] = rand()%100; 
-		value[i] = rand()%1000; 
-	}
-
-	for(i = 0; i < MAX_ELEMENTS; i++){
-		printf("insert %d->%d\n",key[i], value[i]);
-		t.insert(key[i], value[i]);
-	}
-
-	t.print_helper();
-
-	for(i = 0; i < MAX_ELEMENTS; i++){
-		printf("getting %d->%d\n",key[i], t.find(key[i])->value);
-	}
-
-	for(i = 0; i < MAX_ELEMENTS; i++){
-		t.deleteKey(key[i]);
-		t.print_helper();
-		printf("deleted %d\n\n", key[i]);
-	}
-
-	return 0;
-}
+// CPP program to implement 
+// Binary Search in  
+// Standard Template Library (STL) 
+#include <algorithm> 
+#include <iostream> 
+  
+using namespace std; 
+  
+void show(int a[], int arraysize) 
+{ 
+    for (int i = 0; i < arraysize; ++i) 
+        cout << a[i] << " "; 
+} 
+  
+int main() 
+{ 
+    int a[] = { 1, 5, 8, 9, 6, 7, 3, 4, 2, 0 }; 
+    int asize = sizeof(a) / sizeof(a[0]); 
+    cout << "\n The array is : "; 
+    show(a, asize); 
+  
+    cout << "\n\nLet's say we want to search for 2 in the array"; 
+    cout << "\n So, we first sort the array"; 
+    sort(a, a + asize); 
+    cout << "\n\n The array after sorting is : "; 
+    show(a, asize); 
+    cout << "\n\nNow, we do the binary search"; 
+    if (binary_search(a, a + 10, 2)) 
+        cout << "\nElement found in the array"; 
+    else
+        cout << "\nElement not found in the array"; 
+  
+    cout << "\n\nNow, say we want to search for 10"; 
+    if (binary_search(a, a + 10, 10)) 
+        cout << "\nElement found in the array"; 
+    else
+        cout << "\nElement not found in the array"; 
+  
+    return 0; 
+} 
