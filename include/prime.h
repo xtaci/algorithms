@@ -11,8 +11,8 @@
  * http://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
  *
  ******************************************************************************/
-#ifndef __PRIME_H__
-#define __PRIME_H__
+#ifndef ALGO_PRIME_H__
+#define ALGO_PRIME_H__
 
 #include <stdlib.h>
 #include <math.h>
@@ -34,8 +34,8 @@ namespace alg {
 
 		if (n%2	== 0) return false;
 
-		unsigned sqrtn = sqrt(n);
-		for (unsigned int i = 2; i <= sqrtn; ++i) {
+		unsigned sqrtn = sqrt((double)n);
+		for (unsigned int i = 3; i <= sqrtn; i+=2) {
 			if (n % i == 0) {
 				return false;
 			}

@@ -1,0 +1,5 @@
+language: cpp
+compiler: 
+    - clang
+script:
+    - make
