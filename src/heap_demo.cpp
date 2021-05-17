@@ -9,20 +9,25 @@ int main()
 	int MAXELEMENTS=10;
 	Heap<int> heap(MAXELEMENTS);
 
-	int32_t i;
+	int i;
 	srand(time(NULL));
 	for (i=0;i < MAXELEMENTS; i++) {
-		int32_t value = i;
-		heap.insert(i, value);
-		printf("inserting: %d->%d\n", i, value);
+		heap.push(100-i, i);
+		printf("push: key:%d->value:%d\n", 100-i, i);
 	}
+	heap.print_heap();
 
-	printf("decrease a value[%d] to %d\n", 5, -1);
-	heap.decrease_key(5, -1);
-	while(!heap.is_empty()) {
-		printf("deleting min: %d->%d\n", heap.min_key(), heap.min_value());
-		heap.delete_min();
+	for (i=0;i<MAXELEMENTS/2;i++) {
+		heap.remove(i);
+		printf("remove value:%d\n", i);
 	}
+	heap.print_heap();
+
+	while(!heap.is_empty()) {
+		Heap<int>::elem e = heap.pop();
+		printf("pop: key:%d->value:%d\n", e.key, e.data);
+	}
+	heap.print_heap();
 
 	return 0;
 }

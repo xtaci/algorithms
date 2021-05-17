@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 
-#ifndef __IMATH_H__
-#define __IMATH_H__
+#ifndef ALGO_IMATH_H__
+#define ALGO_IMATH_H__
 
 #include <stdint.h>
 #include <string.h>

@@ -16,8 +16,8 @@
  *
  ******************************************************************************/
 
-#ifndef __INTERVAL_TREE_H__
-#define __INTERVAL_TREE_H__
+#ifndef ALGO_INTERVAL_TREE_H__
+#define ALGO_INTERVAL_TREE_H__
 
 #include <stdlib.h>
 #include <assert.h>

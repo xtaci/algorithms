@@ -21,8 +21,8 @@
  *
  ******************************************************************************/
 
-#ifndef __HUFFMAN_CODING_H__
-#define __HUFFMAN_CODING_H__
+#ifndef ALGO_HUFFMAN_CODING_H__
+#define ALGO_HUFFMAN_CODING_H__
 
 #include <stdint.h>
 #include <stdlib.h>

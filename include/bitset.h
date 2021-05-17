@@ -11,8 +11,8 @@
  *
  ******************************************************************************/
 
-#ifndef __BIT_SET_H__
-#define __BIT_SET_H__
+#ifndef ALGO_BIT_SET_H__
+#define ALGO_BIT_SET_H__
 
 #include <stdlib.h>
 #include <stdint.h>

@@ -12,8 +12,8 @@
  * 	https://github.com/wycg1984
  ******************************************************************************/
 
-#ifndef __KMEANS_H__
-#define __KMEANS_H__
+#ifndef ALGO_KMEANS_H__
+#define ALGO_KMEANS_H__
 #include <fstream>
 #include <stdlib.h>
 #include <math.h>

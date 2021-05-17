@@ -8,7 +8,7 @@
  * BINARY SEARCH TREE
  *
  * Features:
- * 1. Expected search time is O(nlogn).
+ * 1. Expected search time is O(log(n)), with worst case O(n).
  * 2. Data should be !!!SHUFFLED!!! first before tree creation.
  * 3. First initialize the value of the root (pointer to the 
  *    structure treeNode) with NULL. eg:
@@ -18,8 +18,8 @@
  *
  ******************************************************************************/
 
-#ifndef __BINARY_SEARCH_TREE_H__
-#define __BINARY_SEARCH_TREE_H__
+#ifndef ALGO_BINARY_SEARCH_TREE_H__
+#define ALGO_BINARY_SEARCH_TREE_H__
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -31,7 +31,7 @@ namespace alg {
 		class BST {
 			private:
 				/**
-				 * binary search tree definiton.
+				 * binary search tree definition.
 				 */
 				struct treeNode {
 					KeyT 	key;			// key
@@ -57,7 +57,7 @@ namespace alg {
 				BST():m_root(NULL){};
 
 				~BST() {
-					__destruct(m_root);
+					destruct_(m_root);
 				}
 
 				/**
@@ -159,10 +159,10 @@ namespace alg {
 				}
 
 			private:
-				void __destruct(treeNode *n) {
+				void destruct_(treeNode *n) {
 					if (n==NULL) return;
-					__destruct(n->left);
-					__destruct(n->right);
+					destruct_(n->left);
+					destruct_(n->right);
 					delete n;
 				}
 

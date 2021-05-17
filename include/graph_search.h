@@ -20,8 +20,8 @@
  *
  ******************************************************************************/
 
-#ifndef __BREADTH_FIRST_SEARCH_H__
-#define __BREADTH_FIRST_SEARCH_H__
+#ifndef ALGO_BREADTH_FIRST_SEARCH_H__
+#define ALGO_BREADTH_FIRST_SEARCH_H__
 
 #include <stdio.h>
 #include <stdint.h>

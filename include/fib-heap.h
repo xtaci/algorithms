@@ -17,8 +17,8 @@
  * http://en.wikipedia.org/wiki/Fibonacci_heap
  ******************************************************************************/
 
-#ifndef __FIB_HEAP_H__
-#define __FIB_HEAP_H__
+#ifndef ALGO_FIB_HEAP_H__
+#define ALGO_FIB_HEAP_H__
 #include <math.h>
 #include <stdint.h>
 #include <unistd.h>

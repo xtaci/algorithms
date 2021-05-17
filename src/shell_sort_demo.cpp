@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h>  
+#include <stdlib.h>  
 #include <time.h>
 
 #include "generic.h"
-#include "heap_sort.h"
+#include "shell_sort.h"
 
 using namespace alg;
 
@@ -22,13 +22,11 @@ int main()
 	printf("The list before sorting is:\n");
 	printlist(list,MAX_ELEMENTS);
 
-	// sort the list using heap sort
-	heapsort<int>(&list[0],MAX_ELEMENTS);
+	// sort the list using shell sort
+	shell_sort<int>(&list[0],MAX_ELEMENTS);  
 
 	// print the result
-	printf("The list after sorting using heapsort algorithm:\n");
+	printf("The list after sorting using shell sort algorithm:\n");
 	printlist(list,MAX_ELEMENTS);
 	return 0;
 }
-
-
