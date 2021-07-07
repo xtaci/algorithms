@@ -30,19 +30,21 @@ namespace alg {
 	template<typename T>
 		static void	BubbleSort(T list[], int start, int end){
 			int i;
+		        int j=0;
 			bool swapped;
 
 			assert(start < end);
 
 			do {
 				swapped = false;
-				for(i = start+1; i <= end; i++) {
+				for(i = start+1; i <= end-j; i++) {
 					if(list[i-1] > list[i]) {
 						// swap them and remember something changed
 						swap(list[i-1], list[i]);
 						swapped = true;
 					}
 				}
+			j++;	
 			} while(swapped);
 		}
 }
