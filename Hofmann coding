@@ -1,0 +1,276 @@
+#include<iostream>
+#include<bits/stdc++.h>
+#include<fstream>
+using namespace std;
+class node{
+    public:
+    int data;
+    char alp;
+    node *lf;
+    node *rf;
+};
+int t=0;
+void code(node *);
+node *inorder(node *);
+node *d;
+int j=0,o=0;
+node *tree(node*);
+node *heap_form(int , int,char);
+void hofmann_tree(node *);
+int main()
+{
+    ifstream myfile;
+    myfile.open("input.txt");
+    node *s;
+    //int k=myfile.size();
+     s=new node[100];
+     d=new node[100];
+    int a;
+    int x=0;
+    char b;
+    while(myfile>>a>>b)
+    {
+       x++;
+       o++;
+      s[x].data=a;
+       s[x].alp=b;
+       s[x].lf=NULL;
+       s[x].rf=NULL;
+      d = heap_form(s[x].data,x,s[x].alp);
+       
+    }
+    
+     for(int i=1;i<=j;i++)
+    {
+        cout<<d[i].data<<" -- "<<d[i].alp<<endl;
+    }cout<<endl;
+    hofmann_tree(d);
+}
+node* heap_form(int ele,int n, char al)
+{
+    j++;
+    if(n==1)
+    {
+        d[j].data=ele;
+        d[j].alp=al;
+    
+    }
+    else
+    {
+        
+        d[j].data=ele;
+        d[j].alp=al;
+    
+        int l=n;
+        int k=n/2;
+        
+        if(d[l].data<d[k].data)
+        {
+            
+            while(k>0 && d[l].data<d[k].data )
+            {
+               int temp1=d[k].data;
+               int temp2=d[k].alp;
+               d[k].data=d[l].data;
+               d[k].alp=d[l].alp;
+               d[l].data=temp1;
+               d[l].alp=temp2;
+               l=k;
+               k=k/2;
+            }
+        }
+      
+    }
+   
+   return d; 
+}
+void hofmann_tree(node *d)
+{
+    int k=j;
+    node *c[1000];
+    for(int i=1;i<=j;i++)
+    {
+        node *p=&d[i];
+        c[i]=p;
+        
+    }
+  for(int i=j;i>1;i--)
+   {
+       
+     node *p= c[1];
+     node *k=c[1+1];
+     node *h =new node();
+     h->data=p->data+k->data;
+    
+     h->alp='\0';
+     h->lf=p;
+     h->rf=k;
+     c[1]=h;
+     
+     for(int i=2;i<j;i++)
+     {
+      c[i]=c[i+1];
+     }
+     
+     j--;
+     //cout<<j<<"";
+       int left1=2;
+         int right1=left1+1;
+        
+         
+         int par=1;
+         while(left1<=j)
+        {
+        
+        if(j==2)
+        {
+            if(c[par]->data>=c[2]->data)
+            {
+                  node *temp;
+                   temp=c[par];
+                   c[par]=c[left1];
+                   c[left1]=temp;
+            }
+            else
+            {
+                break;
+            }
+            
+        }
+           if(c[par]->data<=c[left1]->data && c[par]->data<=c[right1]->data)
+          {
+             
+             break;
+          }
+          else
+         {
+             if(c[left1]->data>=c[right1]->data)
+             {
+                   node *temp;
+                   temp=c[par];
+                   c[par]=c[right1];
+                   c[right1]=temp;
+                   par=right1;
+             }
+             else
+             {
+                  node *temp;
+                   temp=c[par];
+                   c[par]=c[left1];
+                   c[left1]=temp;
+                   par=left1;
+             }
+
+             left1=2*par;
+             right1=left1+1;
+
+         }
+        }
+       
+       
+   }  
+   //cout<<c[1]->data<<" "<<c[1]->alp; 
+    code(c[1]);
+         
+ 
+    
+}
+vector<bool>stck;
+vector<node*> dstk;
+void code(node *root)
+{
+   
+   string A[1000];
+   node *stack[100];
+   node *ptr=root;
+   int top=-1;
+   node *par;
+   read:
+   while( ptr!=NULL)
+   {
+       top++;
+       
+       stack[top]=ptr;
+       if(ptr->alp=='\0' && ptr->lf!=NULL)
+       {
+       stck.push_back(0);
+       }
+       par=ptr;
+       ptr=ptr->lf;
+       
+       if(ptr!=NULL)
+       {
+          
+       par->lf=NULL;
+       }
+       
+   }
+   cout<<endl;
+   ptr=stack[top];
+   top--;
+  while(ptr!=NULL)
+   {
+      
+       if(ptr->rf==NULL && ptr->lf==NULL && ptr->alp=='\0' && t==o)
+       {
+           break;
+       }
+       if(ptr->alp!='\0')
+       {
+         t++;
+        
+       cout<<ptr->alp<<"--";
+         ptr->alp='\0';
+       for(auto it=stck.begin();it!=stck.end();it++)
+       {
+           cout<<*it;
+       }
+       
+       cout<<endl;
+       }
+       if(ptr->rf!=NULL)
+       {
+           par=ptr;;
+           ptr=ptr->rf;
+          
+           if(ptr!=NULL)
+           {
+           par->rf=NULL;
+           }
+            top++;
+       
+       stack[top]=ptr;
+           stck.push_back(1);
+           goto read;
+       }
+       else
+       {
+           if(ptr!=NULL)
+           {
+          
+           ptr=stack[top];
+           
+           top--;
+           stck.pop_back();
+           
+           if(ptr==root)
+           {
+               stck.clear();
+           }
+           }
+           else
+           {
+               break;
+           }
+           
+           
+       }
+       
+       
+   }
+   
+
+  
+}
+    
+
