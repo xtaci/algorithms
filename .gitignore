@@ -1,2 +1,4 @@
 *.dSYM
 *_demo
+.idea
+cmake-build-debug

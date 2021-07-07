@@ -1,8 +1,9 @@
 #include <stdio.h>
-#include <8queen.h>
+#include <nqueen.h>
 
 int main(void) {
-	alg::Queen8 q;
+	alg::QueenN q;
+    q.setN(8);
 	q.solve();
 }
 
