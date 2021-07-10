@@ -14,72 +14,60 @@
 
 #include <stdio.h>
 #include <string.h>
-
+#include <vector>
+#include <set>
 namespace alg {
 	class Queen8 {
 		private:
-			char board[8][8];
+			std::vector<std::vector<char> > board;
 			int cnt;
+			std::set<int> column,main_diagonal,opposite_diagonal;
 		public:
-			void solve() {
-				memset(board, '0', sizeof(board));
+			void solve(int size=8) {
+				board = std::vector<std::vector<char> >(size,std::vector<char>(size,'0'));
 				cnt = 0;
 				_solve(0);
 			}
 		private:
 			void _solve(int row) {	// start from 0
 				int i;
-				for (i=0;i<8;i++) {
+				for (i=0;i<board.size();i++) {
 					board[row][i] = '1';
-					if (check(row, i)) {
-						if (row == 7) print();
+					if (addParameters(row, i)) {
+						if (row == board.size()-1) print();
 						else _solve(row+1);
+						removeParameters(row,i); // rollback
 					}
-					board[row][i] = '0';	// rollback
+					board[row][i] = '0';
 				}
 			}
 
 			void print() {
 				printf("chessboard: %d\n",++cnt);
 				int i,j;
-				for (i=0;i<8;i++) {
-					for (j=0;j<8;j++) {
+				for (i=0;i<board.size();i++) {
+					for (j=0;j<board.size();j++) {
 						printf("%c ", board[i][j]);
 					}
 					printf("\n");
 				}
 			}
 
-			bool check(int row, int col) {
-				int i,j;
-
-				// cannot be same column
-				for (i=0;i<row;i++) {
-					if (board[i][col] == '1') {
-						return false;
-					}
-				}
-
-				// cannot be diagnal
-				i = row-1, j = col-1;
-				while (i>=0 && j >=0) {
-					if (board[i][j] == '1') {
-						return false;
-					}
-					i--;
-					j--;
-				}
-
-				i = row-1, j = col+1;
-				while (i>=0 && j <8) {
-					if (board[i][j] == '1') {
-						return false;
-					}
-					i--;
-					j++;
-				}
-
+			bool addParameters(int row,int col){
+				if(column.find(col)!=column.end() 
+					|| main_diagonal.find(row-col)!=main_diagonal.end() 
+					|| opposite_diagonal.find(row+col)!=opposite_diagonal.end())
+					return false;
+				column.insert(col);
+				main_diagonal.insert(row-col);
+				opposite_diagonal.insert(row+col);
 				return true;
+			}
+
+			bool removeParameters(int row,int col){
+				column.erase(col);
+				main_diagonal.erase(row-col);
+				opposite_diagonal.erase(row+col);
 			}
 	};
 }
