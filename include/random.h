@@ -11,8 +11,8 @@
  *
  ******************************************************************************/
 
-#ifndef __RANDOM_H__
-#define __RANDOM_H__
+#ifndef ALGO_RANDOM_H__
+#define ALGO_RANDOM_H__
 
 #include <stdio.h>
 #include <stdint.h>

@@ -6,9 +6,9 @@
 
 #define printlistC(list,n) \
 do { \
-	int __list_counter; \
-	for(__list_counter=0;__list_counter<n;__list_counter++) \
-		printf("%c\t ",list[__list_counter]); \
+	int list_counter_; \
+	for(list_counter_=0;list_counter_<n;list_counter_++) \
+		printf("%c\t ",list[list_counter_]); \
 	printf("\n"); \
 } while(0)
 

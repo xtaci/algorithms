@@ -13,8 +13,8 @@
  *       and right part.
  *           Example: Say the input is  -10 32 45 -78 91 1 0 -16 then the left part will be  
  *           -10 32 45 -78 and the right part will be  91 1 0 6.
- *   (2) Sort Each of them seperately. Note that here sort does not mean to sort it using some other
- *            method. We already wrote fucntion to sort it. Use the same.
+ *   (2) Sort Each of them separately. Note that here sort does not mean to sort it using some other
+ *            method. We already wrote function to sort it. Use the same.
  *   (3) Then merge the two sorted parts.
  *
  * ------------
@@ -32,15 +32,15 @@
  *
  ******************************************************************************/
 
-#ifndef __MERGE_SORT_H__
-#define __MERGE_SORT_H__
+#ifndef ALGO_MERGE_SORT_H__
+#define ALGO_MERGE_SORT_H__
 
 namespace alg {
 	/**
 	 * Merge functions merges the two sorted parts. Sorted parts will be from [left, mid] and [mid+1, right].
 	 */
 	template<typename T>
-		static void __merge(T *array, int left, int mid, int right) {
+		static void merge_(T *array, int left, int mid, int right) {
 			/*We need a Temporary array to store the new sorted part*/
 			T tempArray[right-left+1];
 			int pos=0,lpos = left,rpos = mid + 1;
@@ -75,7 +75,7 @@ namespace alg {
 				/* Sort the right part */
 				merge_sort(array,mid+1,right);
 				/* Merge the two sorted parts */
-				__merge(array,left,mid,right);
+				merge_(array,left,mid,right);
 			}
 		}
 
