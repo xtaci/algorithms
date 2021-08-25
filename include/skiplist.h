@@ -48,8 +48,18 @@ namespace alg {
 			m_level = 0;
 		}
 
-		~SkipList() {	
-			// TODO: free nodes
+		~SkipList() {
+			SkipNode* x = m_header;
+			SkipNode *tmp = NULL;
+			while (x != NULL) {
+				tmp = x;
+				x = x->forward[0];
+
+				// free tmp
+				delete tmp->forward;
+				delete tmp;
+				tmp = NULL;
+			}
 		}
 
 	private:
@@ -139,7 +149,9 @@ namespace alg {
 						break;
 					update[i]->forward[i] = x->forward[i];
 				}
-				free(x);
+
+				delete x->forward;
+				delete x;
 
 				while(m_level > 0 && m_header->forward[m_level] == NULL) {
 					m_level--;
@@ -186,6 +198,9 @@ namespace alg {
 
 			// the max forward entry for a key is : level + 1
 			n->forward = new struct SkipNode *[level + 1];
+			for (int i = 0; i <= level; i++) {
+				n->forward[i] = NULL;
+			}
 			n->key = key;
 			n->value = value;
 
