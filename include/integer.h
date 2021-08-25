@@ -274,7 +274,7 @@ namespace alg {
 
 			int compare(const Integer & rhs) {
 				uint32_t i = Max(size() - 1, rhs.size() - 1);
-				for ( ; i >= 0; i--) {
+				for ( ; ; i--) {
 					component_t left_comp =
 						(i < size()) ? (*this)[i] : 0;
 					component_t right_comp =
@@ -283,6 +283,8 @@ namespace alg {
 						return -1;
 					else if (left_comp > right_comp)
 						return  1;
+					if (i == 0)
+						break;
 				}
 				return 0;
 			}
@@ -291,9 +293,11 @@ namespace alg {
 			void shift_left_one_integer() {
 				uint32_t i;
 				(*this)[size() - 1] <<= 1;
-				for (i = size() - 2; i >= 0; i--) {
+				for (i = size() - 2; ; i--) {
 					(*this)[i + 1] |= (*this)[i] >> (COMPONENT_BITS - 1);
 					(*this)[i] <<= 1;
+					if (i == 0)
+						break;
 				}
 			}
 
