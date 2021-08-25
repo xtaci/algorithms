@@ -5,9 +5,7 @@
 using namespace std;
 using namespace alg;
 
-int main() {
-		
-		
+int main() {	
 	LRUCache<string,string> Cache(5);
 	Cache.putValue("key1","value1");
 	Cache.putValue("key2","value2");
@@ -22,7 +20,8 @@ int main() {
 	
 	cout << "Now,Visit the LRU Cache with \"key4\"" << endl;
 	cout << "The \"key4\" Value is : "<< Cache.getValue("key4") << endl;
-	cout << "The New LRU Cache is ... " << endl;
+	cout << "The New LRU Cache is ... ";
+	cout<< endl;
 	Cache.display();
 	
 	cout << "Now, Update The LRU Cache with \"key5\" and new value is \"newValue5\" ... " << endl;
@@ -31,5 +30,4 @@ int main() {
 	Cache.display();
 	Cache.getValue("aaa");
 	
-
 }
