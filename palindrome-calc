@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <strings.h>
+#include <math.h>
+
+void pal_find(int num, int dig);
+char programmer[20] = "Prakhar Shukla";
+
+int main()
+{
+    system("cls");
+    int greatest_dig;
+    int dig;
+
+    printf("***************Welcome to Palindromic Calculator Program***************\n\n");
+
+    printf("Enter the number of digits whose calculation is to be made...\n");
+    scanf("%d", &dig);
+
+    greatest_dig = pow((pow(10, dig) - 1), 2);
+
+    pal_find(greatest_dig, dig);
+
+    return 0;
+}
+
+void pal_find(int num, int dig)
+{
+    int great_num;
+    char seedha[100], ulta[100];
+    for (int i = num; i > 0; i--)
+    {
+        sprintf(seedha, "%d", i);
+        strcpy(ulta, seedha);
+        strrev(ulta);
+
+        if (strcmp(seedha, ulta) == 0)
+        {
+            great_num = i;
+            for (int j = (pow(10, dig) - 1); j > 0; j--)
+            {
+                if (great_num % j == 0 && great_num / j < pow(10, dig))
+                {
+                    printf("The greatest number made by product of two %d digit numbers is %d and the two numbers are %d, %d\n", dig, great_num, j, great_num / j);
+                    printf("\nThanks for using this program created by %s", programmer);
+                    exit(0);
+                }
+            }
+        }
+    }
+}
