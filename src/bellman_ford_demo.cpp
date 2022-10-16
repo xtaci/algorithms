@@ -1,3 +1,4 @@
+//imports
 #include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h> 
@@ -45,5 +46,6 @@ int main(void)
 	printf("\nwe %s have negative weighted cycle.\n", bf2.has_negative_cycle()?"DO":"DON'T");
 
 	delete g;
+	
 	return 0;	
 }
