@@ -20,7 +20,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <string.h>
-
+#include<bits/stdc++.h>
 #include "prime.h"
 #include "imath.h"
 #include "random.h"
