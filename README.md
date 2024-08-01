@@ -2,8 +2,8 @@
 
 [![Build Status][1]][2]
 
-[1]: https://travis-ci.org/xtaci/algorithms.svg?branch=master
-[2]: https://travis-ci.org/xtaci/algorithms
+[1]: https://img.shields.io/github/created-at/xtaci/algorithms
+[2]: https://img.shields.io/github/created-at/xtaci/algorithms
 
 #### 目标 ( goal ) :
 
