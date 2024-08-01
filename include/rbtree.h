@@ -15,8 +15,8 @@
  * http://en.literateprograms.org/Red-black_tree_(C)
  ******************************************************************************/
 
-#ifndef __RBTREE_H__
-#define __RBTREE_H__
+#ifndef ALGO_RBTREE_H__
+#define ALGO_RBTREE_H__
 #include <stdio.h>
 #include <stdint.h>
 #include <stdexcept>

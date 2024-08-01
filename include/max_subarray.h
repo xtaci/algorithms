@@ -21,8 +21,8 @@
  * http://en.wikipedia.org/wiki/Maximum_subarray_problem
  ******************************************************************************/
 
-#ifndef	__MAX_SUBARRAY__
-#define	__MAX_SUBARRAY__
+#ifndef	MAX_SUBARRAY__
+#define	MAX_SUBARRAY__
 
 namespace alg {
 	/**

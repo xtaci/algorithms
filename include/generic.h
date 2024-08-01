@@ -9,8 +9,8 @@
  *
  ******************************************************************************/
 
-#ifndef __ALG_INC_H__
-#define __ALG_INC_H__
+#ifndef ALGO_ALG_INC_H__
+#define ALGO_ALG_INC_H__
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
@@ -24,7 +24,7 @@
 #define Min(a, b) ( (a < b) ? a : b )
 
 #define RANDOM_INIT()	srand(time(NULL))
-#define RANDOM(L, R)	(L + rand() % ((R) - (L))) // gen a random integer in [L, R]
+#define RANDOM(L, R)	(L + rand() % ((R) - (L) + 1)) // gen a random integer in [L, R]
 
 namespace alg {
 	/**

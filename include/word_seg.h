@@ -17,8 +17,8 @@
  *
  ******************************************************************************/
 
-#ifndef __WORD_SEG_H__
-#define __WORD_SEG_H__
+#ifndef ALGO_WORD_SEG_H__
+#define ALGO_WORD_SEG_H__
 
 #include <stdio.h>
 #include <stdint.h>

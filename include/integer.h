@@ -12,8 +12,8 @@
  *
  ******************************************************************************/
 
-#ifndef __INTEGER_H__
-#define __INTEGER_H__
+#ifndef ALGO_INTEGER_H__
+#define ALGO_INTEGER_H__
 
 #include <stdlib.h>  
 #include <stdint.h>
