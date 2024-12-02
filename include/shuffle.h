@@ -26,8 +26,8 @@ namespace alg {
 	 * shuffle the 'list' of length 'len'
 	 */
 	template<typename T>
-		static void shuffle(T * list, int len) {
-			srand(time(NULL));
+		static void shuffle(T * list, int len, unsigned int s=1) {
+			srand(s);
 			int i = len, j;
 			T temp;
 
