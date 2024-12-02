@@ -26,7 +26,7 @@ namespace alg {
 			for(iter=1;iter<number_of_elements;iter++) {
 				T current_element = array[iter];
 				jter = iter-1;
-				while(jter>=0 && array[jter] > current_element) {
+				while(jter >= 0 && array[jter] > current_element) {
 					array[jter+1] = array[jter];
 					jter--;
 				}
