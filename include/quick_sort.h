@@ -30,20 +30,20 @@ namespace alg {
 			T pivot = list[pivot_idx];
 			swap(list[begin], list[pivot_idx]);
 
-			int i = begin + 1;
-			int j = end;
+			int a = begin + 1;
+			int b = end;
 
 			while(i <= j) {
-				while((i <= end) && (list[i] <= pivot))
-					i++;
-				while((j >= begin) && (list[j] > pivot))
-					j--;
-				if(i < j)
-					swap(list[i],list[j]);
+				while((a <= end) && (list[a] <= pivot))
+					a++;
+				while((b >= begin) && (list[b] > pivot))
+					b--;
+				if(a < b)
+					swap(list[a],list[b]);
 			}
 
-			swap(list[begin],list[j]);
-			return j; // final pivot position
+			swap(list[begin],list[b]);
+			return b; // final pivot position
 		}
 
 	/**
