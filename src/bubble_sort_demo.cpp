@@ -3,13 +3,14 @@
 #include <time.h>
 
 #include "generic.h"
+// bubble sort header file
 #include "bubble_sort.h"
-
 using namespace alg;
 int main (int argc, char const *argv[]) {
 	const int MAX_ELEMENTS = 10;
 	int list[MAX_ELEMENTS];
 	for(int i = 0; i < MAX_ELEMENTS; i++ ){
+		// generate Random numbers
 		list[i] = rand()%100;
 	}
 	printf("The list before sorting is:\n");
