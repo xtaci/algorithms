@@ -29,7 +29,7 @@
 #### 已实现 ( Implemented ):
 
 | Name | File |
-|------|------|
+|------|-------|
 |Array shuffle|https://github.com/xtaci/algorithms/blob/master/include/shuffle.h |
 |Prime test(trial division)|https://github.com/xtaci/algorithms/blob/master/include/prime.h|
 |Prime test(Miller-Rabin's method)|https://github.com/xtaci/algorithms/blob/master/include/prime.h|
