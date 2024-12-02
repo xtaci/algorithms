@@ -24,7 +24,7 @@ int main(void)
 	grid(0,0) = 0;
 	grid(N-1,N-1) = 0;
 
-	printf("search a path from (0,0) to (%d,%d)\n", N-1,N-1);
+	printf("search a location from (0,0) to (%d,%d)\n", N-1,N-1);
 	for	(i=0;i<N;i++) {
 		for(j=0;j<N;j++){
 			if (grid(i,j) == AStar::WALL) { printf(" "); }
@@ -33,7 +33,7 @@ int main(void)
 		printf("\n");
 	}
 
-	printf("path:\n");
+	printf("Location:\n");
 	AStar astar(grid);
 	AStar::AStarResult * as = astar.run(0,0, N-1,N-1);
 
