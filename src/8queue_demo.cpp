@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <8queen.h>
-
-int main(void) {
+using namespace std;
+int main() {
 	alg::Queen8 q;
 	q.solve();
 }
