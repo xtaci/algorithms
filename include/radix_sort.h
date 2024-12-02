@@ -1,71 +1,51 @@
-/*******************************************************************************
- * DANIEL'S ALGORITHM IMPLEMENTAIONS
- *
- *  /\  |  _   _  ._ o _|_ |_  ._ _   _ 
- * /--\ | (_| (_) |  |  |_ | | | | | _> 
- *         _|                      
- *
- * RADIX SORT 
- *
- * Features: 
- *  1. sort unsigned 32-bit array in O(n) time
- *  2. subset sorted with couting sort.
- *
- * http://en.wikipedia.org/wiki/Radix_sort
- *
- ******************************************************************************/
+/*
+Radix sort
+*/
 
-#ifndef ALGO_RADIX_SORT_H__
-#define ALGO_RADIX_SORT_H__
+int find_largest_number(int arr[], int n) {
 
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <generic.h>
-#include <memory>
+  int i;
+  int largest_number = -1;
 
-namespace alg {
-	/**
-	 * couting sort
-	 */
-	static void radix_(int byte, const unsigned N, const uint32_t *source, uint32_t *dest) {
-		unsigned count[256];
-		unsigned index[256];
-		memset(count, 0, sizeof (count));
+  for (i = 0; i < n; i++) {
+    if (arr[i] > largest_number) largest_number = arr[i];
+  }
 
-		unsigned i;
-		for(i=0; i<N; ++i)
-			count[((source[i])>>(byte*8))&0xff]++;
-
-		index[0]=0;
-		for(i=1; i<256; ++i)
-			index[i] = index[i-1] + count[i-1];
-
-		for(i=0; i<N; ++i)
-			dest[index[((source[i])>>(byte*8))&0xff]++] = source[i];
-	}
-
-	/**
-	 * radix sort a given unsigned 32-bit integer array of size N
-	 */
-	static void radix_sort(uint32_t *source, const unsigned N) {
-		uint32_t * temp = new uint32_t[N];
-		radix_(0, N, source, temp);
-		radix_(1, N, temp, source);
-		radix_(2, N, source, temp);
-		radix_(3, N, temp, source);
-
-		delete [] temp;
-	}
-
-	/**
-	 * check whether the array is in order
-	 */
-	static void check_order(const uint32_t *data, unsigned N) {
-		for(--N ; N > 0; --N, ++data)
-			assert(data[0] <= data[1]);
-	}
+  return largest_number;
 }
 
-#endif //
+void radix_sort(int* arr, int n) {
+
+  // Base 10 is used
+  int i;
+  int semi_sorted[n];
+  int significant_digit = 1;
+  int largest_number = find_largest_number(arr, n);
+
+  // Loop until we reach the largest significant digit
+  while (largest_number / significant_digit > 0) {
+
+
+    int bucket[10] = {0};
+
+    // Counts the number of "keys" or digits that will go into each bucket
+    for (i = 0; i < n; i++) bucket[(arr[i] / significant_digit) % 10]++;
+
+    /**
+     * Add the count of the previous buckets,
+     * Acquires the indexes after the end of each bucket location in the arr
+     * Works similar to the count sort algorithm
+     **/
+    for (i = 1; i < 10; i++) bucket[i] += bucket[i - 1];
+
+    // Use the bucket to fill a "semi_sorted" arr
+    for (i = n - 1; i >= 0; i--)
+      semi_sorted[--bucket[(arr[i] / significant_digit) % 10]] = arr[i];
+
+
+    for (i = 0; i < n; i++) arr[i] = semi_sorted[i];
+
+    // Move to next significant digit
+    significant_digit *= 10;
+  }
+}
