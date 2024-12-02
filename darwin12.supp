@@ -35,7 +35,7 @@
 {
    <insert_a_suppression_name_here>
    Memcheck:Leak
-   fun:malloc_zone_malloc
+   fun: malloc_zone_malloc
    fun:_ZL12_NXMapRehashP11_NXMapTable
    fun:NXMapInsert
    fun:NXMapKeyCopyingInsert
