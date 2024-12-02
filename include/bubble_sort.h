@@ -23,29 +23,50 @@
 #ifndef _BUBBLE_SORT_H_
 #define _BUBBLE_SORT_H_
 
-#include <assert.h>
-#include <generic.h>
+#include <bits/stdc++>
+using namespace std;
 
-namespace alg {
-	template<typename T>
-		static void	BubbleSort(T list[], int start, int end){
-			int i;
-			bool swapped;
+template <class X> void bubble(X *items,int count)
+{
+  X t;
 
-			assert(start < end);
-
-			do {
-				swapped = false;
-				for(i = start+1; i <= end; i++) {
-					if(list[i-1] > list[i]) {
-						// swap them and remember something changed
-						swap(list[i-1], list[i]);
-						swapped = true;
-					}
-				}
-			} while(swapped);
-		}
+  for(int a=1; a<count; a++)
+    for(int b=count-1; b>=a; b--)
+      if(items[b-1] > items[b]) {
+        t = items[b-1];
+        items[b-1] = items[b];
+        items[b] = t;
+      }
 }
 
+int main()
+{
+  int iarray[7] = {7, 5, 4, 3, 9, 8, 6};
+  double darray[5] = {4.3, 2.5, -0.9, 10.2, 3.0};
 
-#endif // _BUBBLE_SORT_H_
+  cout << "Here is unsorted integer array: ";
+  for(int i=0;  i<7; i++)
+    cout << iarray[i] << ' ';
+  cout << endl;
+
+  bubble(iarray, 7);
+
+  cout << "Here is sorted integer array: ";
+  for(int i=0;  i<7; i++)
+    cout << iarray[i] << ' ';
+  cout << endl;
+
+  cout << "Here is unsorted double array: ";
+  for(int i=0;  i<5; i++)
+    cout << darray[i] << ' ';
+  cout << endl;
+
+  bubble(darray, 5);
+
+  cout << "Here is sorted double array: ";
+  for(int i=0;  i<5; i++)
+    cout << darray[i] << ' ';
+  cout << endl;
+
+  return 0;
+}
