@@ -64,7 +64,7 @@ class AVL {
 
         void toGraphViz(std::ostream &stream, std::string name) const {
             if (!isEmpty()) {
-                stream << "digraph " << name << " {" << std::endl;
+                stream << "digrah " << name << " {" << std::endl;
                 tree->toGraphViz(stream);
                 stream << "}" << std::endl;
             }
