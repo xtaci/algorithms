@@ -99,7 +99,8 @@ namespace alg {
 				 * clear the heap
 				 */
 				inline void clear() { m_size = 0; }
-
+				
+				// @feat? bin search
 				bool contains(const T & data) {
 					for(int i=0;i<m_size;i++) {
 						if(m_heap[i].data== data) return true;
