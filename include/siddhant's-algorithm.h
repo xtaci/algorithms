@@ -29,8 +29,8 @@ namespace alg {
             public:
 
         };
-
-
+        /*T: 00:30:08. pre-Bound2.*/
+        /*Look At m_hash e data uhash_init S T rand T M S I rand E T  namespace I walking     I   S   we  wheather        if      I A         qq                      aaaa        A       aaaaa               aaaaa               A   -> don't blink.
 };
 
-#endif //-> although I don't know magic. I can learn it. (Santa's Little Helper.)
+#endif //-> although I don't know magic. I can learn it. (Santa's Little Helper.) 
