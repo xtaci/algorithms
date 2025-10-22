@@ -17,3 +17,17 @@ foreach( appsourcefile ${APP_SOURCES} )
 	get_filename_component( demo_name ${appsourcefile} NAME_WE )
 	add_executable( ${demo_name} ${appsourcefile} )
 endforeach( appsourcefile ${APP_SOURCES} )
+
+
+/**
+
+
+Assignment Requirements for the Algorithms project.
+1. I need to make something that shows a nice DEMO. Demonstration. -> The way I can do this is by doing the following:
+	1. I can start.
+		2. I can try to figure out how to properly do dependency management (*Decompress a Directed Acyclic Graph -> DAG RFC. With Autocomplete.)
+
+
+Dependency Management is likely the future. The reason; (We - I, etc.) say this is because proper surveys' can make OR break a companies routine etc. There's a lot of beauty to be able to be seen within this System.
+Systems assignment for COE 379L (P.I. -> Marcus.)
+**/
