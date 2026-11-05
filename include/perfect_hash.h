@@ -88,7 +88,7 @@ namespace alg {
 				PerfHT& operator=(const PerfHT&);
 
 			public:
-				const T& operator[] (uint32_t key) const throw (PerfHTException) {
+				const T& operator[] (uint32_t key) const {
 					uint32_t hash;
 					hash  = uhash_integer(&params, key);
 					if (slots[hash].key == key) {
@@ -109,7 +109,7 @@ namespace alg {
 				/**
 				 * operator []
 				 */
-				T& operator[] (uint32_t key) throw (PerfHTException) {
+				T& operator[] (uint32_t key) {
 					return const_cast<T&>(static_cast<const PerfHT&>(*this)[key]);
 				}
 
