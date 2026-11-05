@@ -22,18 +22,20 @@
  *
  ******************************************************************************/
 
-#ifndef __PRIM_MST_H__
-#define __PRIM_MST_H__
+#ifndef ALGO_PRIM_MST_H__
+#define ALGO_PRIM_MST_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "undirected_graph.h"
 #include "double_linked_list.h"
 #include "heap.h"
+#include "hash_table.h"
 
 namespace alg {
 	class Prim {
 		public:
+			static const int LARGE_NUMBER = 999999;
 			/**
 			 * Prim's Algorithm. 
 			 *
@@ -62,19 +64,16 @@ namespace alg {
 				// all vertices
 				Graph::Adjacent * a;
 				list_for_each_entry(a, &g.list(), a_node){
-					if (a->v.id != src_id) {
-						Q.insert(INT_MAX, a->v.id);
-						keys[a->v.id] = INT_MAX;
-					}
+					Q.push(LARGE_NUMBER, a->v.id);
+					keys[a->v.id] = LARGE_NUMBER;
 				}
-
-				Q.insert(0, src_id);
+			
+				Q.decrease_key(src_id, 0);
 				keys[src_id] = 0;
 
 				while (!Q.is_empty()) {
-					int32_t id = Q.min_value();
-					Q.delete_min();		// remove u from Q
-
+					Heap<uint32_t>::elem e = Q.pop();
+					uint32_t id = e.data;
 					Graph::Adjacent * u = g[id];	// the vertex to process
 					Graph::Vertex * v;
 					list_for_each_entry(v, &u->v_head, v_node) {

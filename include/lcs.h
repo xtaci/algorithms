@@ -11,8 +11,8 @@
  *
  ******************************************************************************/
 
-#ifndef __LCS_H__
-#define __LCS_H__
+#ifndef ALGO_LCS_H__
+#define ALGO_LCS_H__
 
 #include "generic.h"
 #include "2darray.h"

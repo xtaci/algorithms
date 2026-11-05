@@ -44,8 +44,8 @@
  * 
  ******************************************************************************/
 
-#ifndef __BELLMAN_FORD_H__
-#define __BELLMAN_FORD_H__
+#ifndef ALGO_BELLMAN_FORD_H__
+#define ALGO_BELLMAN_FORD_H__
 
 #include <stdio.h>
 #include <stdlib.h>

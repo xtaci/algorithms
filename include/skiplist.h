@@ -11,8 +11,8 @@
  *
  ******************************************************************************/
  
-#ifndef __SKIP_LIST_H__
-#define __SKIP_LIST_H__
+#ifndef ALGO_SKIP_LIST_H__
+#define ALGO_SKIP_LIST_H__
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -97,7 +97,7 @@ namespace alg {
 			if(x == NULL || x->key != key) {        
 				int lvl = random_level();	// random promotion
 
-				// for nodes higer than  current max level
+				// for nodes higher than  current max level
 				// make 'header node' as it's prev
 				if(lvl > m_level) {
 					for(int i = m_level + 1; i <= lvl; i++) {

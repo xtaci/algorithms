@@ -1,9 +1,9 @@
-#include <stdio.h>
+#include <iostream>
 #include "random.h"
 
 int main(void) {
-	printf("generate random numbers\n");
+	std::cout <<"generate random numbers\n";
 	for (int i=0;i<100;i++) {
-		printf("%u\n",alg::LCG());
+		std::cout<<alg::LCG()<<"\n";
 	}
 }

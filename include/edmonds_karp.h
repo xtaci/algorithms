@@ -21,8 +21,8 @@
  *
  ******************************************************************************/
 
-#ifndef __EDMONDS_KARP_H__
-#define __EDMONDS_KARP_H__
+#ifndef ALGO_EDMONDS_KARP_H__
+#define ALGO_EDMONDS_KARP_H__
 
 #include <stdlib.h>
 #include <stdint.h>

@@ -1,5 +1,5 @@
-#ifndef __GB18030_H__
-#define __GB18030_H__
+#ifndef ALGO_GB18030_H__
+#define ALGO_GB18030_H__
 
 /**
  * Read from the string encoded in GB18030 into WORD

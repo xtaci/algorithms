@@ -14,8 +14,8 @@
  *
  ******************************************************************************/
 
-#ifndef __HASH_TABLE_H__
-#define __HASH_TABLE_H__
+#ifndef ALGO_HASH_TABLE_H__
+#define ALGO_HASH_TABLE_H__
 
 #include <stdint.h>
 #include <string.h>
@@ -36,7 +36,7 @@ namespace alg {
 			typedef _HashCode hash_code_fn;
 			private:
 				/**
-				 * definiton of Key-Value pair.
+				 * definition of Key-Value pair.
 				 */
 				struct HashKV {
 					key_type key;	// 32-bit key

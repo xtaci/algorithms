@@ -9,8 +9,8 @@
  *
  * */
 
-#ifndef __RELABEL_TO_FRONT_H__
-#define __RELABEL_TO_FRONT_H__
+#ifndef ALGO_RELABEL_TO_FRONT_H__
+#define ALGO_RELABEL_TO_FRONT_H__
 
 #include <stdlib.h>
 #include <stdint.h>

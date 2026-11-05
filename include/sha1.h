@@ -37,8 +37,8 @@
  * http://en.wikipedia.org/wiki/SHA-1
  */
 
-#ifndef __SHA1_H__
-#define __SHA1_H__
+#ifndef ALGO_SHA1_H__
+#define ALGO_SHA1_H__
 
 #include <stdbool.h>
 
