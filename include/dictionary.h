@@ -13,6 +13,7 @@
 
 #include <cstdint>
 #include <cassert>
+#include <stdexcept>
 #include <vector>
 #include "hash_code.h"
 #include "prime.h"
@@ -46,8 +47,8 @@ private:
 		{
 			HashCode = -1;
 			Next = -1;
-			Key = TKey();
-			Value = TValue();
+			this->Key = TKey();
+			this->Value = TValue();
 		}
 	};
 
@@ -128,7 +129,7 @@ public:
 	public:
 		KeyValuePair& operator*() const
 		{
-			return *Current;
+			return *this->Current;
 		}
 	};
 
@@ -143,7 +144,7 @@ public:
 	public:
 		const KeyValuePair& operator*() const
 		{
-			return *Current;
+			return *this->Current;
 		}
 	};
 
@@ -177,7 +178,7 @@ public:
 		{
 			return m_Entries[i].Value;
 		}
-		throw MxKeyNotFoundException();
+		throw std::out_of_range("key not found");
 	}
 	const TValue& operator[](const TKey& key) const
 	{
@@ -186,7 +187,7 @@ public:
 		{
 			return m_Entries[i].Value;
 		}
-		throw MxKeyNotFoundException();
+		throw std::out_of_range("key not found");
 	}
 
 	bool TryGetValue(const TKey& key, TValue& outValue) const

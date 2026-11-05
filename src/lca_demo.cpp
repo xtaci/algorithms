@@ -110,8 +110,9 @@ int main(){
     edges.push_back({1,2});
     edges.push_back({2,3});
     edges.push_back({1,4});
-    LCA* l = new LCA(v);
-    std::cout << l->lcaQuery(0,1) << endl;
-    std::cout << l->lcaQuery(3,4) << endl;
-    std::cout << l->lcaQuery(3,2) << endl;
+    LCA* l = new LCA(edges);
+    std::cout << l->lcaQuery(0,1) << std::endl;
+    std::cout << l->lcaQuery(3,4) << std::endl;
+    std::cout << l->lcaQuery(3,2) << std::endl;
+    delete l;
 }

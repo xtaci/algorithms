@@ -77,6 +77,14 @@ namespace alg {
 				// for loop through the kvs
 				inline int count() const { return m_size; };
 
+				const elem& top() const {
+					return m_heap[0];
+				}
+
+				const elem& operator[](int index) const {
+					return m_heap[index];
+				}
+
 				/**
 				 * insert a 'key'->'value' pair into the heap.
 				 */
